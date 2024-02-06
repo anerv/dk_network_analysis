@@ -1,3 +1,4 @@
 *.egg-info
 data/input/*
 TODO.md
+*.DS_Store
