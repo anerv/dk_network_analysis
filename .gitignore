@@ -2,3 +2,6 @@
 data/input/*
 TODO.md
 *.DS_Store
+*.gpkg
+data/processed/*
+*.pyc
