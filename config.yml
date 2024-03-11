@@ -5,6 +5,8 @@ db_port: '5432'
 db_host: 'localhost'
 db_password: 'aneitu'
 
+CRS: 'EPSG:25832'
+
 network_edges: 'osm_edges_export'
 network_nodes: 'osm_nodes_export'
 

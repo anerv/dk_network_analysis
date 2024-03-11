@@ -1,8 +1,8 @@
 # %%
 
 import yaml
-import psycopg2
 import subprocess
+import geopandas as gpd
 from src import db_functions as dbf
 
 with open(r"../config.yml") as file:
@@ -17,9 +17,17 @@ with open(r"../config.yml") as file:
     network_edges = parsed_yaml_file["network_edges"]
     network_nodes = parsed_yaml_file["network_nodes"]
 
+    adm_fp = parsed_yaml_file["adm_boundaries_fp"]
+    socio_fp = parsed_yaml_file["socio_fp"]
+
+    crs = parsed_yaml_file["CRS"]
+
 print("Settings loaded!")
 
-# %%
+connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
+
+engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
+
 
 # LOAD INPUT NETWORK DATA
 subprocess.run(
@@ -34,100 +42,47 @@ subprocess.run(
     check=True,
 )
 
+# LOAD ADM DATA
+adm = gpd.read_file(adm_fp)
 
-connection = dbf.connect_pg("postgres", db_user, db_password, db_port, db_host=db_host)
+assert adm.crs == crs
 
-connection = dbf.connect_pg(db_name, db_user, db_password, db_port, db_host=db_host)
+adm.columns = adm.columns.str.lower()
 
-dbf.run_query_pg("sql/00_create_db.sql", connection)
+useful_cols = [
+    "id.lokalid",
+    # "dagiid",
+    "navn",
+    "kommunekode",
+    "udenforkommuneinddeling",
+    "geometry",
+]
 
-# pg_dump -t table_to_copy source_db | psql target_db
+adm = adm[useful_cols]
 
+dbf.to_postgis(geodataframe=adm, table_name="adm_boundaries", engine=engine)
 
-# %%
-connection.close()
+q = "SELECT navn, kommunekode FROM adm_boundaries LIMIT 10;"
 
-print("Script 01 complete!")
+test = dbf.run_query_pg(q, connection)
 
-# %%
+print(test)
 
+# LOAD SOCIOECONOMIC DATA
+socio = gpd.read_file(socio_fp)
 
-connection = dbf.connect_pg("postgres", db_user, db_password, db_port, db_host=db_host)
+assert socio.crs == crs
 
-connection = dbf.connect_pg(db_name, db_user, db_password, db_port, db_host=db_host)
+socio.columns = socio.columns.str.lower()
 
-dbf.run_query_pg("sql/00_create_db.sql", connection)
+dbf.to_postgis(geodataframe=socio, table_name="socio", engine=engine)
 
-# pg_dump -t table_to_copy source_db | psql target_db
+q = "SELECT area_name, population FROM socio LIMIT 10;"
 
+test = dbf.run_query_pg(q, connection)
 
-# %%
-connection.close()
+print(test)
 
-print("Script 01 complete!")
-
-# %%
-subprocess.run(
-    f"pg_dump -t {network_edges} {input_db_name} | psql {db_name}",
-    shell=True,
-    check=True,
-)
-
-
-connection = dbf.connect_pg("postgres", db_user, db_password, db_port, db_host=db_host)
-
-connection = dbf.connect_pg(db_name, db_user, db_password, db_port, db_host=db_host)
-
-dbf.run_query_pg("sql/00_create_db.sql", connection)
-
-# pg_dump -t table_to_copy source_db | psql target_db
-
-
-# %%
-connection.close()
-
-print("Script 01 complete!")
-
-# %%
-subprocess.run(
-    f"pg_dump -t {network_edges} {input_db_name} | psql {db_name}",
-    shell=True,
-    check=True,
-)
-
-
-connection = dbf.connect_pg("postgres", db_user, db_password, db_port, db_host=db_host)
-
-connection = dbf.connect_pg(db_name, db_user, db_password, db_port, db_host=db_host)
-
-dbf.run_query_pg("sql/00_create_db.sql", connection)
-
-# pg_dump -t table_to_copy source_db | psql target_db
-
-
-# %%
-connection.close()
-
-print("Script 01 complete!")
-
-# %%
-subprocess.run(
-    f"pg_dump -t {network_edges} {input_db_name} | psql {db_name}",
-    shell=True,
-    check=True,
-)
-
-
-connection = dbf.connect_pg("postgres", db_user, db_password, db_port, db_host=db_host)
-
-connection = dbf.connect_pg(db_name, db_user, db_password, db_port, db_host=db_host)
-
-dbf.run_query_pg("sql/00_create_db.sql", connection)
-
-# pg_dump -t table_to_copy source_db | psql target_db
-
-
-# %%
 connection.close()
 
 print("Script 01 complete!")
