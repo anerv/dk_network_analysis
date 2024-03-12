@@ -1,3 +1,4 @@
+# %%
 import yaml
 from src import db_functions as dbf
 
@@ -21,3 +22,20 @@ with open(r"../config.yml") as file:
 print("Settings loaded!")
 
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
+
+# %%
+
+
+queries = []
+
+for i, q in enumerate(queries):
+    print(f"Running step {i+1}...")
+    result = dbf.run_query_pg(q, connection)
+    if result == "error":
+        print("Please fix error before rerunning and reconnect to the database")
+        break
+
+    print(f"Step {i+1} done!")
+
+# %%
+connection.close()

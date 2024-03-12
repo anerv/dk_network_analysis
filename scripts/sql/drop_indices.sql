@@ -1,0 +1,7 @@
+DROP INDEX IF EXISTS id_ix;
+
+DROP INDEX IF EXISTS lts_ix;
+
+DROP INDEX IF EXISTS source_ix;
+
+DROP INDEX IF EXISTS target_ix;
