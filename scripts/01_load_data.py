@@ -50,13 +50,6 @@ q = f"ALTER TABLE {network_nodes} RENAME TO nodes;"
 
 dbf.run_query_pg(q, connection)
 
-q = "CREATE INDEX edges_geom_ix ON edges USING GIST (geometry);"
-
-dbf.run_query_pg(q, connection)
-
-q = "CREATE INDEX nodes_geom_ix ON nodes USING GIST (geometry);"
-
-dbf.run_query_pg(q, connection)
 
 # LOAD ADM DATA
 adm = gpd.read_file(adm_fp)
@@ -78,10 +71,6 @@ adm = adm[useful_cols]
 
 dbf.to_postgis(geodataframe=adm, table_name="adm_boundaries", engine=engine)
 
-q = "CREATE INDEX adm_geom_ix ON adm_boundaries USING GIST (geometry);"
-
-dbf.run_query_pg(q, connection)
-
 q = "SELECT navn, kommunekode FROM adm_boundaries LIMIT 10;"
 
 test = dbf.run_query_pg(q, connection)
@@ -97,15 +86,14 @@ socio.columns = socio.columns.str.lower()
 
 dbf.to_postgis(geodataframe=socio, table_name="socio", engine=engine)
 
-q = "CREATE INDEX socio_geom_ix ON socio USING GIST (geometry);"
-
-dbf.run_query_pg(q, connection)
-
 q = "SELECT area_name, population FROM socio LIMIT 10;"
 
 test = dbf.run_query_pg(q, connection)
 
 print(test)
+
+# CREATE INDICES
+dbf.run_query_pg("sql/create_indices.sql", connection)
 
 connection.close()
 
