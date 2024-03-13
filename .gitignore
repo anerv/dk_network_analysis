@@ -5,3 +5,4 @@ TODO.md
 *.gpkg
 data/processed/*
 *.pyc
+network_analysis_exploration.qgz

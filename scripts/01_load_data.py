@@ -42,6 +42,14 @@ subprocess.run(
     check=True,
 )
 
+q = f"DROP TABLE IF EXISTS edges CASCADE;"
+
+dbf.run_query_pg(q, connection)
+
+q = f"DROP TABLE IF EXISTS nodes CASCADE;"
+
+dbf.run_query_pg(q, connection)
+
 q = f"ALTER TABLE {network_edges} RENAME TO edges;"
 
 dbf.run_query_pg(q, connection)
@@ -49,6 +57,10 @@ dbf.run_query_pg(q, connection)
 q = f"ALTER TABLE {network_nodes} RENAME TO nodes;"
 
 dbf.run_query_pg(q, connection)
+
+q_ix = "CREATE INDEX IF NOT EXISTS nodes_geom_ix ON nodes USING GIST (geometry);"
+
+dbf.run_query_pg(q_ix, connection)
 
 
 # LOAD ADM DATA
@@ -71,6 +83,10 @@ adm = adm[useful_cols]
 
 dbf.to_postgis(geodataframe=adm, table_name="adm_boundaries", engine=engine)
 
+q_ix = "CREATE INDEX IF NOT EXISTS adm_geom_ix ON adm_boundaries USING GIST (geometry);"
+
+dbf.run_query_pg(q_ix, connection)
+
 q = "SELECT navn, kommunekode FROM adm_boundaries LIMIT 10;"
 
 test = dbf.run_query_pg(q, connection)
@@ -86,14 +102,18 @@ socio.columns = socio.columns.str.lower()
 
 dbf.to_postgis(geodataframe=socio, table_name="socio", engine=engine)
 
+q_ix = "CREATE INDEX IF NOT EXISTS socio_geom_ix ON socio USING GIST (geometry);"
+
+dbf.run_query_pg(q_ix, connection)
+
 q = "SELECT area_name, population FROM socio LIMIT 10;"
 
 test = dbf.run_query_pg(q, connection)
 
 print(test)
 
-# CREATE INDICES
-dbf.run_query_pg("sql/create_indices.sql", connection)
+# # CREATE INDICES
+# dbf.run_query_pg("sql/create_indices.sql", connection)
 
 connection.close()
 
