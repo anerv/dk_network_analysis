@@ -1,5 +1,5 @@
 ALTER TABLE
-    kbh
+    edges
 ADD
     COLUMN IF NOT EXISTS lts_1_gap BOOLEAN,
 ADD
@@ -17,85 +17,130 @@ DROP TABLE IF EXISTS lts_3_gaps;
 
 DROP TABLE IF EXISTS lts_4_gaps;
 
-CREATE VIEW nodes_lts_1 AS WITH nodes AS (
-    SELECT
-        source AS node
-    FROM
-        kbh
-    WHERE
-        lts = 1
-    UNION
-    SELECT
-        target AS node
-    FROM
-        kbh
-    WHERE
-        lts = 1
-)
-SELECT
-    DISTINCT node
-FROM
-    nodes;
+DROP MATERIALIZED VIEW IF EXISTS nodes_lts_1;
 
-CREATE VIEW nodes_lts_2 AS WITH nodes AS (
-    SELECT
-        source AS node
-    FROM
-        kbh
-    WHERE
-        lts = 2
-    UNION
-    SELECT
-        target AS node
-    FROM
-        kbh
-    WHERE
-        lts = 2
-)
-SELECT
-    DISTINCT node
-FROM
-    nodes;
+DROP MATERIALIZED VIEW IF EXISTS nodes_lts_2;
 
-CREATE VIEW nodes_lts_3 AS WITH nodes AS (
-    SELECT
-        source AS node
-    FROM
-        kbh
-    WHERE
-        lts = 3
-    UNION
-    SELECT
-        target AS node
-    FROM
-        kbh
-    WHERE
-        lts = 3
-)
-SELECT
-    DISTINCT node
-FROM
-    nodes;
+DROP MATERIALIZED VIEW IF EXISTS nodes_lts_3;
 
-CREATE VIEW nodes_lts_4 AS WITH nodes AS (
-    SELECT
-        source AS node
-    FROM
-        kbh
-    WHERE
-        lts = 4
-    UNION
-    SELECT
-        target AS node
-    FROM
-        kbh
-    WHERE
-        lts = 4
-)
+DROP MATERIALIZED VIEW IF EXISTS nodes_lts_4;
+
+CREATE INDEX IF NOT EXISTS edges_geom_ix ON edges USING GIST (geometry);
+
+CREATE INDEX IF NOT EXISTS lts_ix ON edges (lts);
+
+CREATE INDEX IF NOT EXISTS source_ix ON edges (source);
+
+CREATE INDEX IF NOT EXISTS target_ix ON edges (target);
+
+CREATE MATERIALIZED VIEW nodes_lts_1 AS
 SELECT
     DISTINCT node
 FROM
-    nodes;
+    (
+        SELECT
+            source AS node
+        FROM
+            edges
+        WHERE
+            lts = 1
+        UNION
+        ALL
+        SELECT
+            target AS node
+        FROM
+            edges
+        WHERE
+            lts = 1
+    ) AS nodes;
+
+CREATE MATERIALIZED VIEW nodes_lts_2 AS
+SELECT
+    DISTINCT node
+FROM
+    (
+        SELECT
+            source AS node
+        FROM
+            edges
+        WHERE
+            lts = 2
+        UNION
+        ALL
+        SELECT
+            target AS node
+        FROM
+            edges
+        WHERE
+            lts = 2
+    ) AS nodes;
+
+CREATE MATERIALIZED VIEW nodes_lts_3 AS
+SELECT
+    DISTINCT node
+FROM
+    (
+        SELECT
+            source AS node
+        FROM
+            edges
+        WHERE
+            lts = 3
+        UNION
+        ALL
+        SELECT
+            target AS node
+        FROM
+            edges
+        WHERE
+            lts = 3
+    ) AS nodes;
+
+CREATE MATERIALIZED VIEW nodes_lts_4 AS
+SELECT
+    DISTINCT node
+FROM
+    (
+        SELECT
+            source AS node
+        FROM
+            edges
+        WHERE
+            lts = 4
+        UNION
+        ALL
+        SELECT
+            target AS node
+        FROM
+            edges
+        WHERE
+            lts = 4
+    ) AS nodes;
+
+-- LTS GAPS 1
+CREATE TABLE lts_1_gaps AS
+SELECT
+    e.name,
+    e.municipality,
+    e.id,
+    e.lts,
+    e.lts_access,
+    e.all_access,
+    e.cycling_allowed,
+    e.source,
+    e.target,
+    e.geometry
+FROM
+    edges AS e
+    JOIN nodes_lts_1 AS ns ON e.source = ns.node
+    JOIN nodes_lts_1 AS nt ON e.target = nt.node
+    LEFT JOIN components_1 AS co1 ON e.source = co1.node
+    LEFT JOIN components_1 AS co2 ON e.target = co2.node
+WHERE
+    e.lts <> 1
+    AND e.km <= 0.030
+    AND e.all_access = TRUE
+    AND co1.component <> co2.component;
 
 -- LTS 1 GAPS
 CREATE TABLE lts_1_gaps AS WITH node_sel AS (
@@ -108,6 +153,8 @@ CREATE TABLE lts_1_gaps AS WITH node_sel AS (
 ),
 lts_1_gaps AS (
     SELECT
+        "name",
+        municipality,
         id,
         lts,
         lts_access,
@@ -118,7 +165,7 @@ lts_1_gaps AS (
         target,
         geometry
     FROM
-        kbh
+        edges
     WHERE
         lts <> 1
         AND km <= 0.030
@@ -137,6 +184,8 @@ lts_1_gaps AS (
         )
 )
 SELECT
+    l.name,
+    l.municipality,
     l.id,
     l.lts,
     l.lts_access,
@@ -163,6 +212,8 @@ CREATE TABLE lts_2_gaps AS WITH node_sel AS (
 ),
 lts_2_gaps AS (
     SELECT
+        "name",
+        municipality,
         id,
         lts,
         lts_access,
@@ -173,7 +224,7 @@ lts_2_gaps AS (
         target,
         geometry
     FROM
-        kbh
+        edges
     WHERE
         lts NOT IN (1, 2)
         AND km <= 0.030
@@ -192,6 +243,8 @@ lts_2_gaps AS (
         )
 )
 SELECT
+    l.name,
+    l.municipality,
     l.id,
     l.lts,
     l.lts_access,
@@ -218,6 +271,8 @@ CREATE TABLE lts_3_gaps AS WITH node_sel AS (
 ),
 lts_3_gaps AS (
     SELECT
+        "name",
+        municipality,
         id,
         lts,
         lts_access,
@@ -228,7 +283,7 @@ lts_3_gaps AS (
         target,
         geometry
     FROM
-        kbh
+        edges
     WHERE
         lts NOT IN (1, 2, 3)
         AND km <= 0.030
@@ -247,6 +302,8 @@ lts_3_gaps AS (
         )
 )
 SELECT
+    l.name,
+    l.municipality,
     l.id,
     l.lts,
     l.lts_access,
@@ -273,6 +330,8 @@ CREATE TABLE lts_4_gaps AS WITH node_sel AS (
 ),
 lts_4_gaps AS (
     SELECT
+        "name",
+        municipality,
         id,
         lts,
         lts_access,
@@ -283,7 +342,7 @@ lts_4_gaps AS (
         target,
         geometry
     FROM
-        kbh
+        edges
     WHERE
         lts NOT IN (1, 2, 3, 4)
         AND km <= 0.030
@@ -302,6 +361,8 @@ lts_4_gaps AS (
         )
 )
 SELECT
+    l.name,
+    l.municipality,
     l.id,
     l.lts,
     l.lts_access,
@@ -317,10 +378,126 @@ FROM
 WHERE
     co1.component <> co2.component;
 
--- TODO: CONSIDER NODE SELECTION FOR 2,3,4
--- GET DISTINCT COMPONENT FOR EACH gap source and target - if its the same, it is not a gap
+CREATE INDEX IF NOT EXISTS lts1_gap_geom_ix ON lts_1_gaps USING GIST (geometry);
+
+CREATE INDEX IF NOT EXISTS lts2_gap_geom_ix ON lts_2_gaps USING GIST (geometry);
+
+CREATE INDEX IF NOT EXISTS lts3_gap_geom_ix ON lts_3_gaps USING GIST (geometry);
+
+CREATE INDEX IF NOT EXISTS lts4_gap_geom_ix ON lts_4_gaps USING GIST (geometry);
+
+--DROP gaps that form too long stretches
+WITH merged AS (
+    SELECT
+        (ST_Dump(ST_LineMerge(ST_Collect(geometry)))) .geom AS geometry
+    FROM
+        lts_1_gaps
+),
+too_long_gaps AS (
+    SELECT
+        --row_number() OVER () AS cid,
+        l.id --,
+        --m.geometry
+    FROM
+        merged m
+        INNER JOIN lts_1_gaps l ON ST_Intersects(l.geometry, m.geometry)
+    WHERE
+        ST_Length(m.geometry) > 40
+)
+DELETE FROM
+    lts_1_gaps
+WHERE
+    id IN (
+        SELECT
+            id
+        FROM
+            too_long_gaps
+    );
+
+WITH merged AS (
+    SELECT
+        (ST_Dump(ST_LineMerge(ST_Collect(geometry)))) .geom AS geometry
+    FROM
+        lts_2_gaps
+),
+too_long_gaps AS (
+    SELECT
+        --row_number() OVER () AS cid,
+        l.id --,
+        --m.geometry
+    FROM
+        merged m
+        INNER JOIN lts_2_gaps l ON ST_Intersects(l.geometry, m.geometry)
+    WHERE
+        ST_Length(m.geometry) > 40
+)
+DELETE FROM
+    lts_2_gaps
+WHERE
+    id IN (
+        SELECT
+            id
+        FROM
+            too_long_gaps
+    );
+
+WITH merged AS (
+    SELECT
+        (ST_Dump(ST_LineMerge(ST_Collect(geometry)))) .geom AS geometry
+    FROM
+        lts_3_gaps
+),
+too_long_gaps AS (
+    SELECT
+        --row_number() OVER () AS cid,
+        l.id --,
+        --m.geometry
+    FROM
+        merged m
+        INNER JOIN lts_3_gaps l ON ST_Intersects(l.geometry, m.geometry)
+    WHERE
+        ST_Length(m.geometry) > 40
+)
+DELETE FROM
+    lts_3_gaps
+WHERE
+    id IN (
+        SELECT
+            id
+        FROM
+            too_long_gaps
+    );
+
+WITH merged AS (
+    SELECT
+        (ST_Dump(ST_LineMerge(ST_Collect(geometry)))) .geom AS geometry
+    FROM
+        lts_4_gaps
+),
+too_long_gaps AS (
+    SELECT
+        --row_number() OVER () AS cid,
+        l.id --,
+        --m.geometry
+    FROM
+        merged m
+        INNER JOIN lts_4_gaps l ON ST_Intersects(l.geometry, m.geometry)
+    WHERE
+        ST_Length(m.geometry) > 40
+)
+DELETE FROM
+    lts_4_gaps
+WHERE
+    id IN (
+        SELECT
+            id
+        FROM
+            too_long_gaps
+    );
+
+-- CONSIDER - close gaps for pedestrian, no cycling, etc?
 UPDATE
-    kbh
+    edges
 SET
     lts_1_gap = TRUE
 WHERE
@@ -331,20 +508,52 @@ WHERE
             lts_1_gaps
     );
 
-DROP TABLE IF EXISTS lts_1_gaps;
+UPDATE
+    edges
+SET
+    lts_2_gap = TRUE
+WHERE
+    id IN (
+        SELECT
+            id
+        FROM
+            lts_2_gaps
+    );
 
-DROP TABLE IF EXISTS lts_2_gaps;
+UPDATE
+    edges
+SET
+    lts_3_gap = TRUE
+WHERE
+    id IN (
+        SELECT
+            id
+        FROM
+            lts_3_gaps
+    );
 
-DROP TABLE IF EXISTS lts_3_gaps;
+UPDATE
+    edges
+SET
+    lts_4_gap = TRUE
+WHERE
+    id IN (
+        SELECT
+            id
+        FROM
+            lts_4_gaps
+    );
 
-DROP TABLE IF EXISTS lts_4_gaps;
-
-DROP VIEW IF EXISTS nodes_lts_1;
-
-DROP VIEW IF EXISTS nodes_lts_2;
-
-DROP VIEW IF EXISTS nodes_lts_3;
-
-DROP VIEW IF EXISTS nodes_lts_4;
-
-```
+-- DROP TABLE IF EXISTS lts_1_gaps;
+-- DROP TABLE IF EXISTS lts_2_gaps;
+-- DROP TABLE IF EXISTS lts_3_gaps;
+-- DROP TABLE IF EXISTS lts_4_gaps;
+-- DROP MATERIALIZED VIEW IF EXISTS nodes_lts_1;
+-- DROP MATERIALIZED VIEW IF EXISTS nodes_lts_2;
+-- DROP MATERIALIZED VIEW IF EXISTS nodes_lts_3;
+-- DROP MATERIALIZED VIEW IF EXISTS nodes_lts_4;
+-- DROP TABLE IF EXISTS components;
+-- DROP TABLE IF EXISTS components_1;
+-- DROP TABLE IF EXISTS components_2;
+-- DROP TABLE IF EXISTS components_3;
+-- DROP TABLE IF EXISTS components_4;
