@@ -1,5 +1,5 @@
 ALTER TABLE
-    kbh
+    edges
 ADD
     COLUMN IF NOT EXISTS component_all BIGINT DEFAULT NULL,
 ADD
@@ -34,7 +34,7 @@ SELECT
     *
 FROM
     pgr_connectedComponents(
-        'SELECT id, source, target, cost, reverse_cost FROM kbh'
+        'SELECT id, source, target, cost, reverse_cost FROM edges'
     );
 
 CREATE TABLE components_1 AS
@@ -42,7 +42,7 @@ SELECT
     *
 FROM
     pgr_connectedComponents(
-        'SELECT id, source, target, cost, reverse_cost FROM kbh WHERE lts_access = 1'
+        'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access = 1'
     );
 
 CREATE TABLE components_2 AS
@@ -50,7 +50,7 @@ SELECT
     *
 FROM
     pgr_connectedComponents(
-        'SELECT id, source, target, cost, reverse_cost FROM kbh WHERE lts_access IN (1,2)'
+        'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access IN (1,2)'
     );
 
 CREATE TABLE components_3 AS
@@ -58,7 +58,7 @@ SELECT
     *
 FROM
     pgr_connectedComponents(
-        'SELECT id, source, target, cost, reverse_cost FROM kbh WHERE lts_access IN (1,2,3)'
+        'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access IN (1,2,3)'
     );
 
 CREATE TABLE components_4 AS
@@ -66,11 +66,11 @@ SELECT
     *
 FROM
     pgr_connectedComponents(
-        'SELECT id, source, target, cost, reverse_cost FROM kbh WHERE lts_access IN (1,2,3,4)'
+        'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access IN (1,2,3,4)'
     );
 
 UPDATE
-    kbh e
+    edges e
 SET
     component_all = component
 FROM
@@ -79,7 +79,7 @@ WHERE
     e.source = co.node;
 
 UPDATE
-    kbh e
+    edges e
 SET
     component_1 = component
 FROM
@@ -89,7 +89,7 @@ WHERE
     AND lts_access = 1;
 
 UPDATE
-    kbh e
+    edges e
 SET
     component_2 = component
 FROM
@@ -101,7 +101,7 @@ WHERE
 ;
 
 UPDATE
-    kbh e
+    edges e
 SET
     component_3 = component
 FROM
@@ -111,7 +111,7 @@ WHERE
     AND lts_access IN (1, 2, 3);
 
 UPDATE
-    kbh e
+    edges e
 SET
     component_4 = component
 FROM
@@ -125,7 +125,7 @@ WHERE
 --     *
 -- FROM
 --     pgr_connectedComponents(
---         'SELECT id, source, target, cost, reverse_cost FROM kbh WHERE lts_access = 5'
+--         'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access = 5'
 --     );
 -- ---- **** -----
 -- CREATE TABLE component_6 AS
@@ -133,28 +133,24 @@ WHERE
 --     *
 -- FROM
 --     pgr_connectedComponents(
---         'SELECT id, source, target, cost, reverse_cost FROM kbh WHERE lts_access = 6'
+--         'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access = 6'
 --     );
 -- CREATE TABLE component_7 AS
 -- SELECT
 --     *
 -- FROM
 --     pgr_connectedComponents(
---         'SELECT id, source, target, cost, reverse_cost FROM kbh WHERE lts_access = 7'
+--         'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access = 7'
 --     );
 -- CREATE TABLE component_0 AS
 -- SELECT
 --     *
 -- FROM
 --     pgr_connectedComponents(
---         'SELECT id, source, target, cost, reverse_cost FROM kbh WHERE lts_access = 0'
+--         'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access = 0'
 --     );
-DROP TABLE IF EXISTS components;
-
-DROP TABLE IF EXISTS components_1;
-
-DROP TABLE IF EXISTS components_2;
-
-DROP TABLE IF EXISTS components_3;
-
-DROP TABLE IF EXISTS components_4;
+-- DROP TABLE IF EXISTS components;
+-- DROP TABLE IF EXISTS components_1;
+-- DROP TABLE IF EXISTS components_2;
+-- DROP TABLE IF EXISTS components_3;
+-- DROP TABLE IF EXISTS components_4;
