@@ -26,8 +26,8 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 # %%
 
 queries = [
-    # "sql/02a_lts_cleanup.sql",
-    # "sql/02b_compute_initial_components.sql",
+    "sql/02a_lts_cleanup.sql",
+    "sql/02b_compute_initial_components.sql",
     "sql/02c_close_lts_gaps.sql",
 ]
 
