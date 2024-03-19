@@ -25,8 +25,11 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 # %%
 
-
-queries = []
+queries = [
+    # "sql/02a_lts_cleanup.sql",
+    # "sql/02b_compute_initial_components.sql",
+    "sql/02c_close_lts_gaps.sql",
+]
 
 for i, q in enumerate(queries):
     print(f"Running step {i+1}...")
@@ -39,3 +42,6 @@ for i, q in enumerate(queries):
 
 # %%
 connection.close()
+
+print("Script 02 complete!")
+# %%

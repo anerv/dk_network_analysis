@@ -11,14 +11,6 @@ ADD
 ADD
     COLUMN IF NOT EXISTS component_4 BIGINT DEFAULT NULL;
 
--- ADD
---     COLUMN IF NOT EXISTS component_5 BIGINT DEFAULT NULL,
--- ADD
---     COLUMN IF NOT EXISTS component_6 BIGINT DEFAULT NULL,
--- ADD
---     COLUMN IF NOT EXISTS component_7 BIGINT DEFAULT NULL,
--- ADD
---     COLUMN IF NOT EXISTS component_0 BIGINT DEFAULT NULL;
 DROP TABLE IF EXISTS components;
 
 DROP TABLE IF EXISTS components_1;
@@ -120,35 +112,6 @@ WHERE
     e.source = co.node
     AND lts_access IN (1, 2, 3, 4);
 
--- CREATE TABLE component_5 AS
--- SELECT
---     *
--- FROM
---     pgr_connectedComponents(
---         'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access = 5'
---     );
--- ---- **** -----
--- CREATE TABLE component_6 AS
--- SELECT
---     *
--- FROM
---     pgr_connectedComponents(
---         'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access = 6'
---     );
--- CREATE TABLE component_7 AS
--- SELECT
---     *
--- FROM
---     pgr_connectedComponents(
---         'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access = 7'
---     );
--- CREATE TABLE component_0 AS
--- SELECT
---     *
--- FROM
---     pgr_connectedComponents(
---         'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access = 0'
---     );
 -- DROP TABLE IF EXISTS components;
 -- DROP TABLE IF EXISTS components_1;
 -- DROP TABLE IF EXISTS components_2;
