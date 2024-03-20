@@ -23,8 +23,6 @@ print("Settings loaded!")
 
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
-# %%
-
 queries = [
     "sql/02a_lts_cleanup.sql",
     "sql/02b_compute_initial_components.sql",
@@ -40,7 +38,6 @@ for i, q in enumerate(queries):
 
     print(f"Step {i+1} done!")
 
-# %%
 connection.close()
 
 print("Script 02 complete!")
