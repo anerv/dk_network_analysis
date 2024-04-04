@@ -1,12 +1,12 @@
 ALTER TABLE
     edges
 ADD
-    COLUMN IF NOT EXISTS bike_infrastructure_length FLOAT DEFAULT NULL;
+    COLUMN IF NOT EXISTS bike_length FLOAT DEFAULT NULL;
 
 UPDATE
     edges
 SET
-    bike_infrastructure_length = CASE
+    bike_length = CASE
         WHEN (
             bikeinfra_both_sides IS TRUE
             AND cycling_allowed IS TRUE
@@ -28,7 +28,7 @@ BEGIN
     FROM
         edges
     WHERE
-        bike_infrastructure_length IS NULL
+        bike_length IS NULL
         AND cycling_allowed IS TRUE;
 
 ASSERT bike_infra_count = 0,
@@ -46,7 +46,7 @@ BEGIN
     FROM
         edges
     WHERE
-        bike_infrastructure_length IS NULL
+        bike_length IS NULL
         AND lts_access IN (1, 2, 3, 4, 5);
 
 ASSERT lts_infra_count = 0,
