@@ -27,6 +27,7 @@ queries = [
     "sql/02a_lts_cleanup.sql",
     "sql/02b_compute_initial_components.sql",
     "sql/02c_close_lts_gaps.sql",
+    "sql/02d_compute_infrastructure_length.sql",
 ]
 
 for i, q in enumerate(queries):
