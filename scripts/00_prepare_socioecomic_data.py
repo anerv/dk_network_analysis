@@ -82,6 +82,7 @@ for col in areas.columns[4:]:
 # compute population density
 areas["population_density"] = areas.population / areas.geometry.area
 
+areas["id"] = areas.index
 # %%
 # Export
 areas.to_file("../data/processed/voting_areas.gpkg", driver="GPKG")
