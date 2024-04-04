@@ -7,3 +7,7 @@ CREATE EXTENSION postgis_topology;
 CREATE EXTENSION hstore;
 
 CREATE EXTENSION pgrouting;
+
+CREATE EXTENSION h3;
+
+CREATE EXTENSION h3_postgis;
