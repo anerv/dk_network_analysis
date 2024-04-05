@@ -4,6 +4,8 @@ DROP TABLE IF EXISTS split_edges;
 
 DROP TABLE IF EXISTS socio_edges;
 
+DROP TABLE IF EXISTS socio_buffer;
+
 CREATE INDEX IF NOT EXISTS lts_access_ix ON edges (lts_access);
 
 CREATE INDEX IF NOT EXISTS edges_geom_ix ON edges USING GIST (geometry);
@@ -272,3 +274,5 @@ WHERE
 DROP TABLE IF EXISTS split_edges;
 
 DROP TABLE IF EXISTS socio_edges;
+
+DROP TABLE IF EXISTS socio_buffer;

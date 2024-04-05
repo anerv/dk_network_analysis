@@ -2,23 +2,27 @@ DROP TABLE IF EXISTS density_h3;
 
 DROP TABLE IF EXISTS split_edges;
 
-DROP TABLE IF EXISTS socio_edges;
+DROP TABLE IF EXISTS h3_edges;
+
+DROP TABLE IF EXISTS h3_buffer;
 
 CREATE INDEX IF NOT EXISTS lts_access_ix ON edges (lts_access);
 
 CREATE INDEX IF NOT EXISTS edges_geom_ix ON edges USING GIST (geometry);
 
--- SPLIT EDGES WITH VOTING AREAS
+CREATE INDEX IF NOT EXISTS h3_geom_ix ON h3_grid USING GIST(geometry);
+
+-- SPLIT EDGES WITH HEXAGONS
 CREATE TABLE split_edges AS
 SELECT
     DISTINCT (ST_Dump(ST_Split(e.geometry, s.geometry))) .geom AS geometry,
     e.id
 FROM
     edges AS e
-    JOIN socio AS s ON ST_Intersects(e.geometry, s.geometry);
+    JOIN h3_grid AS s ON ST_Intersects(e.geometry, s.geometry);
 
 -- JOIN ADDITIONAL DATA TO SPLIT EDGES
-CREATE TABLE socio_edges AS
+CREATE TABLE h3_edges AS
 SELECT
     s.id,
     s.geometry,
@@ -31,34 +35,34 @@ FROM
     split_edges s
     JOIN edges e USING (id);
 
-CREATE TABLE socio_buffer AS
+CREATE TABLE h3_buffer AS
 SELECT
-    id,
+    hex_id,
     ST_Buffer(geometry, -1) AS geometry
 FROM
-    socio;
+    h3_grid;
 
-CREATE INDEX IF NOT EXISTS socio_buffer_geom_ix ON socio_buffer USING GIST (geometry);
+CREATE INDEX IF NOT EXISTS h3_buffer_geom_ix ON h3_buffer USING GIST (geometry);
 
-CREATE INDEX IF NOT EXISTS socio_edges_geom_ix ON socio_edges USING GIST (geometry);
+CREATE INDEX IF NOT EXISTS h3_edges_geom_ix ON h3_edges USING GIST (geometry);
 
 ALTER TABLE
-    socio_edges
+    h3_edges
 ADD
-    COLUMN IF NOT EXISTS socio_id BIGINT DEFAULT NULL;
+    COLUMN IF NOT EXISTS h3_id VARCHAR DEFAULT NULL;
 
 UPDATE
-    socio_edges
+    h3_edges
 SET
-    socio_id = s.id
+    h3_id = h.hex_id
 FROM
-    socio_buffer s
+    h3_buffer h
 WHERE
-    ST_Intersects(socio_edges.geometry, s.geometry);
+    ST_Intersects(h3_edges.geometry, h.geometry);
 
 -- RECOMPUTE BIKE INFRA LENGTH
 UPDATE
-    socio_edges
+    h3_edges
 SET
     bike_length = CASE
         WHEN (
@@ -75,93 +79,93 @@ SET
 CREATE TABLE IF NOT EXISTS density_h3 AS WITH lts_1 AS (
     SELECT
         SUM(bike_length) / 1000 AS lts_1_length,
-        socio_id
+        h3_id
     FROM
-        socio_edges
+        h3_edges
     WHERE
         lts_access IN (1)
     GROUP BY
-        socio_id
+        h3_id
 ),
 lts_2 AS (
     SELECT
         SUM(bike_length) / 1000 AS lts_2_length,
-        socio_id
+        h3_id
     FROM
-        socio_edges
+        h3_edges
     WHERE
         lts_access IN (2)
     GROUP BY
-        socio_id
+        h3_id
 ),
 lts_3 AS (
     SELECT
         SUM(bike_length) / 1000 AS lts_3_length,
-        socio_id
+        h3_id
     FROM
-        socio_edges
+        h3_edges
     WHERE
         lts_access IN (3)
     GROUP BY
-        socio_id
+        h3_id
 ),
 lts_4 AS (
     SELECT
         SUM(bike_length) / 1000 AS lts_4_length,
-        socio_id
+        h3_id
     FROM
-        socio_edges
+        h3_edges
     WHERE
         lts_access IN (4)
     GROUP BY
-        socio_id
+        h3_id
 ),
 lts_5 AS (
     SELECT
         SUM(bike_length) / 1000 AS lts_5_length,
-        socio_id
+        h3_id
     FROM
-        socio_edges
+        h3_edges
     WHERE
         lts_access IN (5)
     GROUP BY
-        socio_id
+        h3_id
 ),
 lts_6 AS (
     SELECT
         SUM(ST_Length(geometry)) / 1000 AS lts_6_length,
-        socio_id
+        h3_id
     FROM
-        socio_edges
+        h3_edges
     WHERE
         lts_access IN (6)
     GROUP BY
-        socio_id
+        h3_id
 ),
 lts_7 AS (
     SELECT
         SUM(ST_Length(geometry)) / 1000 AS lts_7_length,
-        socio_id
+        h3_id
     FROM
-        socio_edges
+        h3_edges
     WHERE
         lts_access IN (7)
     GROUP BY
-        socio_id
+        h3_id
 ),
 total_car AS (
     SELECT
         SUM(ST_Length(geometry)) / 1000 AS total_car,
-        socio_id
+        h3_id
     FROM
-        socio_edges
+        h3_edges
     WHERE
         car_traffic IS TRUE
     GROUP BY
-        socio_id
+        h3_id
 )
 SELECT
-    lts_1.socio_id,
+    lts_1.h3_id,
     lts_1.lts_1_length,
     lts_2.lts_2_length,
     lts_3.lts_3_length,
@@ -170,17 +174,17 @@ SELECT
     lts_6.lts_6_length,
     lts_7.lts_7_length,
     total_car.total_car,
-    socio.geometry
+    h3_grid.geometry
 FROM
-    socio
-    LEFT JOIN lts_1 ON socio.id = lts_1.socio_id
-    LEFT JOIN lts_2 ON socio.id = lts_2.socio_id
-    LEFT JOIN lts_3 ON socio.id = lts_3.socio_id
-    LEFT JOIN lts_4 ON socio.id = lts_4.socio_id
-    LEFT JOIN lts_5 ON socio.id = lts_5.socio_id
-    LEFT JOIN lts_6 ON socio.id = lts_6.socio_id
-    LEFT JOIN lts_7 ON socio.id = lts_7.socio_id
-    LEFT JOIN total_car ON socio.id = total_car.socio_id;
+    h3_grid
+    LEFT JOIN lts_1 ON h3_grid.hex_id = lts_1.h3_id
+    LEFT JOIN lts_2 ON h3_grid.hex_id = lts_2.h3_id
+    LEFT JOIN lts_3 ON h3_grid.hex_id = lts_3.h3_id
+    LEFT JOIN lts_4 ON h3_grid.hex_id = lts_4.h3_id
+    LEFT JOIN lts_5 ON h3_grid.hex_id = lts_5.h3_id
+    LEFT JOIN lts_6 ON h3_grid.hex_id = lts_6.h3_id
+    LEFT JOIN lts_7 ON h3_grid.hex_id = lts_7.h3_id
+    LEFT JOIN total_car ON h3_grid.hex_id = total_car.h3_id;
 
 ALTER TABLE
     density_h3
@@ -271,4 +275,6 @@ WHERE
 
 DROP TABLE IF EXISTS split_edges;
 
-DROP TABLE IF EXISTS socio_edges;
+DROP TABLE IF EXISTS h3_edges;
+
+DROP TABLE IF EXISTS h3_buffer;

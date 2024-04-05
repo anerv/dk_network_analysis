@@ -20,7 +20,7 @@ def create_h3_grid(polygon_gdf, hex_resolution, crs, buffer_dist):
 
     # Find the hexagons within the shape boundary using PolyFill
     hex_list = []
-    for n, g in enumerate(union_poly):
+    for n, g in enumerate(union_poly.geoms):
         temp = mapping(g)
         temp["coordinates"] = [[[j[1], j[0]] for j in i] for i in temp["coordinates"]]
         hex_list.extend(h3.polyfill(temp, res=hex_resolution))
