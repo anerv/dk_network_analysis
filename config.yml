@@ -13,6 +13,8 @@ network_nodes: 'osm_nodes_export'
 socio_fp: "../data/processed/voting_areas.gpkg"
 adm_boundaries_fp: "../data/input/adm_boundaries/muni_boundaries.gpkg"
 
+h3_resolution: 10
+
 # Define LTS levels to compare
 LTS:
 - 1
