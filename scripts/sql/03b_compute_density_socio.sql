@@ -1,22 +1,57 @@
 DROP TABLE IF EXISTS density_socio;
 
-DROP TABLE IF EXISTS split_edges;
+DROP TABLE IF EXISTS split_edges_socio;
 
 DROP TABLE IF EXISTS socio_edges;
 
 DROP TABLE IF EXISTS socio_buffer;
 
+DROP TABLE IF EXISTS _segmented_lines;
+
 CREATE INDEX IF NOT EXISTS lts_access_ix ON edges (lts_access);
 
 CREATE INDEX IF NOT EXISTS edges_geom_ix ON edges USING GIST (geometry);
 
+--SUBDIVIDE EDGES TO MAKE SURE THEY ARE ONLY INTERSECTING ONE AREA/HEXAGON
+WITH segs(id, geometry) AS (
+    SELECT
+        id,
+        geometry
+    FROM
+        edges
+)
+SELECT
+    ROW_NUMBER () OVER () AS row_number,
+    id,
+    ST_LineSubstring(geometry, startfrac, LEAST(endfrac, 1)) AS geometry INTO _segmented_lines
+FROM
+    (
+        SELECT
+            id,
+            geometry,
+            ST_Length(geometry) len,
+            400 sublen
+        FROM
+            segs
+    ) AS d
+    CROSS JOIN LATERAL (
+        SELECT
+            i,
+            (sublen * i) / len AS startfrac,
+            (sublen * (i + 1)) / len AS endfrac
+        FROM
+            generate_series(0, floor(len / sublen) :: INTEGER) AS t(i)
+        WHERE
+            (sublen * i) / len <> 1.0
+    ) AS d2;
+
 -- SPLIT EDGES WITH VOTING AREAS
-CREATE TABLE split_edges AS
+CREATE TABLE split_edges_socio AS
 SELECT
     DISTINCT (ST_Dump(ST_Split(e.geometry, s.geometry))) .geom AS geometry,
     e.id
 FROM
-    edges AS e
+    _segmented_lines AS e
     JOIN socio AS s ON ST_Intersects(e.geometry, s.geometry);
 
 -- JOIN ADDITIONAL DATA TO SPLIT EDGES
@@ -30,7 +65,7 @@ SELECT
     e.lts_access,
     e.car_traffic
 FROM
-    split_edges s
+    split_edges_socio s
     JOIN edges e USING (id);
 
 CREATE TABLE socio_buffer AS
@@ -163,7 +198,6 @@ total_car AS (
         socio_id
 )
 SELECT
-    lts_1.socio_id,
     lts_1.lts_1_length,
     lts_2.lts_2_length,
     lts_3.lts_3_length,
@@ -172,6 +206,7 @@ SELECT
     lts_6.lts_6_length,
     lts_7.lts_7_length,
     total_car.total_car,
+    socio.id,
     socio.geometry
 FROM
     socio
@@ -187,6 +222,8 @@ FROM
 ALTER TABLE
     density_socio
 ADD
+    COLUMN IF NOT EXISTS total_network DOUBLE PRECISION DEFAULT NULL,
+ADD
     COLUMN IF NOT EXISTS lts_1_dens DOUBLE PRECISION DEFAULT NULL,
 ADD
     COLUMN IF NOT EXISTS lts_1_2_dens DOUBLE PRECISION DEFAULT NULL,
@@ -195,7 +232,14 @@ ADD
 ADD
     COLUMN IF NOT EXISTS lts_1_4_dens DOUBLE PRECISION DEFAULT NULL,
 ADD
-    COLUMN IF NOT EXISTS total_car_dens DOUBLE PRECISION DEFAULT NULL;
+    COLUMN IF NOT EXISTS total_car_dens DOUBLE PRECISION DEFAULT NULL,
+ADD
+    COLUMN IF NOT EXISTS total_network_dens DOUBLE PRECISION DEFAULT NULL;
+
+UPDATE
+    density_socio
+SET
+    total_network = lts_1_length + lts_2_length + lts_3_length + lts_4_length + lts_7_length;
 
 UPDATE
     density_socio
@@ -234,7 +278,8 @@ SET
     lts_1_4_dens = (
         lts_1_length + lts_2_length + lts_3_length + lts_4_length
     ) / (ST_Area(geometry) / 1000000),
-    total_car_dens = (total_car) / (ST_Area(geometry) / 1000000);
+    total_car_dens = (total_car) / (ST_Area(geometry) / 1000000),
+    total_network_dens = (total_network) / (ST_Area(geometry) / 1000000);
 
 UPDATE
     density_socio
@@ -271,7 +316,67 @@ SET
 WHERE
     total_car_dens IS NULL;
 
-DROP TABLE IF EXISTS split_edges;
+-- CALCULATE RELATIVE LENGTH
+ALTER TABLE
+    density_socio
+ADD
+    COLUMN lts_1_length_rel DOUBLE PRECISION DEFAULT NULL,
+ADD
+    COLUMN lts_1_2_length_rel DOUBLE PRECISION DEFAULT NULL,
+ADD
+    COLUMN lts_1_3_length_rel DOUBLE PRECISION DEFAULT NULL,
+ADD
+    COLUMN lts_1_4_length_rel DOUBLE PRECISION DEFAULT NULL,
+ADD
+    COLUMN lts_7_length_rel DOUBLE PRECISION DEFAULT NULL;
+
+UPDATE
+    density_socio
+SET
+    lts_1_length_rel = lts_1_length / total_network,
+    lts_1_2_length_rel = lts_1_2_length / total_network,
+    lts_1_3_length_rel = lts_1_3_length / total_network,
+    lts_1_4_length_rel = lts_1_4_length / total_network,
+    lts_7_length_rel = lts_7_length / total_network;
+
+DO $$
+DECLARE
+    id_missing INT;
+
+BEGIN
+    SELECT
+        COUNT(*) INTO id_missing
+    FROM
+        density_socio
+    WHERE
+        id IS NULL;
+
+ASSERT id_missing = 0,
+'Areas missing id';
+
+END $$;
+
+DO $$
+DECLARE
+    miscalculated INT;
+
+BEGIN
+    SELECT
+        COUNT(*) INTO miscalculated
+    FROM
+        density_socio
+    WHERE
+        lts_1_2_dens < lts_1_dens
+        OR lts_1_3_dens < lts_1_2_dens
+        OR lts_1_4_dens < lts_1_3_dens
+        OR total_network_dens < lts_1_4_dens;
+
+ASSERT miscalculated = 0,
+'Problem with network density calculation. Check if the network density is calculated correctly.';
+
+END $$;
+
+DROP TABLE IF EXISTS split_edges_socio;
 
 DROP TABLE IF EXISTS socio_edges;
 

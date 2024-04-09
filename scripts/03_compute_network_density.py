@@ -22,6 +22,8 @@ with open(r"../config.yml") as file:
 
     crs = parsed_yaml_file["CRS"]
 
+    h3_resolution = parsed_yaml_file["h3_resolution"]
+
 print("Settings loaded!")
 
 
@@ -33,7 +35,7 @@ study_area_poly = gpd.GeoDataFrame.from_postgis(
     q, engine, crs="EPSG:25832", geom_col="geometry"
 )
 
-h3_grid = h3f.create_h3_grid(study_area_poly, 8, crs, 500)
+h3_grid = h3f.create_h3_grid(study_area_poly, h3_resolution, crs, 500)
 
 assert h3_grid.crs == crs
 
@@ -51,6 +53,7 @@ test = dbf.run_query_pg(q, connection)
 
 print(test)
 
+# %%
 queries = [
     "sql/03a_compute_density_municipality.sql",
     "sql/03b_compute_density_socio.sql",

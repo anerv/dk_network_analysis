@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS density_h3;
 
-DROP TABLE IF EXISTS split_edges;
+DROP TABLE IF EXISTS split_edges_h3;
 
 DROP TABLE IF EXISTS h3_edges;
 
@@ -12,13 +12,13 @@ CREATE INDEX IF NOT EXISTS edges_geom_ix ON edges USING GIST (geometry);
 
 CREATE INDEX IF NOT EXISTS h3_geom_ix ON h3_grid USING GIST(geometry);
 
--- SPLIT EDGES WITH HEXAGONS
-CREATE TABLE split_edges AS
+--SPLIT EDGES WITH HEXAGONS 
+CREATE TABLE split_edges_h3 AS
 SELECT
     DISTINCT (ST_Dump(ST_Split(e.geometry, s.geometry))) .geom AS geometry,
     e.id
 FROM
-    edges AS e
+    _segmented_lines AS e
     JOIN h3_grid AS s ON ST_Intersects(e.geometry, s.geometry);
 
 -- JOIN ADDITIONAL DATA TO SPLIT EDGES
@@ -32,7 +32,7 @@ SELECT
     e.lts_access,
     e.car_traffic
 FROM
-    split_edges s
+    split_edges_h3 s
     JOIN edges e USING (id);
 
 CREATE TABLE h3_buffer AS
@@ -165,7 +165,6 @@ total_car AS (
         h3_id
 )
 SELECT
-    lts_1.h3_id,
     lts_1.lts_1_length,
     lts_2.lts_2_length,
     lts_3.lts_3_length,
@@ -174,6 +173,7 @@ SELECT
     lts_6.lts_6_length,
     lts_7.lts_7_length,
     total_car.total_car,
+    h3_grid.hex_id,
     h3_grid.geometry
 FROM
     h3_grid
@@ -189,6 +189,8 @@ FROM
 ALTER TABLE
     density_h3
 ADD
+    COLUMN IF NOT EXISTS total_network DOUBLE PRECISION DEFAULT NULL,
+ADD
     COLUMN IF NOT EXISTS lts_1_dens DOUBLE PRECISION DEFAULT NULL,
 ADD
     COLUMN IF NOT EXISTS lts_1_2_dens DOUBLE PRECISION DEFAULT NULL,
@@ -197,7 +199,14 @@ ADD
 ADD
     COLUMN IF NOT EXISTS lts_1_4_dens DOUBLE PRECISION DEFAULT NULL,
 ADD
-    COLUMN IF NOT EXISTS total_car_dens DOUBLE PRECISION DEFAULT NULL;
+    COLUMN IF NOT EXISTS total_car_dens DOUBLE PRECISION DEFAULT NULL,
+ADD
+    COLUMN IF NOT EXISTS total_network_dens DOUBLE PRECISION DEFAULT NULL;
+
+UPDATE
+    density_h3
+SET
+    total_network = lts_1_length + lts_2_length + lts_3_length + lts_4_length + lts_7_length;
 
 UPDATE
     density_h3
@@ -236,7 +245,8 @@ SET
     lts_1_4_dens = (
         lts_1_length + lts_2_length + lts_3_length + lts_4_length
     ) / (ST_Area(geometry) / 1000000),
-    total_car_dens = (total_car) / (ST_Area(geometry) / 1000000);
+    total_car_dens = (total_car) / (ST_Area(geometry) / 1000000),
+    total_network_dens = (total_network) / (ST_Area(geometry) / 1000000);
 
 UPDATE
     density_h3
@@ -273,8 +283,70 @@ SET
 WHERE
     total_car_dens IS NULL;
 
-DROP TABLE IF EXISTS split_edges;
+-- CALCULATE RELATIVE LENGTH
+ALTER TABLE
+    density_h3
+ADD
+    COLUMN lts_1_length_rel DOUBLE PRECISION DEFAULT NULL,
+ADD
+    COLUMN lts_1_2_length_rel DOUBLE PRECISION DEFAULT NULL,
+ADD
+    COLUMN lts_1_3_length_rel DOUBLE PRECISION DEFAULT NULL,
+ADD
+    COLUMN lts_1_4_length_rel DOUBLE PRECISION DEFAULT NULL,
+ADD
+    COLUMN lts_7_length_rel DOUBLE PRECISION DEFAULT NULL;
+
+UPDATE
+    density_h3
+SET
+    lts_1_length_rel = lts_1_length / total_network,
+    lts_1_2_length_rel = lts_1_2_length / total_network,
+    lts_1_3_length_rel = lts_1_3_length / total_network,
+    lts_1_4_length_rel = lts_1_4_length / total_network,
+    lts_7_length_rel = lts_7_length / total_network;
+
+DO $$
+DECLARE
+    id_missing INT;
+
+BEGIN
+    SELECT
+        COUNT(*) INTO id_missing
+    FROM
+        density_h3
+    WHERE
+        hex_id IS NULL;
+
+ASSERT id_missing = 0,
+'Areas missing id';
+
+END $$;
+
+DO $$
+DECLARE
+    miscalculated INT;
+
+BEGIN
+    SELECT
+        COUNT(*) INTO miscalculated
+    FROM
+        density_h3
+    WHERE
+        lts_1_2_dens < lts_1_dens
+        OR lts_1_3_dens < lts_1_2_dens
+        OR lts_1_4_dens < lts_1_3_dens
+        OR total_network_dens < lts_1_4_dens;
+
+ASSERT miscalculated = 0,
+'Problem with network density calculation. Check if the network density is calculated correctly.';
+
+END $$;
+
+DROP TABLE IF EXISTS split_edges_h3;
 
 DROP TABLE IF EXISTS h3_edges;
 
 DROP TABLE IF EXISTS h3_buffer;
+
+DROP TABLE IF EXISTS _segments;
