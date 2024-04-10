@@ -112,8 +112,12 @@ WHERE
     e.source = co.node
     AND lts_access IN (1, 2, 3, 4);
 
--- DROP TABLE IF EXISTS components;
--- DROP TABLE IF EXISTS components_1;
--- DROP TABLE IF EXISTS components_2;
--- DROP TABLE IF EXISTS components_3;
--- DROP TABLE IF EXISTS components_4;
+DROP TABLE IF EXISTS components;
+
+DROP TABLE IF EXISTS components_1;
+
+DROP TABLE IF EXISTS components_2;
+
+DROP TABLE IF EXISTS components_3;
+
+DROP TABLE IF EXISTS components_4;
