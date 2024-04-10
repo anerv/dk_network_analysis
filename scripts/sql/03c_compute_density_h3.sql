@@ -206,11 +206,6 @@ ADD
 UPDATE
     density_h3
 SET
-    total_network = lts_1_length + lts_2_length + lts_3_length + lts_4_length + lts_7_length;
-
-UPDATE
-    density_h3
-SET
     lts_1_length = 0
 WHERE
     lts_1_length IS NULL;
@@ -235,6 +230,11 @@ SET
     lts_4_length = 0
 WHERE
     lts_4_length IS NULL;
+
+UPDATE
+    density_h3
+SET
+    total_network = lts_1_length + lts_2_length + lts_3_length + lts_4_length + lts_7_length;
 
 UPDATE
     density_h3
@@ -287,15 +287,15 @@ WHERE
 ALTER TABLE
     density_h3
 ADD
-    COLUMN lts_1_length_rel DOUBLE PRECISION DEFAULT NULL,
+    COLUMN IF NOT EXISTS lts_1_length_rel DOUBLE PRECISION DEFAULT NULL,
 ADD
-    COLUMN lts_1_2_length_rel DOUBLE PRECISION DEFAULT NULL,
+    COLUMN IF NOT EXISTS lts_1_2_length_rel DOUBLE PRECISION DEFAULT NULL,
 ADD
-    COLUMN lts_1_3_length_rel DOUBLE PRECISION DEFAULT NULL,
+    COLUMN IF NOT EXISTS lts_1_3_length_rel DOUBLE PRECISION DEFAULT NULL,
 ADD
-    COLUMN lts_1_4_length_rel DOUBLE PRECISION DEFAULT NULL,
+    COLUMN IF NOT EXISTS lts_1_4_length_rel DOUBLE PRECISION DEFAULT NULL,
 ADD
-    COLUMN lts_7_length_rel DOUBLE PRECISION DEFAULT NULL;
+    COLUMN IF NOT EXISTS lts_7_length_rel DOUBLE PRECISION DEFAULT NULL;
 
 UPDATE
     density_h3

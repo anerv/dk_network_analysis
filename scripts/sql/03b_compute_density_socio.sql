@@ -30,7 +30,7 @@ FROM
             id,
             geometry,
             ST_Length(geometry) len,
-            400 sublen
+            200 sublen
         FROM
             segs
     ) AS d
@@ -44,6 +44,11 @@ FROM
         WHERE
             (sublen * i) / len <> 1.0
     ) AS d2;
+
+DELETE FROM
+    _segmented_lines
+WHERE
+    ST_GeometryType(geometry) = 'ST_Point';
 
 -- SPLIT EDGES WITH VOTING AREAS
 CREATE TABLE split_edges_socio AS
@@ -239,11 +244,6 @@ ADD
 UPDATE
     density_socio
 SET
-    total_network = lts_1_length + lts_2_length + lts_3_length + lts_4_length + lts_7_length;
-
-UPDATE
-    density_socio
-SET
     lts_1_length = 0
 WHERE
     lts_1_length IS NULL;
@@ -268,6 +268,11 @@ SET
     lts_4_length = 0
 WHERE
     lts_4_length IS NULL;
+
+UPDATE
+    density_socio
+SET
+    total_network = lts_1_length + lts_2_length + lts_3_length + lts_4_length + lts_7_length;
 
 UPDATE
     density_socio
@@ -320,15 +325,15 @@ WHERE
 ALTER TABLE
     density_socio
 ADD
-    COLUMN lts_1_length_rel DOUBLE PRECISION DEFAULT NULL,
+    COLUMN IF NOT EXISTS lts_1_length_rel DOUBLE PRECISION DEFAULT NULL,
 ADD
-    COLUMN lts_1_2_length_rel DOUBLE PRECISION DEFAULT NULL,
+    COLUMN IF NOT EXISTS lts_1_2_length_rel DOUBLE PRECISION DEFAULT NULL,
 ADD
-    COLUMN lts_1_3_length_rel DOUBLE PRECISION DEFAULT NULL,
+    COLUMN IF NOT EXISTS lts_1_3_length_rel DOUBLE PRECISION DEFAULT NULL,
 ADD
-    COLUMN lts_1_4_length_rel DOUBLE PRECISION DEFAULT NULL,
+    COLUMN IF NOT EXISTS lts_1_4_length_rel DOUBLE PRECISION DEFAULT NULL,
 ADD
-    COLUMN lts_7_length_rel DOUBLE PRECISION DEFAULT NULL;
+    COLUMN IF NOT EXISTS lts_7_length_rel DOUBLE PRECISION DEFAULT NULL;
 
 UPDATE
     density_socio
