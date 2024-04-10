@@ -351,4 +351,4 @@ DROP TABLE IF EXISTS h3_edges;
 
 DROP TABLE IF EXISTS h3_buffer;
 
-DROP TABLE IF EXISTS _segments;
+DROP TABLE IF EXISTS _segmented_lines;
