@@ -137,11 +137,6 @@ ADD
 UPDATE
     density_municipality
 SET
-    total_network = lts_1_length + lts_2_length + lts_3_length + lts_4_length + lts_7_length;
-
-UPDATE
-    density_municipality
-SET
     lts_1_length = 0
 WHERE
     lts_1_length IS NULL;
@@ -166,6 +161,11 @@ SET
     lts_4_length = 0
 WHERE
     lts_4_length IS NULL;
+
+UPDATE
+    density_municipality
+SET
+    total_network = lts_1_length + lts_2_length + lts_3_length + lts_4_length + lts_7_length;
 
 UPDATE
     density_municipality
