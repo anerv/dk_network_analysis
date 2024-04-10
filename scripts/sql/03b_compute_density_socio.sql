@@ -272,6 +272,13 @@ WHERE
 UPDATE
     density_socio
 SET
+    lts_7_length = 0
+WHERE
+    lts_7_length IS NULL;
+
+UPDATE
+    density_socio
+SET
     total_network = lts_1_length + lts_2_length + lts_3_length + lts_4_length + lts_7_length;
 
 UPDATE
