@@ -91,8 +91,10 @@ FROM
     components_1 co
 WHERE
     e.source = co.node
-    AND lts_access = 1
-    OR lts_1_gap IS TRUE;
+    AND (
+        lts_access = 1
+        OR lts_1_gap IS TRUE
+    );
 
 UPDATE
     edges e
@@ -102,9 +104,11 @@ FROM
     components_2 co
 WHERE
     e.source = co.node
-    AND lts_access IN (1, 2)
-    OR lts_1_gap IS TRUE
-    OR lts_2_gap IS TRUE;
+    AND (
+        lts_access IN (1, 2)
+        OR lts_1_gap IS TRUE
+        OR lts_2_gap IS TRUE
+    );
 
 ;
 
@@ -116,10 +120,12 @@ FROM
     components_3 co
 WHERE
     e.source = co.node
-    AND lts_access IN (1, 2, 3)
-    OR lts_1_gap IS TRUE
-    OR lts_2_gap IS TRUE
-    OR lts_3_gap IS TRUE;
+    AND (
+        lts_access IN (1, 2, 3)
+        OR lts_1_gap IS TRUE
+        OR lts_2_gap IS TRUE
+        OR lts_3_gap IS TRUE
+    );
 
 UPDATE
     edges e
@@ -129,11 +135,13 @@ FROM
     components_4 co
 WHERE
     e.source = co.node
-    AND lts_access IN (1, 2, 3, 4)
-    OR lts_1_gap IS TRUE
-    OR lts_2_gap IS TRUE
-    OR lts_3_gap IS TRUE
-    OR lts_4_gap IS TRUE;
+    AND (
+        lts_access IN (1, 2, 3, 4)
+        OR lts_1_gap IS TRUE
+        OR lts_2_gap IS TRUE
+        OR lts_3_gap IS TRUE
+        OR lts_4_gap IS TRUE
+    );
 
 UPDATE
     edges e
