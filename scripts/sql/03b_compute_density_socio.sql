@@ -232,6 +232,14 @@ ADD
 ADD
     COLUMN IF NOT EXISTS lts_1_dens DOUBLE PRECISION DEFAULT NULL,
 ADD
+    COLUMN IF NOT EXISTS lts_2_dens DOUBLE PRECISION DEFAULT NULL,
+ADD
+    COLUMN IF NOT EXISTS lts_3_dens DOUBLE PRECISION DEFAULT NULL,
+ADD
+    COLUMN IF NOT EXISTS lts_4_dens DOUBLE PRECISION DEFAULT NULL,
+ADD
+    COLUMN IF NOT EXISTS lts_7_dens DOUBLE PRECISION DEFAULT NULL,
+ADD
     COLUMN IF NOT EXISTS lts_1_2_dens DOUBLE PRECISION DEFAULT NULL,
 ADD
     COLUMN IF NOT EXISTS lts_1_3_dens DOUBLE PRECISION DEFAULT NULL,
@@ -286,6 +294,10 @@ UPDATE
     density_socio
 SET
     lts_1_dens = lts_1_length / (ST_Area(geometry) / 1000000),
+    lts_2_dens = lts_2_length / (ST_Area(geometry) / 1000000),
+    lts_3_dens = lts_3_length / (ST_Area(geometry) / 1000000),
+    lts_4_dens = lts_4_length / (ST_Area(geometry) / 1000000),
+    lts_7_dens = lts_7_length / (ST_Area(geometry) / 1000000),
     lts_1_2_dens = (lts_1_length + lts_2_length) / (ST_Area(geometry) / 1000000),
     lts_1_3_dens = (lts_1_length + lts_2_length + lts_3_length) / (ST_Area(geometry) / 1000000),
     lts_1_4_dens = (
@@ -393,6 +405,5 @@ END $$;
 
 DROP TABLE IF EXISTS split_edges_socio;
 
-DROP TABLE IF EXISTS socio_edges;
-
+--DROP TABLE IF EXISTS socio_edges;
 DROP TABLE IF EXISTS socio_buffer;
