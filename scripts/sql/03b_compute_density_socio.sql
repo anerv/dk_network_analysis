@@ -364,7 +364,9 @@ SET
     lts_1_4_length_rel = (
         lts_1_length + lts_2_length + lts_3_length + lts_4_length
     ) / total_network,
-    lts_7_length_rel = lts_7_length / total_network;
+    lts_7_length_rel = lts_7_length / total_network
+WHERE
+    total_network > 0;
 
 DO $$
 DECLARE
