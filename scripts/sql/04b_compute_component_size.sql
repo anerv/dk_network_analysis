@@ -6,7 +6,8 @@ CREATE TABLE component_edges AS
 SELECT
     id,
     highway,
-    --bike_length,
+    bike_length,
+    municipality,
     component_all,
     component_1,
     component_1_2,
@@ -19,11 +20,12 @@ FROM
 WHERE
     component_all IS NOT NULL;
 
-CREATE TABLE component_size AS (
+CREATE TABLE component_size_all AS (
     SELECT
         COUNT(id),
         component_all,
-        SUM(ST_Length(geometry)) AS LENGTH,
+        SUM(ST_Length(geometry)) AS geom_length,
+        SUM(bike_length) AS bike_length,
         ARRAY_AGG(DISTINCT id) AS ids,
         ARRAY_AGG(DISTINCT highway) AS highways
     FROM
@@ -43,6 +45,70 @@ WHERE
         FROM
             component_size
         WHERE
-            LENGTH < 100
+            geom_length < 100
             AND 'cycleway' <> ANY (highways)
     );
+
+CREATE TABLE component_size_1 AS (
+    SELECT
+        COUNT(id),
+        component_all,
+        SUM(ST_Length(geometry)) AS geom_length,
+        SUM(bike_length) AS bike_length,
+        ARRAY_AGG(DISTINCT id) AS ids,
+        ARRAY_AGG(DISTINCT highway) AS highways
+    FROM
+        component_edges
+    WHERE
+        component_1 IS NOT NULL
+    GROUP BY
+        component_1
+);
+
+CREATE TABLE component_size_2 AS (
+    SELECT
+        COUNT(id),
+        component_all,
+        SUM(ST_Length(geometry)) AS geom_length,
+        SUM(bike_length) AS bike_length,
+        ARRAY_AGG(DISTINCT id) AS ids,
+        ARRAY_AGG(DISTINCT highway) AS highways
+    FROM
+        component_edges
+    WHERE
+        component_2 IS NOT NULL
+    GROUP BY
+        component_2
+);
+
+CREATE TABLE component_size_3 AS (
+    SELECT
+        COUNT(id),
+        component_all,
+        SUM(ST_Length(geometry)) AS geom_length,
+        SUM(bike_length) AS bike_length,
+        ARRAY_AGG(DISTINCT id) AS ids,
+        ARRAY_AGG(DISTINCT highway) AS highways
+    FROM
+        component_edges
+    WHERE
+        component_3 IS NOT NULL
+    GROUP BY
+        component_3
+);
+
+CREATE TABLE component_size_4 AS (
+    SELECT
+        COUNT(id),
+        component_all,
+        SUM(ST_Length(geometry)) AS geom_length,
+        SUM(bike_length) AS bike_length,
+        ARRAY_AGG(DISTINCT id) AS ids,
+        ARRAY_AGG(DISTINCT highway) AS highways
+    FROM
+        component_edges
+    WHERE
+        component_4 IS NOT NULL
+    GROUP BY
+        component_4
+);
