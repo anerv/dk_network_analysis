@@ -1,0 +1,4 @@
+-- discard components OF SIZE less than XXX FOR ALL components (IF service, path, footway)
+-- UPDATE comp VALUE OR make NEW comp tables ?
+-- FIRST - IDENTIFY - BY COMPUTING COMP SIZES
+-- ALSO COMPUTE UNIQUE/DISTINCT HIGHWAY VALUES IN COMPS
