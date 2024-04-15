@@ -1,14 +1,13 @@
 # %%
 import yaml
 from src import db_functions as dbf
-from src import h3_functions as h3f
 from src import plotting_functions as plot_funcs
 import geopandas as gpd
 import pandas as pd
 import math
 import matplotlib.pyplot as plt
 
-exec("../settings/plotting.py")
+exec(open("settings/plotting.py").read())
 plot_funcs.set_renderer("png")
 # %%
 
@@ -41,7 +40,7 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 queries = [
     "sql/04a_compute_components.sql",
     "sql/04b_compute_component_size.sql",
-    "sql/04c_compute_local_component_count.sql",
+    # "sql/04c_compute_local_component_count.sql",
 ]
 
 for i, q in enumerate(queries):
