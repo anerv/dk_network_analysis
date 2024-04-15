@@ -199,6 +199,7 @@ total_car AS (
         socio_edges
     WHERE
         car_traffic IS TRUE
+        AND lts_access IN (1, 2, 3, 4, 7)
     GROUP BY
         socio_id
 )
