@@ -121,7 +121,7 @@ WHERE
 ALTER TABLE
     density_municipality
 ADD
-    COLUMN IF NOT EXISTS total_network DOUBLE PRECISION DEFAULT NULL,
+    COLUMN IF NOT EXISTS total_network_length DOUBLE PRECISION DEFAULT NULL,
 ADD
     COLUMN IF NOT EXISTS lts_1_dens DOUBLE PRECISION DEFAULT NULL,
 ADD
@@ -181,7 +181,7 @@ WHERE
 UPDATE
     density_municipality
 SET
-    total_network = lts_1_length + lts_2_length + lts_3_length + lts_4_length + lts_7_length;
+    total_network_length = lts_1_length + lts_2_length + lts_3_length + lts_4_length + lts_7_length;
 
 UPDATE
     density_municipality
@@ -197,7 +197,7 @@ SET
         lts_1_length + lts_2_length + lts_3_length + lts_4_length
     ) / (ST_Area(geometry) / 1000000),
     total_car_dens = (total_car_length) / (ST_Area(geometry) / 1000000),
-    total_network_dens = (total_network) / (ST_Area(geometry) / 1000000);
+    total_network_dens = (total_network_length) / (ST_Area(geometry) / 1000000);
 
 -- CALCULATE RELATIVE LENGTH
 ALTER TABLE
@@ -216,13 +216,13 @@ ADD
 UPDATE
     density_municipality
 SET
-    lts_1_length_rel = lts_1_length / total_network,
-    lts_1_2_length_rel = (lts_1_length + lts_2_length) / total_network,
-    lts_1_3_length_rel = (lts_1_length + lts_2_length + lts_3_length) / total_network,
+    lts_1_length_rel = lts_1_length / total_network_length,
+    lts_1_2_length_rel = (lts_1_length + lts_2_length) / total_network_length,
+    lts_1_3_length_rel = (lts_1_length + lts_2_length + lts_3_length) / total_network_length,
     lts_1_4_length_rel = (
         lts_1_length + lts_2_length + lts_3_length + lts_4_length
-    ) / total_network,
-    lts_7_length_rel = lts_7_length / total_network;
+    ) / total_network_length,
+    lts_7_length_rel = lts_7_length / total_network_length;
 
 DO $$
 DECLARE
