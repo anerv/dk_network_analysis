@@ -1,7 +1,7 @@
 import yaml
 from src import db_functions as dbf
 
-with open(r"../../config.yml") as file:
+with open(r"../config.yml") as file:
     parsed_yaml_file = yaml.load(file, Loader=yaml.FullLoader)
 
     db_name = parsed_yaml_file["db_name"]

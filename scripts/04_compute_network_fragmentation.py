@@ -6,8 +6,8 @@ import pandas as pd
 import math
 import matplotlib.pyplot as plt
 
-exec(open("settings/plotting.py").read())
-exec(open("settings/yaml_variables.py").read())
+exec(open("../settings/yaml_variables.py").read())
+exec(open("../settings/plotting.py").read())
 plot_funcs.set_renderer("png")
 
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
@@ -150,6 +150,8 @@ h3_components = gpd.GeoDataFrame.from_postgis(
     crs=crs,
     geom_col="geometry",
 )
+
+# %%
 
 # %%
 

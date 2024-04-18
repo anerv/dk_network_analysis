@@ -2,7 +2,7 @@
 import geopandas as gpd
 import pandas as pd
 
-exec(open("settings/yaml_variables.py").read())
+exec(open("../settings/yaml_variables.py").read())
 
 # %%
 pop = pd.read_csv(
