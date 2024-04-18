@@ -1,5 +1,4 @@
 # %%
-import yaml
 from src import db_functions as dbf
 from src import plotting_functions as plot_funcs
 import geopandas as gpd
@@ -8,34 +7,13 @@ import math
 import matplotlib.pyplot as plt
 
 exec(open("settings/plotting.py").read())
+exec(open("settings/yaml_variables.py").read())
 plot_funcs.set_renderer("png")
-# %%
-
-with open(r"../config.yml") as file:
-    parsed_yaml_file = yaml.load(file, Loader=yaml.FullLoader)
-
-    db_name = parsed_yaml_file["db_name"]
-    input_db_name = parsed_yaml_file["input_db_name"]
-    db_user = parsed_yaml_file["db_user"]
-    db_password = parsed_yaml_file["db_password"]
-    db_host = parsed_yaml_file["db_host"]
-    db_port = parsed_yaml_file["db_port"]
-    network_edges = parsed_yaml_file["network_edges"]
-    network_nodes = parsed_yaml_file["network_nodes"]
-
-    adm_fp = parsed_yaml_file["adm_boundaries_fp"]
-    socio_fp = parsed_yaml_file["socio_fp"]
-
-    crs = parsed_yaml_file["CRS"]
-
-    h3_resolution = parsed_yaml_file["h3_resolution"]
-
-print("Settings loaded!")
-
 
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
+
 # %%
 queries = [
     "sql/04a_compute_components.sql",
@@ -51,9 +29,6 @@ for i, q in enumerate(queries):
         break
 
     print(f"Step {i+1} done!")
-
-
-# %%
 
 
 # %%
@@ -99,6 +74,7 @@ component_size_dfs = []
 
 for df in component_size_dfs:
     make_zipf_component_plot(df, "bike_length", "all", f"../results/{df}_zipf.png")
+
 # %%
 # Plot component size distribution per municipality
 
@@ -133,12 +109,51 @@ for muni in municipalities:
         make_zipf_component_plot(grouped_edges, c)
 # %%
 
-# Plot component counts per muni, socio, and H3 for each LTS?
-# Make 3 dataframes for muni, socio, h3:
-# each dataframe has the component count for each LTS and the total length of each LTS
-
-# Make in SQL
 # %%
+# Compute local component count
+
+queries = [
+    "sql/04d_component_length_comparison.sql",
+]
+
+for i, q in enumerate(queries):
+    print(f"Running step {i+1}...")
+    result = dbf.run_query_pg(q, connection)
+    if result == "error":
+        print("Please fix error before rerunning and reconnect to the database")
+        break
+
+    print(f"Step {i+1} done!")
+
+# %%
+# Plot local component count
+
+muni_components = gpd.GeoDataFrame.from_postgis(
+    "SELECT * FROM comp_count_muni;",
+    engine,
+    crs=crs,
+    geom_col="geometry",
+)
+
+
+socio_components = gpd.GeoDataFrame.from_postgis(
+    "SELECT * FROM comp_count_socio;",
+    engine,
+    crs=crs,
+    geom_col="geometry",
+)
+
+
+h3_components = gpd.GeoDataFrame.from_postgis(
+    "SELECT * FROM comp_count_h3;",
+    engine,
+    crs=crs,
+    geom_col="geometry",
+)
+
+# %%
+
+# Plot correlation between local component count and length
 
 
 # %%
