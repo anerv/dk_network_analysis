@@ -43,7 +43,7 @@ WHERE
         SELECT
             component_all
         FROM
-            component_size
+            component_size_all
         WHERE
             geom_length < 100
             AND 'cycleway' <> ANY (highways)
