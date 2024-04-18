@@ -40,7 +40,7 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 queries = [
     "sql/04a_compute_components.sql",
     "sql/04b_compute_component_size.sql",
-    # "sql/04c_compute_local_component_count.sql",
+    "sql/04c_compute_local_component_count.sql",
 ]
 
 for i, q in enumerate(queries):
@@ -54,11 +54,6 @@ for i, q in enumerate(queries):
 
 
 # %%
-component_size_all = pd.read_sql("SELECT * FROM component_size_all;", engine)
-component_size_1 = pd.read_sql("SELECT * FROM component_size_1;", engine)
-component_size_2 = pd.read_sql("SELECT * FROM component_size_2;", engine)
-component_size_3 = pd.read_sql("SELECT * FROM component_size_3;", engine)
-component_size_4 = pd.read_sql("SELECT * FROM component_size_4;", engine)
 
 
 # %%
@@ -92,13 +87,24 @@ def make_zipf_component_plot(df, col, label, fp=None):
 
 
 # %%
-# Component size distribution per municipality
+# Plot total component size distributions
+
+component_size_all = pd.read_sql("SELECT * FROM component_size_all;", engine)
+component_size_1 = pd.read_sql("SELECT * FROM component_size_1;", engine)
+component_size_2 = pd.read_sql("SELECT * FROM component_size_2;", engine)
+component_size_3 = pd.read_sql("SELECT * FROM component_size_3;", engine)
+component_size_4 = pd.read_sql("SELECT * FROM component_size_4;", engine)
+
+component_size_dfs = []
+
+for df in component_size_dfs:
+    make_zipf_component_plot(df, "bike_length", "all", f"../results/{df}_zipf.png")
+# %%
+# Plot component size distribution per municipality
 
 municipalities = dbf.run_query_pg(
     "SELECT DISTINCT municipality from edges;", connection
 )
-
-# TODO: FIRST CHECK FOR JUST ONE!
 
 component_columns = [
     "component_all",
@@ -126,20 +132,12 @@ for muni in municipalities:
 
         make_zipf_component_plot(grouped_edges, c)
 # %%
-# Compute local component count per lts
 
+# Plot component counts per muni, socio, and H3 for each LTS?
+# Make 3 dataframes for muni, socio, h3:
+# each dataframe has the component count for each LTS and the total length of each LTS
 
-# For munis: Just group by muni and count
-# For socio and h3: join comp edges to split edges and group by h3/socio and count
-
-# Also include length? IF so, get by joining with density tables
-# Component size distribution for socio
-
-# Do not make zipf plots? Or plot them on the same
-
-# What would the interesting questions be here?
-# Make dataframe which for each socio and for each LTS has the number of components and the total length of the components
-# Same for H3 - and for muni?
+# Make in SQL
 # %%
 
 
