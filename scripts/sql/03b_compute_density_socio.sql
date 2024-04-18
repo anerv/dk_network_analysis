@@ -193,7 +193,7 @@ lts_7 AS (
 ),
 total_car AS (
     SELECT
-        SUM(ST_Length(geometry)) / 1000 AS total_car,
+        SUM(ST_Length(geometry)) / 1000 AS total_car_length,
         socio_id
     FROM
         socio_edges
@@ -211,7 +211,7 @@ SELECT
     lts_5.lts_5_length,
     lts_6.lts_6_length,
     lts_7.lts_7_length,
-    total_car.total_car,
+    total_car.total_car_length,
     socio.id,
     socio.geometry
 FROM
@@ -303,7 +303,7 @@ SET
     lts_1_4_dens = (
         lts_1_length + lts_2_length + lts_3_length + lts_4_length
     ) / (ST_Area(geometry) / 1000000),
-    total_car_dens = (total_car) / (ST_Area(geometry) / 1000000),
+    total_car_dens = (total_car_length) / (ST_Area(geometry) / 1000000),
     total_network_dens = (total_network) / (ST_Area(geometry) / 1000000);
 
 UPDATE
