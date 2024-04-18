@@ -1,10 +1,4 @@
--- ### MUNI COMP COUNT -- 
--- Just use muni to group edges
--- recompute comp size for all edges for each muni
--- process results in python
--- 
--- Join all comps to socio edges and h3 edges on id
-CREATE TABLE muni_comp_count AS (
+CREATE TABLE comp_count_muni AS (
     SELECT
         COUNT(DISTINCT component_all) AS comp_all_count,
         COUNT(DISTINCT component_1) AS comp_1_count,
@@ -49,7 +43,7 @@ FROM
     h3_edges h
     JOIN component_edges co ON h.id = co.id;
 
-CREATE TABLE socio_comp_count AS (
+CREATE TABLE comp_count_socio AS (
     SELECT
         COUNT(DISTINCT component_all) AS comp_all_count,
         COUNT(DISTINCT component_1) AS comp_1_count,
@@ -63,7 +57,7 @@ CREATE TABLE socio_comp_count AS (
         socio_id
 );
 
-CREATE TABLE h3_comp_count AS (
+CREATE TABLE comp_count_h3 AS (
     SELECT
         COUNT(DISTINCT component_all) AS comp_all_count,
         COUNT(DISTINCT component_1) AS comp_1_count,
