@@ -1,5 +1,4 @@
 # %%
-import yaml
 from src import db_functions as dbf
 from src import h3_functions as h3f
 import geopandas as gpd

@@ -1,6 +1,5 @@
 # %%
 
-import yaml
 import psycopg2
 from src import db_functions as dbf
 

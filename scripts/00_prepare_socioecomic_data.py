@@ -1,7 +1,6 @@
 # %%
 import geopandas as gpd
 import pandas as pd
-from src import db_functions as dbf
 
 exec(open("settings/yaml_variables.py").read())
 
