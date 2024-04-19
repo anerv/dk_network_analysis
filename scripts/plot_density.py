@@ -239,7 +239,7 @@ no_data_cols = plot_cols
 filepaths = [f"../results/network_density/administrative/{l}.png" for l in labels]
 cmaps = [pdict["pos"]] * len(plot_cols)
 
-plot_polygon_results(
+plot_func.plot_polygon_results(
     poly_gdf=density_h3,
     plot_cols=plot_cols,
     plot_titles=plot_titles,
@@ -266,7 +266,7 @@ no_data_cols = plot_cols
 filepaths = [f"../results/network_density/administrative/{l}.png" for l in labels]
 cmaps = [pdict["pos"]] * len(plot_cols)
 
-plot_polygon_results(
+plot_func.plot_polygon_results(
     poly_gdf=density_h3,
     plot_cols=plot_cols,
     plot_titles=plot_titles,
@@ -304,7 +304,7 @@ no_data_cols = plot_cols
 filepaths = [f"../results/network_density/administrative/{l}.png" for l in labels]
 cmaps = [pdict["pos"]] * len(plot_cols)
 
-plot_polygon_results(
+plot_func.plot_polygon_results(
     poly_gdf=density_h3,
     plot_cols=plot_cols,
     plot_titles=plot_titles,

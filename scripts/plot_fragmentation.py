@@ -75,11 +75,59 @@ component_columns = [
 
 for muni in municipalities:
 
+    print(muni)
+
     muni_edges = gpd.GeoDataFrame.from_postgis(
         f"SELECT * FROM component_edges WHERE municipality = '{muni}';",
         engine,
         crs=crs,
         geom_col="geometry",
+    )
+
+    muni_edges["bike_length"] = muni_edges["bike_length"] / 1000
+    muni_edges["geom_length"] = muni_edges.geometry.length / 1000
+
+    component_size_all = (
+        muni_edges[muni_edges["component_all"].notna()]
+        .groupby("component_all")
+        .sum("bike_length")
+    )
+    component_size_1 = (
+        muni_edges[muni_edges["component_1"].notna()]
+        .groupby("component_1")
+        .sum("bike_length")
+    )
+    component_size_2 = (
+        muni_edges[muni_edges["component_1_2"].notna()]
+        .groupby("component_1_2")
+        .sum("bike_length")
+    )
+    component_size_3 = (
+        muni_edges[muni_edges["component_1_3"].notna()]
+        .groupby("component_1_3")
+        .sum("bike_length")
+    )
+    component_size_4 = (
+        muni_edges[muni_edges["component_1_4"].notna()]
+        .groupby("component_1_4")
+        .sum("bike_length")
+    )
+    component_size_car = (
+        muni_edges[muni_edges["component_car"].notna()]
+        .groupby("component_car")
+        .sum("geom_length")
+    )
+
+    plot_func.combined_zipf_plot(
+        component_size_all=component_size_all,
+        component_size_1=component_size_1,
+        component_size_2=component_size_2,
+        component_size_3=component_size_3,
+        component_size_4=component_size_4,
+        component_size_car=component_size_car,
+        lts_color_dict=lts_color_dict,
+        fp=f"../results/component_size_distribution/combined_zipf_{muni}.png",
+        title=f"Component size distribution in {muni}",
     )
 
     # for c in component_columns:
