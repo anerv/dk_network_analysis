@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib_inline.backend_inline
 import contextily as cx
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+import math
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -11,6 +12,174 @@ exec(open("../settings/plotting.py").read())
 
 def set_renderer(f="svg"):
     matplotlib_inline.backend_inline.set_matplotlib_formats(f)
+
+
+def combined_zipf_plot(
+    component_size_all,
+    component_size_1,
+    component_size_2,
+    component_size_3,
+    component_size_4,
+    component_size_car,
+    lts_color_dict,
+    fp,
+    title="Component length distribution",
+):
+    fig = plt.figure(figsize=pdict["fsbar"])
+    axes = fig.add_axes([0, 0, 1, 1])
+
+    from matplotlib.patches import Patch
+
+    axes.set_axisbelow(True)
+    axes.grid(True, which="major", ls="dotted")
+
+    all_yvals = sorted(list(component_size_all["bike_length"]), reverse=True)
+    lts1_yvals = sorted(list(component_size_1["bike_length"]), reverse=True)
+    lts2_yvals = sorted(list(component_size_2["bike_length"]), reverse=True)
+    lts3_yvals = sorted(list(component_size_3["bike_length"]), reverse=True)
+    lts4_yvals = sorted(list(component_size_4["bike_length"]), reverse=True)
+    ltscar_yvals = sorted(list(component_size_car["geom_length"]), reverse=True)
+
+    axes.scatter(
+        x=[i + 1 for i in range(len(component_size_all))],
+        y=all_yvals,
+        s=18,
+        color=lts_color_dict["total"],
+    )
+
+    axes.scatter(
+        x=[i + 1 for i in range(len(component_size_1))],
+        y=lts1_yvals,
+        s=18,
+        color=lts_color_dict["1"],
+    )
+
+    axes.scatter(
+        x=[i + 1 for i in range(len(component_size_2))],
+        y=lts2_yvals,
+        s=18,
+        color=lts_color_dict["2"],
+    )
+
+    axes.scatter(
+        x=[i + 1 for i in range(len(component_size_3))],
+        y=lts3_yvals,
+        s=18,
+        color=lts_color_dict["3"],
+    )
+
+    axes.scatter(
+        x=[i + 1 for i in range(len(component_size_4))],
+        y=lts4_yvals,
+        s=18,
+        color=lts_color_dict["4"],
+    )
+
+    axes.scatter(
+        x=[i + 1 for i in range(len(component_size_car))],
+        y=ltscar_yvals,
+        s=18,
+        color=lts_color_dict["car"],
+    )
+
+    y_min = min(
+        min(all_yvals),
+        min(lts1_yvals),
+        min(lts2_yvals),
+        min(lts3_yvals),
+        min(lts4_yvals),
+        min(ltscar_yvals),
+    )
+    y_max = max(
+        max(all_yvals),
+        max(lts1_yvals),
+        max(lts2_yvals),
+        max(lts3_yvals),
+        max(lts4_yvals),
+        max(ltscar_yvals),
+    )
+    axes.set_ylim(
+        ymin=10 ** math.floor(math.log10(y_min)),
+        ymax=10 ** math.ceil(math.log10(y_max)),
+    )
+    axes.set_xscale("log")
+    axes.set_yscale("log")
+
+    axes.set_ylabel("Component length [km]")
+    axes.set_xlabel("Component rank (largest to smallest)")
+
+    legend_patches = [
+        Patch(
+            facecolor=lts_color_dict["total"],
+            edgecolor=lts_color_dict["total"],
+            label="Color Patch",
+        ),
+        Patch(
+            facecolor=lts_color_dict["1"],
+            edgecolor=lts_color_dict["1"],
+            label="Color Patch",
+        ),
+        Patch(
+            facecolor=lts_color_dict["2"],
+            edgecolor=lts_color_dict["2"],
+            label="Color Patch",
+        ),
+        Patch(
+            facecolor=lts_color_dict["3"],
+            edgecolor=lts_color_dict["3"],
+            label="Color Patch",
+        ),
+        Patch(
+            facecolor=lts_color_dict["4"],
+            edgecolor=lts_color_dict["4"],
+            label="Color Patch",
+        ),
+        Patch(
+            facecolor=lts_color_dict["car"],
+            edgecolor=lts_color_dict["car"],
+            label="Color Patch",
+        ),
+    ]
+
+    axes.legend(legend_patches, ["All", "LTS 1", "LTS 2", "LTS 3", "LTS 4", "Car"])
+    axes.set_title(title)
+
+    fig.savefig(fp)
+
+
+def make_zipf_component_plot(df, col, label, fp=None, show=True):
+
+    fig = plt.figure(figsize=pdict["fsbar"])
+    axes = fig.add_axes([0, 0, 1, 1])
+
+    axes.set_axisbelow(True)
+    axes.grid(True, which="major", ls="dotted")
+    yvals = sorted(list(df[col]), reverse=True)
+    # yvals = sorted(list(df[col] / 1000), reverse=True)
+    axes.scatter(
+        x=[i + 1 for i in range(len(df))],
+        y=yvals,
+        s=18,
+        color="purple",
+    )
+    axes.set_ylim(
+        ymin=10 ** math.floor(math.log10(min(yvals))),
+        ymax=10 ** math.ceil(math.log10(max(yvals))),
+    )
+    axes.set_xscale("log")
+    axes.set_yscale("log")
+
+    axes.set_ylabel("Component length [km]")
+    axes.set_xlabel("Component rank (largest to smallest)")
+    axes.set_title(f"Component length distribution in {label}")
+
+    if fp:
+        plt.savefig(fp, bbox_inches="tight")
+
+    if show:
+        plt.show()
+    else:
+        plt.close()
 
 
 def plot_polygon_results(

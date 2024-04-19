@@ -20,6 +20,14 @@ mpl.rcParams["xtick.labelsize"] = 9
 mpl.rcParams["ytick.labelsize"] = 9
 mpl.rcParams["hatch.linewidth"] = 0.5
 
+lts_color_dict = {
+    "total": "red",
+    "1": "blue",
+    "2": "green",
+    "3": "orange",
+    "4": "yellow",
+    "car": "black",
+}
 
 pdict = {
     # grid; polygon; base barplots
