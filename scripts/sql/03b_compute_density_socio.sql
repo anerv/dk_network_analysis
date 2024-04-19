@@ -353,7 +353,9 @@ ADD
 ADD
     COLUMN IF NOT EXISTS lts_1_4_length_rel DOUBLE PRECISION DEFAULT NULL,
 ADD
-    COLUMN IF NOT EXISTS lts_7_length_rel DOUBLE PRECISION DEFAULT NULL;
+    COLUMN IF NOT EXISTS lts_7_length_rel DOUBLE PRECISION DEFAULT NULL,
+ADD
+    COLUMN IF NOT EXISTS total_car_length_rel DOUBLE PRECISION DEFAULT NULL;
 
 UPDATE
     density_socio
@@ -364,7 +366,8 @@ SET
     lts_1_4_length_rel = (
         lts_1_length + lts_2_length + lts_3_length + lts_4_length
     ) / total_network_length,
-    lts_7_length_rel = lts_7_length / total_network
+    lts_7_length_rel = lts_7_length / total_network,
+    total_car_length_rel = total_car_length / total_network_length
 WHERE
     total_network > 0;
 
