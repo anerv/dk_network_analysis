@@ -166,6 +166,7 @@ total_car AS (
         h3_id
 )
 SELECT
+    h3_grid.hex_id,
     lts_1.lts_1_length,
     lts_2.lts_2_length,
     lts_3.lts_3_length,
@@ -174,7 +175,6 @@ SELECT
     lts_6.lts_6_length,
     lts_7.lts_7_length,
     total_car.total_car_length,
-    h3_grid.hex_id,
     h3_grid.geometry
 FROM
     h3_grid
