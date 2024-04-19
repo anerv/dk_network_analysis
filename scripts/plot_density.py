@@ -1,10 +1,11 @@
 # %%
 from src import db_functions as dbf
-from src import h3_functions as h3f
 from src import plotting_functions as plot_func
 import geopandas as gpd
 import numpy as np
 import seaborn as sns
+
+sns.set_theme("paper")
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -316,8 +317,21 @@ plot_polygon_results(
 
 # %%
 # TODO: Plot distribution of network densities for each lts
-import seaborn as sns
 
-sns.displot(density_muni, x="lts_1_dens", kind="kde")
+# TODO: Make distribution plots of each LTS combined and for each aggregation level
+
+# TODO: make dataframe with lts in one col and network length in another
+
+
+sns.displot(density_muni, x="network_length", hue="lts", kind="kde", multiple="stack")
+# %%
+sns.displot(density_muni, x="lts_1_dens", kde=True)
+
+# %%
 
 sns.histplot(density_muni, x="lts_1_dens", kde=True)
+
+import seaborn as sns
+import plotly.express as px
+
+# %%
