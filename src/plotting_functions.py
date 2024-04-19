@@ -121,7 +121,13 @@ def plot_polygon_results(
             ax.set_axis_off()
 
         # add patches in poly_gdf cells with no data on edges
-        if type(no_data_cols[i]) == tuple:
+        if type(no_data_cols[i]) == tuple and len(
+            poly_gdf[
+                (poly_gdf[no_data_cols[i][0]].isnull())
+                & (poly_gdf[no_data_cols[i][1]].isnull())
+            ]
+            > 0
+        ):
 
             poly_gdf[
                 (poly_gdf[no_data_cols[i][0]].isnull())
@@ -135,7 +141,12 @@ def plot_polygon_results(
                 alpha=na_alpha,
             )
 
-        else:
+            ax.legend(handles=[na_legend], loc=legend_loc)
+
+        elif (
+            type(no_data_cols[i]) == str
+            and len(poly_gdf[poly_gdf[no_data_cols[i]].isnull()]) > 0
+        ):
             poly_gdf[poly_gdf[no_data_cols[i]].isnull()].plot(
                 ax=ax,
                 facecolor=na_facecolor,
@@ -145,7 +156,7 @@ def plot_polygon_results(
                 alpha=na_alpha,
             )
 
-        ax.legend(handles=[na_legend], loc=legend_loc)
+            ax.legend(handles=[na_legend], loc=legend_loc)
 
         if plot_res == "high":
             fig.savefig(filepaths[i] + ".svg", dpi=dpi)
