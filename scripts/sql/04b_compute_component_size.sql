@@ -1,6 +1,14 @@
 DROP TABLE IF EXISTS component_edges;
 
-DROP TABLE IF EXISTS component_size;
+DROP TABLE IF EXISTS component_size_all;
+
+DROP TABLE IF EXISTS component_size_1;
+
+DROP TABLE IF EXISTS component_size_2;
+
+DROP TABLE IF EXISTS component_size_3;
+
+DROP TABLE IF EXISTS component_size_4;
 
 CREATE TABLE component_edges AS
 SELECT
@@ -49,10 +57,29 @@ WHERE
             AND 'cycleway' <> ANY (highways)
     );
 
-CREATE TABLE component_size_1 AS (
+-- RECOMPUT COMPONENT SIZES
+DROP TABLE IF EXISTS component_size_all;
+
+CREATE TABLE component_size_all AS (
     SELECT
         COUNT(id),
         component_all,
+        SUM(ST_Length(geometry)) AS geom_length,
+        SUM(bike_length) AS bike_length,
+        ARRAY_AGG(DISTINCT id) AS ids,
+        ARRAY_AGG(DISTINCT highway) AS highways
+    FROM
+        component_edges
+    WHERE
+        component_all IS NOT NULL
+    GROUP BY
+        component_all
+);
+
+CREATE TABLE component_size_1 AS (
+    SELECT
+        COUNT(id),
+        component_1,
         SUM(ST_Length(geometry)) AS geom_length,
         SUM(bike_length) AS bike_length,
         ARRAY_AGG(DISTINCT id) AS ids,
@@ -68,7 +95,7 @@ CREATE TABLE component_size_1 AS (
 CREATE TABLE component_size_2 AS (
     SELECT
         COUNT(id),
-        component_all,
+        component_1_2,
         SUM(ST_Length(geometry)) AS geom_length,
         SUM(bike_length) AS bike_length,
         ARRAY_AGG(DISTINCT id) AS ids,
@@ -76,15 +103,15 @@ CREATE TABLE component_size_2 AS (
     FROM
         component_edges
     WHERE
-        component_2 IS NOT NULL
+        component_1_2 IS NOT NULL
     GROUP BY
-        component_2
+        component_1_2
 );
 
 CREATE TABLE component_size_3 AS (
     SELECT
         COUNT(id),
-        component_all,
+        component_1_3,
         SUM(ST_Length(geometry)) AS geom_length,
         SUM(bike_length) AS bike_length,
         ARRAY_AGG(DISTINCT id) AS ids,
@@ -92,15 +119,15 @@ CREATE TABLE component_size_3 AS (
     FROM
         component_edges
     WHERE
-        component_3 IS NOT NULL
+        component_1_3 IS NOT NULL
     GROUP BY
-        component_3
+        component_1_3
 );
 
 CREATE TABLE component_size_4 AS (
     SELECT
         COUNT(id),
-        component_all,
+        component_1_4,
         SUM(ST_Length(geometry)) AS geom_length,
         SUM(bike_length) AS bike_length,
         ARRAY_AGG(DISTINCT id) AS ids,
@@ -108,7 +135,7 @@ CREATE TABLE component_size_4 AS (
     FROM
         component_edges
     WHERE
-        component_4 IS NOT NULL
+        component_1_4 IS NOT NULL
     GROUP BY
-        component_4
+        component_1_4
 );
