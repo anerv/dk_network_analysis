@@ -54,6 +54,7 @@ pdict = {
     "nodata_hatch": "//",
     # GLOBAL SETTINGS FOR PLOTS
     "dpi": 300,  # resolution
+    "plot_res": "low",  # "high" for exporting to svg, "low" for png
     # matplotlib figure size for map plots of study area
     "fsmap": (13, 7.3125),
     # size for bar plots

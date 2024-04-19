@@ -3,6 +3,7 @@ from matplotlib import cm, colors
 import matplotlib.pyplot as plt
 import matplotlib_inline.backend_inline
 import contextily as cx
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -36,7 +37,7 @@ def plot_polygon_results(
     use_norm=False,
     norm_min=None,
     norm_max=None,
-    plot_res=plot_res,
+    plot_res=pdict["plot_res"],
     attr=None,
 ):
     """
