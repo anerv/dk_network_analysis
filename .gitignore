@@ -9,3 +9,4 @@ network_analysis_exploration.qgz
 scripts/export_data_andreas.py
 scripts/sql/export_andreas.sql
 *.gpkg-journal
+results/*
