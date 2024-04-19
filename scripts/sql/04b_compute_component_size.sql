@@ -10,6 +10,8 @@ DROP TABLE IF EXISTS component_size_3;
 
 DROP TABLE IF EXISTS component_size_4;
 
+DROP TABLE IF EXISTS component_size_car;
+
 CREATE TABLE component_edges AS
 SELECT
     id,
@@ -138,4 +140,20 @@ CREATE TABLE component_size_4 AS (
         component_1_4 IS NOT NULL
     GROUP BY
         component_1_4
+);
+
+CREATE TABLE component_size_car AS (
+    SELECT
+        COUNT(id),
+        component_car,
+        SUM(ST_Length(geometry)) AS geom_length,
+        SUM(bike_length) AS bike_length,
+        ARRAY_AGG(DISTINCT id) AS ids,
+        ARRAY_AGG(DISTINCT highway) AS highways
+    FROM
+        component_edges
+    WHERE
+        component_car IS NOT NULL
+    GROUP BY
+        component_car
 );
