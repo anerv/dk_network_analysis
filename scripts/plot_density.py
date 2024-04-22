@@ -5,7 +5,7 @@ import geopandas as gpd
 import numpy as np
 import seaborn as sns
 
-sns.set_theme("paper")
+# sns.set_theme("paper")
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -26,6 +26,8 @@ density_muni = gpd.GeoDataFrame.from_postgis(
 density_muni.replace(0, np.nan, inplace=True)
 
 # %%
+# Individual LTS density
+
 plot_cols = [
     "lts_1_dens",
     "lts_2_dens",
@@ -36,21 +38,23 @@ plot_cols = [
 ]
 labels = ["LTS 1", "LTS 2", "LTS 3", "LTS 4", "Total car", "Total network"]
 plot_titles = [f"Municipal network density for: {l}" for l in labels]
-no_data_cols = plot_cols
 filepaths = [f"../results/network_density/administrative/{l}" for l in labels]
-cmaps = [pdict["pos"]] * len(plot_cols)
 
-plot_func.plot_polygon_results(
-    poly_gdf=density_muni,
-    plot_cols=plot_cols,
-    plot_titles=plot_titles,
-    filepaths=filepaths,
-    cmaps=cmaps,
-    alpha=pdict["alpha_grid"],
-    cx_tile=cx_tile_2,
-    no_data_cols=no_data_cols,
-)
+for i, p in enumerate(plot_cols):
 
+    plot_func.plot_classified_poly(
+        gdf=density_muni,
+        plot_col=p,
+        scheme="quantiles",
+        cx_tile=cx_tile_2,
+        plot_na=True,
+        cmap=pdict["pos"],
+        edgecolor="none",
+        title=plot_titles[i],
+        fp=filepaths[i],
+    )
+
+# %%
 # Stepwise density
 plot_cols = [
     "lts_1_dens",
@@ -62,20 +66,23 @@ plot_cols = [
 ]
 labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car", "Total network"]
 plot_titles = [f"Municipal network density for: {l}" for l in labels]
-no_data_cols = plot_cols
 filepaths = [f"../results/network_density/administrative/{l}" for l in labels]
-cmaps = [pdict["pos"]] * len(plot_cols)
 
-plot_func.plot_polygon_results(
-    poly_gdf=density_muni,
-    plot_cols=plot_cols,
-    plot_titles=plot_titles,
-    filepaths=filepaths,
-    cmaps=cmaps,
-    alpha=pdict["alpha_grid"],
-    cx_tile=cx_tile_2,
-    no_data_cols=no_data_cols,
-)
+for i, p in enumerate(plot_cols):
+
+    plot_func.plot_classified_poly(
+        gdf=density_muni,
+        plot_col=p,
+        scheme="quantiles",
+        cx_tile=cx_tile_2,
+        plot_na=True,
+        cmap=pdict["pos"],
+        edgecolor="none",
+        title=plot_titles[i],
+        fp=filepaths[i],
+    )
+
+# %%
 
 # Relative network length
 plot_cols = [
@@ -99,23 +106,24 @@ labels = [
 ]
 
 plot_titles = [f"Municipal network length for: {l}" for l in labels]
-no_data_cols = plot_cols
 filepaths = [f"../results/network_density/administrative/{l}" for l in labels]
-cmaps = [pdict["pos"]] * len(plot_cols)
 
-plot_func.plot_polygon_results(
-    poly_gdf=density_muni,
-    plot_cols=plot_cols,
-    plot_titles=plot_titles,
-    filepaths=filepaths,
-    cmaps=cmaps,
-    alpha=pdict["alpha_grid"],
-    cx_tile=cx_tile_2,
-    no_data_cols=no_data_cols,
-)
+for i, p in enumerate(plot_cols):
+
+    plot_func.plot_classified_poly(
+        gdf=density_muni,
+        plot_col=p,
+        scheme="quantiles",
+        cx_tile=cx_tile_2,
+        plot_na=True,
+        cmap=pdict["pos"],
+        edgecolor="none",
+        title=plot_titles[i],
+        fp=filepaths[i],
+    )
 # %%
 # SOCIO
-
+# Individual LTS density
 density_socio = gpd.GeoDataFrame.from_postgis(
     "SELECT * FROM density_socio;",
     engine,
@@ -135,20 +143,21 @@ plot_cols = [
 ]
 labels = ["LTS 1", "LTS 2", "LTS 3", "LTS 4", "Total car", "Total network"]
 plot_titles = [f"Socio network density for: {l}" for l in labels]
-no_data_cols = plot_cols
 filepaths = [f"../results/network_density/socio/{l}" for l in labels]
-cmaps = [pdict["pos"]] * len(plot_cols)
 
-plot_func.plot_polygon_results(
-    poly_gdf=density_socio,
-    plot_cols=plot_cols,
-    plot_titles=plot_titles,
-    filepaths=filepaths,
-    cmaps=cmaps,
-    alpha=pdict["alpha_grid"],
-    cx_tile=cx_tile_2,
-    no_data_cols=no_data_cols,
-)
+for i, p in enumerate(plot_cols):
+
+    plot_func.plot_classified_poly(
+        gdf=density_socio,
+        plot_col=p,
+        scheme="quantiles",
+        cx_tile=cx_tile_2,
+        plot_na=True,
+        cmap=pdict["pos"],
+        edgecolor="none",
+        title=plot_titles[i],
+        fp=filepaths[i],
+    )
 
 # Stepwise density
 plot_cols = [
@@ -161,20 +170,21 @@ plot_cols = [
 ]
 labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car", "Total network"]
 plot_titles = [f"Socio network density for: {l}" for l in labels]
-no_data_cols = plot_cols
 filepaths = [f"../results/network_density/socio/{l}" for l in labels]
-cmaps = [pdict["pos"]] * len(plot_cols)
 
-plot_func.plot_polygon_results(
-    poly_gdf=density_socio,
-    plot_cols=plot_cols,
-    plot_titles=plot_titles,
-    filepaths=filepaths,
-    cmaps=cmaps,
-    alpha=pdict["alpha_grid"],
-    cx_tile=cx_tile_2,
-    no_data_cols=no_data_cols,
-)
+for i, p in enumerate(plot_cols):
+
+    plot_func.plot_classified_poly(
+        gdf=density_socio,
+        plot_col=p,
+        scheme="quantiles",
+        cx_tile=cx_tile_2,
+        plot_na=True,
+        cmap=pdict["pos"],
+        edgecolor="none",
+        title=plot_titles[i],
+        fp=filepaths[i],
+    )
 
 # Relative network length
 plot_cols = [
@@ -198,20 +208,21 @@ labels = [
 ]
 
 plot_titles = [f"Socio network length for: {l}" for l in labels]
-no_data_cols = plot_cols
 filepaths = [f"../results/network_density/socio/{l}" for l in labels]
-cmaps = [pdict["pos"]] * len(plot_cols)
 
-plot_func.plot_polygon_results(
-    poly_gdf=density_socio,
-    plot_cols=plot_cols,
-    plot_titles=plot_titles,
-    filepaths=filepaths,
-    cmaps=cmaps,
-    alpha=pdict["alpha_grid"],
-    cx_tile=cx_tile_2,
-    no_data_cols=no_data_cols,
-)
+for i, p in enumerate(plot_cols):
+
+    plot_func.plot_classified_poly(
+        gdf=density_socio,
+        plot_col=p,
+        scheme="quantiles",
+        cx_tile=cx_tile_2,
+        plot_na=True,
+        cmap=pdict["pos"],
+        edgecolor="none",
+        title=plot_titles[i],
+        fp=filepaths[i],
+    )
 
 # %%
 # H3
@@ -225,6 +236,8 @@ density_h3 = gpd.GeoDataFrame.from_postgis(
 
 density_h3.replace(0, np.nan, inplace=True)
 
+# %%
+
 plot_cols = [
     "lts_1_dens",
     "lts_2_dens",
@@ -235,20 +248,22 @@ plot_cols = [
 ]
 labels = ["LTS 1", "LTS 2", "LTS 3", "LTS 4", "Total car", "Total network"]
 plot_titles = [f"Local network density for: {l}" for l in labels]
-no_data_cols = plot_cols
 filepaths = [f"../results/network_density/administrative/{l}.png" for l in labels]
-cmaps = [pdict["pos"]] * len(plot_cols)
 
-plot_func.plot_polygon_results(
-    poly_gdf=density_h3,
-    plot_cols=plot_cols,
-    plot_titles=plot_titles,
-    filepaths=filepaths,
-    cmaps=cmaps,
-    alpha=pdict["alpha_grid"],
-    cx_tile=cx_tile_2,
-    no_data_cols=no_data_cols,
-)
+
+for i, p in enumerate(plot_cols):
+
+    plot_func.plot_classified_poly(
+        gdf=density_h3,
+        plot_col=p,
+        scheme="quantiles",
+        cx_tile=cx_tile_2,
+        plot_na=False,
+        cmap=pdict["pos"],
+        edgecolor="none",
+        title=plot_titles[i],
+        fp=filepaths[i],
+    )
 
 # %%
 # Stepwise density
@@ -262,20 +277,21 @@ plot_cols = [
 ]
 labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car", "Total network"]
 plot_titles = [f"Local network density for: {l}" for l in labels]
-no_data_cols = plot_cols
 filepaths = [f"../results/network_density/administrative/{l}.png" for l in labels]
-cmaps = [pdict["pos"]] * len(plot_cols)
 
-plot_func.plot_polygon_results(
-    poly_gdf=density_h3,
-    plot_cols=plot_cols,
-    plot_titles=plot_titles,
-    filepaths=filepaths,
-    cmaps=cmaps,
-    alpha=pdict["alpha_grid"],
-    cx_tile=cx_tile_2,
-    no_data_cols=no_data_cols,
-)
+for i, p in enumerate(plot_cols):
+
+    plot_func.plot_classified_poly(
+        gdf=density_h3,
+        plot_col=p,
+        scheme="quantiles",
+        cx_tile=cx_tile_2,
+        plot_na=True,
+        cmap=pdict["pos"],
+        edgecolor="none",
+        title=plot_titles[i],
+        fp=filepaths[i],
+    )
 
 # %%
 # Relative network length
@@ -300,20 +316,22 @@ labels = [
 ]
 
 plot_titles = [f"Local network length for: {l}" for l in labels]
-no_data_cols = plot_cols
 filepaths = [f"../results/network_density/administrative/{l}.png" for l in labels]
-cmaps = [pdict["pos"]] * len(plot_cols)
 
-plot_func.plot_polygon_results(
-    poly_gdf=density_h3,
-    plot_cols=plot_cols,
-    plot_titles=plot_titles,
-    filepaths=filepaths,
-    cmaps=cmaps,
-    alpha=pdict["alpha_grid"],
-    cx_tile=cx_tile_2,
-    no_data_cols=no_data_cols,
-)
+
+for i, p in enumerate(plot_cols):
+
+    plot_func.plot_classified_poly(
+        gdf=density_h3,
+        plot_col=p,
+        scheme="quantiles",
+        cx_tile=cx_tile_2,
+        plot_na=True,
+        cmap=pdict["pos"],
+        edgecolor="none",
+        title=plot_titles[i],
+        fp=filepaths[i],
+    )
 
 # %%
 # TODO: Plot distribution of network densities for each lts
@@ -322,6 +340,7 @@ plot_func.plot_polygon_results(
 
 # TODO: make dataframe with lts in one col and network length in another
 
+# transpose?
 
 sns.displot(density_muni, x="network_length", hue="lts", kind="kde", multiple="stack")
 # %%
