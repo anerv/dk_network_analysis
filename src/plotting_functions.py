@@ -171,7 +171,7 @@ def make_zipf_component_plot(df, col, label, fp=None, show=True):
 
     axes.set_ylabel("Component length [km]")
     axes.set_xlabel("Component rank (largest to smallest)")
-    axes.set_title(f"Component length distribution in {label}")
+    axes.set_title(f"Component length distribution in: {label}")
 
     if fp:
         plt.savefig(fp, bbox_inches="tight")
