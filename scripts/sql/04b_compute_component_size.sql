@@ -62,6 +62,14 @@ WHERE
 -- RECOMPUT COMPONENT SIZES
 DROP TABLE IF EXISTS component_size_all;
 
+-- FILL BIKE LENGTH VALUES
+UPDATE
+    component_edges
+SET
+    bike_length = ST_Length(geometry)
+WHERE
+    bike_length IS NULL;
+
 CREATE TABLE component_size_all AS (
     SELECT
         COUNT(id),
