@@ -3,8 +3,8 @@ from src import db_functions as dbf
 from src import plotting_functions as plot_func
 import geopandas as gpd
 import pandas as pd
-import math
 import matplotlib.pyplot as plt
+import numpy as np
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -80,9 +80,8 @@ component_columns = [
     "component_car",
 ]
 
+success = []
 for muni in municipalities:
-
-    print(muni)
 
     muni_edges = gpd.GeoDataFrame.from_postgis(
         f"SELECT * FROM component_edges WHERE municipality = '{muni}';",
@@ -91,67 +90,61 @@ for muni in municipalities:
         geom_col="geometry",
     )
 
+    muni_edges.loc[muni_edges.bike_length.isna(), "bike_length"] = (
+        muni_edges.geometry.length
+    )
     muni_edges["bike_length"] = muni_edges["bike_length"] / 1000
     muni_edges["geom_length"] = muni_edges.geometry.length / 1000
 
-    component_size_all = (
-        muni_edges[muni_edges["component_all"].notna()]
-        .groupby("component_all")
-        .sum("bike_length")
-    )
-    component_size_1 = (
-        muni_edges[muni_edges["component_1"].notna()]
-        .groupby("component_1")
-        .sum("bike_length")
-    )
-    component_size_2 = (
-        muni_edges[muni_edges["component_1_2"].notna()]
-        .groupby("component_1_2")
-        .sum("bike_length")
-    )
-    component_size_3 = (
-        muni_edges[muni_edges["component_1_3"].notna()]
-        .groupby("component_1_3")
-        .sum("bike_length")
-    )
-    component_size_4 = (
-        muni_edges[muni_edges["component_1_4"].notna()]
-        .groupby("component_1_4")
-        .sum("bike_length")
-    )
-    component_size_car = (
-        muni_edges[muni_edges["component_car"].notna()]
-        .groupby("component_car")
-        .sum("geom_length")
-    )
+    if len(muni_edges) > 0:
+        component_size_all = (
+            muni_edges[muni_edges["component_all"].notna()]
+            .groupby("component_all")
+            .sum("bike_length")
+        )
+        component_size_1 = (
+            muni_edges[muni_edges["component_1"].notna()]
+            .groupby("component_1")
+            .sum("bike_length")
+        )
+        component_size_2 = (
+            muni_edges[muni_edges["component_1_2"].notna()]
+            .groupby("component_1_2")
+            .sum("bike_length")
+        )
+        component_size_3 = (
+            muni_edges[muni_edges["component_1_3"].notna()]
+            .groupby("component_1_3")
+            .sum("bike_length")
+        )
+        component_size_4 = (
+            muni_edges[muni_edges["component_1_4"].notna()]
+            .groupby("component_1_4")
+            .sum("bike_length")
+        )
+        component_size_car = (
+            muni_edges[muni_edges["component_car"].notna()]
+            .groupby("component_car")
+            .sum("geom_length")
+        )
 
-    plot_func.combined_zipf_plot(
-        component_size_all=component_size_all,
-        component_size_1=component_size_1,
-        component_size_2=component_size_2,
-        component_size_3=component_size_3,
-        component_size_4=component_size_4,
-        component_size_car=component_size_car,
-        lts_color_dict=lts_color_dict,
-        fp=f"../results/component_size_distribution/combined_zipf_{muni}.png",
-        title=f"Component size distribution in {muni}",
-    )
+        plot_func.combined_zipf_plot(
+            component_size_all=component_size_all,
+            component_size_1=component_size_1,
+            component_size_2=component_size_2,
+            component_size_3=component_size_3,
+            component_size_4=component_size_4,
+            component_size_car=component_size_car,
+            lts_color_dict=lts_color_dict,
+            fp=f"../results/component_size_distribution/administrative/combined_zipf_{muni}.png",
+            title=f"Component size distribution in {muni}",
+        )
 
-    # for c in component_columns:
-    #     component_edges = muni_edges[muni_edges[c].notna()]
-    #     grouped_edges = component_edges.groupby(c).sum("bike_length")
+        success.append(muni)
 
-    #     grouped_edges.reset_index(inplace=True)
-    #     # grouped_edges.to_csv(f"../results/component_size_distribution/{muni}_{c}.csv")
-    #     if len(grouped_edges) > 0:
-
-    #         make_zipf_component_plot(
-    #             grouped_edges,
-    #             c,
-    #             muni,
-    #             f"../results/component_size_distribution/{muni}_{l}_zipf.png",
-    #             show=False,
-    #         )
+    elif len(muni_edges) == 0:
+        print(f"No edges in {muni}")
+        pass
 
 # %%
 # Plot local component count
@@ -163,7 +156,37 @@ muni_components = gpd.GeoDataFrame.from_postgis(
     geom_col="geometry",
 )
 
+muni_components.replace(0, np.nan, inplace=True)
 
+# %%
+plot_cols = [
+    "comp_1_count",
+    "comp_2_count",
+    "comp_3_count",
+    "comp_4_count",
+    "comp_car_count",
+    "comp_all_count",
+]
+labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car", "Total network"]
+plot_titles = [f"Municipal component count for: {l}" for l in labels]
+filepaths = [f"../results/component_count/administrative/{l}" for l in labels]
+
+for i, p in enumerate(plot_cols):
+
+    plot_func.plot_classified_poly(
+        gdf=muni_components,
+        plot_col=p,
+        scheme="quantiles",
+        cx_tile=cx_tile_2,
+        plot_na=True,
+        cmap=pdict["neg"],
+        edgecolor="none",
+        title=plot_titles[i],
+        fp=filepaths[i],
+    )
+
+
+# %%
 socio_components = gpd.GeoDataFrame.from_postgis(
     "SELECT * FROM comp_count_socio;",
     engine,
@@ -171,6 +194,36 @@ socio_components = gpd.GeoDataFrame.from_postgis(
     geom_col="geometry",
 )
 
+socio_components.replace(0, np.nan, inplace=True)
+
+plot_cols = [
+    "comp_1_count",
+    "comp_2_count",
+    "comp_3_count",
+    "comp_4_count",
+    "comp_car_count",
+    "comp_all_count",
+]
+labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car", "Total network"]
+plot_titles = [f"Local component count for: {l}" for l in labels]
+filepaths = [f"../results/component_count/socio/{l}" for l in labels]
+
+for i, p in enumerate(plot_cols):
+
+    plot_func.plot_classified_poly(
+        gdf=socio_components,
+        plot_col=p,
+        scheme="quantiles",
+        cx_tile=cx_tile_2,
+        plot_na=True,
+        cmap=pdict["neg"],
+        edgecolor="none",
+        title=plot_titles[i],
+        fp=filepaths[i],
+    )
+
+
+# %%
 
 h3_components = gpd.GeoDataFrame.from_postgis(
     "SELECT * FROM comp_count_h3;",
@@ -179,5 +232,34 @@ h3_components = gpd.GeoDataFrame.from_postgis(
     geom_col="geometry",
 )
 
+h3_components.replace(0, np.nan, inplace=True)
 # %%
-# Plot correlation between local component count and length
+plot_cols = [
+    "comp_1_count",
+    "comp_2_count",
+    "comp_3_count",
+    "comp_4_count",
+    "comp_car_count",
+    "comp_all_count",
+]
+labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car", "Total network"]
+plot_titles = [f"H3 component count for: {l}" for l in labels]
+filepaths = [f"../results/component_count/socio/{l}" for l in labels]
+
+for i, p in enumerate(plot_cols):
+
+    plot_func.plot_classified_poly(
+        gdf=h3_components,
+        plot_col=p,
+        scheme="quantiles",
+        cx_tile=cx_tile_2,
+        plot_na=True,
+        cmap=pdict["neg"],
+        edgecolor="none",
+        linewidth=0.0,
+        title=plot_titles[i],
+        fp=filepaths[i],
+    )
+
+# %%
+# TODO: Plot correlation between local component count and length

@@ -145,6 +145,7 @@ def combined_zipf_plot(
     axes.set_title(title)
 
     fig.savefig(fp)
+    plt.close()
 
 
 def make_zipf_component_plot(df, col, label, fp=None, show=True):
@@ -191,6 +192,7 @@ def plot_classified_poly(
     cmap,
     title,
     edgecolor="black",
+    linewidth=0.5,
     fp=None,
     legend=True,
     alpha=0.8,
@@ -241,6 +243,7 @@ def plot_classified_poly(
                 cmap=cmap,
                 alpha=alpha,
                 edgecolor=edgecolor,
+                linewidth=linewidth,
                 legend=legend,
                 missing_kwds={"color": "lightgrey", "label": "No data"},
                 classification_kwds=classification_kwds,
@@ -255,6 +258,7 @@ def plot_classified_poly(
                 cmap=cmap,
                 alpha=alpha,
                 edgecolor=edgecolor,
+                linewidth=linewidth,
                 legend=legend,
                 missing_kwds={"color": "lightgrey", "label": "No data"},
             )
@@ -267,6 +271,7 @@ def plot_classified_poly(
                 cmap=cmap,
                 alpha=alpha,
                 edgecolor=edgecolor,
+                linewidth=linewidth,
                 legend=legend,
             )
 
