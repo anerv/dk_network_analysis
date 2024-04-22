@@ -33,7 +33,14 @@ component_size_dfs = [
     component_size_car,
 ]
 
-labels = ["total", "1", "2", "3", "4", "car"]
+labels = [
+    "total network",
+    "LTS 1 network",
+    "LTS 2 network",
+    "LTS 3 network",
+    "LTS 4 network",
+    "total car network",
+]
 columns = ["bike_length"] * 5 + ["geom_length"]
 
 for i, df in enumerate(component_size_dfs):
