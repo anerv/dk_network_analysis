@@ -1,4 +1,10 @@
-CREATE VIEW component_length_muni AS (
+DROP VIEW IF EXISTS component_length_muni;
+
+DROP VIEW IF EXISTS component_length_socio;
+
+DROP VIEW IF EXISTS component_length_h3;
+
+CREATE TABLE component_length_muni AS (
     SELECT
         dens.municipality,
         dens.lts_1_length,
@@ -25,9 +31,9 @@ CREATE VIEW component_length_muni AS (
         JOIN comp_count_muni comp USING (municipality)
 );
 
-CREATE VIEW component_length_socio AS (
+CREATE TABLE component_length_socio AS (
     SELECT
-        dens.municipality,
+        dens.id,
         dens.lts_1_length,
         dens.lts_2_length,
         dens.lts_3_length,
@@ -48,13 +54,13 @@ CREATE VIEW component_length_socio AS (
         comp.comp_4_count,
         comp.comp_car_count
     FROM
-        density_municipality dens
-        JOIN comp_count_muni comp USING (municipality)
+        density_socio dens
+        JOIN comp_count_socio comp ON dens.id = comp.socio_id
 );
 
-CREATE VIEW component_length_h3 AS (
+CREATE TABLE component_length_h3 AS (
     SELECT
-        dens.municipality,
+        dens.hex_id,
         dens.lts_1_length,
         dens.lts_2_length,
         dens.lts_3_length,
@@ -75,6 +81,6 @@ CREATE VIEW component_length_h3 AS (
         comp.comp_4_count,
         comp.comp_car_count
     FROM
-        density_municipality dens
-        JOIN comp_count_muni comp USING (municipality)
+        density_h3 dens
+        JOIN comp_count_h3 comp ON dens.hex_id = comp.h3_id
 );
