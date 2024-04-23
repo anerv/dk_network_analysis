@@ -30,38 +30,35 @@ FROM
 WHERE
     component_all IS NOT NULL;
 
-CREATE TABLE component_size_all AS (
-    SELECT
-        COUNT(id),
-        component_all,
-        SUM(ST_Length(geometry)) AS geom_length,
-        SUM(bike_length) AS bike_length,
-        ARRAY_AGG(DISTINCT id) AS ids,
-        ARRAY_AGG(DISTINCT highway) AS highways
-    FROM
-        component_edges
-    WHERE
-        component_all IS NOT NULL
-    GROUP BY
-        component_all
-);
-
-DELETE FROM
-    component_edges
-WHERE
-    component_all IN (
-        SELECT
-            component_all
-        FROM
-            component_size_all
-        WHERE
-            geom_length < 100
-            AND 'cycleway' <> ANY (highways)
-    );
-
--- RECOMPUT COMPONENT SIZES
-DROP TABLE IF EXISTS component_size_all;
-
+-- CREATE TABLE component_size_all AS (
+--     SELECT
+--         COUNT(id),
+--         component_all,
+--         SUM(ST_Length(geometry)) AS geom_length,
+--         SUM(bike_length) AS bike_length,
+--         ARRAY_AGG(DISTINCT id) AS ids,
+--         ARRAY_AGG(DISTINCT highway) AS highways
+--     FROM
+--         component_edges
+--     WHERE
+--         component_all IS NOT NULL
+--     GROUP BY
+--         component_all
+-- );
+-- DELETE FROM
+--     component_edges
+-- WHERE
+--     component_all IN (
+--         SELECT
+--             component_all
+--         FROM
+--             component_size_all
+--         WHERE
+--             geom_length < 100
+--             AND 'cycleway' <> ANY (highways)
+--     );
+-- -- RECOMPUT COMPONENT SIZES
+-- DROP TABLE IF EXISTS component_size_all;
 -- FILL BIKE LENGTH VALUES
 UPDATE
     component_edges

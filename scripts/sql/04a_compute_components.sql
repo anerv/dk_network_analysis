@@ -94,7 +94,6 @@ CREATE TABLE components_car AS (
         )
 );
 
--- TODO - FIX!!
 UPDATE
     edges e
 SET
