@@ -21,12 +21,12 @@ mpl.rcParams["ytick.labelsize"] = 9
 mpl.rcParams["hatch.linewidth"] = 0.5
 
 lts_color_dict = {
-    "total": "red",
     "1": "blue",
     "2": "green",
     "3": "orange",
     "4": "yellow",
     "car": "black",
+    "total": "red",
 }
 
 plotly_labels = {
@@ -50,6 +50,7 @@ plotly_labels = {
     "comp_all_count": "Total network component count",
     "density": "Density (km/sqkm)",
     "lts": "LTS",
+    "component_count": "Component count",
 }
 
 pdict = {
