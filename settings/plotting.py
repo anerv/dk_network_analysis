@@ -29,6 +29,29 @@ lts_color_dict = {
     "car": "black",
 }
 
+plotly_labels = {
+    "lts_1_dens": "LTS 1 density (km/sqkm)",
+    "lts_1_2_dens": "LTS 1-2 density (km/sqkm)",
+    "lts_1_3_dens": "LTS 1-3 density (km/sqkm)",
+    "lts_1_4_dens": "LTS 1-4 density (km/sqkm)",
+    "total_car_dens": "Total car density (km/sqkm)",
+    "total_network_dens": "Total network density (km/sqkm)",
+    "lts_1_length": "LTS 1 length (km)",
+    "lts_1_2_length": "LTS 1-2 length (km)",
+    "lts_1_3_length": "LTS 1-3 length (km)",
+    "lts_1_4_length": "LTS 1-4 length (km)",
+    "total_car_length": "Total car length (km)",
+    "total_network_length": "Total network length (km)",
+    "comp_1_count": "LTS 1 component count",
+    "comp_2_count": "LTS 1-2 component count",
+    "comp_3_count": "LTS 1-3 component count",
+    "comp_4_count": "LTS 1-4 component count",
+    "comp_car_count": "Total car component count",
+    "comp_all_count": "Total network component count",
+    "density": "Density (km/sqkm)",
+    "lts": "LTS",
+}
+
 pdict = {
     # grid; polygon; base barplots
     "base": "black",
