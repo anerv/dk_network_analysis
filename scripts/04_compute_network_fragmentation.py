@@ -33,3 +33,5 @@ for i, q in enumerate(queries):
 
 connection.close()
 print("Script 04 complete!")
+
+# %%
