@@ -651,11 +651,7 @@ fig.show()
 # %%
 # ALL H3
 
-all_hex_ids = dbf.run_query_pg(
-    "SELECT DISTINCT hex_id from component_length_h3", connection
-)
-
-all_hex_ids = [h[0] for h in all_hex_ids]
+all_hex_ids = component_length_h3.hex_id.unique()
 # %%
 dens_all = []
 comp_all = []
@@ -670,7 +666,7 @@ for h in all_hex_ids:
         dens_list = data[density_cols].values[0]
         comp_list = data[component_cols].values[0]
         lts = ["1", "1_2", "1_3", "1_4", "car", "all"]
-        hex_ids = [s] * 6
+        hex_ids = [h] * 6
 
         dens_all.extend(dens_list)
         comp_all.extend(comp_list)
@@ -694,7 +690,7 @@ fig = px.scatter(
     color="lts",
     color_discrete_sequence=[v for v in lts_color_dict.values()],
     # color_continuous_scale=px.colors.sequential.Viridis,
-    hover_data="area",
+    hover_data="hex_id",
     opacity=0.8,
     labels=plotly_labels,
     log_x=True,
@@ -725,7 +721,7 @@ fig = px.histogram(
     labels=plotly_labels,
     nbins=18,
     opacity=[0.8],
-    hover_data=["hex_id"],
+    hover_data="hex_id",
     # text_auto=True,
     marginal="rug",
     color_discrete_sequence=[v for v in lts_color_dict.values()],
@@ -745,3 +741,5 @@ fig.write_image(
 )
 
 fig.show()
+
+# %%
