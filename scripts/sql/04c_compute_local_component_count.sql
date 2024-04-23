@@ -4,6 +4,10 @@ DROP TABLE IF EXISTS comp_count_socio;
 
 DROP TABLE IF EXISTS comp_count_h3;
 
+DROP TABLE IF EXISTS socio_component_edges;
+
+DROP TABLE IF EXISTS h3_component_edges;
+
 CREATE TABLE comp_count_muni AS WITH comp_count AS (
     SELECT
         COUNT(DISTINCT component_all) AS comp_all_count,
