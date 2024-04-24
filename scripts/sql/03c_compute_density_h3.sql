@@ -192,6 +192,12 @@ ALTER TABLE
 ADD
     COLUMN IF NOT EXISTS total_network_length DOUBLE PRECISION DEFAULT NULL,
 ADD
+    COLUMN IF NOT EXISTS lts_1_2_length DOUBLE PRECISION DEFAULT NULL,
+ADD
+    COLUMN IF NOT EXISTS lts_1_3_length DOUBLE PRECISION DEFAULT NULL,
+ADD
+    COLUMN IF NOT EXISTS lts_1_4_length DOUBLE PRECISION DEFAULT NULL,
+ADD
     COLUMN IF NOT EXISTS lts_1_dens DOUBLE PRECISION DEFAULT NULL,
 ADD
     COLUMN IF NOT EXISTS lts_2_dens DOUBLE PRECISION DEFAULT NULL,
@@ -251,6 +257,13 @@ UPDATE
     density_h3
 SET
     total_network_length = lts_1_length + lts_2_length + lts_3_length + lts_4_length + lts_7_length;
+
+UPDATE
+    density_h3
+SET
+    lts_1_2_length = lts_1_length + lts_2_length,
+    lts_1_3_length = lts_1_length + lts_2_length + lts_3_length,
+    lts_1_4_length = lts_1_length + lts_2_length + lts_3_length + lts_4_length;
 
 UPDATE
     density_h3
