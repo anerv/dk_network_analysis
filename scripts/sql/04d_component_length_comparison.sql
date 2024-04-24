@@ -1,8 +1,8 @@
-DROP VIEW IF EXISTS component_length_muni;
+DROP TABLE IF EXISTS component_length_muni;
 
-DROP VIEW IF EXISTS component_length_socio;
+DROP TABLE IF EXISTS component_length_socio;
 
-DROP VIEW IF EXISTS component_length_h3;
+DROP TABLE IF EXISTS component_length_h3;
 
 CREATE TABLE component_length_muni AS (
     SELECT
