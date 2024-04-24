@@ -219,7 +219,7 @@ filepaths_violin = [
     "../results/network_density/h3/violin_",
 ]
 
-for e, df in enumerate(gdfs):
+for e, gdf in enumerate(gdfs[:-1]):  # Do not make stacked bar chart for grid cells
 
     # **** BAR CHARTS ****
 
@@ -229,7 +229,7 @@ for e, df in enumerate(gdfs):
     ids_all = []
 
     for i in id_lists[e]:
-        data = df[df[id_cols[e]] == i]
+        data = gdf[gdf[id_cols[e]] == i]
 
         if len(data) > 0:
 
@@ -281,14 +281,17 @@ for e, df in enumerate(gdfs):
     )
     fig.show()
 
+# %%
+for e, gdf in enumerate(gdfs):
+
     # **** VIOLIN PLOTS ****
     colors = [v for v in lts_color_dict.values()]
 
     for i, d in enumerate(density_columns):
         fig = px.violin(
-            density_muni,
+            gdf,
             y=d,
-            hover_name="municipality",
+            hover_name=id_cols[e],
             points="all",
             box=False,
             labels=plotly_labels,
@@ -305,9 +308,9 @@ for e, df in enumerate(gdfs):
 
     for i, l in enumerate(length_columns):
         fig = px.violin(
-            density_muni,
+            gdf,
             y=l,
-            hover_name="municipality",
+            hover_name=id_cols[e],
             points="all",
             box=False,
             labels=plotly_labels,
