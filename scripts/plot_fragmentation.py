@@ -6,6 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import plotly_express as px
+import pandas as pd
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -17,7 +18,8 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 
 # %%
-# Plot total component size distributions
+# ********** Plot total component size distributions **********
+
 component_size_all = pd.read_sql("SELECT * FROM component_size_all;", engine)
 component_size_1 = pd.read_sql("SELECT * FROM component_size_1;", engine)
 component_size_2 = pd.read_sql("SELECT * FROM component_size_2;", engine)
@@ -52,7 +54,7 @@ for i, df in enumerate(component_size_dfs):
         f"../results/component_size_distribution/{labels[i]}_zipf.png",
     )
 
-# %%
+# Combined zipf plot
 plot_func.combined_zipf_plot(
     component_size_all=component_size_all,
     component_size_1=component_size_1,
@@ -65,23 +67,13 @@ plot_func.combined_zipf_plot(
 )
 
 # %%
-# Plot component size distribution per municipality
+# ************ Plot component size distribution per municipality **************************
 
 munis = dbf.run_query_pg("SELECT DISTINCT municipality from edges;", connection)
 
 municipalities = [m[0] for m in munis]
 municipalities.remove(None)
 
-component_columns = [
-    "component_all",
-    "component_1",
-    "component_1_2",
-    "component_1_3",
-    "component_1_4",
-    "component_car",
-]
-
-success = []
 for muni in municipalities:
 
     muni_edges = gpd.GeoDataFrame.from_postgis(
@@ -141,16 +133,12 @@ for muni in municipalities:
             title=f"Component size distribution in {muni}",
         )
 
-        success.append(muni)
-
     elif len(muni_edges) == 0:
         print(f"No edges in {muni}")
         pass
 
 # %%
-# **** PLOT LOCAL COMPONENT COUNT ****
-
-# Municipalities
+# **** PLOT LOCAL COMPONENT COUNT (MAPS) ****
 
 muni_components = gpd.GeoDataFrame.from_postgis(
     "SELECT * FROM comp_count_muni;",
@@ -161,35 +149,6 @@ muni_components = gpd.GeoDataFrame.from_postgis(
 
 muni_components.replace(0, np.nan, inplace=True)
 
-plot_cols = [
-    "comp_1_count",
-    "comp_2_count",
-    "comp_3_count",
-    "comp_4_count",
-    "comp_car_count",
-    "comp_all_count",
-]
-labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car", "Total network"]
-plot_titles = [f"Municipal component count for: {l}" for l in labels]
-filepaths = [f"../results/component_count/administrative/{l}" for l in labels]
-
-for i, p in enumerate(plot_cols):
-
-    plot_func.plot_classified_poly(
-        gdf=muni_components,
-        plot_col=p,
-        scheme="quantiles",
-        cx_tile=cx_tile_2,
-        plot_na=True,
-        cmap=pdict["neg"],
-        edgecolor="none",
-        title=plot_titles[i],
-        fp=filepaths[i],
-    )
-
-
-# %%
-# Socio-economic areas
 socio_components = gpd.GeoDataFrame.from_postgis(
     "SELECT * FROM comp_count_socio;",
     engine,
@@ -199,35 +158,6 @@ socio_components = gpd.GeoDataFrame.from_postgis(
 
 socio_components.replace(0, np.nan, inplace=True)
 
-plot_cols = [
-    "comp_1_count",
-    "comp_2_count",
-    "comp_3_count",
-    "comp_4_count",
-    "comp_car_count",
-    "comp_all_count",
-]
-labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car", "Total network"]
-plot_titles = [f"Local component count for: {l}" for l in labels]
-filepaths = [f"../results/component_count/socio/{l}" for l in labels]
-
-for i, p in enumerate(plot_cols):
-
-    plot_func.plot_classified_poly(
-        gdf=socio_components,
-        plot_col=p,
-        scheme="quantiles",
-        cx_tile=cx_tile_2,
-        plot_na=True,
-        cmap=pdict["neg"],
-        edgecolor="none",
-        title=plot_titles[i],
-        fp=filepaths[i],
-    )
-
-
-# %%
-# H3
 h3_components = gpd.GeoDataFrame.from_postgis(
     "SELECT * FROM comp_count_h3;",
     engine,
@@ -237,178 +167,95 @@ h3_components = gpd.GeoDataFrame.from_postgis(
 
 h3_components.replace(0, np.nan, inplace=True)
 
-plot_cols = [
-    "comp_1_count",
-    "comp_2_count",
-    "comp_3_count",
-    "comp_4_count",
-    "comp_car_count",
-    "comp_all_count",
-]
+gdfs = [muni_components, socio_components, h3_components]
+
+plot_cols = component_count_columns
+
 labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car", "Total network"]
-plot_titles = [f"H3 component count for: {l}" for l in labels]
-filepaths = [f"../results/component_count/h3/{l}" for l in labels]
 
-for i, p in enumerate(plot_cols):
+all_filepaths = [
+    "../results/component_count/administrative/",
+    "../results/component_count/socio/",
+    "../results/component_count/h3/",
+]
+all_plot_titles = [
+    "Municipal component count for: ",
+    "Local component count for: ",
+    "Hexagonal grid component count for: ",
+]
 
-    plot_func.plot_classified_poly(
-        gdf=h3_components,
-        plot_col=p,
-        scheme="quantiles",
-        cx_tile=cx_tile_2,
-        plot_na=True,
-        cmap=pdict["neg"],
-        edgecolor="none",
-        linewidth=0.0,
-        title=plot_titles[i],
-        fp=filepaths[i],
-    )
+plot_titles = [f"Municipal component count for: {l}" for l in labels]
+
+for e, gdf in enumerate(gdfs):
+
+    plot_titles = [all_plot_titles[e] + l for l in labels]
+    filepaths = [all_filepaths[e] + l for l in labels]
+
+    for i, p in enumerate(plot_cols):
+        plot_func.plot_classified_poly(
+            gdf=gdf,
+            plot_col=p,
+            scheme="quantiles",
+            cx_tile=cx_tile_2,
+            plot_na=True,
+            cmap=pdict["neg"],
+            edgecolor="none",
+            title=plot_titles[i],
+            fp=filepaths[i],
+        )
 
 # %%
 # ***** CORRELATION BETWEEN LOCAL COMPONENT COUNT AND NETWORK DENSITY *****
+
 component_length_muni = pd.read_sql("SELECT * FROM component_length_muni;", engine)
 component_length_socio = pd.read_sql("SELECT * FROM component_length_socio;", engine)
 component_length_h3 = pd.read_sql("SELECT * FROM component_length_h3;", engine)
 
-component_cols = [
-    "comp_1_count",
-    "comp_2_count",
-    "comp_3_count",
-    "comp_4_count",
-    "comp_car_count",
-    "comp_all_count",
-]
-
-length_cols = [
-    "lts_1_length",
-    "lts_1_2_length",
-    "lts_1_3_length",
-    "lts_1_4_length",
-    "total_car_length",
-    "total_network_length",
-]
-
-density_cols = [
-    "lts_1_dens",
-    "lts_1_2_dens",
-    "lts_1_3_dens",
-    "lts_1_4_dens",
-    "total_car_dens",
-    "total_network_dens",
-]
-
 dfs = [component_length_muni, component_length_socio, component_length_h3]
 
-for df in dfs:
-    df["lts_1_2_length"] = df.lts_1_length + df.lts_2_length
-    df["lts_1_3_length"] = df.lts_1_length + df.lts_2_length + df.lts_3_length
-    df["lts_1_4_length"] = (
-        df.lts_1_length + df.lts_2_length + df.lts_3_length + df.lts_4_length
-    )
+id_cols = [["municipality"], ["id"], ["hex_id"]]
+titles = ["Municipalities", "Local", "Hexagonal grid"]
+all_filepaths = [
+    "../results/component_correlation/administrative/component_count_infra_density_",
+    "../results/component_correlation/socio/component_count_infra_density_",
+    "../results/component_correlation/h3/component_count_infra_density_",
+]
 
-# %%
+for i, df in enumerate(dfs):
 
-# MUNICIPALITIES
+    for c, d, l in zip(
+        component_count_columns, density_steps_columns, length_steps_columns
+    ):
 
-for c, d, l in zip(component_cols, density_cols, length_cols):
+        fig = px.scatter(
+            df,
+            x=d,
+            y=c,
+            color=l,
+            # color_discrete_sequence=["black"],
+            # color_continuous_scale=px.colors.sequential.Viridis,
+            hover_data=id_cols[i],
+            opacity=0.5,
+            labels=plotly_labels,
+            log_x=True,
+            log_y=True,
+        )
 
-    fig = px.scatter(
-        component_length_muni,
-        x=d,
-        y=c,
-        color=l,
-        # color_discrete_sequence=["black"],
-        # color_continuous_scale=px.colors.sequential.Viridis,
-        hover_data=["municipality"],
-        opacity=0.5,
-        labels=plotly_labels,
-        log_x=True,
-        log_y=True,
-    )
+        fig.update_layout(
+            font=dict(size=12, color="black"),
+            autosize=False,
+            width=800,
+            height=600,
+            yaxis_title="Component count",
+            title=titles[i],
+        )
 
-    fig.update_layout(
-        font=dict(size=12, color="black"),
-        autosize=False,
-        width=800,
-        height=600,
-        yaxis_title="Component count",
-        title=f"Municipalities",
-    )
-
-    fig.write_image(
-        f"../results/component_correlation/administrative/component_count_infra_density_{c}_{d}.jpeg",
-        width=1000,
-        height=750,
-    )
-    fig.show()
-
-# %%
-# SOCIO-ECONOMIC AREAS
-for c, d, l in zip(component_cols, density_cols, length_cols):
-
-    fig = px.scatter(
-        component_length_socio,
-        x=d,
-        y=c,
-        color=l,
-        # color_discrete_sequence=["black"],
-        # color_continuous_scale=px.colors.sequential.Viridis,
-        # hover_data=["municipality"],
-        opacity=0.5,
-        labels=plotly_labels,
-        log_x=True,
-        log_y=True,
-    )
-
-    fig.update_layout(
-        font=dict(size=12, color="black"),
-        autosize=False,
-        width=800,
-        height=600,
-        yaxis_title="Component count",
-        title=f"Socio-economic areas",
-    )
-
-    fig.write_image(
-        f"../results/component_correlation/socio/component_count_infra_density_{c}_{d}.jpeg",
-        width=1000,
-        height=750,
-    )
-    fig.show()
-
-# %%
-# H3 GRID
-for c, d, l in zip(component_cols, density_cols, length_cols):
-
-    fig = px.scatter(
-        component_length_h3,
-        x=d,
-        y=c,
-        color=l,
-        # color_discrete_sequence=["black"],
-        # color_continuous_scale=px.colors.sequential.Viridis,
-        # hover_data=["municipality"],
-        opacity=0.5,
-        labels=plotly_labels,
-        # log_x=True,
-        # log_y=True,
-    )
-
-    fig.update_layout(
-        font=dict(size=12, color="black"),
-        autosize=False,
-        width=800,
-        height=600,
-        yaxis_title="Component count",
-        title=f"Hexagonal grid",
-    )
-
-    fig.write_image(
-        f"../results/component_correlation/h3/component_count_infra_density_{c}_{d}.jpeg",
-        width=1000,
-        height=750,
-    )
-    fig.show()
+        fig.write_image(
+            all_filepaths[i] + "_".join([c, d]) + ".jpeg",
+            width=1000,
+            height=750,
+        )
+        fig.show()
 
 # %%
 # **** FOR EACH MUNICIPALITY ****
@@ -422,8 +269,8 @@ for m in municipalities:
 
     if len(data) > 0:
 
-        dens_list = data[density_cols].values[0]
-        comp_list = data[component_cols].values[0]
+        dens_list = data[density_steps_columns].values[0]
+        comp_list = data[component_count_columns].values[0]
         lts = ["1", "1_2", "1_3", "1_4", "car", "all"]
 
         df = pd.DataFrame(
@@ -461,285 +308,129 @@ for m in municipalities:
     fig.show()
 
 # %%
-# ALL MUNICIPALITIES
+# SCATTER AND RUG PLOTS FOR COMPONENT AND INFRASTRUCTURE DENSITY
 
-dens_all = []
-comp_all = []
-lts_all = []
-munis_all = []
+dfs = [component_length_muni, component_length_socio, component_length_h3]
 
-for m in municipalities:
-    data = component_length_muni[component_length_muni.municipality == m]
+municipalities = component_length_muni.municipality.unique()
+socio_ids = component_length_socio.id.unique()
+h3_ids = component_length_h3.hex_id.unique()
 
-    if len(data) > 0:
+id_lists = [municipalities, socio_ids, h3_ids]
 
-        dens_list = data[density_cols].values[0]
-        comp_list = data[component_cols].values[0]
-        lts = ["1", "1_2", "1_3", "1_4", "car", "all"]
-        munis = [m] * 6
+id_cols = ["municipality", "id", "hex_id"]
 
-        dens_all.extend(dens_list)
-        comp_all.extend(comp_list)
-        lts_all.extend(lts)
-        munis_all.extend(munis)
+all_filepaths = []
 
-df = pd.DataFrame(
-    {
-        "density": dens_all,
-        "component_count": comp_all,
-        "lts": lts_all,
-        "municipality": munis_all,
-    }
-)
+scatter_titles = [
+    "Municipal component count and infrastructure density",
+    "Local component count and infrastructure density",
+    "Hexagonal grid component count and infrastructure density",
+]
+histo_titles = [
+    "Distribution of local component count at the municipal level",
+    "Distribution of local component count at the local level",
+    "Distribution of local component count at the hexagonal grid level",
+]
+scatter_filepaths = [
+    "../results/component_correlation/administrative/component_count_infra_density_all_areas.jpeg",
+    "../results/component_correlation/socio/component_count_infra_density_all_areas.jpeg",
+    "../results/component_correlation/h3/component_count_infra_density_all_areas.jpeg",
+]
+histo_filepaths = [
+    "../results/component_correlation/administrative/component_distribution_muni.jpeg",
+    "../results/component_correlation/socio/component_distribution_socio.jpeg",
+    "../results/component_correlation/h3/component_distribution_h3.jpeg",
+]
 
-fig = px.scatter(
-    df,
-    x="density",
-    y="component_count",
-    color="lts",
-    color_discrete_sequence=[v for v in lts_color_dict.values()],
-    # color_continuous_scale=px.colors.sequential.Viridis,
-    hover_data="municipality",
-    opacity=0.8,
-    labels=plotly_labels,
-    log_x=True,
-    log_y=True,
-)
+for e, df in enumerate(dfs):
 
-fig.update_layout(
-    font=dict(size=12, color="black"),
-    autosize=False,
-    width=800,
-    height=600,
-    yaxis_title="Component count",
-    title=f"Municipal component count and infrastructure density",
-)
+    dens_all = []
+    comp_all = []
+    lts_all = []
+    ids_all = []
 
-fig.write_image(
-    f"../results/component_correlation/administrative/component_count_infra_density_all_areas.jpeg",
-    width=1000,
-    height=750,
-)
-fig.show()
+    for i in id_lists[e]:
 
-fig = px.histogram(
-    df,
-    x="component_count",
-    color="lts",
-    labels=plotly_labels,
-    nbins=18,
-    opacity=[0.8],
-    hover_data=["municipality"],
-    # text_auto=True,
-    marginal="rug",
-    color_discrete_sequence=[v for v in lts_color_dict.values()],
-    # title="Distribution of local component count in OSM and GeoDanmark data",
-)
-fig.update_layout(
-    font=dict(size=12, color="black"),
-    autosize=False,
-    width=800,
-    height=600,
-    yaxis_title="Count",
-)
-fig.write_image(
-    f"../results/component_correlation/administrative/component_distribution_muni.jpeg",
-    width=1000,
-    height=750,
-)
+        data = df[df[id_cols[e]] == i]
 
-fig.show()
+        if len(data) > 0:
 
+            dens_list = data[density_steps_columns].values[0]
+            comp_list = data[component_count_columns].values[0]
+            lts = ["1", "1_2", "1_3", "1_4", "car", "all"]
+            ids = [i] * 6
 
-# %%
-# ALL SOCIO
+            dens_all.extend(dens_list)
+            comp_all.extend(comp_list)
+            lts_all.extend(lts)
+            ids_all.extend(ids)
 
-socio_id = dbf.run_query_pg(
-    "SELECT DISTINCT id from component_length_socio", connection
-)
+    df = pd.DataFrame(
+        {
+            "density": dens_all,
+            "component_count": comp_all,
+            "lts": lts_all,
+            "id": ids_all,
+        }
+    )
 
-socio_id = [s[0] for s in socio_id]
+    fig = px.scatter(
+        df,
+        x="density",
+        y="component_count",
+        color="lts",
+        color_discrete_sequence=[v for v in lts_color_dict.values()],
+        # color_continuous_scale=px.colors.sequential.Viridis,
+        hover_data="id",
+        opacity=0.8,
+        labels=plotly_labels,
+        log_x=True,
+        log_y=True,
+    )
 
-dens_all = []
-comp_all = []
-lts_all = []
-socio_all = []
+    fig.update_layout(
+        font=dict(size=12, color="black"),
+        autosize=False,
+        width=800,
+        height=600,
+        yaxis_title="Component count",
+        title=scatter_titles[e],
+    )
 
-for s in socio_id:
-    data = component_length_socio[component_length_socio.id == s]
+    fig.write_image(
+        scatter_filepaths[e],
+        width=1000,
+        height=750,
+    )
+    fig.show()
 
-    if len(data) > 0:
+    fig = px.histogram(
+        df,
+        x="component_count",
+        color="lts",
+        labels=plotly_labels,
+        nbins=18,
+        opacity=[0.8],
+        hover_data="id",
+        # text_auto=True,
+        marginal="rug",
+        color_discrete_sequence=[v for v in lts_color_dict.values()],
+        title=histo_titles[e],
+    )
+    fig.update_layout(
+        font=dict(size=12, color="black"),
+        autosize=False,
+        width=800,
+        height=600,
+        yaxis_title="Count",
+    )
+    fig.write_image(
+        histo_filepaths[e],
+        width=1000,
+        height=750,
+    )
 
-        dens_list = data[density_cols].values[0]
-        comp_list = data[component_cols].values[0]
-        lts = ["1", "1_2", "1_3", "1_4", "car", "all"]
-        socio_id = [s] * 6
-
-        dens_all.extend(dens_list)
-        comp_all.extend(comp_list)
-        lts_all.extend(lts)
-        socio_all.extend(socio_id)
-
-df = pd.DataFrame(
-    {
-        "density": dens_all,
-        "component_count": comp_all,
-        "lts": lts_all,
-        "area": socio_all,
-    }
-)
-
-fig = px.scatter(
-    df,
-    x="density",
-    y="component_count",
-    color="lts",
-    color_discrete_sequence=[v for v in lts_color_dict.values()],
-    # color_continuous_scale=px.colors.sequential.Viridis,
-    hover_data="area",
-    opacity=0.8,
-    labels=plotly_labels,
-    log_x=True,
-    log_y=True,
-)
-
-fig.update_layout(
-    font=dict(size=12, color="black"),
-    autosize=False,
-    width=800,
-    height=600,
-    yaxis_title="Component count",
-    title=f"Local component count and infrastructure density",
-)
-
-fig.write_image(
-    f"../results/component_correlation/socio/component_count_infra_density_all_socio.jpeg",
-    width=1000,
-    height=750,
-)
-fig.show()
-
-
-fig = px.histogram(
-    df,
-    x="component_count",
-    color="lts",
-    labels=plotly_labels,
-    nbins=18,
-    opacity=[0.8],
-    hover_data=["area"],
-    # text_auto=True,
-    marginal="rug",
-    color_discrete_sequence=[v for v in lts_color_dict.values()],
-    # title="Distribution of local component count in OSM and GeoDanmark data",
-)
-fig.update_layout(
-    font=dict(size=12, color="black"),
-    autosize=False,
-    width=800,
-    height=600,
-    yaxis_title="Count",
-)
-fig.write_image(
-    f"../results/component_correlation/socio/component_distribution_socio.jpeg",
-    width=1000,
-    height=750,
-)
-
-fig.show()
-
-# %%
-# ALL H3
-
-all_hex_ids = component_length_h3.hex_id.unique()
-# %%
-dens_all = []
-comp_all = []
-lts_all = []
-hex_all = []
-
-for h in all_hex_ids:
-    data = component_length_h3[component_length_h3.hex_id == h]
-
-    if len(data) > 0:
-
-        dens_list = data[density_cols].values[0]
-        comp_list = data[component_cols].values[0]
-        lts = ["1", "1_2", "1_3", "1_4", "car", "all"]
-        hex_ids = [h] * 6
-
-        dens_all.extend(dens_list)
-        comp_all.extend(comp_list)
-        lts_all.extend(lts)
-        hex_all.extend(hex_ids)
-
-df = pd.DataFrame(
-    {
-        "density": dens_all,
-        "component_count": comp_all,
-        "lts": lts_all,
-        "hex_id": hex_all,
-    }
-)
-# %%
-
-fig = px.scatter(
-    df,
-    x="density",
-    y="component_count",
-    color="lts",
-    color_discrete_sequence=[v for v in lts_color_dict.values()],
-    # color_continuous_scale=px.colors.sequential.Viridis,
-    hover_data="hex_id",
-    opacity=0.8,
-    labels=plotly_labels,
-    log_x=True,
-    log_y=True,
-)
-
-fig.update_layout(
-    font=dict(size=12, color="black"),
-    autosize=False,
-    width=800,
-    height=600,
-    yaxis_title="Component count",
-    title=f"Local component count and infrastructure density",
-)
-
-fig.write_image(
-    f"../results/component_correlation/h3/component_count_infra_density_all_hex.jpeg",
-    width=1000,
-    height=750,
-)
-fig.show()
-
-
-fig = px.histogram(
-    df,
-    x="component_count",
-    color="lts",
-    labels=plotly_labels,
-    nbins=18,
-    opacity=[0.8],
-    hover_data="hex_id",
-    # text_auto=True,
-    marginal="rug",
-    color_discrete_sequence=[v for v in lts_color_dict.values()],
-    # title="Distribution of local component count in OSM and GeoDanmark data",
-)
-fig.update_layout(
-    font=dict(size=12, color="black"),
-    autosize=False,
-    width=800,
-    height=600,
-    yaxis_title="Count",
-)
-fig.write_image(
-    f"../results/component_correlation/h3/component_distribution_h3.jpeg",
-    width=1000,
-    height=750,
-)
-
-fig.show()
+    fig.show()
 
 # %%
