@@ -295,6 +295,9 @@ def plot_classified_poly(
         else:
             fig.savefig(fp + ".png", dpi=dpi)
 
+    plt.show()
+    plt.close()
+
 
 def plot_polygon_results(
     poly_gdf,
@@ -448,3 +451,5 @@ def plot_polygon_results(
             fig.savefig(filepaths[i] + ".svg", dpi=dpi)
         else:
             fig.savefig(filepaths[i] + ".png", dpi=dpi)
+
+        fig.close()
