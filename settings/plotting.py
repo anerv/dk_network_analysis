@@ -29,8 +29,74 @@ lts_color_dict = {
     "total": "red",
 }
 
+component_columns = [
+    "component_all",
+    "component_1",
+    "component_1_2",
+    "component_1_3",
+    "component_1_4",
+    "component_car",
+]
+
+component_count_columns = [
+    "comp_1_count",
+    "comp_2_count",
+    "comp_3_count",
+    "comp_4_count",
+    "comp_car_count",
+    "comp_all_count",
+]
+length_columns = [
+    "lts_1_length",
+    "lts_2_length",
+    "lts_3_length",
+    "lts_4_length",
+    "total_car_length",
+    "total_network_length",
+]
+
+length_steps_columns = [
+    "lts_1_length",
+    "lts_1_2_length",
+    "lts_1_3_length",
+    "lts_1_4_length",
+    "total_car_length",
+    "total_network_length",
+]
+
+length_relative_columns = [
+    "lts_1_length_rel",
+    "lts_1_2_length_rel",
+    "lts_1_3_length_rel",
+    "lts_1_4_length_rel",
+    "lts_7_length_rel",
+    # "total_car_length_rel",
+]
+
+density_columns = [
+    "lts_1_dens",
+    "lts_2_dens",
+    "lts_3_dens",
+    "lts_4_dens",
+    "total_car_dens",
+    "total_network_dens",
+]
+
+density_steps_columns = [
+    "lts_1_dens",
+    "lts_1_2_dens",
+    "lts_1_3_dens",
+    "lts_1_4_dens",
+    "total_car_dens",
+    "total_network_dens",
+]
+
+
 plotly_labels = {
     "lts_1_dens": "LTS 1 density (km/sqkm)",
+    "lts_2_dens": "LTS 2 density (km/sqkm)",
+    "lts_3_dens": "LTS 3 density (km/sqkm)",
+    "lts_4_dens": "LTS 4 density (km/sqkm)",
     "lts_1_2_dens": "LTS 1-2 density (km/sqkm)",
     "lts_1_3_dens": "LTS 1-3 density (km/sqkm)",
     "lts_1_4_dens": "LTS 1-4 density (km/sqkm)",
@@ -40,6 +106,10 @@ plotly_labels = {
     "lts_1_2_length": "LTS 1-2 length (km)",
     "lts_1_3_length": "LTS 1-3 length (km)",
     "lts_1_4_length": "LTS 1-4 length (km)",
+    "lts_1_length": "LTS 1 length (km)",
+    "lts_2_length": "LTS 2 length (km)",
+    "lts_3_length": "LTS 3 length (km)",
+    "lts_4_length": "LTS 4 length (km)",
     "total_car_length": "Total car length (km)",
     "total_network_length": "Total network length (km)",
     "comp_1_count": "LTS 1 component count",
@@ -51,6 +121,9 @@ plotly_labels = {
     "density": "Density (km/sqkm)",
     "lts": "LTS",
     "component_count": "Component count",
+    "all": "All",
+    "car": "Car",
+    "municipality": "Municipality",
 }
 
 pdict = {
