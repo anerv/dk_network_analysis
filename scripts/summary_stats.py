@@ -1,0 +1,9 @@
+#
+
+# MAKE STYLIZED DATAFRAME
+# EXPORT TO CSV
+
+# Total length of network
+# Total length of each LTS level
+
+# MIN MAX, MEAN AND MEDIAN OF EACH LTS FOR EACH AGGREGATION LEVEL
