@@ -288,6 +288,7 @@ for label, df in stacked_dfs.items():
 
     fig.set_xlabel("Length (km)")
     fig.set_title(f"Network length KDE at the {label.lower()} level")
+    plt.savefig(filepaths_kde[list(stacked_dfs.keys()).index(label)])
 
     plt.show()
 
