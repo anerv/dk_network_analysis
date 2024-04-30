@@ -45,6 +45,7 @@ density_h3 = gpd.GeoDataFrame.from_postgis(
 
 density_h3.replace(0, np.nan, inplace=True)
 
+
 # %%
 ### COMPARE MUNICIPAL NETWORK DISTRIBUTION ####
 
@@ -187,6 +188,8 @@ for e, gdf in enumerate(gdfs):
 
 ####### PLOTS ##############################
 ###########################################
+
+gdfs = [density_muni, density_socio, density_h3]
 length_titles = [
     "Municipal network length (km)",
     "Local network length (km)",
@@ -207,6 +210,12 @@ h3_ids = density_h3.hex_id.unique()
 
 id_lists = [municipalities, socio_ids, h3_ids]
 
+filepaths_kde = [
+    "../results/network_density/administrative/lts_kde.jpg",
+    "../results/network_density/socio/lts_kde.jpg",
+    "../results/network_density/h3/lts_kde.jpg",
+]
+
 filepaths_bar = [
     "../results/network_density/administrative/lts_stacked_bar.jpg",
     "../results/network_density/socio/lts_stacked_bar.jpg",
@@ -219,9 +228,11 @@ filepaths_violin = [
     "../results/network_density/h3/violin_",
 ]
 
-for e, gdf in enumerate(gdfs[:-1]):  # Do not make stacked bar chart for grid cells
+stacked_dfs = {}
 
-    # **** BAR CHARTS ****
+
+## Make stacked dfs
+for e, gdf in enumerate(gdfs):
 
     dens_all = []
     length_all = []
@@ -252,12 +263,50 @@ for e, gdf in enumerate(gdfs[:-1]):  # Do not make stacked bar chart for grid ce
         }
     )
 
+    stacked_dfs[type_cols[e]] = df
+
+
+# %%
+# ***** KDE PLOTS *****
+
+# cumulative=True, common_norm=False, common_grid=True,
+# palette="crest", alpha=.5, linewidth=0,
+
+for label, df in stacked_dfs.items():
+
+    df.rename(columns={"lts": "Network level"}, inplace=True)
+
+    fig = sns.kdeplot(
+        data=df,
+        x="length",
+        hue="Network level",
+        # multiple="stack",
+        # fill=True,
+        log_scale=True,
+        palette=lts_color_dict.values(),
+    )
+
+    fig.set_xlabel("Length (km)")
+    fig.set_title(f"Network length KDE at the {label.lower()} level")
+
+    plt.show()
+
+# %%
+# **** BAR CHARTS ****
+
+dfs = [
+    stacked_dfs["Municipal"],
+    stacked_dfs["Local"],
+]  # Do not make stacked bar chart for grid cells
+
+for i, df in enumerate(dfs):
+
     fig = px.bar(
         df.sort_values("length", ascending=False),
         x="id",
         y="length",
-        color="lts",
-        title=length_titles[e],
+        color="Network level",
+        title=length_titles[i],
         labels=plotly_labels,
         color_discrete_map=lts_color_dict,
     )
@@ -265,7 +314,7 @@ for e, gdf in enumerate(gdfs[:-1]):  # Do not make stacked bar chart for grid ce
     fig.show()
 
     fig.write_image(
-        filepaths_bar[e],
+        filepaths_bar[i],
         width=1000,
         height=750,
     )
@@ -274,17 +323,17 @@ for e, gdf in enumerate(gdfs[:-1]):  # Do not make stacked bar chart for grid ce
         df.sort_values("density", ascending=False),
         x="id",
         y="density",
-        color="lts",
-        title=density_titles[e],
+        color="Network level",
+        title=density_titles[i],
         labels=plotly_labels,
         color_discrete_map=lts_color_dict,
     )
     fig.show()
 
 # %%
+# **** VIOLIN PLOTS ****
 for e, gdf in enumerate(gdfs):
 
-    # **** VIOLIN PLOTS ****
     colors = [v for v in lts_color_dict.values()]
 
     for i, d in enumerate(density_columns):
