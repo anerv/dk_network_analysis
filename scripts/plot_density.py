@@ -154,7 +154,7 @@ for e, gdf in enumerate(gdfs):
         )
 
     ###### Plot relative network length #####
-    plot_cols = length_relative_columns
+    plot_cols = length_relative_steps_columns
 
     for p in plot_cols:
         gdf[p] = gdf[p] * 100
@@ -164,8 +164,8 @@ for e, gdf in enumerate(gdfs):
         "LTS 1-2 (%)",
         "LTS 1-3 (%)",
         "LTS 1-4 (%)",
-        "No biking (%)",
-        # "Total car (%)",
+        # "No biking (%)",
+        "Total car (%)",
     ]
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_file_paths[e] + l for l in labels]
