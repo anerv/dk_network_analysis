@@ -64,13 +64,22 @@ length_steps_columns = [
     "total_network_length",
 ]
 
-length_relative_columns = [
+length_relative_steps_columns = [
     "lts_1_length_rel",
     "lts_1_2_length_rel",
     "lts_1_3_length_rel",
     "lts_1_4_length_rel",
-    "lts_7_length_rel",
-    # "total_car_length_rel",
+    # "lts_7_length_rel",
+    "total_car_length_rel",
+]
+
+length_relative_columns = [
+    "lts_1_length_rel",
+    "lts_2_length_rel",
+    "lts_3_length_rel",
+    "lts_4_length_rel",
+    # "lts_7_length_rel",
+    "total_car_length_rel",
 ]
 
 density_columns = [
