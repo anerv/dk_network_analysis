@@ -187,6 +187,7 @@ def plot_classified_poly(
     gdf,
     plot_col,
     scheme,
+    k,
     cx_tile,
     plot_na,
     cmap,
@@ -210,6 +211,7 @@ def plot_classified_poly(
     gdf (GeoDataFrame): The GeoDataFrame containing the polygon data to be plotted.
     plot_col (str): The column in the GeoDataFrame to be used for coloring the polygons.
     scheme (str): The classification scheme to be used for coloring the polygons.
+    k (int): The number of classes to be used for the classification.
     cx_tile (str): The contextily tile to be used for the basemap.
     plot_na (bool): If True, polygons with no data are plotted in light grey.
     cmap (str): The colormap to be used for coloring the polygons.
@@ -240,6 +242,7 @@ def plot_classified_poly(
                 ax=ax,
                 column=plot_col,
                 scheme=scheme,
+                k=k,
                 cmap=cmap,
                 alpha=alpha,
                 edgecolor=edgecolor,
@@ -255,6 +258,7 @@ def plot_classified_poly(
                 ax=ax,
                 column=plot_col,
                 scheme=scheme,
+                k=k,
                 cmap=cmap,
                 alpha=alpha,
                 edgecolor=edgecolor,
@@ -268,6 +272,7 @@ def plot_classified_poly(
                 ax=ax,
                 column=plot_col,
                 scheme=scheme,
+                k=k,
                 cmap=cmap,
                 alpha=alpha,
                 edgecolor=edgecolor,
