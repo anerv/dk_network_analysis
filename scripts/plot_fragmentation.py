@@ -45,7 +45,7 @@ labels = [
     "total car network",
 ]
 columns = ["bike_length"] * 5 + ["geom_length"]
-
+# %%
 for i, df in enumerate(component_size_dfs):
     plot_func.make_zipf_component_plot(
         df,
