@@ -120,10 +120,10 @@ network_levels_steps = [
 ]
 
 
-# For each level
+# For each stepwise level
 for a, df in zip(aggregation_levels, density_data):
 
-    for i, l in enumerate(network_levels[1:]):
+    for i, l in enumerate(network_levels_steps[1:]):
 
         min_share = df[length_relative_steps_columns[i]].min()
         max_share = df[length_relative_steps_columns[i]].max()
@@ -135,17 +135,17 @@ for a, df in zip(aggregation_levels, density_data):
     print("\n")
 
 # %%
-# For each stepwise level
+# For each level
 
 for a, df in zip(aggregation_levels, density_data):
 
-    for i, l in enumerate(network_levels_steps[1:]):
+    for i, l in enumerate(network_levels[1:]):
 
         min_share = df[length_relative_columns[i]].min()
         max_share = df[length_relative_columns[i]].max()
         mean_share = df[length_relative_columns[i]].mean()
         print(
-            f"At the {a} level, the {l} network is between {min_share:.2f} and {max_share:.2f}% of the full network length. The average share is {mean_share:.2f}%"
+            f"At the {a} level, the {l} network is between {min_share:.2f} % and {max_share:.2f}% of the full network length. The average share is {mean_share:.2f}%"
         )
 
     print("\n")
