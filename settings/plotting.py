@@ -20,6 +20,8 @@ mpl.rcParams["xtick.labelsize"] = 9
 mpl.rcParams["ytick.labelsize"] = 9
 mpl.rcParams["hatch.linewidth"] = 0.5
 
+scheme = "fisherjenks"
+k = 5
 lts_color_dict = {
     "1": "blue",
     "2": "green",
