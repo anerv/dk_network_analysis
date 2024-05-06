@@ -221,7 +221,7 @@ all_filepaths = [
     "../results/component_correlation/socio/component_count_infra_density_",
     "../results/component_correlation/h3/component_count_infra_density_",
 ]
-
+# %%
 for i, df in enumerate(dfs):
 
     for c, d, l in zip(
@@ -384,7 +384,7 @@ for e, df in enumerate(dfs):
         color_discrete_sequence=[v for v in lts_color_dict.values()],
         # color_continuous_scale=px.colors.sequential.Viridis,
         hover_data="id",
-        opacity=0.8,
+        opacity=0.6,
         labels=plotly_labels,
         log_x=True,
         log_y=True,
@@ -432,6 +432,58 @@ for e, df in enumerate(dfs):
         height=750,
     )
 
+    fig.show()
+
+# %%
+
+df_1 = df.loc[df["lts"] == "1"]
+df_2 = df.loc[df["lts"] == "1_2"]
+df_3 = df.loc[df["lts"] == "1_3"]
+df_4 = df.loc[df["lts"] == "1_4"]
+df_car = df.loc[df["lts"] == "car"]
+df_all = df.loc[df["lts"] == "all"]
+
+dfs = [df_1, df_2, df_3, df_4, df_car, df_all]
+
+scatter_filepaths_subsets = [
+    "../results/component_correlation/h3/component_count_infra_density_all_areas_1.jpeg",
+    "../results/component_correlation/h3/component_count_infra_density_all_areas_2.jpeg",
+    "../results/component_correlation/h3/component_count_infra_density_all_areas_3.jpeg",
+    "../results/component_correlation/h3/component_count_infra_density_all_areas_4.jpeg",
+    "../results/component_correlation/h3/component_count_infra_density_all_areas_car.jpeg",
+    "../results/component_correlation/h3/component_count_infra_density_all_areas_all.jpeg",
+]
+# %%
+for i, df_subset in enumerate(dfs):
+
+    fig = px.scatter(
+        df_subset,
+        x="density",
+        y="component_count",
+        color="lts",
+        color_discrete_sequence=[v for v in lts_color_dict.values()],
+        # color_continuous_scale=px.colors.sequential.Viridis,
+        hover_data="id",
+        opacity=0.4,
+        labels=plotly_labels,
+        log_x=True,
+        log_y=True,
+    )
+
+    fig.update_layout(
+        font=dict(size=12, color="black"),
+        autosize=False,
+        width=800,
+        height=600,
+        yaxis_title="Component count",
+        title=scatter_titles[e],
+    )
+
+    fig.write_image(
+        scatter_filepaths_subsets[i],
+        width=1000,
+        height=750,
+    )
     fig.show()
 
 # %%
