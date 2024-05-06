@@ -249,11 +249,18 @@ h3_ids = density_h3.hex_id.unique()
 
 id_lists = [municipalities, socio_ids, h3_ids]
 
-filepaths_kde = [
-    "../results/network_density/administrative/lts_kde.jpg",
-    "../results/network_density/socio/lts_kde.jpg",
-    "../results/network_density/h3/lts_kde.jpg",
+filepaths_kde_length = [
+    "../results/network_density/administrative/lts_kde_length.jpg",
+    "../results/network_density/socio/lts_kde_length.jpg",
+    "../results/network_density/h3/lts_kde_length.jpg",
 ]
+
+filepaths_kde_density = [
+    "../results/network_density/administrative/lts_kde_density.jpg",
+    "../results/network_density/socio/lts_kde_density.jpg",
+    "../results/network_density/h3/lts_kde_density.jpg",
+]
+
 
 filepaths_bar = [
     "../results/network_density/administrative/lts_stacked_bar.jpg",
@@ -266,6 +273,7 @@ filepaths_violin = [
     "../results/network_density/socio/violin_",
     "../results/network_density/h3/violin_",
 ]
+
 
 stacked_dfs = {}
 
@@ -327,9 +335,28 @@ for label, df in stacked_dfs.items():
 
     fig.set_xlabel("Length (km)")
     fig.set_title(f"Network length KDE at the {label.lower()} level")
-    plt.savefig(filepaths_kde[list(stacked_dfs.keys()).index(label)])
+    plt.savefig(filepaths_kde_length[list(stacked_dfs.keys()).index(label)])
 
     plt.show()
+
+    plt.close()
+
+    fig = sns.kdeplot(
+        data=df,
+        x="density",
+        hue="Network level",
+        # multiple="stack",
+        # fill=True,
+        log_scale=True,
+        palette=lts_color_dict.values(),
+    )
+
+    fig.set_xlabel("Density (km/sqkm)")
+    fig.set_title(f"Network density KDE at the {label.lower()} level")
+    plt.savefig(filepaths_kde_density[list(stacked_dfs.keys()).index(label)])
+
+    plt.show()
+    plt.close
 
 # %%
 # **** BAR CHARTS ****
@@ -372,6 +399,7 @@ for i, df in enumerate(dfs):
 
 # %%
 # **** VIOLIN PLOTS ****
+
 for e, gdf in enumerate(gdfs):
 
     colors = [v for v in lts_color_dict.values()]
@@ -409,7 +437,7 @@ for e, gdf in enumerate(gdfs):
         fig.show()
 
         fig.write_image(
-            filepaths_violin[e] + d + ".jpg",
+            filepaths_violin[e] + l + ".jpg",
             width=1000,
             height=750,
         )
