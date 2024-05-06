@@ -109,7 +109,6 @@ all_file_paths = [
 
 for e, gdf in enumerate(gdfs):
 
-    print("At iteration: ", e)
     ###### Plot individual LTS densities #####
 
     plot_cols = density_columns
@@ -123,7 +122,8 @@ for e, gdf in enumerate(gdfs):
         plot_func.plot_classified_poly(
             gdf=gdf,
             plot_col=p,
-            scheme="quantiles",
+            scheme=scheme,
+            k=k,
             cx_tile=cx_tile_2,
             plot_na=True,
             cmap=pdict["pos"],
@@ -144,7 +144,40 @@ for e, gdf in enumerate(gdfs):
         plot_func.plot_classified_poly(
             gdf=gdf,
             plot_col=p,
-            scheme="quantiles",
+            scheme=scheme,
+            k=k,
+            cx_tile=cx_tile_2,
+            plot_na=True,
+            cmap=pdict["pos"],
+            edgecolor="none",
+            title=plot_titles[i],
+            fp=filepaths[i],
+        )
+
+    ###### Plot relative network length #####
+    plot_cols = length_relative_columns
+
+    for p in plot_cols:
+        gdf[p] = gdf[p] * 100
+
+    labels = [
+        "LTS 1 (%)",
+        "LTS 2 (%)",
+        "LTS 3 (%)",
+        "LTS 4 (%)",
+        # "No biking (%)",
+        "Total car (%)",
+    ]
+    plot_titles = [all_plot_titles[e] + l for l in labels]
+    filepaths = [all_file_paths[e] + l for l in labels]
+
+    for i, p in enumerate(plot_cols):
+
+        plot_func.plot_classified_poly(
+            gdf=gdf,
+            plot_col=p,
+            scheme=scheme,
+            k=k,
             cx_tile=cx_tile_2,
             plot_na=True,
             cmap=pdict["pos"],
@@ -156,7 +189,11 @@ for e, gdf in enumerate(gdfs):
     ###### Plot relative network length #####
     plot_cols = length_relative_steps_columns
 
-    for p in plot_cols:
+    convert_cols = [
+        l for l in length_relative_steps_columns if l not in length_relative_columns
+    ]
+
+    for p in convert_cols:
         gdf[p] = gdf[p] * 100
 
     labels = [
@@ -175,7 +212,8 @@ for e, gdf in enumerate(gdfs):
         plot_func.plot_classified_poly(
             gdf=gdf,
             plot_col=p,
-            scheme="quantiles",
+            scheme=scheme,
+            k=k,
             cx_tile=cx_tile_2,
             plot_na=True,
             cmap=pdict["pos"],
@@ -183,6 +221,7 @@ for e, gdf in enumerate(gdfs):
             title=plot_titles[i],
             fp=filepaths[i],
         )
+
 
 # %%
 

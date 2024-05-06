@@ -195,7 +195,8 @@ for e, gdf in enumerate(gdfs):
         plot_func.plot_classified_poly(
             gdf=gdf,
             plot_col=p,
-            scheme="quantiles",
+            scheme=scheme,
+            k=k,
             cx_tile=cx_tile_2,
             plot_na=True,
             cmap=pdict["neg"],
