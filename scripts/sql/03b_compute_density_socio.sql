@@ -76,7 +76,7 @@ FROM
 CREATE TABLE socio_buffer AS
 SELECT
     id,
-    ST_Buffer(geometry, -1) AS geometry
+    ST_Buffer(geometry, -0.001) AS geometry
 FROM
     socio;
 

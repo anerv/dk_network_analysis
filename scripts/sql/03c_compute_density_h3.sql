@@ -38,7 +38,7 @@ FROM
 CREATE TABLE h3_buffer AS
 SELECT
     hex_id,
-    ST_Buffer(geometry, -1) AS geometry
+    ST_Buffer(geometry, -0.001) AS geometry
 FROM
     h3_grid;
 
