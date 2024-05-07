@@ -8,6 +8,14 @@ Large differences between munis in how much of the network is 1, 2, 3, etc.
 
 Value ranges are larger at a fine scale.
 
+Density and connectivity are correlated - at some scales
+
+Much higher fragmentation for more bikefriendly network
+
+Tendency to have a lot of high ranked roads in cities - but not only cities - does not have to be an urban thing
+
+The question is - is high share a goal? Is minimum share enough?
+
 ## Density - MAPS
 
 ### MUNI
