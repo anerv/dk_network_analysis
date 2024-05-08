@@ -184,7 +184,7 @@ all_plot_titles = [
     "Hexagonal grid component count for: ",
 ]
 
-plot_titles = [f"Municipal component count for: {l}" for l in labels]
+# plot_titles = [f"Municipal component count for: {l}" for l in labels]
 
 for e, gdf in enumerate(gdfs):
 
@@ -485,5 +485,103 @@ for i, df_subset in enumerate(dfs):
         height=750,
     )
     fig.show()
+
+# %%
+# **** PLOT COMPONENTS PER LENGTH AND DENSITY ****
+
+
+muni_components = gpd.GeoDataFrame.from_postgis(
+    "SELECT * FROM component_length_muni;",
+    engine,
+    crs=crs,
+    geom_col="geometry",
+)
+
+muni_components.replace(0, np.nan, inplace=True)
+
+socio_components = gpd.GeoDataFrame.from_postgis(
+    "SELECT * FROM component_length_socio;",
+    engine,
+    crs=crs,
+    geom_col="geometry",
+)
+
+socio_components.replace(0, np.nan, inplace=True)
+
+h3_components = gpd.GeoDataFrame.from_postgis(
+    "SELECT * FROM component_length_h3;",
+    engine,
+    crs=crs,
+    geom_col="geometry",
+)
+
+h3_components.replace(0, np.nan, inplace=True)
+
+gdfs = [muni_components, socio_components, h3_components]
+
+
+plot_cols = component_per_km_cols
+
+labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car", "Total network"]
+
+all_filepaths = [
+    "../results/component_count/administrative/",
+    "../results/component_count/socio/",
+    "../results/component_count/h3/",
+]
+all_plot_titles = [
+    "Municipal component count per km for: ",
+    "Local component count per km for: ",
+    "Hexagonal grid component count per km for: ",
+]
+
+for e, gdf in enumerate(gdfs):
+
+    plot_titles = [all_plot_titles[e] + l for l in labels]
+    filepaths = [all_filepaths[e] + l + "_per_km" for l in labels]
+
+    for i, p in enumerate(plot_cols):
+        plot_func.plot_classified_poly(
+            gdf=gdf,
+            plot_col=p,
+            scheme=scheme,
+            k=k,
+            cx_tile=cx_tile_2,
+            plot_na=True,
+            cmap=pdict["neg"],
+            edgecolor="none",
+            title=plot_titles[i],
+            fp=filepaths[i],
+        )
+
+
+all_plot_titles = [
+    "Municipal component count per km/sqkm for: ",
+    "Local component count per km/sqkm for: ",
+    "Hexagonal grid component count per km/sqkm for: ",
+]
+
+
+plot_cols = component_per_km_sqkm_cols
+
+
+for e, gdf in enumerate(gdfs):
+
+    plot_titles = [all_plot_titles[e] + l for l in labels]
+    filepaths = [all_filepaths[e] + l + "_per_km_sqkm" for l in labels]
+
+    for i, p in enumerate(plot_cols):
+        plot_func.plot_classified_poly(
+            gdf=gdf,
+            plot_col=p,
+            scheme=scheme,
+            k=k,
+            cx_tile=cx_tile_2,
+            plot_na=True,
+            cmap=pdict["neg"],
+            edgecolor="none",
+            title=plot_titles[i],
+            fp=filepaths[i],
+        )
 
 # %%
