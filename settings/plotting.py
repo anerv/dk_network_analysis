@@ -102,6 +102,24 @@ density_steps_columns = [
     "total_network_dens",
 ]
 
+component_per_km_cols = [
+    "component_per_length_1",
+    "component_per_length_2",
+    "component_per_length_3",
+    "component_per_length_4",
+    "component_per_length_car",
+    "component_per_length_all",
+]
+
+component_per_km_sqkm_cols = [
+    "component_per_dens_1",
+    "component_per_dens_2",
+    "component_per_dens_3",
+    "component_per_dens_4",
+    "component_per_dens_car",
+    "component_per_dens_all",
+]
+
 
 plotly_labels = {
     "lts_1_dens": "LTS 1 density (km/sqkm)",
