@@ -80,7 +80,16 @@ SELECT
 FROM
     socio;
 
+CREATE TABLE socio_buffer_100 AS
+SELECT
+    id,
+    ST_Buffer(geometry, 100) AS geometry
+FROM
+    socio;
+
 CREATE INDEX IF NOT EXISTS socio_buffer_geom_ix ON socio_buffer USING GIST (geometry);
+
+CREATE INDEX IF NOT EXISTS socio_buffer100_geom_ix ON socio_buffer_100 USING GIST (geometry);
 
 CREATE INDEX IF NOT EXISTS socio_edges_geom_ix ON socio_edges USING GIST (geometry);
 
@@ -97,6 +106,16 @@ FROM
     socio_buffer s
 WHERE
     ST_Intersects(socio_edges.geometry, s.geometry);
+
+UPDATE
+    socio_edges
+SET
+    socio_id = s.id
+FROM
+    socio_buffer_100 s
+WHERE
+    ST_Intersects(socio_edges.geometry, s.geometry)
+    AND socio_id IS NULL;
 
 -- RECOMPUTE BIKE INFRA LENGTH
 UPDATE
