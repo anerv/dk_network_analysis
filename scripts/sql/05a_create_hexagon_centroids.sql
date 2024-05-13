@@ -1,14 +1,38 @@
 DROP TABLE IF EXISTS centroids;
 
-DROP TABLE IF EXISTS node_lts_1;
+DROP TABLE IF EXISTS nodes_all;
 
-DROP TABLE IF EXISTS node_lts_2;
+DROP TABLE IF EXISTS nodes_lts_1;
 
-DROP TABLE IF EXISTS node_lts_3;
+DROP TABLE IF EXISTS nodes_lts_2;
 
-DROP TABLE IF EXISTS node_lts_4;
+DROP TABLE IF EXISTS nodes_lts_3;
 
-DROP TABLE IF EXISTS node_lts_car;
+DROP TABLE IF EXISTS nodes_lts_4;
+
+DROP TABLE IF EXISTS nodes_lts_car;
+
+DROP VIEW IF EXISTS nodes_all_view;
+
+DROP VIEW IF EXISTS nodes_lts_1_view;
+
+DROP VIEW IF EXISTS nodes_lts_2_view;
+
+DROP VIEW IF EXISTS nodes_lts_3_view;
+
+DROP VIEW IF EXISTS nodes_lts_4_view;
+
+DROP VIEW IF EXISTS nodes_lts_car_view;
+
+DROP TABLE IF EXISTS reach_lts_1;
+
+DROP TABLE IF EXISTS reach_lts_2;
+
+DROP TABLE IF EXISTS reach_lts_3;
+
+DROP TABLE IF EXISTS reach_lts_4;
+
+DROP TABLE IF EXISTS reach_lts_car;
 
 CREATE TABLE centroids AS
 SELECT
@@ -22,173 +46,410 @@ CREATE INDEX IF NOT EXISTS centroid_geom_ix ON centroids USING GIST (geometry);
 ALTER TABLE
     nodes
 ADD
-    COLUMN hex_id VARCHAR;
+    COLUMN IF NOT EXISTS hex_id VARCHAR;
 
 UPDATE
     nodes
 SET
     hex_id = h3_grid.hex_id
+FROM
+    h3_grid
 WHERE
     ST_Intersects(nodes.geometry, h3_grid.geometry);
 
--- ALTER TABLE
---     nodes
--- ADD
---     COLUMN lts_access INT DEFAULT NULL;
--- UPDATE
---     nodes n
--- SET
---     lts_access = e.lts_access
-CREATE TABLE node_lts_1 AS (
-    SELECT
-        source AS node,
-        geometry
-    UNION
-    SELECT
-        target AS node,
-        geometry
-    FROM
-        edges
-    WHERE
-        lts_access = 1
-);
-
-CREATE TABLE node_lts_2 AS (
-    SELECT
-        source AS node,
-        geometry
-    UNION
-    SELECT
-        target AS node,
-        geometry
-    FROM
-        edges
-    WHERE
-        lts_access IN (1, 2)
-);
-
-CREATE TABLE node_lts_3 AS (
-    SELECT
-        source AS node,
-        geometry
-    UNION
-    SELECT
-        target AS node,
-        geometry
-    FROM
-        edges
-    WHERE
-        lts_access IN (1, 2, 3)
-);
-
-CREATE TABLE node_lts_4 AS (
-    SELECT
-        source AS node,
-        geometry
-    UNION
-    SELECT
-        target AS node,
-        geometry
-    FROM
-        edges
-    WHERE
-        lts_access IN (1, 2, 3, 4)
-);
-
-CREATE TABLE node_lts_car AS (
-    SELECT
-        source AS node,
-        geometry
-    UNION
-    SELECT
-        target AS node,
-        geometry
-    FROM
-        edges
-    WHERE
-        car_traffic IS TRUE
-        AND lts_access IN (1, 2, 3, 4, 7)
-);
-
-CREATE INDEX IF NOT EXISTS node1_geom_ix ON nodes_lts_1 USING GIST (geometry);
-
-CREATE INDEX IF NOT EXISTS node2_geom_ix ON nodes_lts_2 USING GIST (geometry);
-
-CREATE INDEX IF NOT EXISTS node3_geom_ix ON nodes_lts_3 USING GIST (geometry);
-
-CREATE INDEX IF NOT EXISTS node4_geom_ix ON nodes_lts_4 USING GIST (geometry);
-
-CREATE INDEX IF NOT EXISTS nodecar_geom_ix ON nodes_lts_car USING GIST (geometry);
-
--- JOIN centroids to nodes 1 on hex id limit 1 order by distance
+CREATE VIEW nodes_all_view AS
 SELECT
-    ce.hex_id,
-    n.node,
-    n.geometry,
-    ST_Distance(ce.geometry, n.geometry) AS dist
+    DISTINCT node AS id
 FROM
-    centroids ce
-    JOIN LATERAL lts_nodes_1 n ON ce.hex_id = n.hex_id
-ORDER BY
-    dist
-LIMIT
-    1;
-
-SELECT
-    ce.hex_id,
-    n.node,
-    n.geometry,
-    ST_Distance(ce.geometry, n.geometry) AS dist
-FROM
-    centroids ce
-    JOIN LATERAL lts_nodes_1 n ON ce.hex_id = n.hex_id;
-
-SELECT
-    subways.gid AS subway_gid,
-    subways.name AS subway,
-    streets.name AS street,
-    streets.gid AS street_gid,
-    streets.geom :: geometry(MultiLinestring, 26918) AS street_geom,
-    streets.dist
-FROM
-    nyc_subway_stations subways
-    CROSS JOIN LATERAL (
+    (
         SELECT
-            streets.name,
-            streets.geom,
-            streets.gid,
-            streets.geom < -> subways.geom AS dist
+            source AS node
         FROM
-            nyc_streets AS streets
-        ORDER BY
-            dist
-        LIMIT
-            1
-    ) streets;
-
-SELECT
-    A .id,
-    b.value,
-    -- ST_Distance(a.wkb_geometry::GEOGRAPHY, b.wkb_geometry::GEOGRAPHY) as dist,
-    A .wkb_geometry
-FROM
-    t2 AS A
-    JOIN LATERAL (
+            edges
+        WHERE
+            lts_access IN (1, 2, 3, 4, 7)
+            OR lts_1_gap IS TRUE
+            OR lts_2_gap IS TRUE
+            OR lts_3_gap IS TRUE
+            OR lts_4_gap IS TRUE
+        UNION
+        ALL
         SELECT
-            VALUE
+            target AS node
         FROM
-            t1
-        ORDER BY
-            A .wkb_geometry < -> t2.wkb_geometry
-        LIMIT
-            1
-    ) AS b ON TRUE -- CREATE JOINS BETWEEN hex centroids AND edge nodes for each lts
-    -- FIND CLOSEST NODE TO EACH HEX CENTROID FOR EACH LTS *IF* NODE IS WITHIN HEXAGON
-    -- MAKE node_lts_access columns
-    -- JOIN TO Hexagons
-    -- find the one closest to the centroid? 
-    -- VIEWS?
-    -- - FOR each LTS / component TABLE: 
-    -- -    FOR each intersecting component WITH A hexagon,
-    --          find node closest TO centroid - Store nodes - FOR each node,
-    --          compute pgr driving distance USING THE edge components FOR that levels - Store TO each hex (total VALUE)
+            edges
+        WHERE
+            lts_access IN (1, 2, 3, 4, 7)
+            OR lts_1_gap IS TRUE
+            OR lts_2_gap IS TRUE
+            OR lts_3_gap IS TRUE
+            OR lts_4_gap IS TRUE
+    ) AS nodes;
+
+CREATE VIEW nodes_lts_1_view AS
+SELECT
+    DISTINCT node AS id
+FROM
+    (
+        SELECT
+            source AS node
+        FROM
+            edges
+        WHERE
+            lts_access IN (1)
+            OR lts_1_gap IS TRUE
+        UNION
+        ALL
+        SELECT
+            target AS node
+        FROM
+            edges
+        WHERE
+            lts_access IN (1)
+            OR lts_1_gap IS TRUE
+    ) AS nodes;
+
+CREATE VIEW nodes_lts_2_view AS
+SELECT
+    DISTINCT node AS id
+FROM
+    (
+        SELECT
+            source AS node
+        FROM
+            edges
+        WHERE
+            lts_access IN (1, 2)
+            OR lts_1_gap IS TRUE
+            OR lts_2_gap IS TRUE
+        UNION
+        ALL
+        SELECT
+            target AS node
+        FROM
+            edges
+        WHERE
+            lts_access IN (1, 2)
+            OR lts_1_gap IS TRUE
+            OR lts_2_gap IS TRUE
+    ) AS nodes;
+
+CREATE VIEW nodes_lts_3_view AS
+SELECT
+    DISTINCT node AS id
+FROM
+    (
+        SELECT
+            source AS node
+        FROM
+            edges
+        WHERE
+            lts_access IN (1, 2, 3)
+            OR lts_1_gap IS TRUE
+            OR lts_2_gap IS TRUE
+            OR lts_3_gap IS TRUE
+        UNION
+        ALL
+        SELECT
+            target AS node
+        FROM
+            edges
+        WHERE
+            lts_access IN (1, 2, 3)
+            OR lts_1_gap IS TRUE
+            OR lts_2_gap IS TRUE
+            OR lts_3_gap IS TRUE
+    ) AS nodes;
+
+CREATE VIEW nodes_lts_4_view AS
+SELECT
+    DISTINCT node AS id
+FROM
+    (
+        SELECT
+            source AS node
+        FROM
+            edges
+        WHERE
+            lts_access IN (1, 2, 3, 4)
+            OR lts_1_gap IS TRUE
+            OR lts_2_gap IS TRUE
+            OR lts_3_gap IS TRUE
+            OR lts_4_gap IS TRUE
+        UNION
+        ALL
+        SELECT
+            target AS node
+        FROM
+            edges
+        WHERE
+            lts_access IN (1, 2, 3, 4)
+            OR lts_1_gap IS TRUE
+            OR lts_2_gap IS TRUE
+            OR lts_3_gap IS TRUE
+            OR lts_4_gap IS TRUE
+    ) AS nodes;
+
+CREATE VIEW nodes_lts_car_view AS
+SELECT
+    DISTINCT node AS id
+FROM
+    (
+        SELECT
+            source AS node
+        FROM
+            edges
+        WHERE
+            (
+                lts_access IN (1, 2, 3, 4, 7)
+                OR lts_1_gap IS TRUE
+                OR lts_2_gap IS TRUE
+                OR lts_3_gap IS TRUE
+                OR lts_4_gap IS TRUE
+            )
+            AND car_traffic IS TRUE
+        UNION
+        ALL
+        SELECT
+            target AS node
+        FROM
+            edges
+        WHERE
+            (
+                lts_access IN (1, 2, 3, 4, 7)
+                OR lts_1_gap IS TRUE
+                OR lts_2_gap IS TRUE
+                OR lts_3_gap IS TRUE
+                OR lts_4_gap IS TRUE
+            )
+            AND car_traffic IS TRUE
+    ) AS nodes;
+
+CREATE TABLE nodes_all AS
+SELECT
+    id,
+    geometry,
+    hex_id
+FROM
+    nodes
+WHERE
+    id IN (
+        SELECT
+            id
+        FROM
+            nodes_all_view
+    );
+
+CREATE TABLE nodes_lts_1 AS
+SELECT
+    id,
+    geometry,
+    hex_id
+FROM
+    nodes
+WHERE
+    id IN (
+        SELECT
+            id
+        FROM
+            nodes_lts_1_view
+    );
+
+CREATE TABLE nodes_lts_2 AS
+SELECT
+    id,
+    geometry,
+    hex_id
+FROM
+    nodes
+WHERE
+    id IN (
+        SELECT
+            id
+        FROM
+            nodes_lts_2_view
+    );
+
+CREATE TABLE nodes_lts_3 AS
+SELECT
+    id,
+    geometry,
+    hex_id
+FROM
+    nodes
+WHERE
+    id IN (
+        SELECT
+            id
+        FROM
+            nodes_lts_3_view
+    );
+
+CREATE TABLE nodes_lts_4 AS
+SELECT
+    id,
+    geometry,
+    hex_id
+FROM
+    nodes
+WHERE
+    id IN (
+        SELECT
+            id
+        FROM
+            nodes_lts_4_view
+    );
+
+CREATE TABLE nodes_lts_car AS
+SELECT
+    id,
+    geometry,
+    hex_id
+FROM
+    nodes
+WHERE
+    id IN (
+        SELECT
+            id
+        FROM
+            nodes_lts_car_view
+    );
+
+CREATE TABLE reach_lts_1 AS WITH joined_points AS (
+    SELECT
+        ce.hex_id AS hex_id,
+        b.id AS node_id,
+        ce.geometry AS hex_centroid,
+        b.geometry AS node_geom,
+        ROW_NUMBER() OVER (
+            PARTITION BY ce.hex_id
+            ORDER BY
+                ST_Distance(ce.geometry, b.geometry)
+        ) AS rn
+    FROM
+        centroids ce
+        JOIN nodes_lts_1 b ON ce.hex_id = b.hex_id
+)
+SELECT
+    hex_id,
+    node_id,
+    hex_centroid,
+    node_geom
+FROM
+    joined_points
+WHERE
+    rn = 1;
+
+CREATE TABLE reach_lts_2 AS WITH joined_points AS (
+    SELECT
+        ce.hex_id AS hex_id,
+        b.id AS node_id,
+        ce.geometry AS hex_centroid,
+        b.geometry AS node_geom,
+        ROW_NUMBER() OVER (
+            PARTITION BY ce.hex_id
+            ORDER BY
+                ST_Distance(ce.geometry, b.geometry)
+        ) AS rn
+    FROM
+        centroids ce
+        JOIN nodes_lts_2 b ON ce.hex_id = b.hex_id
+)
+SELECT
+    hex_id,
+    node_id,
+    hex_centroid,
+    node_geom
+FROM
+    joined_points
+WHERE
+    rn = 1;
+
+CREATE TABLE reach_lts_3 AS WITH joined_points AS (
+    SELECT
+        ce.hex_id AS hex_id,
+        b.id AS node_id,
+        ce.geometry AS hex_centroid,
+        b.geometry AS node_geom,
+        ROW_NUMBER() OVER (
+            PARTITION BY ce.hex_id
+            ORDER BY
+                ST_Distance(ce.geometry, b.geometry)
+        ) AS rn
+    FROM
+        centroids ce
+        JOIN nodes_lts_3 b ON ce.hex_id = b.hex_id
+)
+SELECT
+    hex_id,
+    node_id,
+    hex_centroid,
+    node_geom
+FROM
+    joined_points
+WHERE
+    rn = 1;
+
+CREATE TABLE reach_lts_4 AS WITH joined_points AS (
+    SELECT
+        ce.hex_id AS hex_id,
+        b.id AS node_id,
+        ce.geometry AS hex_centroid,
+        b.geometry AS node_geom,
+        ROW_NUMBER() OVER (
+            PARTITION BY ce.hex_id
+            ORDER BY
+                ST_Distance(ce.geometry, b.geometry)
+        ) AS rn
+    FROM
+        centroids ce
+        JOIN nodes_lts_4 b ON ce.hex_id = b.hex_id
+)
+SELECT
+    hex_id,
+    node_id,
+    hex_centroid,
+    node_geom
+FROM
+    joined_points
+WHERE
+    rn = 1;
+
+CREATE TABLE reach_lts_car AS WITH joined_points AS (
+    SELECT
+        ce.hex_id AS hex_id,
+        b.id AS node_id,
+        ce.geometry AS hex_centroid,
+        b.geometry AS node_geom,
+        ROW_NUMBER() OVER (
+            PARTITION BY ce.hex_id
+            ORDER BY
+                ST_Distance(ce.geometry, b.geometry)
+        ) AS rn
+    FROM
+        centroids ce
+        JOIN nodes_lts_car b ON ce.hex_id = b.hex_id
+)
+SELECT
+    hex_id,
+    node_id,
+    hex_centroid,
+    node_geom
+FROM
+    joined_points
+WHERE
+    rn = 1;
+
+DROP TABLE IF EXISTS centroids;
+
+DROP TABLE IF EXISTS nodes_all;
+
+DROP TABLE IF EXISTS nodes_lts_1;
+
+DROP TABLE IF EXISTS nodes_lts_2;
+
+DROP TABLE IF EXISTS nodes_lts_3;
+
+DROP TABLE IF EXISTS nodes_lts_4;
+
+DROP TABLE IF EXISTS nodes_lts_car;
