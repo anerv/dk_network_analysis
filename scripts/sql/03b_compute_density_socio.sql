@@ -6,6 +6,8 @@ DROP TABLE IF EXISTS socio_edges;
 
 DROP TABLE IF EXISTS socio_buffer;
 
+DROP TABLE IF EXISTS socio_buffer_100;
+
 DROP TABLE IF EXISTS _segmented_lines;
 
 CREATE INDEX IF NOT EXISTS lts_access_ix ON edges (lts_access);
@@ -454,3 +456,5 @@ DROP TABLE IF EXISTS split_edges_socio;
 
 --DROP TABLE IF EXISTS socio_edges;
 DROP TABLE IF EXISTS socio_buffer;
+
+DROP TABLE IF EXISTS socio_buffer_100;
