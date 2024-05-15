@@ -1,17 +1,17 @@
 --- *********** ---
 -- COMPUTING REACHABLE NODES FROM EACH HEXAGON
 ---- *********** ---
-DROP TABLE IF EXISTS lts_1_reach;
+DROP TABLE IF EXISTS reach.lts_1_reach;
 
-DROP TABLE IF EXISTS lts_2_reach;
+DROP TABLE IF EXISTS reach.lts_2_reach;
 
-DROP TABLE IF EXISTS lts_3_reach;
+DROP TABLE IF EXISTS reach.lts_3_reach;
 
-DROP TABLE IF EXISTS lts_4_reach;
+DROP TABLE IF EXISTS reach.lts_4_reach;
 
-DROP TABLE IF EXISTS car_reach;
+DROP TABLE IF EXISTS reach.car_reach;
 
-CREATE TABLE lts_1_reach AS WITH start_points AS (
+CREATE TABLE reach.lts_1_reach AS WITH start_points AS (
     SELECT
         node_id
     FROM
@@ -48,7 +48,7 @@ FROM
 GROUP BY
     from_v;
 
-CREATE TABLE lts_2_reach AS WITH start_points AS (
+CREATE TABLE reach.lts_2_reach AS WITH start_points AS (
     SELECT
         node_id
     FROM
@@ -80,7 +80,7 @@ FROM
 GROUP BY
     from_v;
 
-CREATE TABLE lts_3_reach AS WITH start_points AS (
+CREATE TABLE reach.lts_3_reach AS WITH start_points AS (
     SELECT
         node_id
     FROM
@@ -112,7 +112,7 @@ FROM
 GROUP BY
     from_v;
 
-CREATE TABLE lts_4_reach AS WITH start_points AS (
+CREATE TABLE reach.lts_4_reach AS WITH start_points AS (
     SELECT
         node_id
     FROM
@@ -144,7 +144,7 @@ FROM
 GROUP BY
     from_v;
 
-CREATE TABLE car_reach AS WITH start_points AS (
+CREATE TABLE reach.car_reach AS WITH start_points AS (
     SELECT
         node_id
     FROM
