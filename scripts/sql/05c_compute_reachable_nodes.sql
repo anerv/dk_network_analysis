@@ -15,7 +15,7 @@ CREATE TABLE reach.lts_1_reach AS WITH start_points AS (
     SELECT
         node_id
     FROM
-        hex_lts_1
+        reach.hex_lts_1
 )
 SELECT
     from_v AS start_node,
@@ -23,12 +23,7 @@ SELECT
         node
         ORDER BY
             node
-    ) AS reachable_nodes,
-    ARRAY_AGG(
-        edge
-        ORDER BY
-            edge
-    ) AS reachable_edges
+    ) AS reachable_nodes
 FROM
     pgr_drivingDistance(
         'SELECT id, source, target, km AS cost FROM lts_1_edges',
