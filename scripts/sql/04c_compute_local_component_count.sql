@@ -1,14 +1,14 @@
-DROP TABLE IF EXISTS comp_count_muni;
+DROP TABLE IF EXISTS fragmentation.comp_count_muni;
 
-DROP TABLE IF EXISTS comp_count_socio;
+DROP TABLE IF EXISTS fragmentation.comp_count_socio;
 
-DROP TABLE IF EXISTS comp_count_h3;
+DROP TABLE IF EXISTS fragmentation.comp_count_h3;
 
-DROP TABLE IF EXISTS socio_component_edges;
+DROP TABLE IF EXISTS fragmentation.socio_component_edges;
 
-DROP TABLE IF EXISTS h3_component_edges;
+DROP TABLE IF EXISTS fragmentation.h3_component_edges;
 
-CREATE TABLE comp_count_muni AS WITH comp_count AS (
+CREATE TABLE fragmentation.comp_count_muni AS WITH comp_count AS (
     SELECT
         COUNT(DISTINCT component_all) AS comp_all_count,
         COUNT(DISTINCT component_1) AS comp_1_count,
@@ -18,7 +18,7 @@ CREATE TABLE comp_count_muni AS WITH comp_count AS (
         COUNT(DISTINCT component_car) AS comp_car_count,
         municipality
     FROM
-        component_edges
+        fragmentation.component_edges
     GROUP BY
         municipality
 )
@@ -36,7 +36,7 @@ FROM
     JOIN adm_boundaries mu ON co.municipality = mu.navn;
 
 -- JOIN SPLIT EDGES TO COMPONENT EDGES
-CREATE TABLE socio_component_edges AS
+CREATE TABLE fragmentation.socio_component_edges AS
 SELECT
     s.id,
     s.bike_length,
@@ -49,9 +49,9 @@ SELECT
     co.component_car
 FROM
     socio_edges s
-    JOIN component_edges co ON s.id = co.id;
+    JOIN fragmentation.component_edges co ON s.id = co.id;
 
-CREATE TABLE h3_component_edges AS
+CREATE TABLE fragmentation.h3_component_edges AS
 SELECT
     h.id,
     h.bike_length,
@@ -64,9 +64,11 @@ SELECT
     co.component_car
 FROM
     h3_edges h
-    JOIN component_edges co ON h.id = co.id;
+    JOIN fragmentation.component_edges co ON h.id = co.id;
 
-CREATE TABLE comp_count_socio AS WITH comp_count AS (
+CREATE TABLE fragmentation.comp_count_socio;
+
+AS WITH comp_count AS (
     SELECT
         socio_id,
         COUNT(DISTINCT component_all) AS comp_all_count,
@@ -76,7 +78,7 @@ CREATE TABLE comp_count_socio AS WITH comp_count AS (
         COUNT(DISTINCT component_1_4) AS comp_4_count,
         COUNT(DISTINCT component_car) AS comp_car_count
     FROM
-        socio_component_edges
+        fragmentation.socio_component_edges
     GROUP BY
         socio_id
 )
@@ -93,7 +95,7 @@ FROM
     comp_count co
     JOIN socio so ON co.socio_id = so.id;
 
-CREATE TABLE comp_count_h3 AS WITH comp_count AS (
+CREATE TABLE fragmentation.comp_count_h3 AS WITH comp_count AS (
     SELECT
         h3_id,
         COUNT(DISTINCT component_all) AS comp_all_count,
@@ -103,7 +105,7 @@ CREATE TABLE comp_count_h3 AS WITH comp_count AS (
         COUNT(DISTINCT component_1_4) AS comp_4_count,
         COUNT(DISTINCT component_car) AS comp_car_count
     FROM
-        h3_component_edges
+        fragmentation.h3_component_edges
     GROUP BY
         h3_id
 )

@@ -1,8 +1,12 @@
-DROP TABLE IF EXISTS density_municipality;
+DROP schema IF EXISTS density CASCADE;
+
+CREATE schema density;
+
+DROP TABLE IF EXISTS density.density_municipality;
 
 CREATE INDEX IF NOT EXISTS lts_access_ix ON edges (lts_access);
 
-CREATE TABLE IF NOT EXISTS density_municipality AS WITH lts_1 AS (
+CREATE TABLE IF NOT EXISTS density.density_municipality AS WITH lts_1 AS (
     SELECT
         SUM(bike_length) / 1000 AS lts_1_length,
         municipality
@@ -114,12 +118,12 @@ FROM
     LEFT JOIN total_car ON adm_boundaries.navn = total_car.municipality;
 
 DELETE FROM
-    density_municipality
+    density.density_municipality
 WHERE
     municipality IS NULL;
 
 ALTER TABLE
-    density_municipality
+    density.density_municipality
 ADD
     COLUMN IF NOT EXISTS total_network_length DOUBLE PRECISION DEFAULT NULL,
 ADD
@@ -150,54 +154,54 @@ ADD
     COLUMN IF NOT EXISTS total_network_dens DOUBLE PRECISION DEFAULT NULL;
 
 UPDATE
-    density_municipality
+    density.density_municipality
 SET
     lts_1_length = 0
 WHERE
     lts_1_length IS NULL;
 
 UPDATE
-    density_municipality
+    density.density_municipality
 SET
     lts_2_length = 0
 WHERE
     lts_2_length IS NULL;
 
 UPDATE
-    density_municipality
+    density.density_municipality
 SET
     lts_3_length = 0
 WHERE
     lts_3_length IS NULL;
 
 UPDATE
-    density_municipality
+    density.density_municipality
 SET
     lts_4_length = 0
 WHERE
     lts_4_length IS NULL;
 
 UPDATE
-    density_municipality
+    density.density_municipality
 SET
     lts_7_length = 0
 WHERE
     lts_7_length IS NULL;
 
 UPDATE
-    density_municipality
+    density.density_municipality
 SET
     total_network_length = lts_1_length + lts_2_length + lts_3_length + lts_4_length + lts_7_length;
 
 UPDATE
-    density_municipality
+    density.density_municipality
 SET
     lts_1_2_length = lts_1_length + lts_2_length,
     lts_1_3_length = lts_1_length + lts_2_length + lts_3_length,
     lts_1_4_length = lts_1_length + lts_2_length + lts_3_length + lts_4_length;
 
 UPDATE
-    density_municipality
+    density.density_municipality
 SET
     lts_1_dens = lts_1_length / (ST_Area(geometry) / 1000000),
     lts_2_dens = lts_2_length / (ST_Area(geometry) / 1000000),
@@ -214,7 +218,7 @@ SET
 
 -- CALCULATE RELATIVE LENGTH
 ALTER TABLE
-    density_municipality
+    density.density_municipality
 ADD
     COLUMN IF NOT EXISTS lts_1_length_rel DOUBLE PRECISION DEFAULT NULL,
 ADD
@@ -235,7 +239,7 @@ ADD
     COLUMN IF NOT EXISTS lts_4_length_rel DOUBLE PRECISION DEFAULT NULL;
 
 UPDATE
-    density_municipality
+    density.density_municipality
 SET
     lts_1_length_rel = lts_1_length / total_network_length,
     lts_2_length_rel = lts_2_length / total_network_length,
@@ -257,7 +261,7 @@ BEGIN
     SELECT
         COUNT(*) INTO miscalculated
     FROM
-        density_municipality
+        density.density_municipality
     WHERE
         lts_1_2_dens < lts_1_dens
         OR lts_1_3_dens < lts_1_2_dens
