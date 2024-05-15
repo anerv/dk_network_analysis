@@ -32,6 +32,10 @@ for i, q in enumerate(queries):
 
 
 connection.close()
+
+with open("vacuum_analyze.py") as f:
+    exec(f.read())
+
 print("Script 04 complete!")
 
 # %%
