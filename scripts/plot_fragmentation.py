@@ -20,12 +20,16 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 # %%
 # ********** Plot total component size distributions **********
 
-component_size_all = pd.read_sql("SELECT * FROM component_size_all;", engine)
-component_size_1 = pd.read_sql("SELECT * FROM component_size_1;", engine)
-component_size_2 = pd.read_sql("SELECT * FROM component_size_2;", engine)
-component_size_3 = pd.read_sql("SELECT * FROM component_size_3;", engine)
-component_size_4 = pd.read_sql("SELECT * FROM component_size_4;", engine)
-component_size_car = pd.read_sql("SELECT * FROM component_size_car;", engine)
+component_size_all = pd.read_sql(
+    "SELECT * FROM fragmentation.component_size_all;", engine
+)
+component_size_1 = pd.read_sql("SELECT * FROM fragmentation.component_size_1;", engine)
+component_size_2 = pd.read_sql("SELECT * FROM fragmentation.component_size_2;", engine)
+component_size_3 = pd.read_sql("SELECT * FROM fragmentation.component_size_3;", engine)
+component_size_4 = pd.read_sql("SELECT * FROM fragmentation.component_size_4;", engine)
+component_size_car = pd.read_sql(
+    "SELECT * FROM fragmentation.component_size_car;", engine
+)
 
 component_size_dfs = [
     component_size_all,
@@ -77,7 +81,7 @@ municipalities.remove(None)
 for muni in municipalities:
 
     muni_edges = gpd.GeoDataFrame.from_postgis(
-        f"SELECT * FROM component_edges WHERE municipality = '{muni}';",
+        f"SELECT * FROM fragmentation.component_edges WHERE municipality = '{muni}';",
         engine,
         crs=crs,
         geom_col="geometry",
@@ -141,7 +145,7 @@ for muni in municipalities:
 # **** PLOT LOCAL COMPONENT COUNT (MAPS) ****
 
 muni_components = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM comp_count_muni;",
+    "SELECT * FROM fragmentation.comp_count_muni;",
     engine,
     crs=crs,
     geom_col="geometry",
@@ -150,7 +154,7 @@ muni_components = gpd.GeoDataFrame.from_postgis(
 muni_components.replace(0, np.nan, inplace=True)
 
 socio_components = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM comp_count_socio;",
+    "SELECT * FROM fragmentation.comp_count_socio;",
     engine,
     crs=crs,
     geom_col="geometry",
@@ -159,7 +163,7 @@ socio_components = gpd.GeoDataFrame.from_postgis(
 socio_components.replace(0, np.nan, inplace=True)
 
 h3_components = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM comp_count_h3;",
+    "SELECT * FROM fragmentation.comp_count_h3;",
     engine,
     crs=crs,
     geom_col="geometry",
@@ -208,9 +212,15 @@ for e, gdf in enumerate(gdfs):
 # %%
 # ***** CORRELATION BETWEEN LOCAL COMPONENT COUNT AND NETWORK DENSITY *****
 
-component_length_muni = pd.read_sql("SELECT * FROM component_length_muni;", engine)
-component_length_socio = pd.read_sql("SELECT * FROM component_length_socio;", engine)
-component_length_h3 = pd.read_sql("SELECT * FROM component_length_h3;", engine)
+component_length_muni = pd.read_sql(
+    "SELECT * FROM fragmentation.component_length_muni;", engine
+)
+component_length_socio = pd.read_sql(
+    "SELECT * FROM fragmentation.component_length_socio;", engine
+)
+component_length_h3 = pd.read_sql(
+    "SELECT * FROM fragmentation.component_length_h3;", engine
+)
 
 dfs = [component_length_muni, component_length_socio, component_length_h3]
 
@@ -491,7 +501,7 @@ for i, df_subset in enumerate(dfs):
 
 
 muni_components = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM component_length_muni;",
+    "SELECT * FROM fragmentation.component_length_muni;",
     engine,
     crs=crs,
     geom_col="geometry",
@@ -500,7 +510,7 @@ muni_components = gpd.GeoDataFrame.from_postgis(
 muni_components.replace(0, np.nan, inplace=True)
 
 socio_components = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM component_length_socio;",
+    "SELECT * FROM fragmentation.component_length_socio;",
     engine,
     crs=crs,
     geom_col="geometry",
@@ -509,7 +519,7 @@ socio_components = gpd.GeoDataFrame.from_postgis(
 socio_components.replace(0, np.nan, inplace=True)
 
 h3_components = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM component_length_h3;",
+    "SELECT * FROM fragmentation.component_length_h3;",
     engine,
     crs=crs,
     geom_col="geometry",
