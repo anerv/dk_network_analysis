@@ -58,9 +58,7 @@ FROM
 WHERE
     ST_Intersects(nodes.geometry, h3_grid.geometry);
 
-CREATE VIEW reach.nodes_all_view;
-
-AS
+CREATE VIEW reach.nodes_all_view AS
 SELECT
     DISTINCT node AS id
 FROM
@@ -89,9 +87,7 @@ FROM
             OR lts_4_gap IS TRUE
     ) AS nodes;
 
-CREATE VIEW reach.nodes_lts_1_view;
-
-AS
+CREATE VIEW reach.nodes_lts_1_view AS
 SELECT
     DISTINCT node AS id
 FROM
@@ -114,9 +110,7 @@ FROM
             OR lts_1_gap IS TRUE
     ) AS nodes;
 
-CREATE VIEW reach.nodes_lts_2_view;
-
-AS
+CREATE VIEW reach.nodes_lts_2_view AS
 SELECT
     DISTINCT node AS id
 FROM
@@ -141,9 +135,7 @@ FROM
             OR lts_2_gap IS TRUE
     ) AS nodes;
 
-CREATE VIEW reach.nodes_lts_3_view;
-
-AS
+CREATE VIEW reach.nodes_lts_3_view AS
 SELECT
     DISTINCT node AS id
 FROM
@@ -199,9 +191,7 @@ FROM
             OR lts_4_gap IS TRUE
     ) AS nodes;
 
-CREATE VIEW reach.nodes_car_view;
-
-AS
+CREATE VIEW reach.nodes_car_view AS
 SELECT
     DISTINCT node AS id
 FROM
@@ -236,9 +226,7 @@ FROM
             AND car_traffic IS TRUE
     ) AS nodes;
 
-CREATE TABLE reach.nodes_all;
-
-AS
+CREATE TABLE reach.nodes_all AS
 SELECT
     id,
     geometry,
@@ -250,9 +238,8 @@ WHERE
         SELECT
             id
         FROM
-            reach.nodes_all_view;
-
-);
+            reach.nodes_all_view
+    );
 
 CREATE TABLE reach.nodes_lts_1 AS
 SELECT
@@ -266,13 +253,10 @@ WHERE
         SELECT
             id
         FROM
-            reach.nodes_lts_1_view;
+            reach.nodes_lts_1_view
+    );
 
-);
-
-CREATE TABLE reach.nodes_lts_2;
-
-AS
+CREATE TABLE reach.nodes_lts_2 AS
 SELECT
     id,
     geometry,
@@ -284,13 +268,10 @@ WHERE
         SELECT
             id
         FROM
-            reach.nodes_lts_2_view;
+            reach.nodes_lts_2_view
+    );
 
-);
-
-CREATE TABLE reach.nodes_lts_3;
-
-AS
+CREATE TABLE reach.nodes_lts_3 AS
 SELECT
     id,
     geometry,
@@ -302,13 +283,10 @@ WHERE
         SELECT
             id
         FROM
-            reach.nodes_lts_3_view;
+            reach.nodes_lts_3_view
+    );
 
-);
-
-CREATE TABLE reach.nodes_lts_4;
-
-AS
+CREATE TABLE reach.nodes_lts_4 AS
 SELECT
     id,
     geometry,
@@ -323,9 +301,7 @@ WHERE
             reach.nodes_lts_4_view
     );
 
-CREATE TABLE reach.nodes_lts_car;
-
-AS
+CREATE TABLE reach.nodes_lts_car AS
 SELECT
     id,
     geometry,
@@ -337,9 +313,8 @@ WHERE
         SELECT
             id
         FROM
-            reach.nodes_car_view;
-
-);
+            reach.nodes_car_view
+    );
 
 CREATE TABLE reach.hex_lts_1 AS WITH joined_points AS (
     SELECT
@@ -379,9 +354,7 @@ CREATE TABLE reach.hex_lts_2 AS WITH joined_points AS (
         ) AS rn
     FROM
         reach.centroids ce
-        JOIN reach.nodes_lts_2;
-
-b ON ce.hex_id = b.hex_id
+        JOIN reach.nodes_lts_2 b ON ce.hex_id = b.hex_id
 )
 SELECT
     hex_id,
@@ -406,9 +379,7 @@ CREATE TABLE reach.hex_lts_3 AS WITH joined_points AS (
         ) AS rn
     FROM
         reach.centroids ce
-        JOIN reach.nodes_lts_3;
-
-b ON ce.hex_id = b.hex_id
+        JOIN reach.nodes_lts_3 b ON ce.hex_id = b.hex_id
 )
 SELECT
     hex_id,
@@ -433,9 +404,7 @@ CREATE TABLE reach.hex_lts_4 AS WITH joined_points AS (
         ) AS rn
     FROM
         reach.centroids ce
-        JOIN reach.nodes_lts_4;
-
-b ON ce.hex_id = b.hex_id
+        JOIN reach.nodes_lts_4 b ON ce.hex_id = b.hex_id
 )
 SELECT
     hex_id,
@@ -460,9 +429,7 @@ CREATE TABLE reach.hex_car AS WITH joined_points AS (
         ) AS rn
     FROM
         reach.centroids ce
-        JOIN reach.nodes_lts_car;
-
-b ON ce.hex_id = b.hex_id
+        JOIN reach.nodes_lts_car b ON ce.hex_id = b.hex_id
 )
 SELECT
     hex_id,
