@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS density.density_socio;
 
 DROP TABLE IF EXISTS density.split_edges_socio;
 
-DROP TABLE IF EXISTS density.socio_edges;
+DROP TABLE IF EXISTS socio_edges;
 
 DROP TABLE IF EXISTS density.socio_buffer;
 
@@ -62,7 +62,7 @@ FROM
     JOIN socio AS s ON ST_Intersects(e.geometry, s.geometry);
 
 -- JOIN ADDITIONAL DATA TO SPLIT EDGES
-CREATE TABLE density.socio_edges AS
+CREATE TABLE socio_edges AS
 SELECT
     s.id,
     s.geometry,
@@ -93,35 +93,35 @@ CREATE INDEX IF NOT EXISTS socio_buffer_geom_ix ON density.socio_buffer USING GI
 
 CREATE INDEX IF NOT EXISTS socio_buffer100_geom_ix ON density.socio_buffer_100 USING GIST (geometry);
 
-CREATE INDEX IF NOT EXISTS socio_edges_geom_ix ON density.socio_edges USING GIST (geometry);
+CREATE INDEX IF NOT EXISTS socio_edges_geom_ix ON socio_edges USING GIST (geometry);
 
 ALTER TABLE
-    density.socio_edges
+    socio_edges
 ADD
     COLUMN IF NOT EXISTS socio_id BIGINT DEFAULT NULL;
 
 UPDATE
-    density.socio_edges
+    socio_edges
 SET
     socio_id = s.id
 FROM
     density.socio_buffer s
 WHERE
-    ST_Intersects(density.socio_edges.geometry, s.geometry);
+    ST_Intersects(socio_edges.geometry, s.geometry);
 
 UPDATE
-    density.socio_edges
+    socio_edges
 SET
     socio_id = s.id
 FROM
     density.socio_buffer_100 s
 WHERE
-    ST_Intersects(density.socio_edges.geometry, s.geometry)
+    ST_Intersects(socio_edges.geometry, s.geometry)
     AND socio_id IS NULL;
 
 -- RECOMPUTE BIKE INFRA LENGTH
 UPDATE
-    density.socio_edges
+    socio_edges
 SET
     bike_length = CASE
         WHEN (
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS density.density_socio AS WITH lts_1 AS (
         SUM(bike_length) / 1000 AS lts_1_length,
         socio_id
     FROM
-        density.socio_edges
+        socio_edges
     WHERE
         lts_access IN (1)
     GROUP BY
@@ -151,7 +151,7 @@ lts_2 AS (
         SUM(bike_length) / 1000 AS lts_2_length,
         socio_id
     FROM
-        density.socio_edges
+        socio_edges
     WHERE
         lts_access IN (2)
     GROUP BY
@@ -162,7 +162,7 @@ lts_3 AS (
         SUM(bike_length) / 1000 AS lts_3_length,
         socio_id
     FROM
-        density.socio_edges
+        socio_edges
     WHERE
         lts_access IN (3)
     GROUP BY
@@ -173,7 +173,7 @@ lts_4 AS (
         SUM(bike_length) / 1000 AS lts_4_length,
         socio_id
     FROM
-        density.socio_edges
+        socio_edges
     WHERE
         lts_access IN (4)
     GROUP BY
@@ -184,7 +184,7 @@ lts_5 AS (
         SUM(bike_length) / 1000 AS lts_5_length,
         socio_id
     FROM
-        density.socio_edges
+        socio_edges
     WHERE
         lts_access IN (5)
     GROUP BY
@@ -195,7 +195,7 @@ lts_6 AS (
         SUM(ST_Length(geometry)) / 1000 AS lts_6_length,
         socio_id
     FROM
-        density.socio_edges
+        socio_edges
     WHERE
         lts_access IN (6)
     GROUP BY
@@ -206,7 +206,7 @@ lts_7 AS (
         SUM(ST_Length(geometry)) / 1000 AS lts_7_length,
         socio_id
     FROM
-        density.socio_edges
+        socio_edges
     WHERE
         lts_access IN (7)
     GROUP BY
@@ -217,7 +217,7 @@ total_car AS (
         SUM(ST_Length(geometry)) / 1000 AS total_car_length,
         socio_id
     FROM
-        density.socio_edges
+        socio_edges
     WHERE
         car_traffic IS TRUE
         AND lts_access IN (1, 2, 3, 4, 7)
@@ -454,7 +454,7 @@ END $$;
 
 DROP TABLE IF EXISTS density.split_edges_socio;
 
---DROP TABLE IF EXISTS density.socio_edges;
+--DROP TABLE IF EXISTS socio_edges;
 DROP TABLE IF EXISTS density.socio_buffer;
 
 DROP TABLE IF EXISTS density.socio_buffer_100;
