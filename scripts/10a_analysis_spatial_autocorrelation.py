@@ -16,3 +16,11 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 # %%
+
+# DETERMINE SPATIAL CLUSTERING IN ALL RESULT TYPES
+
+# VIZ + EXPORT VALUES
+
+# REMEMBER SENSITIVITY TO WEIGHTS
+
+# %%

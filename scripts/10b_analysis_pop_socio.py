@@ -1,4 +1,3 @@
-# %%
 from src import db_functions as dbf
 from src import plotting_functions as plot_func
 import geopandas as gpd
@@ -16,5 +15,6 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 # %%
-# Print absolute and relative differences
-# Min, max, average etc.
+
+# LOOK INTO CORR BETWEEN POP DENS, URB CLASS, AND SOCIO FACTORS BETWEEN SELECT METRICS
+# %%
