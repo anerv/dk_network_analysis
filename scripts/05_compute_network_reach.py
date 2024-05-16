@@ -135,13 +135,21 @@ table_names = [
 
 edge_tables = ["lts_1_edges", "lts_2_edges", "lts_3_edges", "lts_4_edges", "car_edges"]
 
+hex_tables = [
+    "reach.hex_lts_1",
+    "reach.hex_lts_2",
+    "reach.hex_lts_3",
+    "reach.hex_lts_4",
+    "reach.hex_car",
+]
+
 for t in table_names:
 
     q = f"""
         ALTER TABLE
             {t}
         ADD
-            COLUMN IF NOT EXISTS edges_reached VARCHAR DEFAULT NULL,
+            COLUMN IF NOT EXISTS reached_edges VARCHAR DEFAULT NULL,
         ADD
             COLUMN IF NOT EXISTS edge_length NUMERIC DEFAULT NULL,
         ADD
@@ -156,7 +164,9 @@ for t in table_names:
         break
 
 # %%
-for i, t in enumerate(table_names[0:1]):
+for i, t in enumerate(table_names):
+
+    print(f"At round: {i}")
 
     # TODO: use start_nodes to get subsets??
     # GET ALL IDS
@@ -165,28 +175,34 @@ for i, t in enumerate(table_names[0:1]):
 
     for ids_chunk in dbf.get_chunks(sequence=node_ids, chunk_size=1000):
 
-        q1 = f"""WITH joined_edges AS (
+        q = f"""WITH joined_edges AS (
             SELECT
                 start_node,
                 array_agg(e.id) AS reachable_edges,
                 SUM(ST_Length(e.geometry)) AS total_length
             FROM
                 {t}
-                JOIN {edge_tables[i]} e ON e.source = ANY({t}.reachable_nodes)
-                AND e.target = ANY({t}.reachable_nodes)
+                JOIN {edge_tables[i]} e ON e.source = ANY({t}.reachable_nodes::int[])
+                AND e.target = ANY({t}.reachable_nodes::int[]) 
+            WHERE 
+                start_node IN {ids_chunk}
             GROUP BY
-                start_node WHERE start_node IN {ids_chunk}
+                start_node 
         )
         UPDATE
             {t}
         SET
-            edges_reached = j.reachable_edges,
+            reached_edges = j.reachable_edges,
             edge_length = j.total_length
         FROM
             joined_edges j
         WHERE
             {t}.start_node = j.start_node;"""
 
+        result = dbf.run_query_pg(q, connection)
+        if result == "error":
+            print("Please fix error before rerunning and reconnect to the database")
+            break
 # %%
 for i, t in enumerate(table_names[0:1]):
 
@@ -197,13 +213,13 @@ for i, t in enumerate(table_names[0:1]):
 
     for ids_chunk in dbf.get_chunks(sequence=node_ids, chunk_size=1000):
 
-        q2 = f"""WITH joined_nodes AS (
+        q = f"""WITH joined_nodes AS (
             SELECT
                 start_node,
                 ST_ConcaveHull(ST_Collect(n.geometry), 0.4, FALSE) AS geometry
             FROM
                 {t}
-                JOIN nodes n ON n.id = ANY({t}.reachable_nodes)
+                JOIN nodes n ON n.id = ANY({t}.reachable_nodes::int[])
             GROUP BY
                 start_node WHERE start_node IN {ids_chunk}
         )
@@ -216,6 +232,11 @@ for i, t in enumerate(table_names[0:1]):
             joined_nodes j
         WHERE
             {t}.start_node = j.start_node;"""
+
+        result = dbf.run_query_pg(q, connection)
+        if result == "error":
+            print("Please fix error before rerunning and reconnect to the database")
+            break
 # %%
 connection.close()
 
