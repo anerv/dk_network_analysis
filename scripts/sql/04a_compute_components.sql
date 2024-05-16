@@ -1,6 +1,6 @@
 DROP SCHEMA IF EXISTS fragmentation CASCADE;
 
-CREATE schema fragmentation;
+CREATE SCHEMA fragmentation;
 
 DROP TABLE IF EXISTS fragmentation.components;
 
@@ -41,11 +41,11 @@ DROP TABLE IF EXISTS fragmentation.components;
 
 DROP TABLE IF EXISTS fragmentation.components_1;
 
-DROP TABLE IF EXISTS components_1_2;
+DROP TABLE IF EXISTS fragmentation.components_1_2;
 
-DROP TABLE IF EXISTS components_1_3;
+DROP TABLE IF EXISTS fragmentation.components_1_3;
 
-DROP TABLE IF EXISTS components_1_4;
+DROP TABLE IF EXISTS fragmentation.components_1_4;
 
 DROP TABLE IF EXISTS fragmentation.components_car;
 
