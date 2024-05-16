@@ -66,9 +66,7 @@ FROM
     h3_edges h
     JOIN fragmentation.component_edges co ON h.id = co.id;
 
-CREATE TABLE fragmentation.comp_count_socio;
-
-AS WITH comp_count AS (
+CREATE TABLE fragmentation.comp_count_socio AS WITH comp_count AS (
     SELECT
         socio_id,
         COUNT(DISTINCT component_all) AS comp_all_count,

@@ -101,9 +101,7 @@ CREATE TABLE fragmentation.component_size_3 AS (
         component_1_3
 );
 
-CREATE TABLE fragmentation.component_size_4;
-
-AS (
+CREATE TABLE fragmentation.component_size_4 AS (
     SELECT
         COUNT(id),
         component_1_4,
@@ -119,9 +117,7 @@ AS (
         component_1_4
 );
 
-CREATE TABLE fragmentation.component_size_car;
-
-AS (
+CREATE TABLE fragmentation.component_size_car AS (
     SELECT
         COUNT(id),
         component_car,

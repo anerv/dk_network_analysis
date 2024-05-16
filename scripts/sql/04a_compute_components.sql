@@ -73,9 +73,7 @@ FROM
         'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access IN (1,2) OR lts_1_gap IS TRUE or lts_2_gap IS TRUE'
     );
 
-CREATE TABLE fragmentation.components_3;
-
-AS
+CREATE TABLE fragmentation.components_3 AS
 SELECT
     *
 FROM
@@ -83,9 +81,7 @@ FROM
         'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access IN (1,2,3) OR lts_1_gap IS TRUE or lts_2_gap IS TRUE or lts_3_gap IS TRUE'
     );
 
-CREATE TABLE fragmentation.components_4;
-
-AS
+CREATE TABLE fragmentation.components_4 AS
 SELECT
     *
 FROM
@@ -93,9 +89,7 @@ FROM
         'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access IN (1,2,3,4) OR lts_1_gap IS TRUE or lts_2_gap IS TRUE or lts_3_gap IS TRUE or lts_4_gap IS TRUE'
     );
 
-CREATE TABLE fragmentation.components_car;
-
-AS (
+CREATE TABLE fragmentation.components_car AS (
     SELECT
         *
     FROM
@@ -152,9 +146,7 @@ UPDATE
 SET
     component_1_3 = component
 FROM
-    fragmentation.components_3;
-
-co
+    fragmentation.components_3 co
 WHERE
     e.source = co.node
     AND (
@@ -169,9 +161,7 @@ UPDATE
 SET
     component_1_4 = component
 FROM
-    fragmentation.components_4;
-
-co
+    fragmentation.components_4 co
 WHERE
     e.source = co.node
     AND (
@@ -187,9 +177,7 @@ UPDATE
 SET
     component_car = component
 FROM
-    fragmentation.components_car;
-
-co
+    fragmentation.components_car co
 WHERE
     e.source = co.node
     AND car_traffic IS TRUE
