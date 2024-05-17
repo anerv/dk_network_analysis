@@ -19,5 +19,3 @@ with open(r"../config.yml") as file:
     crs = parsed_yaml_file["CRS"]
 
     h3_resolution = parsed_yaml_file["h3_resolution"]
-
-print("Settings loaded!")
