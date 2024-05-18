@@ -255,7 +255,6 @@ for i, t in enumerate(table_names):
             print("Please fix error before rerunning and reconnect to the database")
             break
 
-        break
 
 # %%
 # **** COMPUT CONVEX HULL OF REACHABLE NODES ****
