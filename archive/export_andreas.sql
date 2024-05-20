@@ -32,7 +32,7 @@ CREATE TABLE andreas_export AS (
             -- 'Høje-Taastrup',
             -- 'Hørsholm',
             -- 'Ishøj',
-            'København',
+            'København' --,
             -- 'Køge',
             -- 'Lyngby-Taarbæk',
             -- 'Roskilde',

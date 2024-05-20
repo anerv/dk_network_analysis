@@ -160,9 +160,7 @@ for t in table_names:
         ADD
             COLUMN IF NOT EXISTS reachable_edges VARCHAR DEFAULT NULL,
         ADD
-            COLUMN IF NOT EXISTS edge_length NUMERIC DEFAULT NULL,
-        ADD
-            COLUMN IF NOT EXISTS coverage_area NUMERIC DEFAULT NULL;
+            COLUMN IF NOT EXISTS edge_length NUMERIC DEFAULT NULL;
         """
 
     result = dbf.run_query_pg(q, connection)
@@ -206,8 +204,7 @@ for i, t in enumerate(table_names):
                 SELECT
                     fn.start_node,
                     array_agg(fe.id) AS reachable_edges,
-                    SUM(fe.length) AS total_length,
-                    ST_Union(fe.geometry) AS geometry
+                    SUM(fe.length) AS total_length
                 FROM filtered_nodes fn
                 JOIN filtered_edges fe
                 ON fe.source = ANY(fn.reachable_nodes::int[])
@@ -217,8 +214,7 @@ for i, t in enumerate(table_names):
             UPDATE {t} rc
             SET
                 reachable_edges = j.reachable_edges,
-                edge_length = j.total_length,
-                coverage_area = ST_Area(ST_Buffer(j.geometry, 10))
+                edge_length = j.total_length
             FROM joined_edges j
             WHERE rc.start_node = j.start_node;
         
@@ -228,8 +224,7 @@ for i, t in enumerate(table_names):
         #     SELECT
         #         start_node,
         #         array_agg(e.id) AS reachable_edges,
-        #         SUM(ST_Length(e.geometry)) AS total_length,
-        #         ST_Union(e.geometry) AS geometry
+        #         SUM(ST_Length(e.geometry)) AS total_length
         #     FROM
         #         {t}
         #         JOIN {edge_tables[i]} e ON e.source = ANY({t}.reachable_nodes::int[])
@@ -243,8 +238,7 @@ for i, t in enumerate(table_names):
         #     {t}
         # SET
         #     reached_edges = j.reachable_edges,
-        #     edge_length = j.total_length,
-        #     coverage_area = ST_Area(ST_Buffer(j.geometry, {buffer_dist}))
+        #     edge_length = j.total_length
         # FROM
         #     joined_edges j
         # WHERE

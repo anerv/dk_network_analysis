@@ -16,15 +16,10 @@ SELECT
     h.hex_id,
     h.geometry,
     l1.edge_length AS l1_len,
-    l1.coverage_area AS l1_area,
     l2.edge_length AS l2_len,
-    l2.coverage_area AS l2_area,
     l3.edge_length AS l3_len,
-    l3.coverage_area AS l3_area,
     l4.edge_length AS l4_len,
-    l4.coverage_area AS l4_area,
     ca.edge_length AS car_len,
-    ca.coverage_area AS car_area
 FROM
     h3_grid h
     LEFT JOIN lts_1_reach l1 ON h.hex_id = l1.hex_id
@@ -78,48 +73,48 @@ ASSERT hex_grid_len = hex_reach_len,
 
 END $$;
 
+-- **** COMPUTE ABS DECREASE IN REACH FROM CAR TO LTS 4 etc. ****
+ALTER TABLE
+    reach.hex_reach
+ADD
+    COLUMN car_lts_1_diff DECIMAL,
+ADD
+    COLUMN car_lts_2_diff DECIMAL,
+ADD
+    COLUMN car_lts_3_diff DECIMAL,
+ADD
+    COLUMN car_lts_4_diff DECIMAL;
+
+UPDATE
+    reach.hex_reach
+SET
+    car_lts_1_diff = car_len - l1_len,
+    car_lts_2_diff = car_len - l2_len,
+    car_lts_3_diff = car_len - l3_len,
+    car_lts_4_diff = car_len - l4_len;
+
 -- **** COMPUTE PCT DECREASE IN REACH FROM CAR TO LTS 4 etc. ****
 ALTER TABLE
     reach.hex_reach
 ADD
-    COLUMN pct_lts_1_len DECIMAL,
+    COLUMN car_lts_1_diff_pct DECIMAL,
 ADD
-    COLUMN pct_lts_2_len DECIMAL,
+    COLUMN car_lts_2_diff_pct DECIMAL,
 ADD
-    COLUMN pct_lts_3_len DECIMAL,
+    COLUMN car_lts_3_diff_pct DECIMAL,
 ADD
-    COLUMN pct_lts_4_len DECIMAL,
-ADD
-    COLUMN pct_lts_1_cover DECIMAL,
-ADD
-    COLUMN pct_lts_2_cover DECIMAL,
-ADD
-    COLUMN pct_lts_3_cover DECIMAL,
-ADD
-    COLUMN pct_lts_4_cover DECIMAL;
+    COLUMN car_lts_4_diff_pct DECIMAL;
 
 UPDATE
     reach.hex_reach
 SET
-    pct_lts_1_len = (l1_len / car_len) * 100,
-    pct_lts_2_len = (l2_len / car_len) * 100,
-    pct_lts_3_len = (l3_len / car_len) * 100,
-    pct_lts_4_len = (l4_len / car_len) * 100;
+    car_lts_1_diff_pct = (l1_len / car_len) * 100,
+    car_lts_2_diff_pct = (l2_len / car_len) * 100,
+    car_lts_3_diff_pct = (l3_len / car_len) * 100,
+    car_lts_4_diff_pct = (l4_len / car_len) * 100;
 
-UPDATE
-    reach.hex_reach
-SET
-    pct_lts_1_cover = (l1_area / car_area) * 100,
-    pct_lts_2_cover = (l2_area / car_area) * 100,
-    pct_lts_3_cover = (l3_area / car_area) * 100,
-    pct_lts_4_cover = (l4_area / car_area) * 100;
-
-DROP TABLE IF EXISTS reach.hex_lts_1;
-
-DROP TABLE IF EXISTS reach.hex_lts_2;
-
-DROP TABLE IF EXISTS reach.hex_lts_3;
-
-DROP TABLE IF EXISTS reach.hex_lts_4;
-
-DROP TABLE IF EXISTS reach.hex_car;
+-- DROP TABLE IF EXISTS reach.hex_lts_1;
+-- DROP TABLE IF EXISTS reach.hex_lts_2;
+-- DROP TABLE IF EXISTS reach.hex_lts_3;
+-- DROP TABLE IF EXISTS reach.hex_lts_4;
+-- DROP TABLE IF EXISTS reach.hex_car;
