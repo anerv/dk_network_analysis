@@ -220,30 +220,6 @@ for i, t in enumerate(table_names):
         
         """
 
-        # q = f"""WITH joined_edges AS (
-        #     SELECT
-        #         start_node,
-        #         array_agg(e.id) AS reachable_edges,
-        #         SUM(ST_Length(e.geometry)) AS total_length
-        #     FROM
-        #         {t}
-        #         JOIN {edge_tables[i]} e ON e.source = ANY({t}.reachable_nodes::int[])
-        #         AND e.target = ANY({t}.reachable_nodes::int[])
-        #     WHERE
-        #         start_node IN {ids_chunk}
-        #     GROUP BY
-        #         start_node
-        # )
-        # UPDATE
-        #     {t}
-        # SET
-        #     reached_edges = j.reachable_edges,
-        #     edge_length = j.total_length
-        # FROM
-        #     joined_edges j
-        # WHERE
-        #     {t}.start_node = j.start_node;"""
-
         result = dbf.run_query_pg(q, connection)
         if result == "error":
             print("Please fix error before rerunning and reconnect to the database")
