@@ -234,3 +234,4 @@ with open("vacuum_analyze.py") as f:
     exec(f.read())
 
 print("Script 05 complete!")
+# %%
