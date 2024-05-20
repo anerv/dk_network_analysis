@@ -142,6 +142,41 @@ SET
     car_lts_4_diff = car_len - l4_len;
 
 -- **** COMPUTE PCT DECREASE IN REACH FROM CAR TO LTS 4 etc. ****
+UPDATE
+    reach.hex_reach
+SET
+    l1_len = 0
+WHERE
+    l1_len IS NULL;
+
+UPDATE
+    reach.hex_reach
+SET
+    l2_len = 0
+WHERE
+    l2_len IS NULL;
+
+UPDATE
+    reach.hex_reach
+SET
+    l3_len = 0
+WHERE
+    l3_len IS NULL;
+
+UPDATE
+    reach.hex_reach
+SET
+    l4_len = 0
+WHERE
+    l4_len IS NULL;
+
+UPDATE
+    reach.hex_reach
+SET
+    car_len = 0
+WHERE
+    car_len IS NULL;
+
 ALTER TABLE
     reach.hex_reach
 ADD
@@ -159,7 +194,41 @@ SET
     car_lts_1_diff_pct = (l1_len / car_len) * 100,
     car_lts_2_diff_pct = (l2_len / car_len) * 100,
     car_lts_3_diff_pct = (l3_len / car_len) * 100,
-    car_lts_4_diff_pct = (l4_len / car_len) * 100;
+    car_lts_4_diff_pct = (l4_len / car_len) * 100
+WHERE
+    car_len > 0;
+
+UPDATE
+    reach.hex_reach
+SET
+    car_lts_1_diff_pct = 100
+WHERE
+    car_len = 0
+    AND l1_len > 0;
+
+UPDATE
+    reach.hex_reach
+SET
+    car_lts_2_diff_pct = 100
+WHERE
+    car_len = 0
+    AND l2_len > 0;
+
+UPDATE
+    reach.hex_reach
+SET
+    car_lts_3_diff_pct = 100
+WHERE
+    car_len = 0
+    AND l3_len > 0;
+
+UPDATE
+    reach.hex_reach
+SET
+    car_lts_4_diff_pct = 100
+WHERE
+    car_len = 0
+    AND l4_len > 0;
 
 -- DROP TABLE IF EXISTS reach.hex_lts_1;
 -- DROP TABLE IF EXISTS reach.hex_lts_2;
