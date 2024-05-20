@@ -249,63 +249,6 @@ for i, t in enumerate(table_names):
             print("Please fix error before rerunning and reconnect to the database")
             break
 
-
-# %%
-# **** COMPUT CONVEX HULL OF REACHABLE NODES ****
-
-# for i, t in enumerate(table_names[0:1]):
-
-#     print(f"At round: {i}")
-
-#     # GET ALL IDS
-#     df = pd.read_sql_query(f"SELECT node_id FROM {hex_tables[i]}", con=engine)
-#     node_ids = tuple(df.node_id.to_list())
-
-#     for ids_chunk in dbf.get_chunks(sequence=node_ids, chunk_size=1000):
-
-#         # print(f"Computing convex hull for chunk: {ids_chunk}")
-
-#         q1 = f"""CREATE TEMP TABLE temp_joined_nodes AS
-#                 WITH joined_nodes AS (
-#                     SELECT
-#                         start_node,
-#                         ST_ConcaveHull(ST_Collect(n.geometry), 0.2, FALSE) AS geometry
-#                     FROM
-#                         {t}
-#                         JOIN nodes n ON n.id = ANY({t}.reachable_nodes::INT[])
-#                     WHERE
-#                         start_node IN {ids_chunk}
-#                     GROUP BY
-#                         start_node
-#                 )
-#             SELECT * FROM joined_nodes;"""
-
-#         result = dbf.run_query_pg(q1, connection)
-#         if result == "error":
-#             print("Please fix error before rerunning and reconnect to the database")
-#             break
-
-#         q2 = f"""UPDATE
-#                 {t} r
-#             SET
-#                 convex_hull = j.geometry,
-#                 coverage_area = ST_Area(ST_Buffer(j.geometry,1))
-#             FROM
-#                 temp_joined_nodes j
-#             WHERE
-#                 r.start_node = j.start_node;"""
-
-#         result = dbf.run_query_pg(q2, connection)
-#         if result == "error":
-#             print("Please fix error before rerunning and reconnect to the database")
-#             break
-
-#         q3 = """DROP TABLE temp_joined_nodes;"""
-
-#         result = dbf.run_query_pg(q3, connection)
-#         if result == "error":
-#             print("Please fix error before rerunning and reconnect to the database")
-#             break
 # %%
 connection.close()
 
