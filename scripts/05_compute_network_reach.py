@@ -168,10 +168,6 @@ for t in table_names:
         print("Please fix error before rerunning and reconnect to the database")
         break
 
-# %%
-
-with open("vacuum_analyze.py") as f:
-    exec(f.read())
 
 # %%
 # compute reachable edges
@@ -226,6 +222,18 @@ for i, t in enumerate(table_names):
             break
 
 # %%
+queries = ["sql/05c_compute_reach_difference.sql"]
+
+for i, q in enumerate(queries):
+    print(f"Running step {i+1}...")
+    result = dbf.run_query_pg(q, connection)
+    if result == "error":
+        print("Please fix error before rerunning and reconnect to the database")
+        break
+
+    print(f"Step {i+1} done!")
+
+
 connection.close()
 
 # %%
