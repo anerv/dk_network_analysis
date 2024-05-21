@@ -200,8 +200,8 @@ def plot_classified_poly(
     figsize=(10, 10),
     attr=None,
     set_axis_off=True,
-    plot_res="low",
-    dpi=300,
+    plot_res=pdict["plot_res"],
+    dpi=pdict["dpi"],
     classification_kwds=None,
 ):
     """

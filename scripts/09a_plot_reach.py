@@ -24,23 +24,20 @@ hex_reach = gpd.read_postgis("SELECT * FROM reach.hex_reach", connection)
 # MAPS:
 # Reach length
 
-# Reach area
+# Reach diffs
 
 # Reach len as share of car length
 
-# Reach area as share of car area
 
 # %%
 # Corr plots
 
-# Corr between reach length and area
-
 # Corr between reach length and density?? (if so, join with density data)
 
-# Corr between reach area and density?? (if so, join with density data)
 
 # Corr with components?
 
 # %%
-# Distribution plots of reach length and area?
+# Distribution plots of reach length and diffs?
+
 # KDE etc.
