@@ -222,7 +222,10 @@ for i, t in enumerate(table_names):
             break
 
 # %%
-queries = ["sql/05c_compute_reach_difference.sql"]
+queries = [
+    "sql/05c_compute_reach_difference.sql",
+    "sql/05d_reach_length_component_comparison.sql",
+]
 
 for i, q in enumerate(queries):
     print(f"Running step {i+1}...")
