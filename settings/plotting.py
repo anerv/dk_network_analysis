@@ -120,13 +120,19 @@ component_per_km_sqkm_cols = [
     "component_per_dens_all",
 ]
 
-reach_columns = ["l1_len", "l2_len", "l3_len", "l4_len", "car_len"]
-reach_diff_columns = ["car_l1_diff", "car_l2_diff", "car_l3_diff", "car_l4_diff"]
+reach_columns = ["lts1_len", "lts2_len", "lts3_len", "lts4_len", "car_len"]
+
+reach_diff_columns = [
+    "car_lts1_diff",
+    "car_lts2_diff",
+    "car_lts3_diff",
+    "car_lts4_diff",
+]
 reach_diff_pct_columns = [
-    "car_l1_diff_pct",
-    "car_l2_diff_pct",
-    "car_l3_diff_pct",
-    "car_l4_diff_pct",
+    "car_lts1_diff_pct",
+    "car_lts2_diff_pct",
+    "car_lts3_diff_pct",
+    "car_lts4_diff_pct",
 ]
 
 plotly_labels = {
