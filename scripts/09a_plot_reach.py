@@ -252,9 +252,43 @@ plt.close()
 
 # %%
 
-# Corr plots
 
-# Corr between reach length and density?? (if so, join with density data)
+# Correlation plots
 
+df = pd.read_sql("SELECT * FROM reach.reach_component_length_h3;", engine)
 
-# Corr with components?
+labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Car network"]
+for c, d, r, l in zip(
+    component_count_columns[:-1], density_steps_columns[:-1], reach_columns, labels
+):
+
+    fig = px.scatter(
+        df,
+        x=d,
+        y=r,
+        # color=c,
+        # color_discrete_sequence=["black"],
+        # color_continuous_scale=px.colors.sequential.Viridis,
+        opacity=0.3,
+        labels=plotly_labels,
+        log_x=True,
+        log_y=True,
+    )
+
+    fig.update_layout(
+        font=dict(size=12, color="black"),
+        autosize=False,
+        width=800,
+        height=600,
+        yaxis_title="Network reach",
+        title=f"Correlation between reach and density: {l}",
+    )
+
+    fig.write_image(
+        "../results/network_reach/corr_reach_density_" + l + ".jpeg",
+        width=1000,
+        height=750,
+    )
+    fig.show()
+
+# %%
