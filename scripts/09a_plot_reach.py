@@ -206,7 +206,7 @@ fig = sns.kdeplot(
 
 fig.set_xlabel("Length (km)")
 fig.set_title(f"Network reach")
-# plt.savefig()
+plt.savefig("../results/network_reach/kde_network_reach.png")
 
 plt.show()
 
@@ -244,54 +244,11 @@ fig = sns.kdeplot(
 
 fig.set_xlabel("Difference in network reach (km)")
 fig.set_title(f"Network reach difference")
-# plt.savefig()
+plt.savefig("../results/network_reach/kde_network_reach_diff.png")
 
 plt.show()
 
 plt.close()
-
-# %%
-# reach_len_diff_pct = []
-# lts_all = []
-
-# lts = [
-#     "1",
-#     "2",
-#     "3",
-#     "4",
-# ]
-
-# for i, l in enumerate(lts):
-
-#     reach_len_diff_pct.extend(hex_reach[reach_diff_pct_columns[i]].values)
-#     lts_all.extend([l] * len(hex_reach))
-
-# df = pd.DataFrame(
-#     {
-#         "reach_len_diff_pct": reach_len_diff_pct,
-#         "lts": lts_all,
-#     }
-# )
-
-# df.rename(columns={"lts": "Network level"}, inplace=True)
-
-# fig = sns.kdeplot(
-#     data=df,
-#     x="reach_len_diff_pct",
-#     hue="Network level",
-#     multiple="stack",
-#     # fill=True,
-#     # log_scale=True,
-#     palette=lts_color_dict.values(),
-# )
-
-# fig.set_xlabel("Difference in network reach (%)")
-# fig.set_title(f"Network reach difference (%)")
-# # plt.savefig()
-
-# plt.show()
-
-# plt.close()
 
 # %%
 
