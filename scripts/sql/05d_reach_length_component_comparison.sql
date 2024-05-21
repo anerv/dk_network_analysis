@@ -26,9 +26,8 @@ CREATE TABLE reach.reach_component_length_h3 AS (
         reach.car_len
     FROM
         density.density_h3 dens
-        JOIN fragmentation.comp_count_h3 comp ON dens.hex_id = comp.h3_id
-        JOIN reach.hex_reach reach ON dens.hex_id = reach.hex_id;
-
+        LEFT JOIN fragmentation.comp_count_h3 comp ON dens.hex_id = comp.h3_id
+        LEFT JOIN reach.hex_reach reach ON dens.hex_id = reach.hex_id
 );
 
 -- ALTER TABLE
