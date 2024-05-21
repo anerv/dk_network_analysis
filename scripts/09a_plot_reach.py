@@ -22,7 +22,7 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 # Read data
 
 hex_reach = gpd.read_postgis(
-    "SELECT * FROM reach.hex_reach", connection, geom_col="geometry"
+    "SELECT * FROM reach.hex_reach", engine, geom_col="geometry"
 )
 
 for p in reach_columns:
@@ -32,6 +32,7 @@ for p in reach_diff_columns:
     hex_reach[p] = hex_reach[p] / 1000  # Convert to km
 
 # %%
+###########################################
 ####### MAPS ##############################
 ###########################################
 
@@ -147,7 +148,9 @@ for i, p in enumerate(plot_columns):
     )
 
 # %%
-# ***** Histograms *****
+###########################################
+####### Histograms ########################
+###########################################
 
 plot_titles = [
     "Network reach: LTS 1",
@@ -172,7 +175,9 @@ for i, p in enumerate(reach_columns):
     plt.show()
     plt.close()
 # %%
-# ***** KDE PLOTS *****
+###########################################
+####### KDE PLOTS #########################
+###########################################
 
 # NETWORK REACH LENGTH
 reach_len = []
@@ -211,7 +216,7 @@ plt.savefig("../results/network_reach/kde_network_reach.png")
 plt.show()
 
 plt.close()
-# %%
+
 # NETWORK REACH LENGTH DIFFERENCE
 reach_len_diff = []
 lts_all = []
@@ -251,7 +256,125 @@ plt.show()
 plt.close()
 
 # %%
+###########################################
+####### Violin plots ######################
+###########################################
 
+colors = [v for v in lts_color_dict.values()]
+
+# reach
+
+filepaths_violin = [
+    "../results/network_reach/violin_lts1_reach_len.jpg",
+    "../results/network_reach/violin_lts2_reach_len.jpg",
+    "../results/network_reach/violin_lts3_reach_len.jpg",
+    "../results/network_reach/violin_lts4_reach_len.jpg",
+    "../results/network_reach/violin_car_reach_len.jpg",
+]
+
+titles = [
+    "Network reach: LTS 1",
+    "Network reach: LTS 1-2",
+    "Network reach: LTS 1-3",
+    "Network reach: LTS 1-4",
+    "Network reach: Car network",
+]
+
+for i, r in enumerate(reach_columns):
+
+    fig = px.violin(
+        hex_reach,
+        y=r,
+        points="all",
+        box=False,
+        labels=plotly_labels,
+        color_discrete_sequence=[colors[i]],
+        title=titles[i],
+    )
+    fig.show()
+
+    fig.write_image(
+        filepaths_violin[i],
+        width=1000,
+        height=750,
+    )
+
+# %%
+
+# reach_diff
+
+filepaths_violin = [
+    "../results/network_reach/violin_lts1_reach_diff_len.jpg",
+    "../results/network_reach/violin_lts2_reach_diff_len.jpg",
+    "../results/network_reach/violin_lts3_reach_diff_len.jpg",
+    "../results/network_reach/violin_lts4_reach_diff_len.jpg",
+]
+
+titles = [
+    "Network reach difference: Car - LTS 1",
+    "Network reach difference: Car - LTS 1-2",
+    "Network reach: Car - LTS 1-3",
+    "Network reach: Car - LTS 1-4",
+]
+
+for i, r in enumerate(reach_diff_columns):
+
+    fig = px.violin(
+        hex_reach,
+        y=r,
+        points="all",
+        box=False,
+        labels=plotly_labels,
+        color_discrete_sequence=[colors[i]],
+        title=titles[i],
+    )
+    fig.show()
+
+    fig.write_image(
+        filepaths_violin[i],
+        width=1000,
+        height=750,
+    )
+
+# %%
+
+# reach_diff_pct
+
+filepaths_violin = [
+    "../results/network_reach/violin_lts1_reach_diff_pct.jpg",
+    "../results/network_reach/violin_lts2_reach_diff_pct.jpg",
+    "../results/network_reach/violin_lts3_reach_diff_pct.jpg",
+    "../results/network_reach/violin_lts4_reach_diff_pct.jpg",
+]
+
+titles = [
+    "Network reach difference: Car - LTS 1 (%)",
+    "Network reach difference: Car - LTS 1-2 (%)",
+    "Network reach: Car - LTS 1-3 (%)",
+    "Network reach: Car - LTS 1-4 (%)",
+]
+
+for i, r in enumerate(reach_diff_pct_columns):
+
+    fig = px.violin(
+        hex_reach,
+        y=r,
+        points="all",
+        box=False,
+        labels=plotly_labels,
+        color_discrete_sequence=[colors[i]],
+        title=titles[i],
+    )
+    fig.show()
+
+    fig.write_image(
+        filepaths_violin[i],
+        width=1000,
+        height=750,
+    )
+
+
+# %%
 
 # Correlation plots
 
