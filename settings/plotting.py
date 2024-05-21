@@ -167,6 +167,19 @@ plotly_labels = {
     "all": "All",
     "car": "Car",
     "municipality": "Municipality",
+    "lts1_len": "Network reach (km)",
+    "lts2_len": "Network reach (km)",
+    "lts3_len": "Network reach (km)",
+    "lts4_len": "Network reach (km)",
+    "car_len": "Network reach (km)",
+    "car_lts1_diff": "Difference in car - LTS 1 reach (km)",
+    "car_lts2_diff": "Difference in car - LTS 1-2 reach (km)",
+    "car_lts3_diff": "Difference in car - LTS 1-3 reach (km)",
+    "car_lts4_diff": "Difference in car - LTS 1-4 reach (km)",
+    "car_lts1_diff_pct": "Difference in car - LTS 1 reach (%)",
+    "car_lts2_diff_pct": "Difference in car - LTS 1-2 reach (%)",
+    "car_lts3_diff_pct": "Difference in car - LTS 1-3 reach (%)",
+    "car_lts4_diff_pct": "Difference in car - LTS 1-4 reach (%)",
 }
 
 pdict = {
