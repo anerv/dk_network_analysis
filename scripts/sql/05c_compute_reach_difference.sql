@@ -1,28 +1,30 @@
 -- ***** JOIN REACH TO ORIGINAL HEX GEOMETRIES *****
+DROP TABLE IF EXISTS reach.hex_reach;
+
 ALTER TABLE
     reach.lts_1_reach
 ADD
-    COLUMN hex_id VARCHAR;
+    COLUMN IF NOT EXISTS hex_id VARCHAR;
 
 ALTER TABLE
     reach.lts_2_reach
 ADD
-    COLUMN hex_id VARCHAR;
+    COLUMN IF NOT EXISTS hex_id VARCHAR;
 
 ALTER TABLE
     reach.lts_3_reach
 ADD
-    COLUMN hex_id VARCHAR;
+    COLUMN IF NOT EXISTS hex_id VARCHAR;
 
 ALTER TABLE
     reach.lts_4_reach
 ADD
-    COLUMN hex_id VARCHAR;
+    COLUMN IF NOT EXISTS hex_id VARCHAR;
 
 ALTER TABLE
     reach.car_reach
 ADD
-    COLUMN hex_id VARCHAR;
+    COLUMN IF NOT EXISTS hex_id VARCHAR;
 
 UPDATE
     reach.lts_1_reach
@@ -85,10 +87,10 @@ CREATE TABLE reach.hex_reach AS
 SELECT
     h.hex_id,
     h.geometry,
-    l1.edge_length AS l1_len,
-    l2.edge_length AS l2_len,
-    l3.edge_length AS l3_len,
-    l4.edge_length AS l4_len,
+    l1.edge_length AS lts1_len,
+    l2.edge_length AS lts2_len,
+    l3.edge_length AS lts3_len,
+    l4.edge_length AS lts4_len,
     ca.edge_length AS car_len
 FROM
     h3_grid h
@@ -125,50 +127,50 @@ END $$;
 ALTER TABLE
     reach.hex_reach
 ADD
-    COLUMN car_lts_1_diff DECIMAL,
+    COLUMN car_lts1_diff DECIMAL,
 ADD
-    COLUMN car_lts_2_diff DECIMAL,
+    COLUMN car_lts2_diff DECIMAL,
 ADD
-    COLUMN car_lts_3_diff DECIMAL,
+    COLUMN car_lts3_diff DECIMAL,
 ADD
-    COLUMN car_lts_4_diff DECIMAL;
+    COLUMN car_lts4_diff DECIMAL;
 
 UPDATE
     reach.hex_reach
 SET
-    car_lts_1_diff = car_len - l1_len,
-    car_lts_2_diff = car_len - l2_len,
-    car_lts_3_diff = car_len - l3_len,
-    car_lts_4_diff = car_len - l4_len;
+    car_lts1_diff = car_len - lts1_len,
+    car_lts2_diff = car_len - lts2_len,
+    car_lts3_diff = car_len - lts3_len,
+    car_lts4_diff = car_len - lts4_len;
 
 -- **** COMPUTE PCT DECREASE IN REACH FROM CAR TO LTS 4 etc. ****
 UPDATE
     reach.hex_reach
 SET
-    l1_len = 0
+    lts1_len = 0
 WHERE
-    l1_len IS NULL;
+    lts1_len IS NULL;
 
 UPDATE
     reach.hex_reach
 SET
-    l2_len = 0
+    lts2_len = 0
 WHERE
-    l2_len IS NULL;
+    lts2_len IS NULL;
 
 UPDATE
     reach.hex_reach
 SET
-    l3_len = 0
+    lts3_len = 0
 WHERE
-    l3_len IS NULL;
+    lts3_len IS NULL;
 
 UPDATE
     reach.hex_reach
 SET
-    l4_len = 0
+    lts4_len = 0
 WHERE
-    l4_len IS NULL;
+    lts4_len IS NULL;
 
 UPDATE
     reach.hex_reach
@@ -180,55 +182,55 @@ WHERE
 ALTER TABLE
     reach.hex_reach
 ADD
-    COLUMN car_lts_1_diff_pct DECIMAL,
+    COLUMN car_lts1_diff_pct DECIMAL,
 ADD
-    COLUMN car_lts_2_diff_pct DECIMAL,
+    COLUMN car_lts2_diff_pct DECIMAL,
 ADD
-    COLUMN car_lts_3_diff_pct DECIMAL,
+    COLUMN car_lts3_diff_pct DECIMAL,
 ADD
-    COLUMN car_lts_4_diff_pct DECIMAL;
+    COLUMN car_lts4_diff_pct DECIMAL;
 
 UPDATE
     reach.hex_reach
 SET
-    car_lts_1_diff_pct = (l1_len / car_len) * 100,
-    car_lts_2_diff_pct = (l2_len / car_len) * 100,
-    car_lts_3_diff_pct = (l3_len / car_len) * 100,
-    car_lts_4_diff_pct = (l4_len / car_len) * 100
+    car_lts1_diff_pct = (lts1_len / car_len) * 100,
+    car_lts2_diff_pct = (lts2_len / car_len) * 100,
+    car_lts3_diff_pct = (lts3_len / car_len) * 100,
+    car_lts4_diff_pct = (lts4_len / car_len) * 100
 WHERE
     car_len > 0;
 
 UPDATE
     reach.hex_reach
 SET
-    car_lts_1_diff_pct = 100
+    car_lts1_diff_pct = 100
 WHERE
     car_len = 0
-    AND l1_len > 0;
+    AND lts1_len > 0;
 
 UPDATE
     reach.hex_reach
 SET
-    car_lts_2_diff_pct = 100
+    car_lts2_diff_pct = 100
 WHERE
     car_len = 0
-    AND l2_len > 0;
+    AND lts2_len > 0;
 
 UPDATE
     reach.hex_reach
 SET
-    car_lts_3_diff_pct = 100
+    car_lts3_diff_pct = 100
 WHERE
     car_len = 0
-    AND l3_len > 0;
+    AND lts3_len > 0;
 
 UPDATE
     reach.hex_reach
 SET
-    car_lts_4_diff_pct = 100
+    car_lts4_diff_pct = 100
 WHERE
     car_len = 0
-    AND l4_len > 0;
+    AND lts4_len > 0;
 
 -- DROP TABLE IF EXISTS reach.hex_lts_1;
 -- DROP TABLE IF EXISTS reach.hex_lts_2;
