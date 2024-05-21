@@ -128,8 +128,10 @@ for a, df in zip(aggregation_levels, density_data):
         min_share = df[length_relative_steps_columns[i]].min()
         max_share = df[length_relative_steps_columns[i]].max()
         mean_share = df[length_relative_steps_columns[i]].mean()
+        median_share = df[length_relative_steps_columns[i]].median()
         print(
-            f"At the {a} level, the {l} network is between {min_share:.2f} % and {max_share:.2f} % of the full network length. The average share is {mean_share:.2f}%"
+            f"At the {a} level, the {l} network is between {min_share:.2f} % and {max_share:.2f} % of the full network length. 
+            The average share is {mean_share:.2f}% and the median share is {median_share:.2f}%."
         )
 
     print("\n")
@@ -144,8 +146,10 @@ for a, df in zip(aggregation_levels, density_data):
         min_share = df[length_relative_columns[i]].min()
         max_share = df[length_relative_columns[i]].max()
         mean_share = df[length_relative_columns[i]].mean()
+        median_share = df[length_relative_columns[i]].median()
         print(
-            f"At the {a} level, the {l} network is between {min_share:.2f} % and {max_share:.2f}% of the full network length. The average share is {mean_share:.2f}%"
+            f"At the {a} level, the {l} network is between {min_share:.2f} % and {max_share:.2f}% of the full network length. 
+            The average share is {mean_share:.2f}% and the median share is {median_share:.2f}%."
         )
 
     print("\n")

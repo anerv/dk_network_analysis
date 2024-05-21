@@ -63,3 +63,45 @@ for i, r in enumerate(reach_columns):
     print("\n")
 
 # %%
+for i, r in enumerate(reach_diff_columns):
+
+    print(
+        f"The minimum difference in network reach between the car and the {labels[i]} network is: {hex_reach[r].min():_.3f} km."
+    )
+    print(
+        f"The maximum difference in network reach between the car and the {labels[i]} network is: {hex_reach[r].max():_.3f} km."
+    )
+    print(
+        f"The average difference in network reach between the car and the {labels[i]} network is: {hex_reach[r].mean():_.3f} km."
+    )
+    print(
+        f"The median difference in network reach between the car and the {labels[i]} network is: {hex_reach[r].median():_.3f} km."
+    )
+    print(
+        f"The standard deviation in network reach difference between the car and the {labels[i]} network is: {hex_reach[r].std():_.2f} km."
+    )
+
+    print("\n")
+
+# %%
+for i, r in enumerate(reach_diff_pct_columns):
+
+    print(
+        f"The minimum difference in network reach between the car and the {labels[i]} network is: {hex_reach[r].min():_.3f}%."
+    )
+    print(
+        f"The maximum difference in network reach between the car and the {labels[i]} network is: {hex_reach[r].max():_.3f}%."
+    )
+    print(
+        f"The average difference in network reach between the car and the {labels[i]} network is: {hex_reach[r].mean():_.3f}%."
+    )
+    print(
+        f"The median difference in network reach between the car and the {labels[i]} network is: {hex_reach[r].median():_.3f}%."
+    )
+    print(
+        f"The standard deviation in network reach difference between the car and the {labels[i]} network is: {hex_reach[r].std():_.2f}%."
+    )
+
+    print("\n")
+
+# %%

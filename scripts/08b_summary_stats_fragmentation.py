@@ -64,6 +64,8 @@ for c, n in zip(comp_dfs, network_levels_steps):
         f"The largest component for the {n} network is {c['bike_length'].max()/1000:_.2f} km."
     )
 
+    print(f"The median component size is {c['bike_length'].median()/1000:_.2f} km.")
+
     print("\n")
 # %%
 aggregation_levels = ["municipal", "local", "grid"]
@@ -86,12 +88,16 @@ for a, df in zip(aggregation_levels, comp_dfs):
         min_comp_count = df[component_count_columns[i]].min()
         mean_comp_count = df[component_count_columns[i]].mean()
         max_comp_count = df[component_count_columns[i]].max()
+        median_comp_count = df[component_count_columns[i]].median()
 
         print(
             f"At the {a} level, the minimum component count for the {l} network is {min_comp_count}."
         )
         print(
             f"At the {a} level, the mean component count for the {l} network is {mean_comp_count:.0f}."
+        )
+        print(
+            f"At the {a} level, the median component count for the {l} network is {median_comp_count}."
         )
         print(
             f"At the {a} level, the maximum component count for the {l} network is {max_comp_count}."
