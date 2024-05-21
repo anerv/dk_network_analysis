@@ -261,11 +261,16 @@ filepaths_kde_density = [
     "../results/network_density/h3/lts_kde_density.jpg",
 ]
 
+filepaths_bar_length = [
+    "../results/network_density/administrative/lts_stacked_bar_len.jpg",
+    "../results/network_density/socio/lts_stacked_bar_len.jpg",
+    "../results/network_density/h3/lts_stacked_bar_len.jpg",
+]
 
-filepaths_bar = [
-    "../results/network_density/administrative/lts_stacked_bar.jpg",
-    "../results/network_density/socio/lts_stacked_bar.jpg",
-    "../results/network_density/h3/lts_stacked_bar.jpg",
+filepaths_bar_density = [
+    "../results/network_density/administrative/lts_stacked_bar_dens.jpg",
+    "../results/network_density/socio/lts_stacked_bar_dens.jpg",
+    "../results/network_density/h3/lts_stacked_bar_dens.jpg",
 ]
 
 filepaths_violin = [
@@ -381,7 +386,7 @@ for i, df in enumerate(dfs):
     fig.show()
 
     fig.write_image(
-        filepaths_bar[i],
+        filepaths_bar_length[i],
         width=1000,
         height=750,
     )
@@ -396,6 +401,12 @@ for i, df in enumerate(dfs):
         color_discrete_map=lts_color_dict,
     )
     fig.show()
+
+    fig.write_image(
+        filepaths_bar_density[i],
+        width=1000,
+        height=750,
+    )
 
 # %%
 # **** VIOLIN PLOTS ****
