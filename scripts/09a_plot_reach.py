@@ -18,7 +18,15 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 # %%
 # read data
 
-hex_reach = gpd.read_postgis("SELECT * FROM reach.hex_reach", connection)
+hex_reach = gpd.read_postgis(
+    "SELECT * FROM reach.hex_reach", connection, geom_col="geometry"
+)
+
+for p in reach_columns:
+    hex_reach[p] = hex_reach[p] / 1000  # Convert to km
+
+for p in reach_diff_columns:
+    hex_reach[p] = hex_reach[p] / 1000  # Convert to km
 
 # %%
 ####### MAPS ##############################
@@ -28,11 +36,17 @@ hex_reach = gpd.read_postgis("SELECT * FROM reach.hex_reach", connection)
 
 # Use norm/same color scale for all maps?
 
-all_plot_titles = []
-all_file_paths = []
-plot_columns = []
+plot_titles = [
+    "Network reach: LTS 1",
+    "Network reach: LTS 2",
+    "Network reach: LTS 3",
+    "Network reach: LTS 4",
+    "Network reach: Car network",
+]
+file_paths = []
 
-plot_titles = []
+plot_columns = reach_columns
+
 
 for i, p in enumerate(plot_columns):
 
@@ -55,11 +69,9 @@ for i, p in enumerate(plot_columns):
 # Use diverging color map
 # Use norm/same color scale for all maps?
 
-all_plot_titles = []
-all_file_paths = []
-plot_columns = []
-
 plot_titles = []
+file_paths = []
+plot_columns = reach_diff_columns
 
 for i, p in enumerate(plot_columns):
 
@@ -82,11 +94,9 @@ for i, p in enumerate(plot_columns):
 # Use diverging color map
 # Use norm/same color scale for all maps?
 
-all_plot_titles = []
-all_file_paths = []
-plot_columns = []
-
 plot_titles = []
+file_paths = []
+plot_columns = reach_diff_pct_columns
 
 for i, p in enumerate(plot_columns):
 
@@ -102,17 +112,6 @@ for i, p in enumerate(plot_columns):
         title=plot_titles[i],
         fp=filepaths[i],
     )
-# %%
-# Corr plots
-
-# Corr between reach length and density?? (if so, join with density data)
-
-
-# Corr with components?
-
-# %%
-# Distribution plots of reach length and diffs?
-
 
 # %%
 # ***** Histograms *****
@@ -144,3 +143,13 @@ for label, df in stacked_dfs.items():
     plt.show()
 
     plt.close()
+
+
+# %%
+
+# Corr plots
+
+# Corr between reach length and density?? (if so, join with density data)
+
+
+# Corr with components?
