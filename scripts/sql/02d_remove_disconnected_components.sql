@@ -54,6 +54,21 @@ WHERE
         FROM
             component_size_all
         WHERE
+            highways = ARRAY [ 'track' ]
+            AND geom_length < 500
+    );
+
+DELETE
+    *
+FROM
+    edges
+WHERE
+    component_all IN (
+        SELECT
+            component_all
+        FROM
+            component_size_all
+        WHERE
             highways = ARRAY [ 'footway' ]
             AND geom_length < 500
     );
