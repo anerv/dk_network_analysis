@@ -58,6 +58,11 @@ filepaths = [
 
 plot_columns = reach_columns
 
+min_vals = [hex_reach[p].min() for p in plot_columns]
+max_vals = [hex_reach[p].max() for p in plot_columns]
+v_min = min(min_vals)
+v_max = max(max_vals)
+
 for i, p in enumerate(plot_columns):
 
     plot_func.plot_classified_poly(
@@ -71,6 +76,18 @@ for i, p in enumerate(plot_columns):
         edgecolor="none",
         title=plot_titles[i],
         fp=filepaths[i],
+    )
+
+    plot_func.plot_unclassified_poly(
+        poly_gdf=hex_reach,
+        plot_col=p,
+        plot_title=plot_titles[i],
+        filepath=filepaths[i] + "_unclassified",
+        cmap=pdict["pos"],
+        use_norm=True,
+        norm_min=v_min,
+        norm_max=v_max,
+        cx_tile=cx_tile_2,
     )
 
 # %%
@@ -95,6 +112,12 @@ filepaths = [
 
 plot_columns = reach_diff_columns
 
+
+min_vals = [hex_reach[p].min() for p in plot_columns]
+max_vals = [hex_reach[p].max() for p in plot_columns]
+v_min = min(min_vals)
+v_max = max(max_vals)
+
 for i, p in enumerate(plot_columns):
 
     plot_func.plot_classified_poly(
@@ -108,6 +131,18 @@ for i, p in enumerate(plot_columns):
         edgecolor="none",
         title=plot_titles[i],
         fp=filepaths[i],
+    )
+
+    plot_func.plot_unclassified_poly(
+        poly_gdf=hex_reach,
+        plot_col=p,
+        plot_title=plot_titles[i],
+        filepath=filepaths[i] + "_unclassified",
+        cmap=pdict["pos"],
+        use_norm=True,
+        norm_min=v_min,
+        norm_max=v_max,
+        cx_tile=cx_tile_2,
     )
 
 # %%
@@ -132,6 +167,13 @@ filepaths = [
 
 plot_columns = reach_diff_pct_columns
 
+
+min_vals = [hex_reach[p].min() for p in plot_columns]
+max_vals = [hex_reach[p].max() for p in plot_columns]
+v_min = min(min_vals)
+v_max = max(max_vals)
+
+
 for i, p in enumerate(plot_columns):
 
     plot_func.plot_classified_poly(
@@ -145,6 +187,18 @@ for i, p in enumerate(plot_columns):
         edgecolor="none",
         title=plot_titles[i],
         fp=filepaths[i],
+    )
+
+    plot_func.plot_unclassified_poly(
+        poly_gdf=hex_reach,
+        plot_col=p,
+        plot_title=plot_titles[i],
+        filepath=filepaths[i] + "_unclassified",
+        cmap=pdict["pos"],
+        use_norm=True,
+        norm_min=v_min,
+        norm_max=v_max,
+        cx_tile=cx_tile_2,
     )
 
 # %%

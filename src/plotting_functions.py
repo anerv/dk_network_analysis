@@ -10,6 +10,270 @@ exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 
 
+import geopandas as gpd
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from matplotlib import cm, colors
+import contextily as cx
+from collections import Counter
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+from IPython.display import Image, HTML, display
+
+
+def plot_classified_poly(
+    gdf,
+    plot_col,
+    scheme,
+    k,
+    cx_tile,
+    plot_na,
+    cmap,
+    title,
+    edgecolor="black",
+    linewidth=0.5,
+    fp=None,
+    legend=True,
+    alpha=1,
+    figsize=(10, 10),
+    attr=None,
+    set_axis_off=True,
+    plot_res=pdict["plot_res"],
+    dpi=pdict["dpi"],
+    classification_kwds=None,
+):
+    """
+    Plots a classified polygon based on the given parameters.
+
+    Parameters:
+    gdf (GeoDataFrame): The GeoDataFrame containing the polygon data to be plotted.
+    plot_col (str): The column in the GeoDataFrame to be used for coloring the polygons.
+    scheme (str): The classification scheme to be used for coloring the polygons.
+    k (int): The number of classes to be used for the classification.
+    cx_tile (str): The contextily tile to be used for the basemap.
+    plot_na (bool): If True, polygons with no data are plotted in light grey.
+    cmap (str): The colormap to be used for coloring the polygons.
+    title (str): The title of the plot.
+    edgecolor (str, optional): The color of the polygon edges. Defaults to "black".
+    fp (str, optional): The file path where the plot should be saved. If None, the plot is not saved. Defaults to None.
+    legend (bool, optional): If True, a legend is added to the plot. Defaults to True.
+    alpha (float, optional): The alpha level of the polygons. Defaults to 0.8.
+    figsize (tuple, optional): The size of the figure. Defaults to (10, 10).
+    attr (str, optional): The attribute to be used for the plot. Defaults to None.
+    set_axis_off (bool, optional): If True, the axis is set off. Defaults to True.
+    plot_res (str, optional): The resolution of the plot. Defaults to "low".
+    dpi (int, optional): The resolution in dots per inch. Defaults to 300.
+    classification_kwds (dict, optional): Additional keyword arguments for the 'user_defined' classification scheme. Defaults to None.
+
+    Returns:
+    None
+    """
+
+    fig, ax = plt.subplots(1, figsize=figsize)
+
+    # divider = make_axes_locatable(ax)
+    # cax = divider.append_axes("right", size="3.5%", pad="1%")
+    if scheme == "user_defined" and classification_kwds is not None:
+        if plot_na:
+            gdf.plot(
+                # cax=cax,
+                ax=ax,
+                column=plot_col,
+                scheme=scheme,
+                k=k,
+                cmap=cmap,
+                alpha=alpha,
+                edgecolor=edgecolor,
+                linewidth=linewidth,
+                legend=legend,
+                missing_kwds={"color": "lightgrey", "label": "No data"},
+                classification_kwds=classification_kwds,
+            )
+    else:
+        if plot_na:
+            gdf.plot(
+                # cax=cax,
+                ax=ax,
+                column=plot_col,
+                scheme=scheme,
+                k=k,
+                cmap=cmap,
+                alpha=alpha,
+                edgecolor=edgecolor,
+                linewidth=linewidth,
+                legend=legend,
+                missing_kwds={"color": "lightgrey", "label": "No data"},
+            )
+        else:
+            gdf.plot(
+                # cax=cax,
+                ax=ax,
+                column=plot_col,
+                scheme=scheme,
+                k=k,
+                cmap=cmap,
+                alpha=alpha,
+                edgecolor=edgecolor,
+                linewidth=linewidth,
+                legend=legend,
+            )
+
+    cx.add_basemap(ax=ax, crs=gdf.crs, source=cx_tile)
+
+    if attr is not None:
+        cx.add_attribution(ax=ax, text="(C) " + attr)
+        txt = ax.texts[-1]
+        txt.set_position([1, 0.00])
+        txt.set_ha("right")
+        txt.set_va("bottom")
+
+    ax.set_title(title)
+
+    if set_axis_off:
+        ax.set_axis_off()
+
+    if fp:
+        if plot_res == "high":
+            fig.savefig(fp + ".svg", dpi=dpi)
+        else:
+            fig.savefig(fp + ".png", dpi=dpi)
+
+    plt.show()
+    plt.close()
+
+
+def plot_unclassified_poly(
+    poly_gdf,
+    plot_col,
+    plot_title,
+    filepath,
+    cmap,
+    cx_tile,
+    alpha=1,
+    edgecolor="white",
+    linewidth=0.1,
+    figsize=pdict["fsmap"],
+    dpi=pdict["dpi"],
+    legend=True,
+    set_axis_off=True,
+    use_norm=False,
+    norm_min=None,
+    norm_max=None,
+    plot_res=pdict["plot_res"],
+    attr=None,
+    plot_na=True,
+):
+    """
+    Plots an unclassified polygon based on the given parameters.
+    poly_gdf (GeoDataFrame): The GeoDataFrame containing the polygon data to be plotted.
+    plot_col (str): The column in the GeoDataFrame to be used for coloring the polygons.
+    plot_title (str): The title of the plot.
+    filepath (str): The file path where the plot should be saved.
+    cmap (str): The colormap to be used for coloring the polygons.
+    alpha (float): The alpha level of the polygons.
+    cx_tile (str): The contextily tile to be used for the basemap.
+    figsize (tuple, optional): The size of the figure. Defaults to (10, 10).
+    dpi (int, optional): The resolution in dots per inch. Defaults to 300.
+    legend (bool, optional): If True, a legend is added to the plot. Defaults to True.
+    set_axis_off (bool, optional): If True, the axis is set off. Defaults to True.
+    use_norm (bool, optional): If True, the colormap is normalized. Defaults to False.
+    norm_min (float, optional): The minimum value for the colormap normalization. Defaults to None.
+    norm_max (float, optional): The maximum value for the colormap normalization. Defaults to None.
+    plot_res (str, optional): The resolution of the plot. Defaults to "low".
+    attr (str, optional): The attribute to be used for the plot. Defaults to None.
+    plot_na (bool, optional): If True, polygons with no data are plotted in light grey. Defaults to True.
+    """
+
+    if use_norm is True:
+        assert norm_min is not None, print("Please provide a value for norm_min")
+        assert norm_max is not None, print("Please provide a value for norm_max")
+
+    fig, ax = plt.subplots(1, figsize=figsize)
+
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes("right", size="3.5%", pad="1%")
+
+    if use_norm is True:
+
+        cbnorm = colors.Normalize(vmin=norm_min, vmax=norm_max)
+
+        if plot_na:
+
+            poly_gdf.plot(
+                cax=cax,
+                ax=ax,
+                column=plot_col,
+                legend=legend,
+                edgecolor=edgecolor,
+                linewidth=linewidth,
+                alpha=alpha,
+                norm=cbnorm,
+                cmap=cmap,
+                missing_kwds={"color": "lightgrey", "label": "No data"},
+            )
+
+        else:
+
+            poly_gdf.plot(
+                cax=cax,
+                ax=ax,
+                column=plot_col,
+                edgecolor=edgecolor,
+                linewidth=linewidth,
+                legend=legend,
+                alpha=alpha,
+                norm=cbnorm,
+                cmap=cmap,
+            )
+
+    else:
+        if plot_na:
+
+            poly_gdf.plot(
+                cax=cax,
+                ax=ax,
+                column=plot_col,
+                edgecolor=edgecolor,
+                linewidth=linewidth,
+                legend=legend,
+                alpha=alpha,
+                cmap=cmap,
+                missing_kwds={"color": "lightgrey", "label": "No data"},
+            )
+
+        else:
+            poly_gdf.plot(
+                cax=cax,
+                ax=ax,
+                column=plot_col,
+                edgecolor=edgecolor,
+                linewidth=linewidth,
+                legend=legend,
+                alpha=alpha,
+                cmap=cmap,
+            )
+
+    cx.add_basemap(ax=ax, crs=poly_gdf.crs, source=cx_tile)
+
+    if attr is not None:
+        cx.add_attribution(ax=ax, text="(C) " + attr)
+        txt = ax.texts[-1]
+        txt.set_position([1, 0.00])
+        txt.set_ha("right")
+        txt.set_va("bottom")
+
+    ax.set_title(plot_title)
+
+    if set_axis_off:
+        ax.set_axis_off()
+
+    if plot_res == "high":
+        fig.savefig(filepath + ".svg", dpi=dpi)
+    else:
+        fig.savefig(filepath + ".png", dpi=dpi)
+
+    # fig.close()
+
+
 def set_renderer(f="svg"):
     matplotlib_inline.backend_inline.set_matplotlib_formats(f)
 
@@ -181,280 +445,3 @@ def make_zipf_component_plot(df, col, label, fp=None, show=True):
         plt.show()
     else:
         plt.close()
-
-
-def plot_classified_poly(
-    gdf,
-    plot_col,
-    scheme,
-    k,
-    cx_tile,
-    plot_na,
-    cmap,
-    title,
-    edgecolor="black",
-    linewidth=0.5,
-    fp=None,
-    legend=True,
-    alpha=1,
-    figsize=(10, 10),
-    attr=None,
-    set_axis_off=True,
-    plot_res=pdict["plot_res"],
-    dpi=pdict["dpi"],
-    classification_kwds=None,
-):
-    """
-    Plots a classified polygon based on the given parameters.
-
-    Parameters:
-    gdf (GeoDataFrame): The GeoDataFrame containing the polygon data to be plotted.
-    plot_col (str): The column in the GeoDataFrame to be used for coloring the polygons.
-    scheme (str): The classification scheme to be used for coloring the polygons.
-    k (int): The number of classes to be used for the classification.
-    cx_tile (str): The contextily tile to be used for the basemap.
-    plot_na (bool): If True, polygons with no data are plotted in light grey.
-    cmap (str): The colormap to be used for coloring the polygons.
-    title (str): The title of the plot.
-    edgecolor (str, optional): The color of the polygon edges. Defaults to "black".
-    fp (str, optional): The file path where the plot should be saved. If None, the plot is not saved. Defaults to None.
-    legend (bool, optional): If True, a legend is added to the plot. Defaults to True.
-    alpha (float, optional): The alpha level of the polygons. Defaults to 0.8.
-    figsize (tuple, optional): The size of the figure. Defaults to (10, 10).
-    attr (str, optional): The attribute to be used for the plot. Defaults to None.
-    set_axis_off (bool, optional): If True, the axis is set off. Defaults to True.
-    plot_res (str, optional): The resolution of the plot. Defaults to "low".
-    dpi (int, optional): The resolution in dots per inch. Defaults to 300.
-    classification_kwds (dict, optional): Additional keyword arguments for the 'user_defined' classification scheme. Defaults to None.
-
-    Returns:
-    None
-    """
-
-    fig, ax = plt.subplots(1, figsize=figsize)
-
-    # divider = make_axes_locatable(ax)
-    # cax = divider.append_axes("right", size="3.5%", pad="1%")
-    if scheme == "user_defined" and classification_kwds is not None:
-        if plot_na:
-            gdf.plot(
-                # cax=cax,
-                ax=ax,
-                column=plot_col,
-                scheme=scheme,
-                k=k,
-                cmap=cmap,
-                alpha=alpha,
-                edgecolor=edgecolor,
-                linewidth=linewidth,
-                legend=legend,
-                missing_kwds={"color": "lightgrey", "label": "No data"},
-                classification_kwds=classification_kwds,
-            )
-    else:
-        if plot_na:
-            gdf.plot(
-                # cax=cax,
-                ax=ax,
-                column=plot_col,
-                scheme=scheme,
-                k=k,
-                cmap=cmap,
-                alpha=alpha,
-                edgecolor=edgecolor,
-                linewidth=linewidth,
-                legend=legend,
-                missing_kwds={"color": "lightgrey", "label": "No data"},
-            )
-        else:
-            gdf.plot(
-                # cax=cax,
-                ax=ax,
-                column=plot_col,
-                scheme=scheme,
-                k=k,
-                cmap=cmap,
-                alpha=alpha,
-                edgecolor=edgecolor,
-                linewidth=linewidth,
-                legend=legend,
-            )
-
-    cx.add_basemap(ax=ax, crs=gdf.crs, source=cx_tile)
-
-    if attr is not None:
-        cx.add_attribution(ax=ax, text="(C) " + attr)
-        txt = ax.texts[-1]
-        txt.set_position([1, 0.00])
-        txt.set_ha("right")
-        txt.set_va("bottom")
-
-    ax.set_title(title)
-
-    if set_axis_off:
-        ax.set_axis_off()
-
-    if fp:
-        if plot_res == "high":
-            fig.savefig(fp + ".svg", dpi=dpi)
-        else:
-            fig.savefig(fp + ".png", dpi=dpi)
-
-    plt.show()
-    plt.close()
-
-
-def plot_polygon_results(
-    poly_gdf,
-    plot_cols,
-    plot_titles,
-    filepaths,
-    cmaps,
-    alpha,
-    cx_tile,
-    no_data_cols,
-    na_facecolor=pdict["nodata_face"],
-    na_edgecolor=pdict["nodata_edge"],
-    na_linewidth=pdict["line_nodata"],
-    na_hatch=pdict["nodata_hatch"],
-    na_alpha=pdict["alpha_nodata"],
-    na_legend=nodata_patch,
-    figsize=pdict["fsmap"],
-    dpi=pdict["dpi"],
-    crs=crs,
-    legend=True,
-    set_axis_off=True,
-    legend_loc="upper left",
-    use_norm=False,
-    norm_min=None,
-    norm_max=None,
-    plot_res=pdict["plot_res"],
-    attr=None,
-    plot_na=True,
-):
-    """
-    Make multiple choropleth maps of e.g. poly_gdf with analysis results based on a list of geodataframe columns to be plotted
-    and save them in separate files
-    Arguments:
-        poly_gdf (gdf): geodataframe with polygons to be plotted
-        plot_cols (list): list of column names (strings) to be plotted
-        plot_titles (list): list of strings to be used as plot titles
-        cmaps (list): list of color maps
-        alpha(numeric): value between 0-1 for setting the transparency of the plots
-        cx_tile(cx tileprovider): name of contextily tile to be used for base map
-        no_data_cols(list): list of column names used for generating no data layer in each plot
-        na_facecolor(string): name of color used for the no data layer fill
-        na_edegcolor(string): name of color used for the no data layer outline
-        na_hatch: hatch pattern used for no data layer
-        na_alpha (numeric): value between 0-1 for setting the transparency of the plots
-        na_linewidth (numeric): width of edge lines of no data poly_gdf cells
-        na_legend(matplotlib Patch): patch to be used for the no data layer in the legend
-        figsize(tuple): size of each plot
-        dpi(numeric): resolution of saved plots
-        crs (string): name of crs used for the poly_gdf (to set correct crs of basemap)
-        legend (bool): True if a legend/colorbar should be plotted
-        set_axis_off (bool): True if axis ticks and values should be omitted
-        legend_loc (string): Position of map legend (see matplotlib doc for valid entries)
-        use_norm (bool): True if colormap should be defined based on provided min and max values
-        norm_min(numeric): min value to use for norming color map
-        norm_max(numeric): max value to use for norming color map
-        attr (string): optional attribution
-        plot_na (bool): True if no data layer should be plotted
-
-    Returns:
-        None
-    """
-
-    if use_norm is True:
-        assert norm_min is not None, print("Please provide a value for norm_min")
-        assert norm_max is not None, print("Please provide a value for norm_max")
-
-    for i, c in enumerate(plot_cols):
-
-        fig, ax = plt.subplots(1, figsize=figsize)
-
-        divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size="3.5%", pad="1%")
-
-        if use_norm is True:
-
-            cbnorm = colors.Normalize(vmin=norm_min[i], vmax=norm_max[i])
-
-            poly_gdf.plot(
-                cax=cax,
-                ax=ax,
-                column=c,
-                legend=legend,
-                alpha=alpha,
-                norm=cbnorm,
-                cmap=cmaps[i],
-            )
-
-        else:
-            poly_gdf.plot(
-                cax=cax,
-                ax=ax,
-                column=c,
-                legend=legend,
-                alpha=alpha,
-                cmap=cmaps[i],
-            )
-        cx.add_basemap(ax=ax, crs=crs, source=cx_tile)
-
-        if attr is not None:
-            cx.add_attribution(ax=ax, text="(C) " + attr)
-            txt = ax.texts[-1]
-            txt.set_position([1, 0.00])
-            txt.set_ha("right")
-            txt.set_va("bottom")
-
-        ax.set_title(plot_titles[i])
-
-        if set_axis_off:
-            ax.set_axis_off()
-
-        if plot_na:
-            # add patches in poly_gdf cells with no data on edges
-            if type(no_data_cols[i]) == tuple and len(
-                poly_gdf[
-                    (poly_gdf[no_data_cols[i][0]].isnull())
-                    & (poly_gdf[no_data_cols[i][1]].isnull())
-                ]
-                > 0
-            ):
-
-                poly_gdf[
-                    (poly_gdf[no_data_cols[i][0]].isnull())
-                    & (poly_gdf[no_data_cols[i][1]].isnull())
-                ].plot(
-                    ax=ax,
-                    facecolor=na_facecolor,
-                    edgecolor=na_edgecolor,
-                    linewidth=na_linewidth,
-                    hatch=na_hatch,
-                    alpha=na_alpha,
-                )
-
-                ax.legend(handles=[na_legend], loc=legend_loc)
-
-            elif (
-                type(no_data_cols[i]) == str
-                and len(poly_gdf[poly_gdf[no_data_cols[i]].isnull()]) > 0
-            ):
-                poly_gdf[poly_gdf[no_data_cols[i]].isnull()].plot(
-                    ax=ax,
-                    facecolor=na_facecolor,
-                    edgecolor=na_edgecolor,
-                    linewidth=na_linewidth,
-                    hatch=na_hatch,
-                    alpha=na_alpha,
-                )
-
-                ax.legend(handles=[na_legend], loc=legend_loc)
-
-        if plot_res == "high":
-            fig.savefig(filepaths[i] + ".svg", dpi=dpi)
-        else:
-            fig.savefig(filepaths[i] + ".png", dpi=dpi)
-
-        fig.close()

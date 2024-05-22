@@ -195,6 +195,11 @@ for e, gdf in enumerate(gdfs):
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l for l in labels]
 
+    min_vals = [gdf[p].min() for p in plot_cols]
+    max_vals = [gdf[p].max() for p in plot_cols]
+    v_min = min(min_vals)
+    v_max = max(max_vals)
+
     for i, p in enumerate(plot_cols):
         plot_func.plot_classified_poly(
             gdf=gdf,
@@ -207,6 +212,18 @@ for e, gdf in enumerate(gdfs):
             edgecolor="none",
             title=plot_titles[i],
             fp=filepaths[i],
+        )
+
+        plot_func.plot_unclassified_poly(
+            poly_gdf=gdf,
+            plot_col=p,
+            plot_title=plot_titles[i],
+            filepath=filepaths[i] + "_unclassified",
+            cmap=pdict["neg"],
+            use_norm=True,
+            norm_min=v_min,
+            norm_max=v_max,
+            cx_tile=cx_tile_2,
         )
 
 # %%
@@ -550,6 +567,11 @@ for e, gdf in enumerate(gdfs):
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l + "_per_km" for l in labels]
 
+    min_vals = [gdf[p].min() for p in plot_cols]
+    max_vals = [gdf[p].max() for p in plot_cols]
+    v_min = min(min_vals)
+    v_max = max(max_vals)
+
     for i, p in enumerate(plot_cols):
         plot_func.plot_classified_poly(
             gdf=gdf,
@@ -564,6 +586,18 @@ for e, gdf in enumerate(gdfs):
             fp=filepaths[i],
         )
 
+        plot_func.plot_unclassified_poly(
+            poly_gdf=gdf,
+            plot_col=p,
+            plot_title=plot_titles[i],
+            filepath=filepaths[i] + "_unclassified",
+            cmap=pdict["neg"],
+            use_norm=True,
+            norm_min=v_min,
+            norm_max=v_max,
+            cx_tile=cx_tile_2,
+        )
+
 
 all_plot_titles = [
     "Municipal component count per km/sqkm for: ",
@@ -574,11 +608,15 @@ all_plot_titles = [
 
 plot_cols = component_per_km_sqkm_cols
 
-
 for e, gdf in enumerate(gdfs):
 
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l + "_per_km_sqkm" for l in labels]
+
+    min_vals = [gdf[p].min() for p in plot_cols]
+    max_vals = [gdf[p].max() for p in plot_cols]
+    v_min = min(min_vals)
+    v_max = max(max_vals)
 
     for i, p in enumerate(plot_cols):
         plot_func.plot_classified_poly(
@@ -592,6 +630,18 @@ for e, gdf in enumerate(gdfs):
             edgecolor="none",
             title=plot_titles[i],
             fp=filepaths[i],
+        )
+
+        plot_func.plot_unclassified_poly(
+            poly_gdf=gdf,
+            plot_col=p,
+            plot_title=plot_titles[i],
+            filepath=filepaths[i] + "_unclassified",
+            cmap=pdict["neg"],
+            use_norm=True,
+            norm_min=v_min,
+            norm_max=v_max,
+            cx_tile=cx_tile_2,
         )
 
 # %%
