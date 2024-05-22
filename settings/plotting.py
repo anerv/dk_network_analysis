@@ -23,12 +23,12 @@ mpl.rcParams["hatch.linewidth"] = 0.5
 scheme = "fisherjenks"
 k = 5
 lts_color_dict = {
-    "1": "blue",
-    "2": "green",
-    "3": "orange",
-    "4": "yellow",
-    "car": "black",
-    "total": "red",
+    "1": "#0B7512",
+    "2": "#7ABA78",
+    "3": "#FFC100",
+    "4": "#F97300",
+    "car": "#5c5c5c",
+    "total": "#151515",
 }
 
 component_columns = [
@@ -172,14 +172,14 @@ plotly_labels = {
     "lts3_len": "Network reach (km)",
     "lts4_len": "Network reach (km)",
     "car_len": "Network reach (km)",
-    "car_lts1_diff": "Difference in car - LTS 1 reach (km)",
-    "car_lts2_diff": "Difference in car - LTS 1-2 reach (km)",
-    "car_lts3_diff": "Difference in car - LTS 1-3 reach (km)",
-    "car_lts4_diff": "Difference in car - LTS 1-4 reach (km)",
-    "car_lts1_diff_pct": "Difference in car - LTS 1 reach (%)",
-    "car_lts2_diff_pct": "Difference in car - LTS 1-2 reach (%)",
-    "car_lts3_diff_pct": "Difference in car - LTS 1-3 reach (%)",
-    "car_lts4_diff_pct": "Difference in car - LTS 1-4 reach (%)",
+    "car_lts1_diff": "Difference in network reach (km)",
+    "car_lts2_diff": "Difference in network reach (km)",
+    "car_lts3_diff": "Difference in network reach (km)",
+    "car_lts4_diff": "Difference in network reach (km)",
+    "car_lts1_diff_pct": "Difference in network reach (%)",
+    "car_lts2_diff_pct": "Difference in network reach (%)",
+    "car_lts3_diff_pct": "Difference in network reach (%)",
+    "car_lts4_diff_pct": "Difference in network reach (%)",
 }
 
 pdict = {
@@ -240,4 +240,4 @@ nodata_patch = mpatches.Patch(
 import contextily as cx
 
 cx_tile_1 = cx.providers.CartoDB.Voyager
-cx_tile_2 = cx.providers.CartoDB.Positron
+cx_tile_2 = cx.providers.CartoDB.PositronNoLabels  # CartoDB.DarkMatterNoLabels
