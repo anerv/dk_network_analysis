@@ -313,8 +313,8 @@ filepaths_violin = [
 titles = [
     "Network reach difference: Car - LTS 1",
     "Network reach difference: Car - LTS 1-2",
-    "Network reach: Car - LTS 1-3",
-    "Network reach: Car - LTS 1-4",
+    "Network reach difference: Car - LTS 1-3",
+    "Network reach difference: Car - LTS 1-4",
 ]
 
 for i, r in enumerate(reach_diff_columns):
