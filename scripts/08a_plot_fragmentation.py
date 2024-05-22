@@ -605,7 +605,7 @@ all_plot_titles = [
     "Hexagonal grid component count per km/sqkm for: ",
 ]
 
-
+# %%
 plot_cols = component_per_km_sqkm_cols
 
 for e, gdf in enumerate(gdfs):
