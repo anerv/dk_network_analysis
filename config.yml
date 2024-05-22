@@ -14,19 +14,3 @@ socio_fp: "../data/processed/voting_areas.gpkg"
 adm_boundaries_fp: "../data/input/adm_boundaries/muni_boundaries.gpkg"
 
 h3_resolution: 8
-
-# Define LTS levels to compare
-LTS:
-- 1
-- 2
-- 3
-- 4
-
-# LTS values for total network
-LTS_TOTAL:
-- 1
-- 2
-- 3
-- 4
-# - 999
-# - 0
