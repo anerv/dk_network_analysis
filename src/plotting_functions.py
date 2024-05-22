@@ -196,7 +196,7 @@ def plot_classified_poly(
     linewidth=0.5,
     fp=None,
     legend=True,
-    alpha=0.8,
+    alpha=1,
     figsize=(10, 10),
     attr=None,
     set_axis_off=True,
