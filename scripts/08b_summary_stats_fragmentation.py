@@ -11,6 +11,7 @@ import pandas as pd
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 exec(open("../settings/filepaths.py").read())
+exec(open("../settings/df_styler.py").read())
 
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
@@ -82,7 +83,7 @@ df = pd.DataFrame(
 )
 
 df.to_csv(filepath_sum_fragmentation_summary_stats, index=True)
-print(df)
+display(df.style.pipe(format_style_index))
 # %%
 aggregation_levels = ["municipal", "local", "grid"]
 
@@ -113,7 +114,6 @@ for a, df in zip(aggregation_levels, comp_dfs):
         max_comp_counts.append(df[component_count_columns[i]].max())
         std_comp_counts.append(df[component_count_columns[i]].std())
 
-    print(f"Summary statistics for local component count at the {a} level:")
     df = pd.DataFrame(
         data={
             "min": min_comp_counts,
@@ -124,13 +124,13 @@ for a, df in zip(aggregation_levels, comp_dfs):
         }
     )
 
-    print(df)
-
-    print("\n")
-
     df.to_csv(
         filepath_sum_fragmentation_component_count + a + ".csv",
         index=False,
     )
+
+    print(f"Summary statistics for local component count at the {a} level:")
+
+    display(df.style.pipe(format_style_no_index))
 
 # %%

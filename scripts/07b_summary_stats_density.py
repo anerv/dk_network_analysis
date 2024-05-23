@@ -15,6 +15,7 @@ import pandas as pd
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 exec(open("../settings/filepaths.py").read())
+exec(open("../settings/df_styler.py").read())
 
 plot_func.set_renderer("png")
 
@@ -91,9 +92,9 @@ network_lengths = [
 
 df = pd.DataFrame(data={"network_type": network_levels, "length (km)": network_lengths})
 
-print(df)
-
 df.to_csv(filepath_summmary_stats_network_length, index=False)
+
+display(df.style.pipe(format_style_no_index))
 
 # %%
 ### VALUE RANGES FOR EACH LTS LEVEL FOR EACH AGGREGATION LEVEL
@@ -155,13 +156,17 @@ for a, df in zip(aggregation_levels, density_data):
     )
 
     print(f"At the {a} level:")
-    print(df)
-    print("\n")
+    # print(df)
+
+    # print("\n")
 
     df.to_csv(
         filepath_sum_density_relative_steps + a + ".csv",
         index=True,
     )
+
+    display(df.style.pipe(format_style_index))
+
 
 # %%
 # For each level
@@ -195,18 +200,18 @@ for a, df in zip(aggregation_levels, density_data):
             "mean_share": mean_shares,
             "median_share": median_shares,
             "max_share": max_shares,
-            "std_dev": std_devs,
+            "std_dev (share)": std_devs,
         },
     )
-
-    print(f"At the {a} level:")
-    print(df)
-    print("\n")
 
     df.to_csv(
         filepath_sum_density_relative + a + ".csv",
         index=True,
     )
+
+    print(f"At the {a} level:")
+
+    display(df.style.pipe(format_style_index))
 
 
 # %%
@@ -235,11 +240,13 @@ for a, df in zip(aggregation_levels, density_data):
         index=network_levels_steps[1:-1],
         data={"more_bike_count": more_bike_count, "more_bike_share": more_bike_share},
     )
-    print(df)
 
     df.to_csv(
         filepath_sum_density_more_bike_count + a + ".csv",
         index=True,
     )
+
+    display(df.style.pipe(format_style_index))
+
 
 # %%
