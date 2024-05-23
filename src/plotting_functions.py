@@ -35,7 +35,7 @@ def plot_classified_poly(
     legend=True,
     alpha=1,
     figsize=(10, 10),
-    attr=None,
+    attr=pdict["map_attr"],
     set_axis_off=True,
     plot_res=pdict["plot_res"],
     dpi=pdict["dpi"],
@@ -159,7 +159,7 @@ def plot_unclassified_poly(
     norm_min=None,
     norm_max=None,
     plot_res=pdict["plot_res"],
-    attr=None,
+    attr=pdict["map_attr"],
     plot_na=True,
 ):
     """

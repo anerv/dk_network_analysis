@@ -223,6 +223,7 @@ pdict = {
     "fsbar_small": (4, 3.5),
     "fsbar_short": (6, 3),
     "fsbar_sub": (4, 3),  # size per subplot
+    "map_attr": "GeoDanmark",
 }
 
 # patches for geopandas plots legend of "no data"
