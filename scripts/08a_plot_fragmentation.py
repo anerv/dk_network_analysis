@@ -56,7 +56,7 @@ for i, df in enumerate(component_size_dfs):
         df,
         columns[i],
         labels[i],
-        fp_zip_lts + labels[i] + ".png",
+        fp_zipf_lts + labels[i] + ".png",
     )
 
 # Combined zipf plot
@@ -352,7 +352,7 @@ rug_titles = [
     "Distribution of local component count at the local level",
     "Distribution of local component count at the hexagonal grid level",
 ]
-scatter_filepaths = filpaths_components_scatter
+scatter_filepaths = filepaths_components_scatter
 rug_filepaths = filepaths_components_rug
 
 for e, df in enumerate(dfs):
@@ -524,7 +524,8 @@ h3_components.replace(0, np.nan, inplace=True)
 
 gdfs = [muni_components, socio_components, h3_components]
 
-
+# %%
+# comp per km
 plot_cols = component_per_km_cols
 
 labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car", "Total network"]
@@ -575,6 +576,7 @@ for e, gdf in enumerate(gdfs):
 
 
 # %%
+# comp per km sqkm
 all_plot_titles = [
     "Municipal component count per km/sqkm for: ",
     "Local component count per km/sqkm for: ",

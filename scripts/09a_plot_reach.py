@@ -50,7 +50,7 @@ plot_titles = [
 ]
 
 plot_columns = reach_columns
-filepath = filepaths_reach
+filepaths = filepaths_reach
 
 min_vals = [hex_reach[p].min() for p in plot_columns]
 max_vals = [hex_reach[p].max() for p in plot_columns]
