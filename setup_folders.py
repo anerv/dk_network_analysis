@@ -15,6 +15,7 @@ for f in data_subfolders:
     if not os.path.exists("data/" + f):
         os.mkdir("data/" + f)
 
+
 # make subfolders for results
 results_subfolders = [
     "component_density_correlation",
@@ -22,6 +23,7 @@ results_subfolders = [
     "component_count_maps",
     "density_maps",
     "density_distributions",
+    "summary_stats",
     "reach_maps",
     "reach_distributions",
     "reach_density_correlation",
