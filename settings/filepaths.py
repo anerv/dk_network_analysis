@@ -1,7 +1,7 @@
 # Density plots
 
 filepaths_kde_length = [
-    "../results/densit_distributions/administrative/lts_kde_length.jpg",
+    "../results/density_distributions/administrative/lts_kde_length.jpg",
     "../results/density_distributions/socio/lts_kde_length.jpg",
     "../results/density_distributions/hexgrid/lts_kde_length.jpg",
 ]
