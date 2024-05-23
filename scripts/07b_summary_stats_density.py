@@ -14,6 +14,7 @@ import pandas as pd
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
+exec(open("../settings/filepaths.py").read())
 
 plot_func.set_renderer("png")
 
@@ -24,7 +25,7 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 # %%
 density_muni = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM density_municipality;",
+    "SELECT * FROM density.density_municipality;",
     engine,
     crs=crs,
     geom_col="geometry",
@@ -32,7 +33,7 @@ density_muni = gpd.GeoDataFrame.from_postgis(
 density_muni.replace(0, np.nan, inplace=True)
 
 density_socio = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM density_socio;",
+    "SELECT * FROM density.density_socio;",
     engine,
     crs=crs,
     geom_col="geometry",
@@ -41,7 +42,7 @@ density_socio = gpd.GeoDataFrame.from_postgis(
 density_socio.replace(0, np.nan, inplace=True)
 
 density_h3 = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM density_h3;",
+    "SELECT * FROM density.density_h3;",
     engine,
     crs=crs,
     geom_col="geometry",
@@ -88,12 +89,11 @@ network_lengths = [
     lts_car_length,
 ]
 
-for n, l in zip(network_levels, network_lengths):
+df = pd.DataFrame(data={"network_type": network_levels, "length (km)": network_lengths})
 
-    print(
-        f"The total length of the {n} network is {l:_.2f} km or {(l/total_network_length*100):.2f}%"
-    )
+print(df)
 
+df.to_csv(filepath_summmary_stats_network_length, index=False)
 
 # %%
 ### VALUE RANGES FOR EACH LTS LEVEL FOR EACH AGGREGATION LEVEL
@@ -123,23 +123,56 @@ network_levels_steps = [
 # For each stepwise level
 for a, df in zip(aggregation_levels, density_data):
 
+    min_shares = []
+    max_shares = []
+    mean_shares = []
+    median_shares = []
+    std_devs = []
+
     for i, l in enumerate(network_levels_steps[1:]):
 
         min_share = df[length_relative_steps_columns[i]].min()
         max_share = df[length_relative_steps_columns[i]].max()
         mean_share = df[length_relative_steps_columns[i]].mean()
         median_share = df[length_relative_steps_columns[i]].median()
-        print(
-            f"At the {a} level, the {l} network is between {min_share:.2f} % and {max_share:.2f} % of the full network length. 
-            The average share is {mean_share:.2f}% and the median share is {median_share:.2f}%."
-        )
+        std_dev = df[length_relative_steps_columns[i]].std()
 
+        min_shares.append(min_share)
+        max_shares.append(max_share)
+        mean_shares.append(mean_share)
+        median_shares.append(median_share)
+        std_devs.append(std_dev)
+
+    df = pd.DataFrame(
+        index=network_levels_steps[1:],
+        data={
+            "min_share": min_shares,
+            "mean_share": mean_shares,
+            "median_share": median_shares,
+            "max_share": max_shares,
+            "std_dev": std_devs,
+        },
+    )
+
+    print(f"At the {a} level:")
+    print(df)
     print("\n")
+
+    df.to_csv(
+        filepath_sum_density_relative_steps + a + ".csv",
+        index=True,
+    )
 
 # %%
 # For each level
 
 for a, df in zip(aggregation_levels, density_data):
+
+    min_shares = []
+    max_shares = []
+    mean_shares = []
+    median_shares = []
+    std_devs = []
 
     for i, l in enumerate(network_levels[1:]):
 
@@ -147,12 +180,33 @@ for a, df in zip(aggregation_levels, density_data):
         max_share = df[length_relative_columns[i]].max()
         mean_share = df[length_relative_columns[i]].mean()
         median_share = df[length_relative_columns[i]].median()
-        print(
-            f"At the {a} level, the {l} network is between {min_share:.2f} % and {max_share:.2f}% of the full network length. 
-            The average share is {mean_share:.2f}% and the median share is {median_share:.2f}%."
-        )
+        std_dev = df[length_relative_columns[i]].std()
 
+        min_shares.append(min_share)
+        max_shares.append(max_share)
+        mean_shares.append(mean_share)
+        median_shares.append(median_share)
+        std_devs.append(std_dev)
+
+    df = pd.DataFrame(
+        index=network_levels[1:],
+        data={
+            "min_share": min_shares,
+            "mean_share": mean_shares,
+            "median_share": median_shares,
+            "max_share": max_shares,
+            "std_dev": std_devs,
+        },
+    )
+
+    print(f"At the {a} level:")
+    print(df)
     print("\n")
+
+    df.to_csv(
+        filepath_sum_density_relative + a + ".csv",
+        index=True,
+    )
 
 
 # %%
@@ -169,18 +223,23 @@ for a, df in zip(aggregation_levels, density_data):
     more_lts_1_3_percent = more_lts_1_3 / df.shape[0] * 100
     more_lts_1_4_percent = more_lts_1_4 / df.shape[0] * 100
 
-    print(
-        f"At the {a} level, {more_lts_1_percent:.2f}% have more LTS 1 network than car network."
-    )
-    print(
-        f"At the {a} level, {more_lts_1_2_percent:.2f}% have more LTS 1-2 network than car network."
-    )
-    print(
-        f"At the {a} level, {more_lts_1_3_percent:.2f}% have more LTS 1-3 network than car network."
-    )
-    print(
-        f"At the {a} level, {more_lts_1_4_percent:.2f}% have more LTS 1-4 network than car network."
-    )
+    more_bike_count = [more_lts_1, more_lts_1_2, more_lts_1_3, more_lts_1_4]
+    more_bike_share = [
+        more_lts_1_percent,
+        more_lts_1_2_percent,
+        more_lts_1_3_percent,
+        more_lts_1_4_percent,
+    ]
 
+    df = pd.DataFrame(
+        index=network_levels_steps[1:-1],
+        data={"more_bike_count": more_bike_count, "more_bike_share": more_bike_share},
+    )
+    print(df)
+
+    df.to_csv(
+        filepath_sum_density_more_bike_count + a + ".csv",
+        index=True,
+    )
 
 # %%

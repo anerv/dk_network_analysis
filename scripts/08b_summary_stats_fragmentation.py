@@ -10,6 +10,7 @@ import pandas as pd
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
+exec(open("../settings/filepaths.py").read())
 
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
@@ -17,16 +18,20 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 
 # %%
-component_size_all = pd.read_sql("SELECT * FROM component_size_all;", engine)
-component_size_1 = pd.read_sql("SELECT * FROM component_size_1;", engine)
-component_size_2 = pd.read_sql("SELECT * FROM component_size_2;", engine)
-component_size_3 = pd.read_sql("SELECT * FROM component_size_3;", engine)
-component_size_4 = pd.read_sql("SELECT * FROM component_size_4;", engine)
-component_size_car = pd.read_sql("SELECT * FROM component_size_car;", engine)
+component_size_all = pd.read_sql(
+    "SELECT * FROM fragmentation.component_size_all;", engine
+)
+component_size_1 = pd.read_sql("SELECT * FROM fragmentation.component_size_1;", engine)
+component_size_2 = pd.read_sql("SELECT * FROM fragmentation.component_size_2;", engine)
+component_size_3 = pd.read_sql("SELECT * FROM fragmentation.component_size_3;", engine)
+component_size_4 = pd.read_sql("SELECT * FROM fragmentation.component_size_4;", engine)
+component_size_car = pd.read_sql(
+    "SELECT * FROM fragmentation.component_size_car;", engine
+)
 
-compt_count_muni = pd.read_sql("SELECT * FROM comp_count_muni;", engine)
-compt_count_socio = pd.read_sql("SELECT * FROM comp_count_socio;", engine)
-compt_count_h3 = pd.read_sql("SELECT * FROM comp_count_h3;", engine)
+compt_count_muni = pd.read_sql("SELECT * FROM fragmentation.comp_count_muni;", engine)
+compt_count_socio = pd.read_sql("SELECT * FROM fragmentation.comp_count_socio;", engine)
+compt_count_h3 = pd.read_sql("SELECT * FROM fragmentation.comp_count_h3;", engine)
 
 # %%
 
@@ -48,25 +53,36 @@ network_levels_steps = [
     "car",
 ]
 
+comp_count = []
+smallest_comp_size = []
+mean_comp_size = []
+median_comp_size = []
+max_comp_size = []
+std_dev_comp_size = []
+
 for c, n in zip(comp_dfs, network_levels_steps):
 
-    print(f"The {n} network is divided into {len(c):_} components.")
+    comp_count.append(len(c))
+    smallest_comp_size.append(c["bike_length"].min())
+    mean_comp_size.append(c["bike_length"].mean())
+    median_comp_size.append(c["bike_length"].median())
+    max_comp_size.append(c["bike_length"].max())
+    std_dev_comp_size.append(c["bike_length"].std())
 
-    print(
-        f"The smallest component for the {n} network is {c['bike_length'].min()/1000:_.4f} km long."
-    )
+df = pd.DataFrame(
+    index=network_levels_steps,
+    data={
+        "component count": comp_count,
+        "smallest component size (km)": smallest_comp_size,
+        "mean component size (km)": mean_comp_size,
+        "median component size (km)": median_comp_size,
+        "largest component size (km)": max_comp_size,
+        "standard deviation of component size (km)": std_dev_comp_size,
+    },
+)
 
-    print(
-        f"The average component size for the {n} network is {c['bike_length'].mean()/1000:_.2f} km."
-    )
-
-    print(
-        f"The largest component for the {n} network is {c['bike_length'].max()/1000:_.2f} km."
-    )
-
-    print(f"The median component size is {c['bike_length'].median()/1000:_.2f} km.")
-
-    print("\n")
+df.to_csv(filepath_sum_fragmentation_summary_stats, index=True)
+print(df)
 # %%
 aggregation_levels = ["municipal", "local", "grid"]
 
@@ -83,26 +99,38 @@ network_levels_steps = [
 
 for a, df in zip(aggregation_levels, comp_dfs):
 
+    min_comp_counts = []
+    mean_comp_counts = []
+    median_comp_counts = []
+    max_comp_counts = []
+    std_comp_counts = []
+
     for i, l in enumerate(network_levels_steps):
 
-        min_comp_count = df[component_count_columns[i]].min()
-        mean_comp_count = df[component_count_columns[i]].mean()
-        max_comp_count = df[component_count_columns[i]].max()
-        median_comp_count = df[component_count_columns[i]].median()
+        min_comp_counts.append(df[component_count_columns[i]].min())
+        mean_comp_counts.append(df[component_count_columns[i]].mean())
+        median_comp_counts.append(df[component_count_columns[i]].median())
+        max_comp_counts.append(df[component_count_columns[i]].max())
+        std_comp_counts.append(df[component_count_columns[i]].std())
 
-        print(
-            f"At the {a} level, the minimum component count for the {l} network is {min_comp_count}."
-        )
-        print(
-            f"At the {a} level, the mean component count for the {l} network is {mean_comp_count:.0f}."
-        )
-        print(
-            f"At the {a} level, the median component count for the {l} network is {median_comp_count}."
-        )
-        print(
-            f"At the {a} level, the maximum component count for the {l} network is {max_comp_count}."
-        )
+    print(f"Summary statistics for local component count at the {a} level:")
+    df = pd.DataFrame(
+        data={
+            "min": min_comp_counts,
+            "mean": mean_comp_counts,
+            "median": median_comp_counts,
+            "max": max_comp_counts,
+            "std": std_comp_counts,
+        }
+    )
+
+    print(df)
 
     print("\n")
+
+    df.to_csv(
+        filepath_sum_fragmentation_component_count + a + ".csv",
+        index=False,
+    )
 
 # %%

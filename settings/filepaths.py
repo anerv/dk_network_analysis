@@ -127,3 +127,37 @@ filepaths_components_scatter_lts = [
     "../results/component_density_correlation/hexgrid/component_count_infra_density_all_areas_car.jpeg",
     "../results/component_density_correlation/hexgrid/component_count_infra_density_all_areas_all.jpeg",
 ]
+
+filepath_summmary_stats_network_length = (
+    "../results/summary_stats/density_network_length.csv"
+)
+
+filepath_sum_density_relative_steps = (
+    "../results/summary_stats/density_network_relative_length_steps_"
+)
+
+filepath_sum_density_relative = (
+    "../results/summary_stats/density_network_relative_length_"
+)
+
+filepath_sum_density_more_bike_count = (
+    "../results/summary_stats/density_more_bike_count_"
+)
+
+filepath_sum_fragmentation_summary_stats = (
+    "../results/summary_stats/fragmentation_summary_stats.csv"
+)
+
+filepath_sum_fragmentation_component_count = (
+    "../results/summary_stats/fragmentation_component_count_"
+)
+
+filepath_summary_stats_reach = "../results/summary_stats/reach_summary_stats.csv"
+
+filepath_summary_stats_reach_diff = (
+    "../results/summary_stats/reach_diff_summary_stats.csv"
+)
+
+filepath_summary_stats_reach_diff_pct = (
+    "../results/summary_stats/reach_diff_pct_summary_stats.csv"
+)

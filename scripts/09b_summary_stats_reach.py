@@ -10,19 +10,17 @@ import pandas as pd
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
-plot_func.set_renderer("png")
+exec(open("../settings/filepaths.py").read())
 
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 # %%
-# Print absolute and relative differences for both reach len and area
-# Min, max, average etc.
 
 # Read data
 
 hex_reach = gpd.read_postgis(
-    "SELECT * FROM reach.hex_reach", connection, geom_col="geometry"
+    "SELECT * FROM reach.hex_reach", engine, geom_col="geometry"
 )
 
 for p in reach_columns:
@@ -42,66 +40,90 @@ labels = [
     "car",
 ]
 
+min_reach = []
+mean_reach = []
+median_reach = []
+std_reach = []
+max_reach = []
+
 for i, r in enumerate(reach_columns):
 
-    print(
-        f"The minimum network reach for the {labels[i]} network is: {hex_reach[r].min():_.3f} km."
-    )
-    print(
-        f"The maximum network reach for the {labels[i]} network is: {hex_reach[r].max():_.3f} km."
-    )
-    print(
-        f"The average network reach for the {labels[i]} network is: {hex_reach[r].mean():_.3f} km."
-    )
-    print(
-        f"The median network reach for the {labels[i]} network is: {hex_reach[r].median():_.3f} km."
-    )
-    print(
-        f"The standard deviation in network reach network for: {labels[i]} is {hex_reach[r].std():_.2f} km."
-    )
+    min_reach.append(hex_reach[r].min())
+    mean_reach.append(hex_reach[r].mean())
+    median_reach.append(hex_reach[r].median())
+    std_reach.append(hex_reach[r].std())
+    max_reach.append(hex_reach[r].max())
 
-    print("\n")
+df = pd.DataFrame(
+    index=labels,
+    data={
+        "min (km)": min_reach,
+        "mean (km)": mean_reach,
+        "median (km)": median_reach,
+        "max (km)": max_reach,
+        "std (km)": std_reach,
+    },
+)
+
+print(df)
+df.to_csv(filepath_summary_stats_reach, index=True)
 
 # %%
+
+min_reach_diff = []
+mean_reach_diff = []
+median_reach_diff = []
+std_reach_diff = []
+max_reach_diff = []
+
+
 for i, r in enumerate(reach_diff_columns):
 
-    print(
-        f"The minimum difference in network reach between the car and the {labels[i]} network is: {hex_reach[r].min():_.3f} km."
-    )
-    print(
-        f"The maximum difference in network reach between the car and the {labels[i]} network is: {hex_reach[r].max():_.3f} km."
-    )
-    print(
-        f"The average difference in network reach between the car and the {labels[i]} network is: {hex_reach[r].mean():_.3f} km."
-    )
-    print(
-        f"The median difference in network reach between the car and the {labels[i]} network is: {hex_reach[r].median():_.3f} km."
-    )
-    print(
-        f"The standard deviation in network reach difference between the car and the {labels[i]} network is: {hex_reach[r].std():_.2f} km."
-    )
+    min_reach_diff.append(hex_reach[r].min())
+    mean_reach_diff.append(hex_reach[r].mean())
+    median_reach_diff.append(hex_reach[r].median())
+    std_reach_diff.append(hex_reach[r].std())
+    max_reach_diff.append(hex_reach[r].max())
 
-    print("\n")
-
+df = pd.DataFrame(
+    index=labels[:-1],
+    data={
+        "min diff (km)": min_reach_diff,
+        "mean diff (km)": mean_reach_diff,
+        "median diff (km)": median_reach_diff,
+        "max diff (km)": max_reach_diff,
+        "std diff (km)": std_reach_diff,
+    },
+)
+print(df)
+df.to_csv(filepath_summary_stats_reach_diff, index=True)
 # %%
+
+min_reach_diff_pct = []
+mean_reach_diff_pct = []
+median_reach_diff_pct = []
+std_reach_diff_pct = []
+max_reach_diff_pct = []
+
 for i, r in enumerate(reach_diff_pct_columns):
 
-    print(
-        f"The minimum difference in network reach between the car and the {labels[i]} network is: {hex_reach[r].min():_.3f}%."
-    )
-    print(
-        f"The maximum difference in network reach between the car and the {labels[i]} network is: {hex_reach[r].max():_.3f}%."
-    )
-    print(
-        f"The average difference in network reach between the car and the {labels[i]} network is: {hex_reach[r].mean():_.3f}%."
-    )
-    print(
-        f"The median difference in network reach between the car and the {labels[i]} network is: {hex_reach[r].median():_.3f}%."
-    )
-    print(
-        f"The standard deviation in network reach difference between the car and the {labels[i]} network is: {hex_reach[r].std():_.2f}%."
-    )
+    min_reach_diff_pct.append(hex_reach[r].min())
+    mean_reach_diff_pct.append(hex_reach[r].mean())
+    median_reach_diff_pct.append(hex_reach[r].median())
+    std_reach_diff_pct.append(hex_reach[r].std())
+    max_reach_diff_pct.append(hex_reach[r].max())
 
-    print("\n")
+df = pd.DataFrame(
+    index=labels[:-1],
+    data={
+        "min diff (%)": min_reach_diff_pct,
+        "mean diff (%)": mean_reach_diff_pct,
+        "median diff (%)": median_reach_diff_pct,
+        "max diff (%)": max_reach_diff_pct,
+        "std diff (%)": std_reach_diff_pct,
+    },
+)
 
+print(df)
+df.to_csv(filepath_summary_stats_reach_diff_pct, index=True)
 # %%
