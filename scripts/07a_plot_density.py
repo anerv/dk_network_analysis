@@ -293,7 +293,7 @@ for e, gdf in enumerate(gdfs):
 
 # %%
 ###########################################
-####### PLOTS ##############################
+####### PLOTS #############################
 ###########################################
 
 gdfs = [density_muni, density_socio, density_h3]
@@ -335,7 +335,7 @@ for e, gdf in enumerate(gdfs):
 
             dens_list = data[density_columns].values[0]
             length_list = data[length_columns].values[0]
-            lts = ["1", "2", "3", "4", "car", "all"]
+            lts = ["1", "2", "3", "4", "car", "total"]
             ids = [i] * 6
 
             dens_all.extend(dens_list)
@@ -408,8 +408,8 @@ for label, df in stacked_dfs.items():
 
 dfs = [
     stacked_dfs["Municipal"],
-    stacked_dfs["Local"],
-]  # Do not make stacked bar chart for grid cells
+    # stacked_dfs["Local"],
+]  # Do not make stacked bar chart for grid cells or socio
 
 filepaths_density = filepaths_bar_density
 filepaths_length = filepaths_bar_length
@@ -430,7 +430,7 @@ for i, df in enumerate(dfs):
 
     fig.write_image(
         filepaths_length[i],
-        width=1000,
+        width=2000,
         height=750,
     )
 
