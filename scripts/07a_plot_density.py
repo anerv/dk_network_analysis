@@ -12,6 +12,7 @@ sns.set_theme("paper")
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
+exec(open("../settings/filepaths.py").read())
 
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
@@ -102,11 +103,8 @@ all_plot_titles = [
     "Socio network density for: ",
     "Local network density for: ",
 ]
-all_file_paths = [
-    "../results/network_density/administrative/",
-    "../results/network_density/socio/",
-    "../results/network_density/h3/",
-]
+
+all_filepaths = all_filepaths_map_density
 
 for e, gdf in enumerate(gdfs):
 
@@ -116,7 +114,7 @@ for e, gdf in enumerate(gdfs):
 
     labels = ["LTS 1", "LTS 2", "LTS 3", "LTS 4", "Total car", "Total network"]
     plot_titles = [all_plot_titles[e] + l for l in labels]
-    filepaths = [all_file_paths[e] + l for l in labels]
+    filepaths = [all_filepaths[e] + l for l in labels]
 
     min_vals = [gdf[p].min() for p in plot_cols]
     max_vals = [gdf[p].max() for p in plot_cols]
@@ -155,7 +153,7 @@ for e, gdf in enumerate(gdfs):
 
     labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car", "Total network"]
     plot_titles = [all_plot_titles[e] + l for l in labels]
-    filepaths = [all_file_paths[e] + l for l in labels]
+    filepaths = [all_filepaths[e] + l for l in labels]
 
     min_vals = [gdf[p].min() for p in plot_cols]
     max_vals = [gdf[p].max() for p in plot_cols]
@@ -204,7 +202,7 @@ for e, gdf in enumerate(gdfs):
         "Total car (%)",
     ]
     plot_titles = [all_plot_titles[e] + l for l in labels]
-    filepaths = [all_file_paths[e] + l for l in labels]
+    filepaths = [all_filepaths[e] + l for l in labels]
 
     min_vals = [gdf[p].min() for p in plot_cols]
     max_vals = [gdf[p].max() for p in plot_cols]
@@ -257,7 +255,7 @@ for e, gdf in enumerate(gdfs):
         "Total car (%)",
     ]
     plot_titles = [all_plot_titles[e] + l for l in labels]
-    filepaths = [all_file_paths[e] + l for l in labels]
+    filepaths = [all_filepaths[e] + l for l in labels]
 
     min_vals = [gdf[p].min() for p in plot_cols]
     max_vals = [gdf[p].max() for p in plot_cols]
@@ -318,37 +316,6 @@ h3_ids = density_h3.hex_id.unique()
 
 id_lists = [municipalities, socio_ids, h3_ids]
 
-filepaths_kde_length = [
-    "../results/network_density/administrative/lts_kde_length.jpg",
-    "../results/network_density/socio/lts_kde_length.jpg",
-    "../results/network_density/h3/lts_kde_length.jpg",
-]
-
-filepaths_kde_density = [
-    "../results/network_density/administrative/lts_kde_density.jpg",
-    "../results/network_density/socio/lts_kde_density.jpg",
-    "../results/network_density/h3/lts_kde_density.jpg",
-]
-
-filepaths_bar_length = [
-    "../results/network_density/administrative/lts_stacked_bar_len.jpg",
-    "../results/network_density/socio/lts_stacked_bar_len.jpg",
-    "../results/network_density/h3/lts_stacked_bar_len.jpg",
-]
-
-filepaths_bar_density = [
-    "../results/network_density/administrative/lts_stacked_bar_dens.jpg",
-    "../results/network_density/socio/lts_stacked_bar_dens.jpg",
-    "../results/network_density/h3/lts_stacked_bar_dens.jpg",
-]
-
-filepaths_violin = [
-    "../results/network_density/administrative/violin_",
-    "../results/network_density/socio/violin_",
-    "../results/network_density/h3/violin_",
-]
-
-
 stacked_dfs = {}
 
 
@@ -393,6 +360,9 @@ for e, gdf in enumerate(gdfs):
 # cumulative=True, common_norm=False, common_grid=True,
 # palette="crest", alpha=.5, linewidth=0,
 
+filepaths_length = filepaths_kde_length
+filepaths_density = filepaths_kde_density
+
 for label, df in stacked_dfs.items():
 
     df.rename(columns={"lts": "Network level"}, inplace=True)
@@ -409,7 +379,7 @@ for label, df in stacked_dfs.items():
 
     fig.set_xlabel("Length (km)")
     fig.set_title(f"Network length KDE at the {label.lower()} level")
-    plt.savefig(filepaths_kde_length[list(stacked_dfs.keys()).index(label)])
+    plt.savefig(filepaths_length[list(stacked_dfs.keys()).index(label)])
 
     plt.show()
 
@@ -427,7 +397,7 @@ for label, df in stacked_dfs.items():
 
     fig.set_xlabel("Density (km/sqkm)")
     fig.set_title(f"Network density KDE at the {label.lower()} level")
-    plt.savefig(filepaths_kde_density[list(stacked_dfs.keys()).index(label)])
+    plt.savefig(filepaths_density[list(stacked_dfs.keys()).index(label)])
 
     plt.show()
     plt.close
@@ -439,6 +409,9 @@ dfs = [
     stacked_dfs["Municipal"],
     stacked_dfs["Local"],
 ]  # Do not make stacked bar chart for grid cells
+
+filepaths_density = filepaths_bar_density
+filepaths_length = filepaths_bar_length
 
 for i, df in enumerate(dfs):
 
@@ -455,7 +428,7 @@ for i, df in enumerate(dfs):
     fig.show()
 
     fig.write_image(
-        filepaths_bar_length[i],
+        filepaths_length[i],
         width=1000,
         height=750,
     )
@@ -472,13 +445,15 @@ for i, df in enumerate(dfs):
     fig.show()
 
     fig.write_image(
-        filepaths_bar_density[i],
+        filepaths_density[i],
         width=1000,
         height=750,
     )
 
 # %%
 # **** VIOLIN PLOTS ****
+
+filepaths = filepaths_violin_density
 
 for e, gdf in enumerate(gdfs):
 
@@ -498,7 +473,7 @@ for e, gdf in enumerate(gdfs):
         fig.show()
 
         fig.write_image(
-            filepaths_violin[e] + d + ".jpg",
+            filepaths[e] + d + ".jpg",
             width=1000,
             height=750,
         )
@@ -517,7 +492,7 @@ for e, gdf in enumerate(gdfs):
         fig.show()
 
         fig.write_image(
-            filepaths_violin[e] + l + ".jpg",
+            filepaths[e] + l + ".jpg",
             width=1000,
             height=750,
         )

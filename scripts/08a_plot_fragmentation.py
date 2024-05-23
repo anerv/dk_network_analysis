@@ -10,6 +10,7 @@ import pandas as pd
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
+exec(open("../settings/filepaths.py").read())
 plot_func.set_renderer("png")
 
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
@@ -55,7 +56,7 @@ for i, df in enumerate(component_size_dfs):
         df,
         columns[i],
         labels[i],
-        f"../results/component_size_distribution/{labels[i]}_zipf.png",
+        fp_zip_lts + labels[i] + ".png",
     )
 
 # Combined zipf plot
@@ -67,7 +68,7 @@ plot_func.combined_zipf_plot(
     component_size_4=component_size_4,
     component_size_car=component_size_car,
     lts_color_dict=lts_color_dict,
-    fp="../results/component_size_distribution/combined_zipf.png",
+    fp=fp_zipf_combined,
 )
 
 # %%
@@ -133,7 +134,7 @@ for muni in municipalities:
             component_size_4=component_size_4,
             component_size_car=component_size_car,
             lts_color_dict=lts_color_dict,
-            fp=f"../results/component_size_distribution/administrative/combined_zipf_{muni}.png",
+            fp=fp_zipf_muni + muni + ".png",
             title=f"Component size distribution in {muni}",
         )
 
@@ -177,18 +178,13 @@ plot_cols = component_count_columns
 
 labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car", "Total network"]
 
-all_filepaths = [
-    "../results/component_count/administrative/",
-    "../results/component_count/socio/",
-    "../results/component_count/h3/",
-]
+all_filepaths = filepaths_local_component_count
+
 all_plot_titles = [
     "Municipal component count for: ",
     "Local component count for: ",
     "Hexagonal grid component count for: ",
 ]
-
-# plot_titles = [f"Municipal component count for: {l}" for l in labels]
 
 for e, gdf in enumerate(gdfs):
 
@@ -243,11 +239,8 @@ dfs = [component_length_muni, component_length_socio, component_length_h3]
 
 id_cols = [["municipality"], ["id"], ["hex_id"]]
 titles = ["Municipalities", "Local", "Hexagonal grid"]
-all_filepaths = [
-    "../results/component_correlation/administrative/component_count_infra_density_",
-    "../results/component_correlation/socio/component_count_infra_density_",
-    "../results/component_correlation/h3/component_count_infra_density_",
-]
+
+all_filepaths = filepaths_component_density_correlation
 # %%
 for i, df in enumerate(dfs):
 
@@ -348,28 +341,19 @@ id_lists = [municipalities, socio_ids, h3_ids]
 
 id_cols = ["municipality", "id", "hex_id"]
 
-all_filepaths = []
-
 scatter_titles = [
     "Municipal component count and infrastructure density",
     "Local component count and infrastructure density",
     "Hexagonal grid component count and infrastructure density",
 ]
-histo_titles = [
+
+rug_titles = [
     "Distribution of local component count at the municipal level",
     "Distribution of local component count at the local level",
     "Distribution of local component count at the hexagonal grid level",
 ]
-scatter_filepaths = [
-    "../results/component_correlation/administrative/component_count_infra_density_all_areas.jpeg",
-    "../results/component_correlation/socio/component_count_infra_density_all_areas.jpeg",
-    "../results/component_correlation/h3/component_count_infra_density_all_areas.jpeg",
-]
-histo_filepaths = [
-    "../results/component_correlation/administrative/component_distribution_muni.jpeg",
-    "../results/component_correlation/socio/component_distribution_socio.jpeg",
-    "../results/component_correlation/h3/component_distribution_h3.jpeg",
-]
+scatter_filepaths = filpaths_components_scatter
+rug_filepaths = filepaths_components_rug
 
 for e, df in enumerate(dfs):
 
@@ -444,7 +428,7 @@ for e, df in enumerate(dfs):
         # text_auto=True,
         marginal="rug",
         color_discrete_sequence=[v for v in lts_color_dict.values()],
-        title=histo_titles[e],
+        title=rug_titles[e],
     )
     fig.update_layout(
         font=dict(size=12, color="black"),
@@ -454,7 +438,7 @@ for e, df in enumerate(dfs):
         yaxis_title="Count",
     )
     fig.write_image(
-        histo_filepaths[e],
+        rug_filepaths[e],
         width=1000,
         height=750,
     )
@@ -462,6 +446,8 @@ for e, df in enumerate(dfs):
     fig.show()
 
 # %%
+
+# Corr between component count and density for each step of LTS
 
 df_1 = df.loc[df["lts"] == "1"]
 df_2 = df.loc[df["lts"] == "1_2"]
@@ -472,15 +458,8 @@ df_all = df.loc[df["lts"] == "all"]
 
 dfs = [df_1, df_2, df_3, df_4, df_car, df_all]
 
-scatter_filepaths_subsets = [
-    "../results/component_correlation/h3/component_count_infra_density_all_areas_1.jpeg",
-    "../results/component_correlation/h3/component_count_infra_density_all_areas_2.jpeg",
-    "../results/component_correlation/h3/component_count_infra_density_all_areas_3.jpeg",
-    "../results/component_correlation/h3/component_count_infra_density_all_areas_4.jpeg",
-    "../results/component_correlation/h3/component_count_infra_density_all_areas_car.jpeg",
-    "../results/component_correlation/h3/component_count_infra_density_all_areas_all.jpeg",
-]
-# %%
+scatter_filepaths_subsets = filepaths_components_scatter_lts
+
 for i, df_subset in enumerate(dfs):
 
     fig = px.scatter(
@@ -516,7 +495,6 @@ for i, df_subset in enumerate(dfs):
 # %%
 # **** PLOT COMPONENTS PER LENGTH AND DENSITY ****
 
-
 muni_components = gpd.GeoDataFrame.from_postgis(
     "SELECT * FROM fragmentation.component_length_muni;",
     engine,
@@ -551,11 +529,8 @@ plot_cols = component_per_km_cols
 
 labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car", "Total network"]
 
-all_filepaths = [
-    "../results/component_count/administrative/",
-    "../results/component_count/socio/",
-    "../results/component_count/h3/",
-]
+all_filepaths = filepaths_local_component_count
+
 all_plot_titles = [
     "Municipal component count per km for: ",
     "Local component count per km for: ",
@@ -599,13 +574,13 @@ for e, gdf in enumerate(gdfs):
         )
 
 
+# %%
 all_plot_titles = [
     "Municipal component count per km/sqkm for: ",
     "Local component count per km/sqkm for: ",
     "Hexagonal grid component count per km/sqkm for: ",
 ]
 
-# %%
 plot_cols = component_per_km_sqkm_cols
 
 for e, gdf in enumerate(gdfs):

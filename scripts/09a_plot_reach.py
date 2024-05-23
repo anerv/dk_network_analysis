@@ -13,6 +13,7 @@ sns.set_theme("paper")
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
+exec(open("../settings/filepaths.py").read())
 plot_func.set_renderer("png")
 
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
@@ -48,15 +49,8 @@ plot_titles = [
     "Network reach: Car network",
 ]
 
-filepaths = [
-    "../results/network_reach/lts1_reach_len.png",
-    "../results/network_reach/lts2_reach_len.png",
-    "../results/network_reach/lts3_reach_len.png",
-    "../results/network_reach/lts4_reach_len.png",
-    "../results/network_reach/car_reach_len.png",
-]
-
 plot_columns = reach_columns
+filepath = filepaths_reach
 
 min_vals = [hex_reach[p].min() for p in plot_columns]
 max_vals = [hex_reach[p].max() for p in plot_columns]
@@ -103,12 +97,7 @@ plot_titles = [
     "Difference in network reach: Car VS. LTS 1-4",
 ]
 
-filepaths = [
-    "../results/network_reach/lts1_reach_len_diff.png",
-    "../results/network_reach/lts2_reach_len_diff.png",
-    "../results/network_reach/lts3_reach_len_diff.png",
-    "../results/network_reach/lts4_reach_len_diff.png",
-]
+filepaths = filepaths_reach_diff
 
 plot_columns = reach_diff_columns
 
@@ -158,12 +147,7 @@ plot_titles = [
     "Difference in network reach: Car VS. LTS 1-4 (%)",
 ]
 
-filepaths = [
-    "../results/network_reach/lts1_reach_pct_diff.png",
-    "../results/network_reach/lts2_reach_pct_diff.png",
-    "../results/network_reach/lts3_reach_pct_diff.png",
-    "../results/network_reach/lts4_reach_pct_diff.png",
-]
+filepaths = filepaths_reach_diff_pct
 
 plot_columns = reach_diff_pct_columns
 
@@ -265,7 +249,7 @@ fig = sns.kdeplot(
 
 fig.set_xlabel("Length (km)")
 fig.set_title(f"Network reach")
-plt.savefig("../results/network_reach/kde_network_reach.png")
+plt.savefig(fp_network_reach_kde)
 
 plt.show()
 
@@ -303,7 +287,7 @@ fig = sns.kdeplot(
 
 fig.set_xlabel("Difference in network reach (km)")
 fig.set_title(f"Network reach difference")
-plt.savefig("../results/network_reach/kde_network_reach_diff.png")
+plt.savefig(fp_network_reach_diff_kde)
 
 plt.show()
 
@@ -318,13 +302,7 @@ colors = [v for v in lts_color_dict.values()]
 
 # reach
 
-filepaths_violin = [
-    "../results/network_reach/violin_lts1_reach_len.jpg",
-    "../results/network_reach/violin_lts2_reach_len.jpg",
-    "../results/network_reach/violin_lts3_reach_len.jpg",
-    "../results/network_reach/violin_lts4_reach_len.jpg",
-    "../results/network_reach/violin_car_reach_len.jpg",
-]
+filepaths = filepaths_violin_reach
 
 titles = [
     "Network reach: LTS 1",
@@ -348,7 +326,7 @@ for i, r in enumerate(reach_columns):
     fig.show()
 
     fig.write_image(
-        filepaths_violin[i],
+        filepaths[i],
         width=1000,
         height=750,
     )
@@ -357,12 +335,7 @@ for i, r in enumerate(reach_columns):
 
 # reach_diff
 
-filepaths_violin = [
-    "../results/network_reach/violin_lts1_reach_diff_len.jpg",
-    "../results/network_reach/violin_lts2_reach_diff_len.jpg",
-    "../results/network_reach/violin_lts3_reach_diff_len.jpg",
-    "../results/network_reach/violin_lts4_reach_diff_len.jpg",
-]
+filepaths = filepaths_violin_reach_diff
 
 titles = [
     "Network reach difference: Car - LTS 1",
@@ -385,7 +358,7 @@ for i, r in enumerate(reach_diff_columns):
     fig.show()
 
     fig.write_image(
-        filepaths_violin[i],
+        filepaths[i],
         width=1000,
         height=750,
     )
@@ -394,12 +367,7 @@ for i, r in enumerate(reach_diff_columns):
 
 # reach_diff_pct
 
-filepaths_violin = [
-    "../results/network_reach/violin_lts1_reach_diff_pct.jpg",
-    "../results/network_reach/violin_lts2_reach_diff_pct.jpg",
-    "../results/network_reach/violin_lts3_reach_diff_pct.jpg",
-    "../results/network_reach/violin_lts4_reach_diff_pct.jpg",
-]
+filepaths = filepaths_violin_reach_diff_pct
 
 titles = [
     "Network reach difference: Car - LTS 1 (%)",
@@ -422,7 +390,7 @@ for i, r in enumerate(reach_diff_pct_columns):
     fig.show()
 
     fig.write_image(
-        filepaths_violin[i],
+        filepaths[i],
         width=1000,
         height=750,
     )
@@ -462,7 +430,7 @@ for c, d, r, l in zip(
     )
 
     fig.write_image(
-        "../results/network_reach/corr_reach_density_" + l + ".jpeg",
+        fp_reach_density_corr + l + ".jpeg",
         width=1000,
         height=750,
     )
