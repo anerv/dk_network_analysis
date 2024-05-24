@@ -48,7 +48,9 @@ def compute_spatial_weights(gdf, na_cols, w_type, dist=1000, k=6):
     return w
 
 
-def compute_lisa(col_names, variable_names, gdf, spatial_weights, filepaths, p=0.05):
+def compute_lisa(
+    col_names, variable_names, gdf, spatial_weights, filepaths, p=0.05, show_plot=True
+):
     # based on https://geographicdata.science/book/notebooks/07_local_autocorrelation.html
 
     """
@@ -154,13 +156,16 @@ def compute_lisa(col_names, variable_names, gdf, spatial_weights, filepaths, p=0
 
         f.savefig(filepaths[i])
 
-        plt.show()
+        if show_plot:
+            plt.show()
+
+        plt.close()
 
     return lisas
 
 
 def compute_spatial_autocorrelation(
-    col_names, variable_names, df, spatial_weights, filepaths
+    col_names, variable_names, df, spatial_weights, filepaths, show_plot=True
 ):
     """
     Wrapper function for computing and plotting global spatial autocorrelation (Moran's I)
@@ -200,7 +205,9 @@ def compute_spatial_autocorrelation(
         ax.axvline(0, c="k", alpha=0.5)
         ax.axhline(0, c="k", alpha=0.5)
         ax.set_title(f"Moran Plot - {v}")
-        plt.show()
+
+        if show_plot:
+            plt.show()
 
         moran = esda.moran.Moran(df[c], spatial_weights)
         print(
@@ -210,5 +217,7 @@ def compute_spatial_autocorrelation(
         morans[v] = moran
 
         fig.savefig(filepaths[i])
+
+        plt.close()
 
     return morans
