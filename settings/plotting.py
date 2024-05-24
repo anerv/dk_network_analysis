@@ -20,7 +20,9 @@ mpl.rcParams["xtick.labelsize"] = 9
 mpl.rcParams["ytick.labelsize"] = 9
 mpl.rcParams["hatch.linewidth"] = 0.5
 
+# Classification scheme for visualizations of results
 scheme = "fisherjenks"
+# number of classes in classification scheme
 k = 5
 lts_color_dict = {
     "1": "#0B7512",
@@ -48,6 +50,7 @@ component_count_columns = [
     "comp_car_count",
     "comp_all_count",
 ]
+
 length_columns = [
     "lts_1_length",
     "lts_2_length",
