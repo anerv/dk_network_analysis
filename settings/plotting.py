@@ -42,15 +42,6 @@ component_columns = [
     "component_car",
 ]
 
-component_count_columns = [
-    "comp_1_count",
-    "comp_2_count",
-    "comp_3_count",
-    "comp_4_count",
-    "comp_car_count",
-    "comp_all_count",
-]
-
 length_columns = [
     "lts_1_length",
     "lts_2_length",
@@ -103,6 +94,15 @@ density_steps_columns = [
     "lts_1_4_dens",
     "total_car_dens",
     "total_network_dens",
+]
+
+component_count_columns = [
+    "comp_1_count",
+    "comp_2_count",
+    "comp_3_count",
+    "comp_4_count",
+    "comp_car_count",
+    "comp_all_count",
 ]
 
 component_per_km_cols = [
