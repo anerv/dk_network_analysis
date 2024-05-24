@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS reach.reach_component_length_h3;
+DROP TABLE IF EXISTS reach.reach_component_length_hex;
 
-CREATE TABLE reach.reach_component_length_h3 AS (
+CREATE TABLE reach.reach_component_length_hex AS (
     SELECT
         dens.hex_id,
         dens.lts_1_length,
@@ -25,13 +25,13 @@ CREATE TABLE reach.reach_component_length_h3 AS (
         reach.lts4_len,
         reach.car_len
     FROM
-        density.density_h3 dens
-        LEFT JOIN fragmentation.comp_count_h3 comp ON dens.hex_id = comp.h3_id
+        density.density_hex dens
+        LEFT JOIN fragmentation.comp_count_hex comp ON dens.hex_id = comp.hex_id
         LEFT JOIN reach.hex_reach reach ON dens.hex_id = reach.hex_id
 );
 
 UPDATE
-    reach.reach_component_length_h3
+    reach.reach_component_length_hex
 SET
     lts1_len = lts1_len / 1000,
     lts2_len = lts2_len / 1000,

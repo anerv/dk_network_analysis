@@ -42,16 +42,16 @@ density_socio = gpd.GeoDataFrame.from_postgis(
 
 density_socio.replace(0, np.nan, inplace=True)
 
-density_h3 = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM density.density_h3;",
+density_hex = gpd.GeoDataFrame.from_postgis(
+    "SELECT * FROM density.density_hex;",
     engine,
     crs=crs,
     geom_col="geometry",
 )
 
-density_h3.replace(0, np.nan, inplace=True)
+density_hex.replace(0, np.nan, inplace=True)
 
-density_data = [density_muni, density_socio, density_h3]
+density_data = [density_muni, density_socio, density_hex]
 
 for df in density_data:
 

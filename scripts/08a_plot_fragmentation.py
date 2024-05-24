@@ -163,16 +163,16 @@ socio_components = gpd.GeoDataFrame.from_postgis(
 
 socio_components.replace(0, np.nan, inplace=True)
 
-h3_components = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM fragmentation.comp_count_h3;",
+hex_components = gpd.GeoDataFrame.from_postgis(
+    "SELECT * FROM fragmentation.comp_count_hex;",
     engine,
     crs=crs,
     geom_col="geometry",
 )
 
-h3_components.replace(0, np.nan, inplace=True)
+hex_components.replace(0, np.nan, inplace=True)
 
-gdfs = [muni_components, socio_components, h3_components]
+gdfs = [muni_components, socio_components, hex_components]
 
 plot_cols = component_count_columns
 
@@ -231,11 +231,11 @@ component_length_muni = pd.read_sql(
 component_length_socio = pd.read_sql(
     "SELECT * FROM fragmentation.component_length_socio;", engine
 )
-component_length_h3 = pd.read_sql(
-    "SELECT * FROM fragmentation.component_length_h3;", engine
+component_length_hex = pd.read_sql(
+    "SELECT * FROM fragmentation.component_length_hex;", engine
 )
 
-dfs = [component_length_muni, component_length_socio, component_length_h3]
+dfs = [component_length_muni, component_length_socio, component_length_hex]
 
 id_cols = [["municipality"], ["id"], ["hex_id"]]
 titles = ["Municipalities", "Local", "Hexagonal grid"]
@@ -331,13 +331,13 @@ for m in municipalities:
 # %%
 # SCATTER AND RUG PLOTS FOR COMPONENT AND INFRASTRUCTURE DENSITY
 
-dfs = [component_length_muni, component_length_socio, component_length_h3]
+dfs = [component_length_muni, component_length_socio, component_length_hex]
 
 municipalities = component_length_muni.municipality.unique()
 socio_ids = component_length_socio.id.unique()
-h3_ids = component_length_h3.hex_id.unique()
+hex_ids = component_length_hex.hex_id.unique()
 
-id_lists = [municipalities, socio_ids, h3_ids]
+id_lists = [municipalities, socio_ids, hex_ids]
 
 id_cols = ["municipality", "id", "hex_id"]
 
@@ -513,16 +513,16 @@ socio_components = gpd.GeoDataFrame.from_postgis(
 
 socio_components.replace(0, np.nan, inplace=True)
 
-h3_components = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM fragmentation.component_length_h3;",
+hex_components = gpd.GeoDataFrame.from_postgis(
+    "SELECT * FROM fragmentation.component_length_hex;",
     engine,
     crs=crs,
     geom_col="geometry",
 )
 
-h3_components.replace(0, np.nan, inplace=True)
+hex_components.replace(0, np.nan, inplace=True)
 
-gdfs = [muni_components, socio_components, h3_components]
+gdfs = [muni_components, socio_components, hex_components]
 
 # %%
 # comp per km

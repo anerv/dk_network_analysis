@@ -37,14 +37,14 @@ density_socio = gpd.GeoDataFrame.from_postgis(
 
 density_socio.replace(0, np.nan, inplace=True)
 
-density_h3 = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM density.density_h3;",
+density_hex = gpd.GeoDataFrame.from_postgis(
+    "SELECT * FROM density.density_hex;",
     engine,
     crs=crs,
     geom_col="geometry",
 )
 
-density_h3.replace(0, np.nan, inplace=True)
+density_hex.replace(0, np.nan, inplace=True)
 
 
 # %%
@@ -97,7 +97,7 @@ for m in municipalities:
 ####### MAPS ##############################
 ###########################################
 
-gdfs = [density_muni, density_socio, density_h3]
+gdfs = [density_muni, density_socio, density_hex]
 
 all_plot_titles = [
     "Municipal network density for: ",
@@ -296,7 +296,7 @@ for e, gdf in enumerate(gdfs):
 ####### PLOTS #############################
 ###########################################
 
-gdfs = [density_muni, density_socio, density_h3]
+gdfs = [density_muni, density_socio, density_hex]
 length_titles = [
     "Municipal network length (km)",
     "Local network length (km)",
@@ -313,9 +313,9 @@ type_cols = ["Municipal", "Local", "Grid"]
 
 municipalities = density_muni.municipality.unique()
 socio_ids = density_socio.id.unique()
-h3_ids = density_h3.hex_id.unique()
+hex_ids = density_hex.hex_id.unique()
 
-id_lists = [municipalities, socio_ids, h3_ids]
+id_lists = [municipalities, socio_ids, hex_ids]
 
 stacked_dfs = {}
 

@@ -19,17 +19,17 @@ study_area_poly = gpd.GeoDataFrame.from_postgis(
     q, engine, crs="EPSG:25832", geom_col="geometry"
 )
 
-h3_grid = h3f.create_h3_grid(study_area_poly, h3_resolution, crs, 500)
+hex_grid = h3f.create_hex_grid(study_area_poly, h3_resolution, crs, 500)
 
-assert h3_grid.crs == crs
+assert hex_grid.crs == crs
 
-h3_grid.columns = h3_grid.columns.str.lower()
+hex_grid.columns = hex_grid.columns.str.lower()
 
-dbf.to_postgis(geodataframe=h3_grid, table_name="h3_grid", engine=engine)
+dbf.to_postgis(geodataframe=hex_grid, table_name="hex_grid", engine=engine)
 
 print("H3 grid created and saved to database!")
 
-q = "SELECT hex_id FROM h3_grid LIMIT 10;"
+q = "SELECT hex_id FROM hex_grid LIMIT 10;"
 
 test = dbf.run_query_pg(q, connection)
 
@@ -39,7 +39,7 @@ print(test)
 queries = [
     "sql/03a_compute_density_municipality.sql",
     "sql/03b_compute_density_socio.sql",
-    "sql/03c_compute_density_h3.sql",
+    "sql/03c_compute_density_hex.sql",
 ]
 
 for i, q in enumerate(queries):

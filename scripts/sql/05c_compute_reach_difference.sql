@@ -71,7 +71,7 @@ FROM
 WHERE
     reach.car_reach.start_node = h.node_id;
 
-CREATE INDEX IF NOT EXISTS h3_grid_ix ON h3_grid (hex_id);
+CREATE INDEX IF NOT EXISTS hex_grid_ix ON hex_grid (hex_id);
 
 CREATE INDEX IF NOT EXISTS lts_1_reach_ix ON reach.lts_1_reach (hex_id);
 
@@ -93,7 +93,7 @@ SELECT
     l4.edge_length AS lts4_len,
     ca.edge_length AS car_len
 FROM
-    h3_grid h
+    hex_grid h
     LEFT JOIN reach.lts_1_reach l1 ON h.hex_id = l1.hex_id
     LEFT JOIN reach.lts_2_reach l2 ON h.hex_id = l2.hex_id
     LEFT JOIN reach.lts_3_reach l3 ON h.hex_id = l3.hex_id
@@ -116,7 +116,7 @@ BEGIN
 SELECT
     COUNT(*) INTO hex_grid_len
 FROM
-    h3_grid;
+    hex_grid;
 
 ASSERT hex_grid_len = hex_reach_len,
 'Missing hex cells!';

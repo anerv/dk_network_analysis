@@ -30,9 +30,9 @@ component_size_car = pd.read_sql(
     "SELECT * FROM fragmentation.component_size_car;", engine
 )
 
-compt_count_muni = pd.read_sql("SELECT * FROM fragmentation.comp_count_muni;", engine)
-compt_count_socio = pd.read_sql("SELECT * FROM fragmentation.comp_count_socio;", engine)
-compt_count_h3 = pd.read_sql("SELECT * FROM fragmentation.comp_count_h3;", engine)
+comp_count_muni = pd.read_sql("SELECT * FROM fragmentation.comp_count_muni;", engine)
+comp_count_socio = pd.read_sql("SELECT * FROM fragmentation.comp_count_socio;", engine)
+comp_count_hex = pd.read_sql("SELECT * FROM fragmentation.comp_count_hex;", engine)
 
 # %%
 
@@ -87,7 +87,7 @@ display(df.style.pipe(format_style_index))
 # %%
 aggregation_levels = ["municipal", "local", "grid"]
 
-comp_dfs = [compt_count_muni, compt_count_socio, compt_count_h3]
+comp_dfs = [comp_count_muni, comp_count_socio, comp_count_hex]
 
 network_levels_steps = [
     "LTS 1",

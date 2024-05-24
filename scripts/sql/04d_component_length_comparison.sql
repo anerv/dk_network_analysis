@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS fragmentation.component_length_muni;
 
 DROP TABLE IF EXISTS fragmentation.component_length_socio;
 
-DROP TABLE IF EXISTS fragmentation.component_length_h3;
+DROP TABLE IF EXISTS fragmentation.component_length_hex;
 
 CREATE TABLE fragmentation.component_length_muni AS (
     SELECT
@@ -65,7 +65,7 @@ CREATE TABLE fragmentation.component_length_socio AS (
         JOIN fragmentation.comp_count_socio comp ON dens.id = comp.socio_id
 );
 
-CREATE TABLE fragmentation.component_length_h3 AS (
+CREATE TABLE fragmentation.component_length_hex AS (
     SELECT
         dens.hex_id,
         dens.lts_1_length,
@@ -91,8 +91,8 @@ CREATE TABLE fragmentation.component_length_h3 AS (
         comp.comp_4_count,
         comp.comp_car_count
     FROM
-        density.density_h3 dens
-        JOIN fragmentation.comp_count_h3 comp ON dens.hex_id = comp.h3_id
+        density.density_hex dens
+        JOIN fragmentation.comp_count_hex comp ON dens.hex_id = comp.hex_id
 );
 
 ALTER TABLE
@@ -126,7 +126,7 @@ ADD
     COLUMN component_per_length_car DOUBLE PRECISION;
 
 ALTER TABLE
-    fragmentation.component_length_h3
+    fragmentation.component_length_hex
 ADD
     COLUMN component_per_length_all DOUBLE PRECISION,
 ADD
@@ -171,7 +171,7 @@ ADD
     COLUMN component_per_dens_car DOUBLE PRECISION;
 
 ALTER TABLE
-    fragmentation.component_length_h3
+    fragmentation.component_length_hex
 ADD
     COLUMN component_per_dens_all DOUBLE PRECISION,
 ADD
@@ -226,7 +226,7 @@ SET
     component_per_dens_car = comp_car_count / total_car_dens;
 
 UPDATE
-    fragmentation.component_length_h3
+    fragmentation.component_length_hex
 SET
     component_per_length_all = comp_all_count / total_network_length
 WHERE
@@ -236,7 +236,7 @@ WHERE
     );
 
 UPDATE
-    fragmentation.component_length_h3
+    fragmentation.component_length_hex
 SET
     component_per_length_1 = comp_1_count / lts_1_length
 WHERE
@@ -246,7 +246,7 @@ WHERE
     );
 
 UPDATE
-    fragmentation.component_length_h3
+    fragmentation.component_length_hex
 SET
     component_per_length_2 = comp_2_count / lts_1_2_length
 WHERE
@@ -256,7 +256,7 @@ WHERE
     );
 
 UPDATE
-    fragmentation.component_length_h3
+    fragmentation.component_length_hex
 SET
     component_per_length_3 = comp_3_count / lts_1_3_length
 WHERE
@@ -266,7 +266,7 @@ WHERE
     );
 
 UPDATE
-    fragmentation.component_length_h3
+    fragmentation.component_length_hex
 SET
     component_per_length_4 = comp_4_count / lts_1_4_length
 WHERE
@@ -276,7 +276,7 @@ WHERE
     );
 
 UPDATE
-    fragmentation.component_length_h3
+    fragmentation.component_length_hex
 SET
     component_per_length_car = comp_car_count / total_car_length
 WHERE
@@ -286,7 +286,7 @@ WHERE
     );
 
 UPDATE
-    fragmentation.component_length_h3
+    fragmentation.component_length_hex
 SET
     component_per_dens_all = comp_all_count / total_network_dens
 WHERE
@@ -296,7 +296,7 @@ WHERE
     );
 
 UPDATE
-    fragmentation.component_length_h3
+    fragmentation.component_length_hex
 SET
     component_per_dens_1 = comp_1_count / lts_1_dens
 WHERE
@@ -306,7 +306,7 @@ WHERE
     );
 
 UPDATE
-    fragmentation.component_length_h3
+    fragmentation.component_length_hex
 SET
     component_per_dens_2 = comp_2_count / lts_1_2_dens
 WHERE
@@ -316,7 +316,7 @@ WHERE
     );
 
 UPDATE
-    fragmentation.component_length_h3
+    fragmentation.component_length_hex
 SET
     component_per_dens_3 = comp_3_count / lts_1_3_dens
 WHERE
@@ -326,7 +326,7 @@ WHERE
     );
 
 UPDATE
-    fragmentation.component_length_h3
+    fragmentation.component_length_hex
 SET
     component_per_dens_4 = comp_4_count / lts_1_4_dens
 WHERE
@@ -336,7 +336,7 @@ WHERE
     );
 
 UPDATE
-    fragmentation.component_length_h3
+    fragmentation.component_length_hex
 SET
     component_per_dens_car = comp_car_count / total_car_dens
 WHERE

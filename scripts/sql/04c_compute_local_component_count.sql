@@ -2,11 +2,11 @@ DROP TABLE IF EXISTS fragmentation.comp_count_muni;
 
 DROP TABLE IF EXISTS fragmentation.comp_count_socio;
 
-DROP TABLE IF EXISTS fragmentation.comp_count_h3;
+DROP TABLE IF EXISTS fragmentation.comp_count_hex;
 
 DROP TABLE IF EXISTS fragmentation.socio_component_edges;
 
-DROP TABLE IF EXISTS fragmentation.h3_component_edges;
+DROP TABLE IF EXISTS fragmentation.hex_component_edges;
 
 CREATE TABLE fragmentation.comp_count_muni AS WITH comp_count AS (
     SELECT
@@ -51,11 +51,11 @@ FROM
     socio_edges s
     JOIN fragmentation.component_edges co ON s.id = co.id;
 
-CREATE TABLE fragmentation.h3_component_edges AS
+CREATE TABLE fragmentation.hex_component_edges AS
 SELECT
     h.id,
     h.bike_length,
-    h.h3_id,
+    h.hex_id,
     co.component_all,
     co.component_1,
     co.component_1_2,
@@ -63,7 +63,7 @@ SELECT
     co.component_1_4,
     co.component_car
 FROM
-    h3_edges h
+    hex_edges h
     JOIN fragmentation.component_edges co ON h.id = co.id;
 
 CREATE TABLE fragmentation.comp_count_socio AS WITH comp_count AS (
@@ -93,9 +93,9 @@ FROM
     comp_count co
     JOIN socio so ON co.socio_id = so.id;
 
-CREATE TABLE fragmentation.comp_count_h3 AS WITH comp_count AS (
+CREATE TABLE fragmentation.comp_count_hex AS WITH comp_count AS (
     SELECT
-        h3_id,
+        hex_id,
         COUNT(DISTINCT component_all) AS comp_all_count,
         COUNT(DISTINCT component_1) AS comp_1_count,
         COUNT(DISTINCT component_1_2) AS comp_2_count,
@@ -103,12 +103,12 @@ CREATE TABLE fragmentation.comp_count_h3 AS WITH comp_count AS (
         COUNT(DISTINCT component_1_4) AS comp_4_count,
         COUNT(DISTINCT component_car) AS comp_car_count
     FROM
-        fragmentation.h3_component_edges
+        fragmentation.hex_component_edges
     GROUP BY
-        h3_id
+        hex_id
 )
 SELECT
-    co.h3_id,
+    co.hex_id,
     co.comp_all_count,
     co.comp_1_count,
     co.comp_2_count,
@@ -118,4 +118,4 @@ SELECT
     h.geometry
 FROM
     comp_count co
-    JOIN h3_grid h ON co.h3_id = h.hex_id;
+    JOIN hex_grid h ON co.hex_id = h.hex_id;

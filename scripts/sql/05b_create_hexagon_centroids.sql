@@ -40,7 +40,7 @@ SELECT
     ST_Centroid(geometry) AS geometry,
     hex_id
 FROM
-    h3_grid;
+    hex_grid;
 
 CREATE INDEX IF NOT EXISTS centroid_geom_ix ON reach.centroids USING GIST (geometry);
 
@@ -52,11 +52,11 @@ ADD
 UPDATE
     nodes
 SET
-    hex_id = h3_grid.hex_id
+    hex_id = hex_grid.hex_id
 FROM
-    h3_grid
+    hex_grid
 WHERE
-    ST_Intersects(nodes.geometry, h3_grid.geometry);
+    ST_Intersects(nodes.geometry, hex_grid.geometry);
 
 CREATE VIEW reach.nodes_all_view AS
 SELECT

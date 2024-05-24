@@ -8,7 +8,7 @@ from shapely.geometry import mapping, Polygon
 import h3
 
 
-def create_h3_grid(polygon_gdf, hex_resolution, crs, buffer_dist):
+def create_hex_grid(polygon_gdf, hex_resolution, crs, buffer_dist):
 
     # Inspired by https://stackoverflow.com/questions/51159241/how-to-generate-shapefiles-for-h3-hexagons-in-a-particular-area
 

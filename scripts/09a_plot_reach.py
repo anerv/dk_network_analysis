@@ -400,7 +400,7 @@ for i, r in enumerate(reach_diff_pct_columns):
 
 # Correlation plots
 
-df = pd.read_sql("SELECT * FROM reach.reach_component_length_h3;", engine)
+df = pd.read_sql("SELECT * FROM reach.reach_component_length_hex;", engine)
 
 labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Car network"]
 for c, d, r, l in zip(
