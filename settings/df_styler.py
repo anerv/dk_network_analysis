@@ -6,9 +6,6 @@ import pandas as pd
 exec(open("../settings/plotting.py").read())
 exec(open("../settings/yaml_variables.py").read())
 
-# summarize_results_df.style.pipe(format_osm_style)
-
-
 # General settings
 cell_hover = {"selector": "td:hover", "props": [("background-color", "#ffffb3")]}
 
