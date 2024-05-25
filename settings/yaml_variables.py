@@ -19,3 +19,8 @@ with open(r"../config.yml") as file:
     crs = parsed_yaml_file["CRS"]
 
     h3_resolution = parsed_yaml_file["h3_resolution"]
+
+    k_muni = parsed_yaml_file["k_muni"]
+    k_socio = parsed_yaml_file["k_socio"]
+    k_hex = parsed_yaml_file["k_hex"]
+    p_lisa = parsed_yaml_file["p_lisa"]
