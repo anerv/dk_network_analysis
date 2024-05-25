@@ -245,3 +245,60 @@ import contextily as cx
 
 cx_tile_1 = cx.providers.CartoDB.Voyager
 cx_tile_2 = cx.providers.CartoDB.PositronNoLabels  # CartoDB.DarkMatterNoLabels
+
+rename_index_dict_density = {
+    "lts_1_dens": "LTS 1 density",
+    "lts_2_dens": "LTS 2 density",
+    "lts_3_dens": "LTS 3 density",
+    "lts_4_dens": "LTS 4 density",
+    "total_car_dens": "Car density",
+    "total_network_dens": "Total density",
+    "lts_1_2_dens": "LTS 1-2 density",
+    "lts_1_3_dens": "LTS 1-3 density",
+    "lts_1_4_dens": "LTS 1-4 density",
+    "lts_1_length_rel": "LTS 1 %",
+    "lts_2_length_rel": "LTS 2 %",
+    "lts_3_length_rel": "LTS 3 %",
+    "lts_4_length_rel": "LTS 4 %",
+    "total_car_length_rel": "Car %",
+    "lts_1_2_length_rel": "LTS 1-2 %",
+    "lts_1_3_length_rel": "LTS 1-3 %",
+    "lts_1_4_length_rel": "LTS 1-4 %",
+}
+
+rename_index_dict_fragmentation = {
+    "comp_1_count": "Component count LTS 1",
+    "comp_2_count": "Component count LTS 1-2",
+    "comp_3_count": "Component count LTS 1-3",
+    "comp_4_count": "Component count LTS 1-4",
+    "comp_car_count": "Component count car",
+    "comp_all_count": "Component count full",
+    "component_per_length_1": "Components per km LTS 1",
+    "component_per_length_2": "Components per km LTS 1-2",
+    "component_per_length_3": "Components per km LTS 1-3",
+    "component_per_length_4": "Components per km LTS 1-4",
+    "component_per_length_car": "Components per km car",
+    "component_per_length_all": "Components per km full",
+    "component_per_dens_1": "Components per km/sqkm LTS 1",
+    "component_per_dens_2": "Components per km/sqkm LTS 1-2",
+    "component_per_dens_3": "Components per km/sqkm LTS 1-3",
+    "component_per_dens_4": "Components per km/sqkm LTS 1-4",
+    "component_per_dens_car": "Components per km/sqkm car",
+    "component_per_dens_all": "Components per km/sqkm all",
+}
+
+rename_index_dict_reach = {
+    "lts1_len": "LTS 1 reach",
+    "lts2_len": "LTS 2 reach",
+    "lts3_len": "LTS 3 reach",
+    "lts4_len": "LTS 4 reach",
+    "car_len": "Car reach",
+    "car_lts1_diff": "Difference car-LTS 1 reach",
+    "car_lts2_diff": "Difference car-LTS 2 reach",
+    "car_lts3_diff": "Difference car-LTS 3 reach",
+    "car_lts4_diff": "Difference car-LTS 4 reach",
+    "car_lts1_diff_pct": "Difference car-LTS 1 reach %",
+    "car_lts2_diff_pct": "Difference car-LTS 2 reach %",
+    "car_lts3_diff_pct": "Difference car-LTS 3 reach %",
+    "car_lts4_diff_pct": "Difference car-LTS 4 reach %",
+}
