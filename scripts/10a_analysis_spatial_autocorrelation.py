@@ -58,11 +58,6 @@ for gdf in gdfs:
         gdf[p] = gdf[p] * 100
 
 # %%
-# Define K values for spatial weights
-k_muni = 3
-k_socio = 8
-k_hex = 18
-p = 0.05  # p-value for LISA
 
 # Define spatial weights
 w_muni = analysis_func.compute_spatial_weights(
@@ -169,11 +164,6 @@ hex_components.replace(np.nan, 0, inplace=True)
 
 gdfs = [muni_components, socio_components, hex_components]
 
-# Define K values for spatial weights
-k_muni = 3
-k_socio = 8
-k_hex = 18
-p = 0.05  # p-value for LISA
 
 # Define spatial weights
 w_muni = analysis_func.compute_spatial_weights(
@@ -262,9 +252,6 @@ hex_reach.replace(np.nan, 0, inplace=True)
 
 gdfs = [hex_reach]
 
-# Define K values for spatial weights
-k_hex = 18
-p = 0.05  # p-value for LISA
 
 # Define spatial weights
 w_grid = analysis_func.compute_spatial_weights(

@@ -14,3 +14,10 @@ socio_fp: "../data/processed/voting_areas.gpkg"
 adm_boundaries_fp: "../data/input/adm_boundaries/muni_boundaries.gpkg"
 
 h3_resolution: 8
+
+
+# Define K values for spatial weights
+k_muni: 3
+k_socio: 8
+k_hex: 18
+p_lisa: 0.05  # p-value for LISA
