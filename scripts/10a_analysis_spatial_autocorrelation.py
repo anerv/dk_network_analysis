@@ -138,11 +138,6 @@ for i, gdf in enumerate(gdfs):
 # %%
 ### FRAGMENTATION ###
 
-## AT EACH AGGREGATION LEVEL:
-# Component count of each LTS type
-# Comp per km
-# Comp per sqkm
-
 # READ DATA
 
 muni_components = gpd.GeoDataFrame.from_postgis(
@@ -273,11 +268,11 @@ p = 0.05  # p-value for LISA
 
 # Define spatial weights
 w_grid = analysis_func.compute_spatial_weights(
-    density_hex, "hex_id", w_type="knn", k=k_hex
+    hex_reach, "hex_id", w_type="knn", k=k_hex
 )
 
-spatial_weights = [w_muni, w_socio, w_grid]
-k_values = [k_muni, k_socio, k_hex]
+spatial_weights = [w_grid]
+k_values = [k_hex]
 
 all_reach_columns = [reach_columns, reach_diff_columns, reach_diff_pct_columns]
 
@@ -290,7 +285,7 @@ for i, gdf in enumerate(gdfs):
 
     global_morans_results = {}
 
-    for columns in all_fragmentation_columns:
+    for columns in all_reach_columns:
 
         filepaths = [
             f"../results/spatial_autocorrelation/reach/{aggregation_level[i]}/{c}.png".replace(
