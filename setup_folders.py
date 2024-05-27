@@ -84,3 +84,9 @@ for f in analysis_results_subfolders:
                             + "/"
                             + "hexgrid"
                         )
+
+fp = "results/spatial_autocorrelation/sensitivity_test"
+if not os.path.exists(fp):
+    os.mkdir(fp)
+
+    print("Successfully created folder: " + fp)
