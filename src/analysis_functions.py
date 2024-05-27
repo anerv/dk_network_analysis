@@ -165,7 +165,13 @@ def compute_lisa(
 
 
 def compute_spatial_autocorrelation(
-    col_names, variable_names, df, spatial_weights, filepaths, show_plot=True
+    col_names,
+    variable_names,
+    df,
+    spatial_weights,
+    filepaths,
+    show_plot=True,
+    print_results=True,
 ):
     """
     Wrapper function for computing and plotting global spatial autocorrelation (Moran's I)
@@ -210,9 +216,11 @@ def compute_spatial_autocorrelation(
             plt.show()
 
         moran = esda.moran.Moran(df[c], spatial_weights)
-        print(
-            f"With significance {moran.p_sim}, the Moran's I value for {v} is {moran.I:.2f}"
-        )
+
+        if print_results:
+            print(
+                f"With significance {moran.p_sim}, the Moran's I value for {v} is {moran.I:.2f}"
+            )
 
         morans[v] = moran
 
