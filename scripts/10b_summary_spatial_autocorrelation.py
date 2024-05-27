@@ -7,6 +7,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import json
+import plotly.express as px
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -29,6 +30,8 @@ rename_dicts = [
 ]
 
 # %%
+
+# DENSITY AND FRAGMENTATION
 
 for i, metric in enumerate(metrics[:-1]):
 
@@ -58,6 +61,22 @@ for i, metric in enumerate(metrics[:-1]):
 
     display(joined_df.style.pipe(format_style_index))
 
+    fig = px.bar(
+        df.reset_index(),
+        x="index",
+        y=f"morans I: {a}",
+        # color="Network level",
+        title=f"Moran's I for {metric} at {a}",
+        labels={
+            "index": "Metric type",
+        },
+    )
+
+    fig.show()
+
+
+# %%
+# REACH
 
 df = pd.read_json(
     f"../results/spatial_autocorrelation/reach/hexgrid/global_moransi_k{k_values[2]}.json",
@@ -67,11 +86,24 @@ df = pd.read_json(
 df.rename(columns={0: "morans I: hexgrid"}, inplace=True)
 
 df.rename(
-    index=rename_dicts[i],
+    index=rename_dicts[2],
     inplace=True,
 )
 
 display(df.style.pipe(format_style_index))
+
+fig = px.bar(
+    df.reset_index(),
+    x="index",
+    y="morans I: hexgrid",
+    # color="Network level",
+    title="Moran's I for network reach",
+    labels={
+        "index": "Metric type",
+    },
+)
+
+fig.show()
 
 # %%
 for i, metric in enumerate(metrics[:-1]):
@@ -103,12 +135,40 @@ for i, metric in enumerate(metrics[:-1]):
 
         new_col_names = [c.strip("_q") for c in joined_df.columns]
         new_cols_dict = {}
-        for i, c in enumerate(joined_df.columns):
-            new_cols_dict[c] = new_col_names[i]
+        for a, c in enumerate(joined_df.columns):
+            new_cols_dict[c] = new_col_names[a]
         joined_df.rename(columns=new_cols_dict, inplace=True)
+
+        joined_df.rename(columns=rename_dicts[i], inplace=True)
 
         print(f"LISA summary for {metric} at {a}")
         display(joined_df.style.pipe(format_style_index))
+
+        long_df = joined_df.reset_index().melt(
+            id_vars="index", var_name="Metric", value_name="Count"
+        )
+
+        # Create the stacked bar chart
+        fig = px.bar(
+            long_df,
+            x="Metric",
+            y="Count",
+            color="index",
+            title=f"LISA for {metric} at {a}",
+            labels={"index": "LISA Type", "Count": "Count", "Metric": "Metric"},
+            hover_data=["Metric", "index", "Count"],
+            color_discrete_map={
+                "Non-Significant": "#d3d3d3",
+                "HH": "#d62728",
+                "HL": "#e6bbad",
+                "LH": "#add8e6",
+                "LL": "#1f77b4",
+            },
+        )
+
+        # Show the figure
+        fig.show()
+
 # %%
 summary = {}
 
@@ -135,6 +195,33 @@ for i, c in enumerate(joined_df.columns):
     new_cols_dict[c] = new_col_names[i]
 joined_df.rename(columns=new_cols_dict, inplace=True)
 
+joined_df.rename(columns=rename_dicts[2], inplace=True)
+
 print(f"LISA summary for reach at hexgrid")
 display(joined_df.style.pipe(format_style_index))
+
+long_df = joined_df.reset_index().melt(
+    id_vars="index", var_name="Metric", value_name="Count"
+)
+
+# Create the stacked bar chart
+fig = px.bar(
+    long_df,
+    x="Metric",
+    y="Count",
+    color="index",
+    title=f"LISA for reach at hexgrid",
+    labels={"index": "LISA Type", "Count": "Count", "Metric": "Metric"},
+    hover_data=["Metric", "index", "Count"],
+    color_discrete_map={
+        "Non-Significant": "#d3d3d3",
+        "HH": "#d62728",
+        "HL": "#e6bbad",
+        "LH": "#add8e6",
+        "LL": "#1f77b4",
+    },
+)
+
+# Show the figure
+fig.show()
 # %%
