@@ -121,7 +121,7 @@ for i, gdf in enumerate(gdfs):
             global_morans_results[key] = value.I
 
     with open(
-        f"../results/spatial_autocorrelation/density/{aggregation_level[i]}/global_moransi_k{spatial_weights_values[i]}.json",
+        f"../results/spatial_autocorrelation/density/{aggregation_level[i]}/global_moransi_{spatial_weights_values[i]}.json",
         "w",
     ) as outfile:
         json.dump(global_morans_results, outfile)
@@ -169,6 +169,11 @@ gdfs = [muni_components, socio_components, hex_components]
 
 # %%
 # Define spatial weights
+
+id_cols = ["municipality", "id", "hex_id"]
+k_values = [k_muni, k_socio, k_hex]
+spatial_weights_values = [f"queen_{k}" for k in k_values]
+
 spatial_weights = []
 
 for i, gdf in enumerate(gdfs):
@@ -227,7 +232,7 @@ for i, gdf in enumerate(gdfs):
             global_morans_results[key] = value.I
 
     with open(
-        f"../results/spatial_autocorrelation/fragmentation/{aggregation_level[i]}/global_moransi_k{spatial_weights_values[i]}.json",
+        f"../results/spatial_autocorrelation/fragmentation/{aggregation_level[i]}/global_moransi_{spatial_weights_values[i]}.json",
         "w",
     ) as outfile:
         json.dump(global_morans_results, outfile)
@@ -313,7 +318,7 @@ for i, gdf in enumerate(gdfs):
             global_morans_results[key] = value.I
 
     with open(
-        f"../results/spatial_autocorrelation/reach/{aggregation_level[i]}/global_moransi_k{spatial_weights_values[i]}.json",
+        f"../results/spatial_autocorrelation/reach/{aggregation_level[i]}/global_moransi_{spatial_weights_values[i]}.json",
         "w",
     ) as outfile:
         json.dump(global_morans_results, outfile)
@@ -335,6 +340,14 @@ if result == "error":
 
 socio_gdf = gpd.read_postgis("SELECT * FROM socio;", engine, geom_col="geometry")
 
+org_len = len(socio_gdf)
+
+socio_gdf.dropna(subset=["population_density"], inplace=True)
+
+print("Dropped rows with missing population density:", org_len - len(socio_gdf))
+
+socio_gdf.replace(np.nan, 0, inplace=True)
+# %%
 w_queen = analysis_func.compute_spatial_weights(socio_gdf, "id", w_type="queen")
 
 w_knn = analysis_func.compute_spatial_weights(socio_gdf, "id", w_type="knn", k=k_socio)
@@ -342,11 +355,12 @@ w = weights.set_operations.w_union(w_queen, w_knn)
 
 assert len(w.islands) == 0
 
+# %%
 columns = [
     "population_density",
     "households_1car_share",
-    "households_2car_share",
-    "hourseholds_nocar_share",
+    "households_2cars_share",
+    "households_nocar_share",
     "households_income_under_100k_share",
     "households_income_100_150k_share",
     "households_income_150_200k_share",
@@ -359,38 +373,39 @@ columns = [
 
 global_morans_results = {}
 
-for columns in all_fragmentation_columns:
 
-    filepaths = [
-        f"../results/spatial_autocorrelation/socio/{aggregation_level[i]}/{c}.png".replace(
-            " ", "_"
-        )
-        for c in columns
-    ]
+filepaths = [
+    f"../results/spatial_autocorrelation/socio_pop/{c}.png".replace(" ", "_")
+    for c in columns
+]
 
-    morans_results = analysis_func.compute_spatial_autocorrelation(
-        columns, columns, gdf, spatial_weights[i], filepaths, show_plot=False
-    )
+morans_results = analysis_func.compute_spatial_autocorrelation(
+    columns, columns, socio_gdf, w, filepaths, show_plot=False
+)
 
-    lisa_results = analysis_func.compute_lisa(
-        columns,
-        columns,
-        gdf,
-        spatial_weights[i],
-        filepaths,
-        show_plot=False,
-    )
+lisa_results = analysis_func.compute_lisa(
+    columns,
+    columns,
+    socio_gdf,
+    w,
+    filepaths,
+    show_plot=False,
+)
 
-    for key, value in morans_results.items():
-        global_morans_results[key] = value.I
+for key, value in morans_results.items():
+    global_morans_results[key] = value.I
 
 with open(
-    f"../results/spatial_autocorrelation/socio_pop/global_moransi_k{spatial_weights_values[i]}.json",
+    f"../results/spatial_autocorrelation/socio_pop/global_moransi_queens_{k_socio}.json",
     "w",
 ) as outfile:
     json.dump(global_morans_results, outfile)
 
-q_columns = [c for c in gdf.columns if c.endswith("_q")]
-q_columns.extend(["geometry", id_cols[i]])
+q_columns = [c for c in socio_gdf.columns if c.endswith("_q")]
+q_columns.extend(["geometry", "id"])
 
-gdf[q_columns].to_parquet(f"../results/spatial_autocorrelation/socio_pop/lisas.parquet")
+socio_gdf[q_columns].to_parquet(
+    f"../results/spatial_autocorrelation/socio_pop/lisas.parquet"
+)
+
+# %%

@@ -23,6 +23,7 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 metrics = ["density", "fragmentation", "reach"]
 aggregation_levels = ["administrative", "socio", "hexgrid"]
 k_values = [k_muni, k_socio, k_hex]
+spatial_weights_values = [f"queen_{k}" for k in k_values]
 rename_dicts = [
     rename_index_dict_density,
     rename_index_dict_fragmentation,
@@ -40,8 +41,7 @@ for i, metric in enumerate(metrics[:-1]):
     for e, a in enumerate(aggregation_levels):
 
         # print(f"Global Moran's I for {metric} for {a}:")
-
-        fp = f"../results/spatial_autocorrelation/{metric}/{a}/global_moransi_k{k_values[e]}.json"
+        fp = f"../results/spatial_autocorrelation/{metric}/{a}/global_moransi_{spatial_weights_values[e]}.json"
 
         df = pd.read_json(
             fp,
@@ -79,7 +79,7 @@ for i, metric in enumerate(metrics[:-1]):
 # REACH
 
 df = pd.read_json(
-    f"../results/spatial_autocorrelation/reach/hexgrid/global_moransi_k{k_values[2]}.json",
+    f"../results/spatial_autocorrelation/reach/hexgrid/global_moransi_{spatial_weights_values[e]}.json",
     orient="index",
 )
 
