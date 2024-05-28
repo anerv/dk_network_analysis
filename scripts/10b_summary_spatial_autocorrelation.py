@@ -135,8 +135,8 @@ for i, metric in enumerate(metrics[:-1]):
 
         new_col_names = [c.strip("_q") for c in joined_df.columns]
         new_cols_dict = {}
-        for a, c in enumerate(joined_df.columns):
-            new_cols_dict[c] = new_col_names[a]
+        for z, c in enumerate(joined_df.columns):
+            new_cols_dict[c] = new_col_names[z]
         joined_df.rename(columns=new_cols_dict, inplace=True)
 
         joined_df.rename(columns=rename_dicts[i], inplace=True)
