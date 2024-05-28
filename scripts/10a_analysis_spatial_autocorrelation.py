@@ -347,7 +347,7 @@ socio_gdf.dropna(subset=["population_density"], inplace=True)
 print("Dropped rows with missing population density:", org_len - len(socio_gdf))
 
 socio_gdf.replace(np.nan, 0, inplace=True)
-# %%
+
 w_queen = analysis_func.compute_spatial_weights(socio_gdf, "id", w_type="queen")
 
 w_knn = analysis_func.compute_spatial_weights(socio_gdf, "id", w_type="knn", k=k_socio)
@@ -355,12 +355,13 @@ w = weights.set_operations.w_union(w_queen, w_knn)
 
 assert len(w.islands) == 0
 
-# %%
+
 columns = [
     "population_density",
     "households_1car_share",
     "households_2cars_share",
     "households_nocar_share",
+    "households_with_car_share",
     "households_income_under_100k_share",
     "households_income_100_150k_share",
     "households_income_150_200k_share",
