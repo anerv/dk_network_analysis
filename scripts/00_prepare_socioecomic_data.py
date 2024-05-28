@@ -66,7 +66,7 @@ for col in areas.columns[4:]:
 
 # %%
 # compute population density
-areas["population_density"] = areas.population / areas.geometry.area
+areas["population_density"] = areas.population / (areas.geometry.area / 10**6)
 
 areas["id"] = areas.index
 # %%
