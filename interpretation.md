@@ -173,3 +173,65 @@ Somewhat similar across aggregation
 - LTS 1-2 is lower or same in areas with high density! (but higher range)
 - LTS 1-3 same - but even stronger tendency to low comp count in high dens? (and lower range than 1-2)
 - LTS 1-4 - very low count in most places, but a few with very high - investigate
+
+## Spatial weights sensitivity
+
+All positive significant spatial auto!
+Only very few examples of the different weights changing the direction - and only in cases with already very low Moran's I. Better results for smaller K.
+
+### Reach
+
+Comparing K = 6, 18, 36 for hex grids
+
+Highest Moran's I with w2, but w1 and w2 almost similar
+More grid cells are in significant clusters with w3?
+Same pattern across all LTS levels.
+
+### Density
+
+Comparing:
+hex_ks = [6, 18, 36]
+muni_ks = [3, 5, 7]
+socio_ks = [4, 8, 12]
+
+#### Administrative
+
+##### Individual LTS
+
+Moran's I is sometimes slightly smaller or similar for w3, w1 and w2 identical, clusters bigger.
+
+##### Relative length
+
+w3 tends to be smaller than w1 and w2, clusters bigger.
+
+#### Socio
+
+#### Ind LTS
+
+w3 smaller, w1 and w2 mostly similar - but sometimes slightly different pattern than at adm level.
+
+Clusters again bigger for w3.
+
+Similar for relative length.
+
+#### Hex grid
+
+w3 significantly lower, w3 clusters bigger.
+Both for ind. and rel. density.
+
+### Fragmentation
+
+#### Adm
+
+##### Comp count
+
+Similar Moran's I, larger clusters for w3.
+w3 larger, positive for car and total - but very small - w1 and w2 negative but very small.
+
+##### Comp count per km
+
+w3 usually lower.
+
+Same for socio and hexgrid.
+
+Comp per length usually very low.
