@@ -67,3 +67,13 @@ def format_style_no_index(styler):
     styler.hide(axis="index")
     return styler
 
+def format_style_neg_positive(styler):
+    caption_here = caption.copy()
+    caption_here["props"] += "background-color: " + "black" + ";"
+    styler.format(precision=2, na_rep=" - ", thousands=",", formatter=pct_formatter)
+    styler.set_table_styles(
+        [cell_hover, row_hover, columns_styler, caption_here, index_styler, cell_style],
+        overwrite=False,
+    )
+    styler.map(lambda x: f"color: {'red' if x < 0 else 'green'}")
+    return styler

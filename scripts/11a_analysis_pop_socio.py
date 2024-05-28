@@ -8,16 +8,17 @@ import matplotlib.pyplot as plt
 import numpy as np
 import plotly_express as px
 import pandas as pd
+import seaborn as sns
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
+exec(open("../settings/df_styler.py").read())
 plot_func.set_renderer("png")
 
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 # %%
-
 # Load socio density data
 socio = gpd.read_postgis("SELECT * FROM socio", engine, geom_col="geometry")
 socio_density = gpd.read_postgis(
@@ -31,8 +32,49 @@ socio_density = socio_density.merge(socio, on="id", how="inner")
 
 assert socio_density.shape[0] == socio.shape[0]
 # %%
+#### CORRELATION BETWEEN SOCIO-ECO VARIABLES ####
 
-###### NETWORK DENSITY AND POP DENSITY ######
+socio_corr = socio_density[
+    [
+        "households_income_under_100k_share",
+        "households_income_100_150k_share",
+        "households_income_150_200k_share",
+        "households_income_200_300k_share",
+        "households_income_300_400k_share",
+        "households_income_400_500k_share",
+        "households_income_500_750k_share",
+        "households_income_750k_share",
+        "households_with_car_share",
+        "households_1car_share",
+        "households_2cars_share",
+        "households_nocar_share",
+        "population_density",
+    ]
+].corr()
+
+# Generate a mask for the upper triangle
+mask = np.triu(np.ones_like(socio_corr, dtype=bool))
+
+# Set up the matplotlib figure
+f, ax = plt.subplots(figsize=(11, 9))
+
+# Generate a custom diverging colormap
+cmap = sns.diverging_palette(230, 20, as_cmap=True)
+
+sns.heatmap(
+    socio_corr,
+    mask=mask,
+    cmap=cmap,
+    vmax=0.3,
+    center=0,
+    square=True,
+    linewidths=0.5,
+    cbar_kws={"shrink": 0.5},
+)
+
+# %%
+###### NETWORK DENSITY #########
+################################
 
 all_density_columns = [
     # length_columns,
@@ -42,6 +84,8 @@ all_density_columns = [
     length_relative_columns,
     length_relative_steps_columns,
 ]
+# %%
+###### NETWORK DENSITY AND POP DENSITY ######
 
 for columns in all_density_columns:
 
@@ -63,30 +107,87 @@ for columns in all_density_columns:
     fig.suptitle(f"Correlation between population and network density", fontsize=20)
 
     plt.tight_layout()
+
+    socio_density[
+        columns
+        + [
+            "population_density",
+            "households_1car_share",
+            "households_2cars_share",
+            "households_nocar_share",
+            "households_income_under_100k_share",
+            "households_income_100_150k_share",
+            "households_income_150_200k_share",
+            "households_income_200_300k_share",
+            "households_income_300_400k_share",
+            "households_income_400_500k_share",
+            "households_income_500_750k_share",
+            "households_income_750k_share",
+            "households_with_car",
+            "households_with_car_share",
+        ]
+    ].corr()
+
 
 # %%
-###### NETWORK DENSITY AND INCOME DENSITY ######
+###### NETWORK DENSITY AND INCOME ######
+socio_density["household_share_low_income"] = (
+    socio_density.households_income_under_100k_share
+    + socio_density.households_income_100_150k_share
+)
 
-for columns in all_density_columns:
+socio_density["household_share_medium_income"] = (
+    socio_density.households_income_150_200k_share
+    + socio_density.households_income_200_300k_share
+    + socio_density.households_income_300_400k_share
+    + socio_density.households_income_400_500k_share
+)
 
-    fig, axs = plt.subplots(2, 3, figsize=(15, 10))
+socio_density["household_share_high_income"] = (
+    socio_density.households_income_500_750k_share,
+    socio_density.households_income_750k_share,
+)
 
-    axs = axs.flatten()
+income_columns = [
+    # "households_income_under_100k_share",
+    # "households_income_100_150k_share",
+    # "households_income_150_200k_share",
+    # "households_income_200_300k_share",
+    # "households_income_300_400k_share",
+    # "households_income_400_500k_share",
+    # "households_income_500_750k_share",
+    # "households_income_750k_share",
+    "household_share_low_income",
+    "household_share_medium_income",
+    "household_share_high_income",
+]
+# %%
+for i in income_columns:
 
-    if len(axs) > len(columns):
-        axs[-1].set_visible(False)  # to remove last plot
+    for columns in all_density_columns:
 
-    for ax, col_name in zip(axs, columns):
+        fig, axs = plt.subplots(2, 3, figsize=(15, 10))
 
-        ax.scatter(socio_density["population_density"], socio_density[col_name])
-        ax.set_xscale("log")
-        ax.set_yscale("log")
-        ax.set_xlabel("population_density")
-        ax.set_ylabel(col_name)
+        axs = axs.flatten()
 
-    fig.suptitle(f"Correlation between population and network density", fontsize=20)
+        if len(axs) > len(columns):
+            axs[-1].set_visible(False)  # to remove last plot
 
-    plt.tight_layout()
+        for ax, col_name in zip(axs, columns):
+
+            ax.scatter(socio_density[i], socio_density[col_name])
+            ax.set_xscale("log")
+            ax.set_yscale("log")
+            ax.set_xlabel(i)
+            ax.set_ylabel(col_name)
+
+        fig.suptitle(f"Correlation between {i} and network density", fontsize=20)
+
+        plt.tight_layout()
+
+        plt.show()
+
+        plt.close()
 
 # %%
 ###### NETWORK DENSITY AND CAR OWNERSHIP ######
@@ -112,12 +213,147 @@ for columns in all_density_columns:
     plt.tight_layout()
 
 # %%
+###### NETWORK DENSITY AND CAR OWNERSHIP (no car) ######
+for columns in all_density_columns:
+
+    fig, axs = plt.subplots(2, 3, figsize=(15, 10))
+
+    axs = axs.flatten()
+
+    if len(axs) > len(columns):
+        axs[-1].set_visible(False)  # to remove last plot
+
+    for ax, col_name in zip(axs, columns):
+
+        ax.scatter(socio_density["households_nocar_share"], socio_density[col_name])
+        ax.set_xscale("log")
+        ax.set_yscale("log")
+        ax.set_xlabel("share of households with NO car")
+        ax.set_ylabel(col_name)
+
+    fig.suptitle(f"Correlation between population and car ownership", fontsize=20)
+
+    plt.tight_layout()
+
+# %%
+
+socio_density_corr = socio_density[
+    density_columns
+    + length_relative_columns
+    + [
+        "households_income_under_100k_share",
+        "households_income_100_150k_share",
+        "households_income_150_200k_share",
+        "households_income_200_300k_share",
+        "households_income_300_400k_share",
+        "households_income_400_500k_share",
+        "households_income_500_750k_share",
+        "households_income_750k_share",
+        "households_with_car_share",
+        "households_1car_share",
+        "households_2cars_share",
+        "households_nocar_share",
+        "population_density",
+    ]
+].corr()
+# Generate a mask for the upper triangle
+mask = np.triu(np.ones_like(socio_density_corr, dtype=bool))
+
+# Set up the matplotlib figure
+f, ax = plt.subplots(figsize=(11, 9))
+
+# Generate a custom diverging colormap
+cmap = sns.diverging_palette(230, 20, as_cmap=True)
+
+sns.heatmap(
+    socio_density_corr,
+    mask=mask,
+    cmap=cmap,
+    vmax=0.3,
+    center=0,
+    square=True,
+    linewidths=0.5,
+    cbar_kws={"shrink": 0.5},
+)
+
+# %%
+###### FRAGMENTATION ######
+##########################
+
+socio_components = gpd.read_postgis(
+    "SELECT * FROM fragmentation.component_length_socio;", engine, geom_col="geometry"
+)
+
+socio_components = socio_components[
+    [
+        "comp_all_count",
+        "comp_1_count",
+        "comp_2_count",
+        "comp_3_count",
+        "comp_4_count",
+        "comp_car_count",
+        "component_per_length_all",
+        "component_per_length_1",
+        "component_per_length_2",
+        "component_per_length_3",
+        "component_per_length_4",
+        "component_per_length_car",
+        "id",
+    ]
+].merge(socio, on="id", how="inner")
+
+# %%
+cols = [
+    # "comp_all_count",
+    # "comp_1_count",
+    # "comp_2_count",
+    # "comp_3_count",
+    # "comp_4_count",
+    # "comp_car_count",
+    "component_per_length_all",
+    "component_per_length_1",
+    "component_per_length_2",
+    "component_per_length_3",
+    "component_per_length_4",
+    "component_per_length_car",
+    "population_density",
+    "households_1car_share",
+    "households_2cars_share",
+    "households_nocar_share",
+    "households_income_under_100k_share",
+    "households_income_100_150k_share",
+    "households_income_150_200k_share",
+    "households_income_200_300k_share",
+    "households_income_300_400k_share",
+    "households_income_400_500k_share",
+    "households_income_500_750k_share",
+    "households_income_750k_share",
+    "households_with_car_share",
+]
+
+socio_components_corr = socio_components[cols].corr()
+# Generate a mask for the upper triangle
+mask = np.triu(np.ones_like(socio_components_corr, dtype=bool))
+
+# Set up the matplotlib figure
+f, ax = plt.subplots(figsize=(11, 9))
+
+# Generate a custom diverging colormap
+cmap = sns.diverging_palette(230, 20, as_cmap=True)
+
+sns.heatmap(
+    socio_components_corr,
+    mask=mask,
+    cmap=cmap,
+    vmax=0.3,
+    center=0,
+    square=True,
+    linewidths=0.5,
+    cbar_kws={"shrink": 0.5},
+)
+# %%
 
 
-## CORR BETWEEN DENSITY AND POP
-
-# Make small multiple plot with corr between pop density and all different density metrics (length ind an step, density, relative length etc.)
-
-## CORR BETWEEN DENSITY AND car ownership
-
-## CORR BETWEEN DENSITY AND income
+# %%
+##### REACH ###########
+######################
