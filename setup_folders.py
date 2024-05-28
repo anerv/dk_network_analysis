@@ -90,3 +90,10 @@ if not os.path.exists(fp):
     os.mkdir(fp)
 
     print("Successfully created folder: " + fp)
+
+
+fp = "results/spatial_autocorrelation/socio_pop"
+if not os.path.exists(fp):
+    os.mkdir(fp)
+
+    print("Successfully created folder: " + fp)
