@@ -7,6 +7,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import json
+from pysal.lib import weights
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -60,20 +61,38 @@ for gdf in gdfs:
 # %%
 
 # Define spatial weights
-w_muni = analysis_func.compute_spatial_weights(
-    density_muni, "municipality", w_type="knn", dist=k_muni
+w_muni_queen = analysis_func.compute_spatial_weights(
+    density_muni, "municipality", w_type="queen"
 )
 
-w_socio = analysis_func.compute_spatial_weights(
+w_socio_queen = analysis_func.compute_spatial_weights(
+    density_socio, "id", w_type="queen"
+)
+
+w_grid_queen = analysis_func.compute_spatial_weights(
+    density_hex, "hex_id", w_type="queen"
+)
+
+w_muni_knn = analysis_func.compute_spatial_weights(
+    density_muni, "municipality", w_type="knn", k=k_muni
+)
+
+w_socio_knn = analysis_func.compute_spatial_weights(
     density_socio, "id", w_type="knn", k=k_socio
 )
 
-w_grid = analysis_func.compute_spatial_weights(
+w_grid_knn = analysis_func.compute_spatial_weights(
     density_hex, "hex_id", w_type="knn", k=k_hex
 )
 
+w_muni = weights.set_operations.w_union(w_muni_queen, w_muni_knn)
+w_socio = weights.set_operations.w_union(w_socio_queen, w_socio_knn)
+w_grid = weights.set_operations.w_union(w_grid_queen, w_grid_knn)
+
+
 spatial_weights = [w_muni, w_socio, w_grid]
 k_values = [k_muni, k_socio, k_hex]
+spatial_weights_values = [f"queen_{k_muni}", f"queen_{k_socio}", f"queen_{k_hex}"]
 
 # %%
 all_density_columns = [
@@ -118,7 +137,7 @@ for i, gdf in enumerate(gdfs):
             global_morans_results[key] = value.I
 
     with open(
-        f"../results/spatial_autocorrelation/density/{aggregation_level[i]}/global_moransi_k{k_values[i]}.json",
+        f"../results/spatial_autocorrelation/density/{aggregation_level[i]}/global_moransi_k{spatial_weights_values[i]}.json",
         "w",
     ) as outfile:
         json.dump(global_morans_results, outfile)
@@ -162,24 +181,42 @@ hex_components = gpd.GeoDataFrame.from_postgis(
 
 hex_components.replace(np.nan, 0, inplace=True)
 
-gdfs = [muni_components, socio_components, hex_components]
-
-
+# %%
 # Define spatial weights
-w_muni = analysis_func.compute_spatial_weights(
-    muni_components, "municipality", w_type="knn", dist=k_muni
+w_muni_queen = analysis_func.compute_spatial_weights(
+    muni_components, "municipality", w_type="queen"
 )
 
-w_socio = analysis_func.compute_spatial_weights(
+w_socio_queen = analysis_func.compute_spatial_weights(
+    socio_components, "id", w_type="queen"
+)
+
+w_grid_queen = analysis_func.compute_spatial_weights(
+    hex_components, "hex_id", w_type="queen"
+)
+
+w_muni_knn = analysis_func.compute_spatial_weights(
+    muni_components, "municipality", w_type="knn", k=k_muni
+)
+
+w_socio_knn = analysis_func.compute_spatial_weights(
     socio_components, "id", w_type="knn", k=k_socio
 )
 
-w_grid = analysis_func.compute_spatial_weights(
+w_grid_knn = analysis_func.compute_spatial_weights(
     hex_components, "hex_id", w_type="knn", k=k_hex
 )
 
+w_muni = weights.set_operations.w_union(w_muni_queen, w_muni_knn)
+w_socio = weights.set_operations.w_union(w_socio_queen, w_socio_knn)
+w_grid = weights.set_operations.w_union(w_grid_queen, w_grid_knn)
+
+# %%
 spatial_weights = [w_muni, w_socio, w_grid]
 k_values = [k_muni, k_socio, k_hex]
+spatial_weights_values = [f"queen_{k_muni}", f"queen_{k_socio}", f"queen_{k_hex}"]
+
+gdfs = [muni_components, socio_components, hex_components]
 
 all_fragmentation_columns = [
     component_count_columns,
@@ -222,7 +259,7 @@ for i, gdf in enumerate(gdfs):
             global_morans_results[key] = value.I
 
     with open(
-        f"../results/spatial_autocorrelation/fragmentation/{aggregation_level[i]}/global_moransi_k{k_values[i]}.json",
+        f"../results/spatial_autocorrelation/fragmentation/{aggregation_level[i]}/global_moransi_k{spatial_weights_values[i]}.json",
         "w",
     ) as outfile:
         json.dump(global_morans_results, outfile)
@@ -252,14 +289,16 @@ hex_reach.replace(np.nan, 0, inplace=True)
 
 gdfs = [hex_reach]
 
-
-# Define spatial weights
-w_grid = analysis_func.compute_spatial_weights(
-    hex_reach, "hex_id", w_type="knn", k=k_hex
+w_grid_queen = analysis_func.compute_spatial_weights(
+    hex_components, "hex_id", w_type="queen"
 )
+w_grid_knn = analysis_func.compute_spatial_weights(
+    hex_components, "hex_id", w_type="knn", k=k_hex
+)
+w_grid = weights.set_operations.w_union(w_grid_queen, w_grid_knn)
 
 spatial_weights = [w_grid]
-k_values = [k_hex]
+spatial_weights_values = [k_hex]
 
 all_reach_columns = [reach_columns, reach_diff_columns, reach_diff_pct_columns]
 
@@ -298,7 +337,7 @@ for i, gdf in enumerate(gdfs):
             global_morans_results[key] = value.I
 
     with open(
-        f"../results/spatial_autocorrelation/reach/{aggregation_level[i]}/global_moransi_k{k_values[i]}.json",
+        f"../results/spatial_autocorrelation/reach/{aggregation_level[i]}/global_moransi_k{spatial_weights_values[i]}.json",
         "w",
     ) as outfile:
         json.dump(global_morans_results, outfile)
@@ -310,3 +349,12 @@ for i, gdf in enumerate(gdfs):
         f"../results/spatial_autocorrelation/reach/{aggregation_level[i]}/lisas.parquet"
     )
 # %%
+## Confirm spatial clustering of population density and socio-economic variables
+
+# TODO: convert households columns to share
+
+
+socio_gdf = gpd.read_postgis("SELECT * FROM socio;", engine, geom_col="geometry")
+
+
+columns = ["population_density", "car_ownership", "income"]
