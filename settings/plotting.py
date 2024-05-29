@@ -123,7 +123,7 @@ component_per_km_sqkm_cols = [
     "component_per_dens_all",
 ]
 
-reach_columns = ["lts1_len", "lts2_len", "lts3_len", "lts4_len", "car_len"]
+reach_columns = ["lts1_reach", "lts2_reach", "lts3_reach", "lts4_reach", "car_reach"]
 
 reach_diff_columns = [
     "car_lts1_diff",
@@ -170,11 +170,11 @@ plotly_labels = {
     "all": "All",
     "car": "Car",
     "municipality": "Municipality",
-    "lts1_len": "Network reach (km) - LTS 1",
-    "lts2_len": "Network reach (km) - LTS 2",
-    "lts3_len": "Network reach (km) - LTS 3",
-    "lts4_len": "Network reach (km) - LTS 4",
-    "car_len": "Network reach (km) - car",
+    "lts1_reach": "Network reach (km) - LTS 1",
+    "lts2_reach": "Network reach (km) - LTS 2",
+    "lts3_reach": "Network reach (km) - LTS 3",
+    "lts4_reach": "Network reach (km) - LTS 4",
+    "car_reach": "Network reach (km) - car",
     "car_lts1_diff": "Difference in network reach (km)",
     "car_lts2_diff": "Difference in network reach (km)",
     "car_lts3_diff": "Difference in network reach (km)",
