@@ -1,0 +1,38 @@
+-- DROP TABLE IF EXISTS reach.reach_component_length_hex;
+-- CREATE TABLE reach.reach_component_length_hex AS (
+--     SELECT
+--         dens.hex_id,
+--         dens.lts_1_length,
+--         dens.lts_1_2_length,
+--         dens.lts_1_3_length,
+--         dens.lts_1_4_length,
+--         dens.total_car_length,
+--         dens.lts_1_dens,
+--         dens.lts_1_2_dens,
+--         dens.lts_1_3_dens,
+--         dens.lts_1_4_dens,
+--         dens.total_car_dens,
+--         dens.geometry,
+--         comp.comp_1_count,
+--         comp.comp_2_count,
+--         comp.comp_3_count,
+--         comp.comp_4_count,
+--         comp.comp_car_count,
+--         reach.lts1_reach,
+--         reach.lts2_reach,
+--         reach.lts3_reach,
+--         reach.lts4_reach,
+--         reach.car_reach
+--     FROM
+--         density.density_hex dens
+--         LEFT JOIN fragmentation.comp_count_hex comp ON dens.hex_id = comp.hex_id
+--         LEFT JOIN reach.hex_reach reach ON dens.hex_id = reach.hex_id
+-- );
+-- UPDATE
+--     reach.reach_component_length_hex
+-- SET
+--     lts1_reach = lts1_reach / 1000,
+--     lts2_reach = lts2_reach / 1000,
+--     lts3_reach = lts3_reach / 1000,
+--     lts4_reach = lts4_reach / 1000,
+--     car_reach = car_reach / 1000;
