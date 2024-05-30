@@ -21,9 +21,10 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 # %%
 # Read data
+dist = 5
 
 hex_reach = gpd.read_postgis(
-    "SELECT * FROM reach.hex_reach", engine, geom_col="geometry"
+    f"SELECT * FROM reach.hex_reach_{dist}", engine, geom_col="geometry"
 )
 
 for p in reach_columns:
@@ -42,11 +43,11 @@ for p in reach_diff_columns:
 # Use norm/same color scale for all maps?
 
 plot_titles = [
-    "Network reach: LTS 1",
-    "Network reach: LTS 1-2",
-    "Network reach: LTS 1-3",
-    "Network reach: LTS 1-4",
-    "Network reach: Car network",
+    f"Network reach: LTS 1 ({dist})",
+    f"Network reach: LTS 1-2 ({dist})",
+    f"Network reach: LTS 1-3 ({dist})",
+    f"Network reach: LTS 1-4 ({dist})",
+    f"Network reach: Car network ({dist})",
 ]
 
 plot_columns = reach_columns
@@ -91,10 +92,10 @@ for i, p in enumerate(plot_columns):
 # Use norm/same color scale for all maps?
 
 plot_titles = [
-    "Difference in network reach: Car VS. LTS 1",
-    "Difference in network reach: Car VS. LTS 1-2",
-    "Difference in network reach: Car VS. LTS 1-3",
-    "Difference in network reach: Car VS. LTS 1-4",
+    f"Difference in network reach: Car VS. LTS 1 ({dist})",
+    f"Difference in network reach: Car VS. LTS 1-2 ({dist})",
+    f"Difference in network reach: Car VS. LTS 1-3 ({dist})",
+    f"Difference in network reach: Car VS. LTS 1-4 ({dist})",
 ]
 
 filepaths = filepaths_reach_diff
@@ -141,10 +142,10 @@ for i, p in enumerate(plot_columns):
 # Use norm/same color scale for all maps?
 
 plot_titles = [
-    "Difference in network reach: Car VS. LTS 1 (%)",
-    "Difference in network reach: Car VS. LTS 1-2 (%)",
-    "Difference in network reach: Car VS. LTS 1-3 (%)",
-    "Difference in network reach: Car VS. LTS 1-4 (%)",
+    f"Difference in network reach: Car VS. LTS 1 (%) ({dist})",
+    f"Difference in network reach: Car VS. LTS 1-2 (%) ({dist})",
+    f"Difference in network reach: Car VS. LTS 1-3 (%) ({dist})",
+    f"Difference in network reach: Car VS. LTS 1-4 (%) ({dist})",
 ]
 
 filepaths = filepaths_reach_diff_pct
@@ -191,11 +192,11 @@ for i, p in enumerate(plot_columns):
 ###########################################
 
 plot_titles = [
-    "Network reach: LTS 1",
-    "Network reach: LTS 1-2",
-    "Network reach: LTS 1-3",
-    "Network reach: LTS 1-4",
-    "Network reach: Car network",
+    f"Network reach: LTS 1 ({dist})",
+    f"Network reach: LTS 1-2 ({dist})",
+    f"Network reach: LTS 1-3 ({dist})",
+    f"Network reach: LTS 1-4 ({dist})",
+    f"Network reach: Car network ({dist})",
 ]
 
 for i, p in enumerate(reach_columns):
@@ -248,7 +249,7 @@ fig = sns.kdeplot(
 )
 
 fig.set_xlabel("Length (km)")
-fig.set_title(f"Network reach")
+fig.set_title(f"Network reach ({dist})")
 plt.savefig(fp_network_reach_kde)
 
 plt.show()
@@ -286,7 +287,7 @@ fig = sns.kdeplot(
 )
 
 fig.set_xlabel("Difference in network reach (km)")
-fig.set_title(f"Network reach difference")
+fig.set_title(f"Network reach difference ({dist})")
 plt.savefig(fp_network_reach_diff_kde)
 
 plt.show()
@@ -305,11 +306,11 @@ colors = [v for v in lts_color_dict.values()]
 filepaths = filepaths_violin_reach
 
 titles = [
-    "Network reach: LTS 1",
-    "Network reach: LTS 1-2",
-    "Network reach: LTS 1-3",
-    "Network reach: LTS 1-4",
-    "Network reach: Car network",
+    f"Network reach: LTS 1 ({dist})",
+    f"Network reach: LTS 1-2 ({dist})",
+    f"Network reach: LTS 1-3 ({dist})",
+    f"Network reach: LTS 1-4 ({dist})",
+    f"Network reach: Car network ({dist})",
 ]
 
 for i, r in enumerate(reach_columns):
@@ -338,10 +339,10 @@ for i, r in enumerate(reach_columns):
 filepaths = filepaths_violin_reach_diff
 
 titles = [
-    "Network reach difference: Car - LTS 1",
-    "Network reach difference: Car - LTS 1-2",
-    "Network reach difference: Car - LTS 1-3",
-    "Network reach difference: Car - LTS 1-4",
+    f"Network reach difference: Car - LTS 1 ({dist})",
+    f"Network reach difference: Car - LTS 1-2 ({dist})",
+    f"Network reach difference: Car - LTS 1-3 ({dist})",
+    f"Network reach difference: Car - LTS 1-4 ({dist})",
 ]
 
 for i, r in enumerate(reach_diff_columns):
@@ -370,10 +371,10 @@ for i, r in enumerate(reach_diff_columns):
 filepaths = filepaths_violin_reach_diff_pct
 
 titles = [
-    "Network reach difference: Car - LTS 1 (%)",
-    "Network reach difference: Car - LTS 1-2 (%)",
-    "Network reach: Car - LTS 1-3 (%)",
-    "Network reach: Car - LTS 1-4 (%)",
+    f"Network reach difference: Car - LTS 1 (%) ({dist})",
+    f"Network reach difference: Car - LTS 1-2 (%) ({dist})",
+    f"Network reach: Car - LTS 1-3 (%) ({dist})",
+    f"Network reach: Car - LTS 1-4 (%) ({dist})",
 ]
 
 for i, r in enumerate(reach_diff_pct_columns):
@@ -400,7 +401,7 @@ for i, r in enumerate(reach_diff_pct_columns):
 
 # Correlation plots
 
-df = pd.read_sql("SELECT * FROM reach.reach_component_length_hex;", engine)
+df = pd.read_sql(f"SELECT * FROM reach.reach_{dist}_component_length_hex;", engine)
 
 labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Car network"]
 for c, d, r, l in zip(
@@ -426,7 +427,7 @@ for c, d, r, l in zip(
         width=800,
         height=600,
         yaxis_title="Network reach",
-        title=f"Correlation between reach and density: {l}",
+        title=f"Correlation between reach and density: {l} ({dist})",
     )
 
     fig.write_image(
@@ -435,5 +436,12 @@ for c, d, r, l in zip(
         height=750,
     )
     fig.show()
+
+# %%
+
+# TODO: PLOT CHANGES IN REACH LENGTH AT DIFFERENT DISTANCES
+# Stacked bar chart based on LTS (x-axis) and median/average reach (y-axis)
+
+# Combined KDS for different distances at all LTS levels
 
 # %%
