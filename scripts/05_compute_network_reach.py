@@ -32,7 +32,9 @@ for i, q in enumerate(queries):
 
 
 # %%
-distances = [5, 10, 15]  # max distance in km
+# distances = [5, 10, 15]  # max distance in km
+distances = [10, 15]
+chunk_sizes = [1000, 500, 200, 200, 200]
 
 for dist in distances:
 
@@ -97,7 +99,7 @@ for dist in distances:
         df = pd.read_sql_query(f"SELECT node_id FROM {hex_tables[i]}", con=engine)
         node_ids = df.node_id.to_list()
 
-        for ids_chunk in dbf.get_chunks(sequence=node_ids, chunk_size=1000):
+        for ids_chunk in dbf.get_chunks(sequence=node_ids, chunk_size=chunk_sizes[i]):
 
             # for ids in ids_chunk:
 
@@ -173,7 +175,7 @@ for dist in distances:
     # compute reachable edges
     for i, t in enumerate(table_names):
 
-        print(f"At round: {i}")
+        print(f"Computing edges: At round: {i}")
 
         # GET ALL IDS
         df = pd.read_sql_query(f"SELECT node_id FROM {hex_tables[i]}", con=engine)
@@ -446,7 +448,7 @@ for dist in distances:
             print("Please fix error before rerunning and reconnect to the database")
             break
 
-    connection.close()
+connection.close()
 
 # %%
 with open("vacuum_analyze.py") as f:
@@ -480,6 +482,7 @@ print(final_query)
 
 # %%
 
+# TODO: Compute average socio reach
 
 print("Script 05 complete!")
 # %%
