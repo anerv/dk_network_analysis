@@ -27,6 +27,7 @@ results_subfolders = [
     "reach_maps",
     "reach_distributions",
     "reach_density_correlation",
+    "reach_distance_comparisons",
     "clustering",
     "spatial_autocorrelation",
 ]
