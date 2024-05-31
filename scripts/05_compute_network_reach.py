@@ -32,9 +32,12 @@ for i, q in enumerate(queries):
 
 
 # %%
-# distances = [5, 10, 15]  # max distance in km
-distances = [10, 15]
-chunk_sizes = [1000, 500, 200, 200, 200]
+distances = [5, 10, 15]  # max distance in km
+distances = [5, 10]  # max distance in km
+
+chunk_sizes_5 = [1000, 1000, 1000, 1000, 1000]
+chunk_sizes_10 = [1000, 500, 200, 200, 200]
+chunk_sizes_15 = [1000, 200, 100, 100, 100]
 
 for dist in distances:
 
@@ -456,19 +459,13 @@ with open("vacuum_analyze.py") as f:
 
 # %%
 
-start = "CREATE TABLE reach.compare_reach AS (SELECT"
+start = "CREATE TABLE reach.compare_reach AS (SELECT "
 end = ");"
 
 select_cols = ""
 
 for d in distances:
-    s = f"""
-    r{d}.lts1_reach_{d},
-    r{d}.lts2_reach_{d},
-    r{d}.lts3_reach_{d},
-    r{d}.lts4_reach_{d},
-    r{d}.car_reach_{d},
-    """
+    s = f"""r{d}.lts1_reach AS lts1_reach_{d}, r{d}.lts2_reach AS lts2_reach_{d}, r{d}.lts3_reach AS lts3_reach_{d}, r{d}.lts4_reach AS lts4_reach_{d}, r{d}.car_reach AS car_reach_{d},"""
     select_cols += s
 
 from_q = f"FROM reach.hex_reach_{distances[0]} r{distances[0]}"
@@ -476,13 +473,24 @@ from_q = f"FROM reach.hex_reach_{distances[0]} r{distances[0]}"
 for d in distances[1:]:
     from_q += f" JOIN reach.hex_reach_{d} r{d} ON r{d}.hex_id = r{distances[0]}.hex_id"
 
-final_query = start + select_cols + from_q + end
+final_query = start + select_cols[:-1] + " " + from_q + end
 
-print(final_query)
+result = dbf.run_query_pg(final_query, connection)
+if result == "error":
+    print("Please fix error before rerunning and reconnect to the database")
 
 # %%
 
-# TODO: Compute average socio reach
+# Compute average socio reach
+
+q_socio = "sql/05c_compute_socio_reach.sql"
+result = dbf.run_query_pg(q_socio, connection)
+if result == "error":
+    print("Please fix error before rerunning and reconnect to the database")
+
+# %%
+with open("vacuum_analyze.py") as f:
+    exec(f.read())
 
 print("Script 05 complete!")
 # %%
