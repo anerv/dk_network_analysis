@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS reach.joined,
-reach.joined2;
+reach.joined2,
+reach.socio_reach_5;
 
 CREATE INDEX IF NOT EXISTS hex_reach_5_geom_ix ON reach.hex_reach_5 USING GIST (geometry);
 
@@ -91,6 +92,20 @@ FROM
     reach.joined j
 GROUP BY
     j.id;
+
+ALTER TABLE
+    reach.socio_reach_5
+ADD
+    COLUMN IF NOT EXISTS geometry geometry;
+
+UPDATE
+    reach.socio_reach_5
+SET
+    geometry = s.geometry
+FROM
+    socio s
+WHERE
+    reach.socio_reach_5.id = s.id;
 
 DROP TABLE IF EXISTS reach.joined,
 reach.joined2;
