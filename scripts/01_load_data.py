@@ -94,6 +94,13 @@ test = dbf.run_query_pg(q, connection)
 
 print(test)
 
+# Preprocess socio data
+q = "sql/01a_preprocess_socio.sql"
+result = dbf.run_query_pg(q, connection)
+if result == "error":
+    print("Please fix error before rerunning and reconnect to the database")
+
+
 # # CREATE INDICES
 # dbf.run_query_pg("sql/create_indices.sql", connection)
 
