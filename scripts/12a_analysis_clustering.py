@@ -17,3 +17,22 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 # %%
+
+
+# Use robust_scale to norm cluster variables
+
+
+# Explore sizes of the clusters - number of observations in each cluster, geo size, --> plot
+
+# Group variables by cluster to explore profiles (using scaled or unscaled variables?)
+
+# plot distribution of cluster variables (KDES)
+
+# Experiment with K-means, DBSCAN and agglomorative clustering (spatially constrained)
+
+# Look into elbow method - find appropriate number of clusters
+
+
+# Evaluate geographical and feature coherence of clusters
+
+# Compare scores for different clustering options?
