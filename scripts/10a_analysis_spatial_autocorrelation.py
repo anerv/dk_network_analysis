@@ -332,12 +332,6 @@ for i, gdf in enumerate(gdfs):
 # %%
 ## Confirm spatial clustering of population density and socio-economic variables
 
-# Convert household counts to shares
-q = "sql/10a_preprocess_socio.sql"
-result = dbf.run_query_pg(q, connection)
-if result == "error":
-    print("Please fix error before rerunning and reconnect to the database")
-
 socio_gdf = gpd.read_postgis("SELECT * FROM socio;", engine, geom_col="geometry")
 
 org_len = len(socio_gdf)
