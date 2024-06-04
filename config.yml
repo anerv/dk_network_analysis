@@ -10,8 +10,10 @@ CRS: 'EPSG:25832'
 network_edges: 'osm_edges_export'
 network_nodes: 'osm_nodes_export'
 
+
 socio_fp: "../data/processed/voting_areas.gpkg"
 adm_boundaries_fp: "../data/input/adm_boundaries/muni_boundaries.gpkg"
+urban_areas_fp: "../data/input/urban/urban_areas.parquet"
 
 h3_resolution: 8
 

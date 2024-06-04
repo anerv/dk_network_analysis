@@ -10,7 +10,7 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
-
+# %%
 # LOAD INPUT NETWORK DATA
 subprocess.run(
     f"pg_dump -t {network_edges} {input_db_name} | psql {db_name}",
@@ -43,8 +43,19 @@ dbf.run_query_pg(q, connection)
 q_ix = "CREATE INDEX IF NOT EXISTS nodes_geom_ix ON nodes USING GIST (geometry);"
 
 dbf.run_query_pg(q_ix, connection)
+# %%
+# LOAD URBAN AREAS DATA
+urban = gpd.read_parquet(urban_areas_fp)
 
+assert urban.crs == crs
 
+dbf.to_postgis(geodataframe=urban, table_name="urban_areas", engine=engine)
+
+q_ix = "CREATE INDEX IF NOT EXISTS urban_geom_ix ON urban_areas USING GIST (geometry);"
+
+dbf.run_query_pg(q_ix, connection)
+
+# %%
 # LOAD ADM DATA
 adm = gpd.read_file(adm_fp)
 

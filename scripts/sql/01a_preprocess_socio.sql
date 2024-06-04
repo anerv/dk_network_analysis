@@ -43,3 +43,31 @@ SET
     households_income_750k_share = households_income_750k_ / households,
     households_with_car = households_with_1_car + households_with_2_cars,
     households_with_car_share = (households_with_1_car + households_with_2_cars) / households;
+
+ALTER TABLE
+    socio
+ADD
+    COLUMN IF NOT EXISTS urban_share DECIMAL;
+
+WITH inter AS (
+    SELECT
+        so.id AS id,
+        SUM(
+            ST_Area(ST_Intersection(so.geometry, ub.geometry))
+        ) AS intersection_area
+    FROM
+        socio AS so,
+        urban_areas AS ub
+    WHERE
+        ST_Intersects(so.geometry, ub.geometry)
+    GROUP BY
+        so.id
+)
+UPDATE
+    socio
+SET
+    urban_share = inter.intersection_area / ST_Area(socio.geometry)
+FROM
+    inter
+WHERE
+    socio.id = inter.id;

@@ -15,6 +15,7 @@ with open(r"../config.yml") as file:
 
     adm_fp = parsed_yaml_file["adm_boundaries_fp"]
     socio_fp = parsed_yaml_file["socio_fp"]
+    urban_areas_fp = parsed_yaml_file["urban_areas_fp"]
 
     crs = parsed_yaml_file["CRS"]
 
