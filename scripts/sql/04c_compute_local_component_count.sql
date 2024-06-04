@@ -119,3 +119,56 @@ SELECT
 FROM
     comp_count co
     JOIN hex_grid h ON co.hex_id = h.hex_id;
+
+CREATE TABLE fragmentation.hex_largest_components AS WITH joined_edges AS (
+    SELECT
+        h.id,
+        h.hex_id,
+        co1.bike_length AS bike_length_1,
+        co1.buffer_area AS buffer_area_1,
+        co2.bike_length AS bike_length_2,
+        co2.buffer_area AS buffer_area_2,
+        co3.bike_length AS bike_length_3,
+        co3.buffer_area AS buffer_area_3,
+        co4.bike_length AS bike_length_4,
+        co4.buffer_area AS buffer_area_4,
+        coc.bike_length AS bike_length_car,
+        coc.buffer_area AS buffer_area_car
+    FROM
+        fragmentation.hex_component_edges h
+        LEFT JOIN fragmentation.component_size_1 co1 ON h.component_1 = co1.component_1
+        LEFT JOIN fragmentation.component_size_2 co2 ON h.component_1_2 = co2.component_1_2
+        LEFT JOIN fragmentation.component_size_3 co3 ON h.component_1_3 = co3.component_1_3
+        LEFT JOIN fragmentation.component_size_4 co4 ON h.component_1_4 = co4.component_1_4
+        LEFT JOIN fragmentation.component_size_car coc ON h.component_car = coc.component_car
+)
+SELECT
+    hex_id,
+    MAX(bike_length_1) AS bike_length_1,
+    MAX(buffer_area_1) AS buffer_area_1,
+    MAX(bike_length_2) AS bike_length_2,
+    MAX(buffer_area_2) AS buffer_area_2,
+    MAX(bike_length_3) AS bike_length_3,
+    MAX(buffer_area_3) AS buffer_area_3,
+    MAX(bike_length_4) AS bike_length_4,
+    MAX(buffer_area_4) AS buffer_area_4,
+    MAX(bike_length_car) AS bike_length_car,
+    MAX(buffer_area_car) AS buffer_area_car
+FROM
+    joined_edges
+GROUP BY
+    hex_id;
+
+ALTER TABLE
+    fragmentation.hex_largest_components
+ADD
+    COLUMN geometry geometry(Polygon, 25832);
+
+UPDATE
+    fragmentation.hex_largest_components hc
+SET
+    geometry = h.geometry
+FROM
+    hex_grid h
+WHERE
+    hc.hex_id = h.hex_id;

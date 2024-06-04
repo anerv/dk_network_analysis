@@ -43,6 +43,7 @@ CREATE TABLE fragmentation.component_size_all AS (
         component_all,
         SUM(ST_Length(geometry)) AS geom_length,
         SUM(bike_length) AS bike_length,
+        ST_Buffer(ST_ConcaveHull(ST_Collect(geometry), 0.2), 5) AS buffer_geom,
         ARRAY_AGG(DISTINCT id) AS ids,
         ARRAY_AGG(DISTINCT highway) AS highways
     FROM
@@ -59,6 +60,7 @@ CREATE TABLE fragmentation.component_size_1 AS (
         component_1,
         SUM(ST_Length(geometry)) AS geom_length,
         SUM(bike_length) AS bike_length,
+        ST_Buffer(ST_ConcaveHull(ST_Collect(geometry), 0.2), 5) AS buffer_geom,
         ARRAY_AGG(DISTINCT id) AS ids,
         ARRAY_AGG(DISTINCT highway) AS highways
     FROM
@@ -75,6 +77,7 @@ CREATE TABLE fragmentation.component_size_2 AS (
         component_1_2,
         SUM(ST_Length(geometry)) AS geom_length,
         SUM(bike_length) AS bike_length,
+        ST_Buffer(ST_ConcaveHull(ST_Collect(geometry), 0.2), 5) AS buffer_geom,
         ARRAY_AGG(DISTINCT id) AS ids,
         ARRAY_AGG(DISTINCT highway) AS highways
     FROM
@@ -91,6 +94,7 @@ CREATE TABLE fragmentation.component_size_3 AS (
         component_1_3,
         SUM(ST_Length(geometry)) AS geom_length,
         SUM(bike_length) AS bike_length,
+        ST_Buffer(ST_ConcaveHull(ST_Collect(geometry), 0.2), 5) AS buffer_geom,
         ARRAY_AGG(DISTINCT id) AS ids,
         ARRAY_AGG(DISTINCT highway) AS highways
     FROM
@@ -107,6 +111,7 @@ CREATE TABLE fragmentation.component_size_4 AS (
         component_1_4,
         SUM(ST_Length(geometry)) AS geom_length,
         SUM(bike_length) AS bike_length,
+        ST_Buffer(ST_ConcaveHull(ST_Collect(geometry), 0.2), 5) AS buffer_geom,
         ARRAY_AGG(DISTINCT id) AS ids,
         ARRAY_AGG(DISTINCT highway) AS highways
     FROM
@@ -123,6 +128,7 @@ CREATE TABLE fragmentation.component_size_car AS (
         component_car,
         SUM(ST_Length(geometry)) AS geom_length,
         SUM(bike_length) AS bike_length,
+        ST_Buffer(ST_ConcaveHull(ST_Collect(geometry), 0.2), 5) AS buffer_geom,
         ARRAY_AGG(DISTINCT id) AS ids,
         ARRAY_AGG(DISTINCT highway) AS highways
     FROM
@@ -132,3 +138,63 @@ CREATE TABLE fragmentation.component_size_car AS (
     GROUP BY
         component_car
 );
+
+ALTER TABLE
+    fragmentation.component_size_all
+ADD
+    COLUMN IF NOT EXISTS buffer_area DOUBLE PRECISION;
+
+ALTER TABLE
+    fragmentation.component_size_1
+ADD
+    COLUMN IF NOT EXISTS buffer_area DOUBLE PRECISION;
+
+ALTER TABLE
+    fragmentation.component_size_2
+ADD
+    COLUMN IF NOT EXISTS buffer_area DOUBLE PRECISION;
+
+ALTER TABLE
+    fragmentation.component_size_3
+ADD
+    COLUMN IF NOT EXISTS buffer_area DOUBLE PRECISION;
+
+ALTER TABLE
+    fragmentation.component_size_4
+ADD
+    COLUMN IF NOT EXISTS buffer_area DOUBLE PRECISION;
+
+ALTER TABLE
+    fragmentation.component_size_car
+ADD
+    COLUMN IF NOT EXISTS buffer_area DOUBLE PRECISION;
+
+UPDATE
+    fragmentation.component_size_all
+SET
+    buffer_area = ST_Area(buffer_geom);
+
+UPDATE
+    fragmentation.component_size_1
+SET
+    buffer_area = ST_Area(buffer_geom);
+
+UPDATE
+    fragmentation.component_size_2
+SET
+    buffer_area = ST_Area(buffer_geom);
+
+UPDATE
+    fragmentation.component_size_3
+SET
+    buffer_area = ST_Area(buffer_geom);
+
+UPDATE
+    fragmentation.component_size_4
+SET
+    buffer_area = ST_Area(buffer_geom);
+
+UPDATE
+    fragmentation.component_size_car
+SET
+    buffer_area = ST_Area(buffer_geom);
