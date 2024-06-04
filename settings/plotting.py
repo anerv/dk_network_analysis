@@ -123,6 +123,23 @@ component_per_km_sqkm_cols = [
     "component_per_dens_all",
 ]
 
+largest_local_component_len_cols = [
+    "bike_length_1",
+    "bike_length_2",
+    "bike_length_3",
+    "bike_length_4",
+    "bike_length_car",
+]
+
+largest_local_component_area_cols = [
+    "buffer_area_1",
+    "buffer_area_2",
+    "buffer_area_3",
+    "buffer_area_4",
+    "buffer_area_car",
+]
+
+
 reach_columns = ["lts1_reach", "lts2_reach", "lts3_reach", "lts4_reach", "car_reach"]
 
 reach_diff_columns = [
