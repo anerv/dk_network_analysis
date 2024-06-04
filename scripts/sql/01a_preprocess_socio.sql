@@ -47,7 +47,7 @@ SET
 ALTER TABLE
     socio
 ADD
-    COLUMN IF NOT EXISTS urban_share DECIMAL;
+    COLUMN IF NOT EXISTS urban_pct DECIMAL;
 
 WITH inter AS (
     SELECT
@@ -66,7 +66,9 @@ WITH inter AS (
 UPDATE
     socio
 SET
-    urban_share = inter.intersection_area / ST_Area(socio.geometry)
+    urban_pct = (
+        inter.intersection_area / ST_Area(socio.geometry)
+    ) * 100
 FROM
     inter
 WHERE
