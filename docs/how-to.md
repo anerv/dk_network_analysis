@@ -30,11 +30,12 @@ Successfully created folder results
 
 ## 3. Provide input data
 
-The analysis makes use of 3 input data sets:
+The analysis makes use of 4 input data sets:
 
 * A road network data set split into an edge and a node table
 * A polygon data set with the Danish municipal boundaries
 * A polygon data set with socio-economic data on population density, income etc.
+* A polygon data set with areas classified as urban.
 
 ### Road network data
 
@@ -48,7 +49,11 @@ A data set with the name and spatial extent of all municipalities is provided as
 
 ### Socio-economic data
 
-A data set with socio-economic variables for all voting areas is provided as `../data/processed/voting_areas.gpkg`. Update with more recent input data as needed, but do not change the filepath or attributes in the input data set.
+A data set with socio-economic variables for all voting areas is provided as `../data/processed/voting_areas.gpkg`. Update with more recent input data as needed, but do not change the filepath or attributes in the input data set. To recreate the data with newer input data, replace the files in `../data/input/socioeconomic` and run script `00_prepare_socioeconomic_data.py`.
+
+### Urban areas
+
+A data set with polygons representing areas classified as urban, provided as `../data/input/urban/urban_areas.parquet`. Update with more recent input data as needed, but do not change the filepath or attributes in the input data set.
 
 ## 4. Run analysis
 
