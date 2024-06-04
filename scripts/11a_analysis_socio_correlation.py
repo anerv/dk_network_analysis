@@ -18,67 +18,6 @@ plot_func.set_renderer("png")
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
-# %%
-# Load socio density data
-socio = gpd.read_postgis("SELECT * FROM socio", engine, geom_col="geometry")
-socio_density = gpd.read_postgis(
-    "SELECT * FROM density.density_socio", engine, geom_col="geometry"
-)
-
-socio.dropna(subset=["population_density"], inplace=True)
-socio.drop(columns=["geometry", "area_name"], inplace=True)
-
-socio_density = socio_density.merge(socio, on="id", how="inner")
-
-assert socio_density.shape[0] == socio.shape[0]
-# %%
-
-#### CORRELATION BETWEEN SOCIO-ECO VARIABLES ####
-
-socio_corr_variables = [
-    "households_income_under_100k_share",
-    "households_income_100_150k_share",
-    "households_income_150_200k_share",
-    "households_income_200_300k_share",
-    "households_income_300_400k_share",
-    "households_income_400_500k_share",
-    "households_income_500_750k_share",
-    "households_income_750k_share",
-    "households_with_car_share",
-    "households_1car_share",
-    "households_2cars_share",
-    "households_nocar_share",
-    "population_density",
-]
-
-socio_corr = socio_density[socio_corr_variables].corr()
-
-# Generate a mask for the upper triangle
-mask = np.triu(np.ones_like(socio_corr, dtype=bool))
-
-# Set up the matplotlib figure
-f, ax = plt.subplots(figsize=(11, 9))
-
-# Generate a custom diverging colormap
-cmap = sns.diverging_palette(230, 20, as_cmap=True)
-
-sns.heatmap(
-    socio_corr,
-    mask=mask,
-    cmap=cmap,
-    vmax=0.3,
-    center=0,
-    square=True,
-    linewidths=0.5,
-    cbar_kws={"shrink": 0.5},
-)
-
-sns.pairplot(
-    socio_density[socio_corr_variables], kind="reg", diag_kind="kde", corner=True
-)
-
-# %%
-
 
 # %%
 
@@ -161,6 +100,45 @@ def plot_correlation(
         pp.savefig(pairplot_fp)
 
 
+# %%
+# Load socio density data
+socio = gpd.read_postgis("SELECT * FROM socio", engine, geom_col="geometry")
+socio_density = gpd.read_postgis(
+    "SELECT * FROM density.density_socio", engine, geom_col="geometry"
+)
+
+socio.dropna(subset=["population_density"], inplace=True)
+socio.drop(columns=["geometry", "area_name"], inplace=True)
+
+socio_density = socio_density.merge(socio, on="id", how="inner")
+
+assert socio_density.shape[0] == socio.shape[0]
+# %%
+
+#### CORRELATION BETWEEN SOCIO-ECO VARIABLES ####
+
+socio_corr_variables = [
+    "households_income_under_100k_share",
+    "households_income_100_150k_share",
+    "households_income_150_200k_share",
+    "households_income_200_300k_share",
+    "households_income_300_400k_share",
+    "households_income_400_500k_share",
+    "households_income_500_750k_share",
+    "households_income_750k_share",
+    "households_with_car_share",
+    "households_1car_share",
+    "households_2cars_share",
+    "households_nocar_share",
+    "population_density",
+]
+
+plot_correlation(
+    socio_density,
+    socio_corr_variables,
+    heatmap_fp=None,
+    pairplot_fp=None,
+)
 # %%
 
 
