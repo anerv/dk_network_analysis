@@ -38,7 +38,7 @@ def compute_spatial_weights(gdf, na_cols, w_type, dist=1000, k=6):
         w = weights.distance.KNN.from_array(pts, k=k)
 
     elif w_type == "queen":
-        w = weights.contiguity.Queen.from_dataframe(gdf)
+        w = weights.contiguity.Queen.from_dataframe(gdf, use_index=False)
 
     else:
         print("no valid type defined")
