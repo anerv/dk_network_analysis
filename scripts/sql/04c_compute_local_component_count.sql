@@ -8,6 +8,8 @@ DROP TABLE IF EXISTS fragmentation.socio_component_edges;
 
 DROP TABLE IF EXISTS fragmentation.hex_component_edges;
 
+DROP TABLE IF EXISTS fragmentation.hex_largest_components;
+
 CREATE TABLE fragmentation.comp_count_muni AS WITH comp_count AS (
     SELECT
         COUNT(DISTINCT component_all) AS comp_all_count,
@@ -124,16 +126,16 @@ CREATE TABLE fragmentation.hex_largest_components AS WITH joined_edges AS (
     SELECT
         h.id,
         h.hex_id,
-        co1.bike_length AS bike_length_1,
-        co1.buffer_area AS buffer_area_1,
-        co2.bike_length AS bike_length_2,
-        co2.buffer_area AS buffer_area_2,
-        co3.bike_length AS bike_length_3,
-        co3.buffer_area AS buffer_area_3,
-        co4.bike_length AS bike_length_4,
-        co4.buffer_area AS buffer_area_4,
-        coc.bike_length AS bike_length_car,
-        coc.buffer_area AS buffer_area_car
+        co1.bike_length AS component_length_1,
+        co1.buffer_area AS component_coverage_1,
+        co2.bike_length AS component_length_2,
+        co2.buffer_area AS component_coverage_2,
+        co3.bike_length AS component_length_3,
+        co3.buffer_area AS component_coverage_3,
+        co4.bike_length AS component_length_4,
+        co4.buffer_area AS component_coverage_4,
+        coc.bike_length AS component_length_car,
+        coc.buffer_area AS component_coverage_car
     FROM
         fragmentation.hex_component_edges h
         LEFT JOIN fragmentation.component_size_1 co1 ON h.component_1 = co1.component_1
@@ -144,16 +146,16 @@ CREATE TABLE fragmentation.hex_largest_components AS WITH joined_edges AS (
 )
 SELECT
     hex_id,
-    MAX(bike_length_1) AS bike_length_1,
-    MAX(buffer_area_1) AS buffer_area_1,
-    MAX(bike_length_2) AS bike_length_2,
-    MAX(buffer_area_2) AS buffer_area_2,
-    MAX(bike_length_3) AS bike_length_3,
-    MAX(buffer_area_3) AS buffer_area_3,
-    MAX(bike_length_4) AS bike_length_4,
-    MAX(buffer_area_4) AS buffer_area_4,
-    MAX(bike_length_car) AS bike_length_car,
-    MAX(buffer_area_car) AS buffer_area_car
+    MAX(component_length_1) AS component_length_1,
+    MAX(component_coverage_1) AS component_coverage_1,
+    MAX(component_length_2) AS component_length_2,
+    MAX(component_coverage_2) AS component_coverage_2,
+    MAX(component_length_3) AS component_length_3,
+    MAX(component_coverage_3) AS component_coverage_3,
+    MAX(component_length_4) AS component_length_4,
+    MAX(component_coverage_4) AS component_coverage_4,
+    MAX(component_length_car) AS component_length_car,
+    MAX(component_coverage_car) AS component_coverage_car
 FROM
     joined_edges
 GROUP BY

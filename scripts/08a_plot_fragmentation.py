@@ -824,11 +824,11 @@ df.rename(columns={"variable": "Network level", "value": "length"}, inplace=True
 
 df.replace(
     {
-        "bike_length_1": "LTS 1",
-        "bike_length_2": "LTS 2",
-        "bike_length_3": "LTS 3",
-        "bike_length_4": "LTS 4",
-        "bike_length_car": "Car network",
+        "component_length_1": "LTS 1",
+        "component_length_2": "LTS 2",
+        "component_length_3": "LTS 3",
+        "component_length_4": "LTS 4",
+        "component_length_car": "Car network",
     },
     inplace=True,
 )

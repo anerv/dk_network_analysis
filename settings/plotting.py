@@ -124,19 +124,19 @@ component_per_km_sqkm_cols = [
 ]
 
 largest_local_component_len_cols = [
-    "bike_length_1",
-    "bike_length_2",
-    "bike_length_3",
-    "bike_length_4",
-    "bike_length_car",
+    "component_length_1",
+    "component_length_2",
+    "component_length_3",
+    "component_length_4",
+    "component_length_car",
 ]
 
 largest_local_component_area_cols = [
-    "buffer_area_1",
-    "buffer_area_2",
-    "buffer_area_3",
-    "buffer_area_4",
-    "buffer_area_car",
+    "component_coverage_1",
+    "component_coverage_2",
+    "component_coverage_3",
+    "component_coverage_4",
+    "component_coverage_car",
 ]
 
 

@@ -244,6 +244,90 @@ for i, gdf in enumerate(gdfs):
         f"../results/spatial_autocorrelation/fragmentation/{aggregation_level[i]}/lisas.parquet"
     )
 
+# %%
+# *** Largest component size ****
+
+hex_comp_size = gpd.GeoDataFrame.from_postgis(
+    "SELECT * FROM fragmentation.hex_largest_components;",
+    engine,
+    crs=crs,
+    geom_col="geometry",
+)
+
+hex_comp_size[largest_local_component_len_cols] = hex_comp_size[
+    largest_local_component_len_cols
+].replace(np.nan, 0)
+
+
+gdfs = [hex_comp_size]
+
+# Define spatial weights
+id_cols = ["hex_id"]
+k_values = [k_hex]
+spatial_weights_values = [f"queen_{k}" for k in k_values]
+
+spatial_weights = []
+
+for i, gdf in enumerate(gdfs):
+
+    w_queen = analysis_func.compute_spatial_weights(gdf, id_cols[i], w_type="queen")
+
+    w_knn = analysis_func.compute_spatial_weights(
+        gdf, id_cols[i], w_type="knn", k=k_values[i]
+    )
+    w = weights.set_operations.w_union(w_queen, w_knn)
+
+    assert len(w.islands) == 0
+
+    spatial_weights.append(w)
+
+aggregation_level = ["hexgrid"]
+
+all_comp_size_columns = [largest_local_component_len_cols]
+
+for i, gdf in enumerate(gdfs):
+
+    print(f"At aggregation level: {aggregation_level[i]}:")
+
+    global_morans_results = {}
+
+    for columns in all_comp_size_columns:
+
+        filepaths = [
+            f"../results/spatial_autocorrelation/fragmentation/{aggregation_level[i]}/{c}.png".replace(
+                " ", "_"
+            )
+            for c in columns
+        ]
+
+        morans_results = analysis_func.compute_spatial_autocorrelation(
+            columns, columns, gdf, spatial_weights[i], filepaths, show_plot=False
+        )
+
+        lisa_results = analysis_func.compute_lisa(
+            columns,
+            columns,
+            gdf,
+            spatial_weights[i],
+            filepaths,
+            show_plot=False,
+        )
+
+        for key, value in morans_results.items():
+            global_morans_results[key] = value.I
+
+    with open(
+        f"../results/spatial_autocorrelation/fragmentation/{aggregation_level[i]}/global_moransi_largest_comp_size_{spatial_weights_values[i]}.json",
+        "w",
+    ) as outfile:
+        json.dump(global_morans_results, outfile)
+
+    q_columns = [c for c in gdf.columns if c.endswith("_q")]
+    q_columns.extend(["geometry", id_cols[i]])
+
+    gdf[q_columns].to_parquet(
+        f"../results/spatial_autocorrelation/fragmentation/{aggregation_level[i]}/lisas.parquet"
+    )
 
 # %%
 ### REACH #####
