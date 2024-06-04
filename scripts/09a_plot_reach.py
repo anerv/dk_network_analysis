@@ -560,8 +560,6 @@ socio_reach = gpd.read_postgis(
     f"SELECT * FROM reach.socio_reach_{dist}", engine, geom_col="geometry"
 )
 
-# TODO: plot maps of socio reach
-# ave, median, max, min, etc
 
 # %%
 average_columns = [c for c in socio_reach.columns if "average" in c]
