@@ -5,6 +5,7 @@ import matplotlib_inline.backend_inline
 import contextily as cx
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import math
+import mapclassify
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -18,6 +19,28 @@ import contextily as cx
 from collections import Counter
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from IPython.display import Image, HTML, display
+import mapclassify
+
+
+def get_unique_bins(
+    gdf,
+    p,
+    scheme,
+    k,
+):
+    if scheme == "fisherjenks":
+
+        test = mapclassify.FisherJenks(gdf[p], k=k)
+
+        if len(set(test.bins)) == k:
+            return k
+        else:
+            return len(set(test.bins))
+
+    else:
+        print("Only Fisher Jenks is supported")
+
+        return None
 
 
 def plot_classified_poly(

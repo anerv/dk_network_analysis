@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import plotly_express as px
 import pandas as pd
+import seaborn as sns
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -621,4 +622,228 @@ for e, gdf in enumerate(gdfs):
             cx_tile=cx_tile_2,
         )
 
+# %%
+
+# ****** MAPS OF LARGEST COMPONENTS *******
+
+hex_gdf = gpd.GeoDataFrame.from_postgis(
+    "SELECT * FROM fragmentation.hex_largest_components;",
+    engine,
+    crs=crs,
+    geom_col="geometry",
+)
+
+hex_gdf[largest_local_component_len_cols] = hex_gdf[
+    largest_local_component_len_cols
+].replace(np.nan, 0)
+
+hex_gdf[largest_local_component_area_cols] = hex_gdf[
+    largest_local_component_area_cols
+].replace(np.nan, 0)
+
+
+# %%
+plot_columns = largest_local_component_len_cols
+
+plot_titles = [
+    "Largest component length for network LTS 1",
+    "Largest component length for network LTS 2",
+    "Largest component length for network LTS 3",
+    "Largest component length for network LTS 4",
+    "Largest component length for car network",
+]
+
+labels = [
+    "LTS 1",
+    "LTS 1-2",
+    "LTS 1-3",
+    "LTS 1-4",
+    "Total car",
+]
+filepaths = [
+    "../results/component_size_maps/largest_component_length_" + l for l in labels
+]
+
+min_vals = [hex_gdf[p].min() for p in plot_columns]
+max_vals = [hex_gdf[p].max() for p in plot_columns]
+v_min = min(min_vals)
+v_max = max(max_vals)
+
+for i, p in enumerate(plot_columns):
+
+    k_check = plot_func.get_unique_bins(hex_gdf, p, scheme, k)
+
+    try:
+        plot_func.plot_classified_poly(
+            gdf=hex_gdf,
+            plot_col=p,
+            scheme=scheme,
+            k=k_check,
+            cx_tile=cx_tile_2,
+            plot_na=True,
+            cmap=pdict["pos"],
+            edgecolor="none",
+            title=plot_titles[i],
+            fp=filepaths[i],
+        )
+    except ValueError:
+
+        k_check -= 1
+
+        plot_func.plot_classified_poly(
+            gdf=hex_gdf,
+            plot_col=p,
+            scheme=scheme,
+            k=k_check,
+            cx_tile=cx_tile_2,
+            plot_na=True,
+            cmap=pdict["pos"],
+            edgecolor="none",
+            title=plot_titles[i],
+            fp=filepaths[i],
+        )
+
+    plot_func.plot_unclassified_poly(
+        poly_gdf=hex_gdf,
+        plot_col=p,
+        plot_title=plot_titles[i],
+        filepath=filepaths[i] + "_unclassified",
+        cmap=pdict["pos"],
+        use_norm=True,
+        norm_min=v_min,
+        norm_max=v_max,
+        cx_tile=cx_tile_2,
+    )
+
+# %%
+plot_columns = largest_local_component_area_cols
+
+plot_titles = [
+    "Largest component area for network LTS 1",
+    "Largest component area for network LTS 2",
+    "Largest component area for network LTS 3",
+    "Largest component area for network LTS 4",
+    "Largest component area for car network",
+]
+
+labels = [
+    "LTS 1",
+    "LTS 1-2",
+    "LTS 1-3",
+    "LTS 1-4",
+    "Total car",
+]
+filepaths = [
+    "../results/component_size_maps/largest_component_area_" + l for l in labels
+]
+
+
+min_vals = [hex_gdf[p].min() for p in plot_columns]
+max_vals = [hex_gdf[p].max() for p in plot_columns]
+v_min = min(min_vals)
+v_max = max(max_vals)
+
+
+for i, p in enumerate(plot_columns):
+
+    k_check = plot_func.get_unique_bins(hex_gdf, p, scheme, k)
+
+    try:
+        plot_func.plot_classified_poly(
+            gdf=hex_gdf,
+            plot_col=p,
+            scheme=scheme,
+            k=k_check,
+            cx_tile=cx_tile_2,
+            plot_na=True,
+            cmap=pdict["pos"],
+            edgecolor="none",
+            title=plot_titles[i],
+            fp=filepaths[i],
+        )
+    except ValueError:
+
+        k_check -= 1
+
+    plot_func.plot_unclassified_poly(
+        poly_gdf=hex_gdf,
+        plot_col=p,
+        plot_title=plot_titles[i],
+        filepath=filepaths[i] + "_unclassified",
+        cmap=pdict["pos"],
+        use_norm=True,
+        norm_min=v_min,
+        norm_max=v_max,
+        cx_tile=cx_tile_2,
+    )
+
+
+# %%
+# *** Correlation between hex largest component length and area ***
+
+labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car"]
+
+colors = [v for v in lts_color_dict.values()]
+
+for i in range(len(labels)):
+    fig = px.scatter(
+        hex_gdf,
+        x=largest_local_component_len_cols[i],
+        y=largest_local_component_area_cols[i],
+        hover_data="hex_id",
+        color_discrete_sequence=[colors[i]],
+        opacity=0.6,
+        labels=plotly_labels,
+        log_x=True,
+        log_y=True,
+    )
+
+    fig.update_layout(
+        font=dict(size=12, color="black"),
+        autosize=False,
+        width=800,
+        height=600,
+        yaxis_title="Area",
+        xaxis_title="Length",
+        title="Correlation between largest component length and area for: " + labels[i],
+    )
+
+    fig.write_image(
+        f"../results/component_len_area_correlation/{labels[i]}.jpg",
+        width=1000,
+        height=750,
+    )
+    fig.show()
+# %%
+
+# **** KDES OF LARGEST COMPONENT DISTRIBUTIONS
+
+df = hex_gdf[largest_local_component_len_cols].melt()
+
+df.rename(columns={"variable": "Network level", "value": "length"}, inplace=True)
+
+df.replace(
+    {
+        "bike_length_1": "LTS 1",
+        "bike_length_2": "LTS 2",
+        "bike_length_3": "LTS 3",
+        "bike_length_4": "LTS 4",
+        "bike_length_car": "Car network",
+    },
+    inplace=True,
+)
+fig = sns.kdeplot(
+    data=df,
+    x="length",
+    hue="Network level",
+    palette=lts_color_dict.values(),
+)
+
+fig.set_xlabel("Length")
+fig.set_title(f"Length of the largest component in each hexagon")
+plt.savefig("../results/component_size_distribution/largest_component_length_kde.png")
+
+plt.show()
+
+plt.close()
 # %%
