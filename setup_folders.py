@@ -15,6 +15,14 @@ for f in data_subfolders:
     if not os.path.exists("data/" + f):
         os.mkdir("data/" + f)
 
+# Make input data subfolders
+data_subsubfolders = ["adm_boundaries", "socioeconomic", "urban"]
+
+for f in data_subsubfolders:
+    if not os.path.exists("data/input/" + f):
+        os.mkdir("data/input/" + f)
+
+        print("Successfully created folder: data/input/" + f)
 
 # make subfolders for results
 results_subfolders = [
