@@ -25,6 +25,7 @@ results_subfolders = [
     "density_distributions",
     "summary_stats",
     "component_size_maps",
+    "component_len_area_correlation",
     "reach_maps",
     "reach_distributions",
     "reach_density_correlation",
