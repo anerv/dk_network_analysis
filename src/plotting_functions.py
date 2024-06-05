@@ -6,6 +6,8 @@ import contextily as cx
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import math
 import mapclassify
+import seaborn as sns
+import numpy as np
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -20,6 +22,84 @@ from collections import Counter
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from IPython.display import Image, HTML, display
 import mapclassify
+
+
+def plot_correlation(
+    df,
+    corr_columns,
+    pair_plot_type="reg",
+    diag_kind="kde",
+    corner=True,
+    pair_plot_x_log=False,
+    pair_plot_y_log=False,
+    heatmap_fp=None,
+    pairplot_fp=None,
+):
+    """
+    Plots the correlation between columns in a DataFrame and generates a heatmap and pairplot.
+
+    Parameters:
+        df (pandas.DataFrame): The DataFrame containing the data.
+        corr_columns (list): The list of column names to calculate correlation and plot.
+        pair_plot_type (str, optional): The type of plot for the pairplot. Defaults to "reg".
+        diag_kind (str, optional): The type of plot for the diagonal subplots in the pairplot. Defaults to "kde".
+        corner (bool, optional): Whether to plot only the lower triangle of the heatmap and pairplot. Defaults to True.
+        pair_plot_x_log (bool, optional): Whether to set the x-axis of the pairplot to a logarithmic scale. Defaults to False.
+        pair_plot_y_log (bool, optional): Whether to set the y-axis of the pairplot to a logarithmic scale. Defaults to False.
+        heatmap_fp (str, optional): The file path to save the heatmap plot. Defaults to None.
+        pairplot_fp (str, optional): The file path to save the pairplot. Defaults to None.
+
+    Returns:
+        None
+    """
+
+    df_corr = df[corr_columns].corr()
+
+    # Generate a mask for the upper triangle
+    mask = np.triu(np.ones_like(df_corr, dtype=bool))
+
+    # Set up the matplotlib figure
+    f, ax = plt.subplots(figsize=(11, 9))
+
+    # Generate a custom diverging colormap
+    cmap = sns.diverging_palette(230, 20, as_cmap=True)
+
+    hm = sns.heatmap(
+        df_corr,
+        mask=mask,
+        cmap=cmap,
+        vmax=0.3,
+        center=0,
+        square=True,
+        linewidths=0.5,
+        cbar_kws={"shrink": 0.5},
+    )
+
+    if heatmap_fp is not None:
+        # Save heatmap
+        hm.get_figure().savefig(heatmap_fp)
+
+    if pair_plot_x_log is False and pair_plot_y_log is False:
+
+        pp = sns.pairplot(
+            df[corr_columns], kind=pair_plot_type, diag_kind=diag_kind, corner=corner
+        )
+    else:
+        pp = sns.pairplot(
+            df[corr_columns], kind=pair_plot_type, diag_kind=diag_kind, corner=False
+        )
+
+    if pair_plot_x_log is True:
+        for ax in pp.axes.flat:
+            ax.set(xscale="log")
+
+    if pair_plot_y_log is True:
+        for ax in pp.axes.flat:
+            ax.set(yscale="log")
+
+    if pairplot_fp is not None:
+        # Save pairplot
+        pp.savefig(pairplot_fp)
 
 
 def get_unique_bins(
