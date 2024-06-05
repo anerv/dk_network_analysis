@@ -25,3 +25,5 @@ with open(r"../config.yml") as file:
     k_socio = parsed_yaml_file["k_socio"]
     k_hex = parsed_yaml_file["k_hex"]
     p_lisa = parsed_yaml_file["p_lisa"]
+
+    reach_dist = parsed_yaml_file["reach_dist"]

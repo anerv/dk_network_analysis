@@ -23,3 +23,6 @@ k_muni: 3
 k_socio: 4
 k_hex: 6
 p_lisa: 0.05  # p-value for LISA
+
+# Distance for evaluation of network reach
+reach_dist: 5
