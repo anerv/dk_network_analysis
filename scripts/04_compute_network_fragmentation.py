@@ -19,6 +19,7 @@ queries = [
     "sql/04b_compute_component_size.sql",
     "sql/04c_compute_local_component_count.sql",
     "sql/04d_component_length_comparison.sql",
+    "sql/04e_compute_socio_largest_component.sql",
 ]
 
 for i, q in enumerate(queries):
