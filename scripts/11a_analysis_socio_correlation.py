@@ -20,87 +20,6 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 # %%
-
-
-def plot_correlation(
-    df,
-    corr_columns,
-    pair_plot_type="reg",
-    diag_kind="kde",
-    corner=True,
-    pair_plot_x_log=False,
-    pair_plot_y_log=False,
-    heatmap_fp=None,
-    pairplot_fp=None,
-):
-    """
-    Plots the correlation between columns in a DataFrame and generates a heatmap and pairplot.
-
-    Parameters:
-        df (pandas.DataFrame): The DataFrame containing the data.
-        corr_columns (list): The list of column names to calculate correlation and plot.
-        pair_plot_type (str, optional): The type of plot for the pairplot. Defaults to "reg".
-        diag_kind (str, optional): The type of plot for the diagonal subplots in the pairplot. Defaults to "kde".
-        corner (bool, optional): Whether to plot only the lower triangle of the heatmap and pairplot. Defaults to True.
-        pair_plot_x_log (bool, optional): Whether to set the x-axis of the pairplot to a logarithmic scale. Defaults to False.
-        pair_plot_y_log (bool, optional): Whether to set the y-axis of the pairplot to a logarithmic scale. Defaults to False.
-        heatmap_fp (str, optional): The file path to save the heatmap plot. Defaults to None.
-        pairplot_fp (str, optional): The file path to save the pairplot. Defaults to None.
-
-    Returns:
-        None
-    """
-
-    df_corr = df[corr_columns].corr()
-
-    # Generate a mask for the upper triangle
-    mask = np.triu(np.ones_like(df_corr, dtype=bool))
-
-    # Set up the matplotlib figure
-    f, ax = plt.subplots(figsize=(11, 9))
-
-    # Generate a custom diverging colormap
-    cmap = sns.diverging_palette(230, 20, as_cmap=True)
-
-    hm = sns.heatmap(
-        df_corr,
-        mask=mask,
-        cmap=cmap,
-        vmax=0.3,
-        center=0,
-        square=True,
-        linewidths=0.5,
-        cbar_kws={"shrink": 0.5},
-    )
-
-    if heatmap_fp is not None:
-        # Save heatmap
-        hm.get_figure().savefig(heatmap_fp)
-
-    if pair_plot_x_log is False and pair_plot_y_log is False:
-
-        pp = sns.pairplot(
-            df[corr_columns], kind=pair_plot_type, diag_kind=diag_kind, corner=corner
-        )
-    else:
-        pp = sns.pairplot(
-            df[corr_columns], kind=pair_plot_type, diag_kind=diag_kind, corner=False
-        )
-
-    if pair_plot_x_log is True:
-        for ax in pp.axes.flat:
-            ax.set(xscale="log")
-
-    if pair_plot_y_log is True:
-        for ax in pp.axes.flat:
-            ax.set(yscale="log")
-
-    if pairplot_fp is not None:
-        # Save pairplot
-        pp.savefig(pairplot_fp)
-
-
-# %%
 #### CORRELATION BETWEEN SOCIO-ECO VARIABLES ####
 
 socio = gpd.read_postgis("SELECT * FROM socio", engine, geom_col="geometry")
@@ -143,18 +62,20 @@ keep_columns = socio_corr_variables + ["id"]
 
 socio = socio[keep_columns]
 
-
-plot_correlation(
+plot_func.plot_correlation(
     socio,
     socio_corr_variables,
     heatmap_fp="../results/socio_correlation/heatmap_socio_vars.png",
     pairplot_fp="../results/socio_correlation/pairplot_socio_vars.png",
 )
 
-socio[socio_corr_variables].corr().style.background_gradient(cmap="coolwarm")
-socio[socio_corr_variables].describe()
+display(socio[socio_corr_variables].corr().style.background_gradient(cmap="coolwarm"))
+display(socio[socio_corr_variables].describe())
 
 # %%
+###### NETWORK DENSITY #########
+################################
+
 socio_density = gpd.read_postgis(
     "SELECT * FROM density.density_socio", engine, geom_col="geometry"
 )
@@ -165,10 +86,6 @@ socio.dropna(subset=["population_density"], inplace=True)
 socio_density = socio_density.merge(socio, on="id", how="inner")
 
 assert socio_density.shape[0] == socio.shape[0]
-
-# %%
-###### NETWORK DENSITY #########
-################################
 
 all_density_columns = [
     # length_columns,
@@ -185,7 +102,7 @@ for i, columns in enumerate(all_density_columns):
 
     corr_columns = socio_corr_variables + columns
 
-    plot_correlation(
+    plot_func.plot_correlation(
         socio_density,
         corr_columns,
         heatmap_fp=f"../results/socio_correlation/heatmap_socio_{labels[i]}.png",
@@ -211,7 +128,7 @@ socio_components = gpd.read_postgis(
 socio_largest_components = gpd.read_postgis(
     "SELECT * FROM fragmentation.socio_largest_component;", engine, geom_col="geometry"
 )
-# %%
+
 socio_components = socio_components[
     [
         "comp_all_count",
@@ -235,7 +152,7 @@ socio_components = socio_components.merge(
     socio_largest_components[keep_columns], on="id", how="inner"
 )
 
-# %%
+
 all_fragmentation_columns = [
     component_count_columns,
     component_per_km_columns,
@@ -248,11 +165,12 @@ labels = [
     "largest_local_component",
 ]
 
+# %%
 for i, columns in enumerate(all_fragmentation_columns):
 
     corr_columns = socio_corr_variables + columns
 
-    plot_correlation(
+    plot_func.plot_correlation(
         socio_components,
         corr_columns,
         pair_plot_x_log=True,
@@ -263,7 +181,11 @@ for i, columns in enumerate(all_fragmentation_columns):
 
 # %%
 for i, columns in enumerate(all_fragmentation_columns):
-    display(socio_components[columns].corr().style.background_gradient(cmap="coolwarm"))
+    display(
+        socio_components[columns]
+        .corr(method="spearman")
+        .style.background_gradient(cmap="coolwarm")
+    )
     display(socio_components[columns].describe())
 
 # %%
@@ -275,7 +197,7 @@ socio_reach = gpd.read_postgis(
 )
 
 socio_reach = socio_reach.merge(socio, on="id", how="inner")
-# %%
+
 all_reach_columns = [
     socio_reach_average_columns,
     socio_reach_median_columns,
@@ -286,6 +208,7 @@ labels = [
     "median_reach",
 ]
 
+# %%
 for i, columns in enumerate(all_reach_columns):
 
     corr_columns = socio_corr_variables + columns
@@ -300,8 +223,11 @@ for i, columns in enumerate(all_reach_columns):
 # %%
 
 for i, columns in enumerate(all_reach_columns):
-    display(socio_reach[columns].corr().style.background_gradient(cmap="coolwarm"))
+    display(
+        socio_reach[columns]
+        .corr(method="spearman")
+        .style.background_gradient(cmap="coolwarm")
+    )
     display(socio_reach[columns].describe())
 
 # %%
-# TODO: Quantify and save the correlation values??
