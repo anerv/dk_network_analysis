@@ -10,7 +10,7 @@ pop = pd.read_csv(
     "../data/input/socioeconomic/Befolkning.csv", sep=";", encoding="utf-8"
 )
 
-keep_cols = [
+keep_columns = [
     "ValgstedId",
     "FV2022 - Antal personer opgjort efter forsørgelsestype og afstemningsområde_Antal personer i alt",
     "FV2022 - Husstandsindkomster fordelt på afstemningsområder_Antal husstande i alt",
@@ -29,7 +29,7 @@ keep_cols = [
     "FV2022 - Husstandsindkomster fordelt på afstemningsområder_80%-percentil for husstandsindkomst",
 ]
 
-pop = pop[keep_cols]
+pop = pop[keep_columns]
 
 rename_dict = {
     "FV2022 - Antal personer opgjort efter forsørgelsestype og afstemningsområde_Antal personer i alt": "population",
@@ -69,7 +69,7 @@ pop_2024 = pd.read_csv(
 )
 pop_2024.ValgstedId = pop_2024.Gruppe.astype(int)
 
-keep_cols24 = [
+keep_columns24 = [
     "ValgstedId",
     "FV2022 - Personer efter forsørgelsestype_12. Antal personer i alt",
     "FV2022 - Husstandsindkomster fordelt på afstemningsområder_Antal husstande i alt",
@@ -88,7 +88,7 @@ keep_cols24 = [
     "FV2022 - Husstandsindkomster fordelt på afstemningsområder_80%-percentil for husstandsindkomst",
 ]
 
-pop_2024 = pop_2024[keep_cols24]
+pop_2024 = pop_2024[keep_columns24]
 
 pop_2024.rename(columns=rename_dict, inplace=True)
 

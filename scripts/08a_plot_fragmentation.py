@@ -175,7 +175,7 @@ hex_components.replace(0, np.nan, inplace=True)
 
 gdfs = [muni_components, socio_components, hex_components]
 
-plot_cols = component_count_columns
+plot_columns = component_count_columns
 
 labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car", "Total network"]
 
@@ -192,12 +192,12 @@ for e, gdf in enumerate(gdfs):
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l for l in labels]
 
-    min_vals = [gdf[p].min() for p in plot_cols]
-    max_vals = [gdf[p].max() for p in plot_cols]
+    min_vals = [gdf[p].min() for p in plot_columns]
+    max_vals = [gdf[p].max() for p in plot_columns]
     v_min = min(min_vals)
     v_max = max(max_vals)
 
-    for i, p in enumerate(plot_cols):
+    for i, p in enumerate(plot_columns):
         plot_func.plot_classified_poly(
             gdf=gdf,
             plot_col=p,
@@ -238,7 +238,7 @@ component_length_hex = pd.read_sql(
 
 dfs = [component_length_muni, component_length_socio, component_length_hex]
 
-id_cols = [["municipality"], ["id"], ["hex_id"]]
+id_columns = [["municipality"], ["id"], ["hex_id"]]
 titles = ["Municipalities", "Local", "Hexagonal grid"]
 
 all_filepaths = filepaths_component_density_correlation
@@ -256,7 +256,7 @@ for i, df in enumerate(dfs):
             color=l,
             # color_discrete_sequence=["black"],
             # color_continuous_scale=px.colors.sequential.Viridis,
-            hover_data=id_cols[i],
+            hover_data=id_columns[i],
             opacity=0.5,
             labels=plotly_labels,
             log_x=True,
@@ -340,7 +340,7 @@ hex_ids = component_length_hex.hex_id.unique()
 
 id_lists = [municipalities, socio_ids, hex_ids]
 
-id_cols = ["municipality", "id", "hex_id"]
+id_columns = ["municipality", "id", "hex_id"]
 
 scatter_titles = [
     "Municipal component count and infrastructure density",
@@ -365,7 +365,7 @@ for e, df in enumerate(dfs):
 
     for i in id_lists[e]:
 
-        data = df[df[id_cols[e]] == i]
+        data = df[df[id_columns[e]] == i]
 
         if len(data) > 0:
 
@@ -527,7 +527,7 @@ gdfs = [muni_components, socio_components, hex_components]
 
 # %%
 # comp per km
-plot_cols = component_per_km_cols
+plot_columns = component_per_km_columns
 
 labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car", "Total network"]
 
@@ -544,12 +544,12 @@ for e, gdf in enumerate(gdfs):
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l + "_per_km" for l in labels]
 
-    min_vals = [gdf[p].min() for p in plot_cols]
-    max_vals = [gdf[p].max() for p in plot_cols]
+    min_vals = [gdf[p].min() for p in plot_columns]
+    max_vals = [gdf[p].max() for p in plot_columns]
     v_min = min(min_vals)
     v_max = max(max_vals)
 
-    for i, p in enumerate(plot_cols):
+    for i, p in enumerate(plot_columns):
         plot_func.plot_classified_poly(
             gdf=gdf,
             plot_col=p,
@@ -584,19 +584,19 @@ all_plot_titles = [
     "Hexagonal grid component count per km/sqkm for: ",
 ]
 
-plot_cols = component_per_km_sqkm_cols
+plot_columns = component_per_km_sqkm_columns
 
 for e, gdf in enumerate(gdfs):
 
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l + "_per_km_sqkm" for l in labels]
 
-    min_vals = [gdf[p].min() for p in plot_cols]
-    max_vals = [gdf[p].max() for p in plot_cols]
+    min_vals = [gdf[p].min() for p in plot_columns]
+    max_vals = [gdf[p].max() for p in plot_columns]
     v_min = min(min_vals)
     v_max = max(max_vals)
 
-    for i, p in enumerate(plot_cols):
+    for i, p in enumerate(plot_columns):
         plot_func.plot_classified_poly(
             gdf=gdf,
             plot_col=p,
@@ -633,17 +633,17 @@ hex_gdf = gpd.GeoDataFrame.from_postgis(
     geom_col="geometry",
 )
 
-hex_gdf[largest_local_component_len_cols] = hex_gdf[
-    largest_local_component_len_cols
+hex_gdf[largest_local_component_len_columns] = hex_gdf[
+    largest_local_component_len_columns
 ].replace(np.nan, 0)
 
-hex_gdf[largest_local_component_area_cols] = hex_gdf[
-    largest_local_component_area_cols
+hex_gdf[largest_local_component_area_columns] = hex_gdf[
+    largest_local_component_area_columns
 ].replace(np.nan, 0)
 
 
 # %%
-plot_columns = largest_local_component_len_cols
+plot_columns = largest_local_component_len_columns
 
 plot_titles = [
     "Largest component length for network LTS 1",
@@ -716,7 +716,7 @@ for i, p in enumerate(plot_columns):
     )
 
 # %%
-plot_columns = largest_local_component_area_cols
+plot_columns = largest_local_component_area_columns
 
 plot_titles = [
     "Largest component area for network LTS 1",
@@ -788,8 +788,8 @@ colors = [v for v in lts_color_dict.values()]
 for i in range(len(labels)):
     fig = px.scatter(
         hex_gdf,
-        x=largest_local_component_len_cols[i],
-        y=largest_local_component_area_cols[i],
+        x=largest_local_component_len_columns[i],
+        y=largest_local_component_area_columns[i],
         hover_data="hex_id",
         color_discrete_sequence=[colors[i]],
         opacity=0.6,
@@ -818,7 +818,7 @@ for i in range(len(labels)):
 
 # **** KDES OF LARGEST COMPONENT DISTRIBUTIONS
 
-df = hex_gdf[largest_local_component_len_cols].melt()
+df = hex_gdf[largest_local_component_len_columns].melt()
 
 df.rename(columns={"variable": "Network level", "value": "length"}, inplace=True)
 

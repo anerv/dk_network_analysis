@@ -8,14 +8,14 @@ from pysal.lib import weights
 from splot.esda import lisa_cluster
 
 
-def compute_spatial_weights(gdf, na_cols, w_type, dist=1000, k=6):
+def compute_spatial_weights(gdf, na_columns, w_type, dist=1000, k=6):
     """
     Wrapper function for computing the spatial weights for the analysis/results grids.
     ...
 
     Arguments:
         gdf (geodataframe): geodataframe with polygons
-        na_cols (list): list of columns used to drop NA rows. If no rows should be dropped, just use e.g. 'grid_index'
+        na_columns (list): list of columns used to drop NA rows. If no rows should be dropped, just use e.g. 'grid_index'
         w_type (str): type of spatial weight to compute. Only supports KNN, distance band or queens.
         dist (numeric): distance to use if distance band
         k (int): number of nearest neighbors if using KNN
@@ -23,7 +23,7 @@ def compute_spatial_weights(gdf, na_cols, w_type, dist=1000, k=6):
     Returns:
         w (pysal spatial weight object): the spatial weight object
     """
-    gdf.dropna(subset=na_cols, inplace=True)
+    gdf.dropna(subset=na_columns, inplace=True)
 
     # convert to centroids
     cents = gdf.centroid

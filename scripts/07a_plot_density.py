@@ -111,18 +111,18 @@ for e, gdf in enumerate(gdfs):
 
     ###### Plot individual LTS densities #####
 
-    plot_cols = density_columns
+    plot_columns = density_columns
 
     labels = ["LTS 1", "LTS 2", "LTS 3", "LTS 4", "Total car", "Total network"]
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l for l in labels]
 
-    min_vals = [gdf[p].min() for p in plot_cols]
-    max_vals = [gdf[p].max() for p in plot_cols]
+    min_vals = [gdf[p].min() for p in plot_columns]
+    max_vals = [gdf[p].max() for p in plot_columns]
     v_min = min(min_vals)
     v_max = max(max_vals)
 
-    for i, p in enumerate(plot_cols):
+    for i, p in enumerate(plot_columns):
 
         plot_func.plot_classified_poly(
             gdf=gdf,
@@ -150,18 +150,18 @@ for e, gdf in enumerate(gdfs):
         )
 
     ###### Plot stepwise LTS densities #####
-    plot_cols = density_steps_columns
+    plot_columns = density_steps_columns
 
     labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car", "Total network"]
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l for l in labels]
 
-    min_vals = [gdf[p].min() for p in plot_cols]
-    max_vals = [gdf[p].max() for p in plot_cols]
+    min_vals = [gdf[p].min() for p in plot_columns]
+    max_vals = [gdf[p].max() for p in plot_columns]
     v_min = min(min_vals)
     v_max = max(max_vals)
 
-    for i, p in enumerate(plot_cols):
+    for i, p in enumerate(plot_columns):
 
         plot_func.plot_classified_poly(
             gdf=gdf,
@@ -189,9 +189,9 @@ for e, gdf in enumerate(gdfs):
         )
 
     ###### Plot relative network length #####
-    plot_cols = length_relative_columns
+    plot_columns = length_relative_columns
 
-    for p in plot_cols:
+    for p in plot_columns:
         gdf[p] = gdf[p] * 100
 
     labels = [
@@ -205,12 +205,12 @@ for e, gdf in enumerate(gdfs):
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l for l in labels]
 
-    min_vals = [gdf[p].min() for p in plot_cols]
-    max_vals = [gdf[p].max() for p in plot_cols]
+    min_vals = [gdf[p].min() for p in plot_columns]
+    max_vals = [gdf[p].max() for p in plot_columns]
     v_min = min(min_vals)
     v_max = max(max_vals)
 
-    for i, p in enumerate(plot_cols):
+    for i, p in enumerate(plot_columns):
 
         plot_func.plot_classified_poly(
             gdf=gdf,
@@ -238,13 +238,13 @@ for e, gdf in enumerate(gdfs):
         )
 
     ###### Plot relative network length #####
-    plot_cols = length_relative_steps_columns
+    plot_columns = length_relative_steps_columns
 
-    convert_cols = [
+    convert_columns = [
         l for l in length_relative_steps_columns if l not in length_relative_columns
     ]
 
-    for p in convert_cols:
+    for p in convert_columns:
         gdf[p] = gdf[p] * 100
 
     labels = [
@@ -258,12 +258,12 @@ for e, gdf in enumerate(gdfs):
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l for l in labels]
 
-    min_vals = [gdf[p].min() for p in plot_cols]
-    max_vals = [gdf[p].max() for p in plot_cols]
+    min_vals = [gdf[p].min() for p in plot_columns]
+    max_vals = [gdf[p].max() for p in plot_columns]
     v_min = min(min_vals)
     v_max = max(max_vals)
 
-    for i, p in enumerate(plot_cols):
+    for i, p in enumerate(plot_columns):
 
         plot_func.plot_classified_poly(
             gdf=gdf,
@@ -307,9 +307,9 @@ density_titles = [
     "Local network density (km/sqkm)",
     "Grid network density (km/sqkm)",
 ]
-id_cols = ["municipality", "id", "hex_id"]
+id_columns = ["municipality", "id", "hex_id"]
 
-type_cols = ["Municipal", "Local", "Grid"]
+type_columns = ["Municipal", "Local", "Grid"]
 
 municipalities = density_muni.municipality.unique()
 socio_ids = density_socio.id.unique()
@@ -329,7 +329,7 @@ for e, gdf in enumerate(gdfs):
     ids_all = []
 
     for i in id_lists[e]:
-        data = gdf[gdf[id_cols[e]] == i]
+        data = gdf[gdf[id_columns[e]] == i]
 
         if len(data) > 0:
 
@@ -352,7 +352,7 @@ for e, gdf in enumerate(gdfs):
         }
     )
 
-    stacked_dfs[type_cols[e]] = df
+    stacked_dfs[type_columns[e]] = df
 
 
 # %%
@@ -464,12 +464,12 @@ for e, gdf in enumerate(gdfs):
         fig = px.violin(
             gdf,
             y=d,
-            hover_name=id_cols[e],
+            hover_name=id_columns[e],
             points="all",
             box=False,
             labels=plotly_labels,
             color_discrete_sequence=[colors[i]],
-            title=type_cols[e],
+            title=type_columns[e],
         )
         fig.show()
 
@@ -483,12 +483,12 @@ for e, gdf in enumerate(gdfs):
         fig = px.violin(
             gdf,
             y=l,
-            hover_name=id_cols[e],
+            hover_name=id_columns[e],
             points="all",
             box=False,
             labels=plotly_labels,
             color_discrete_sequence=[colors[i]],
-            title=type_cols[e],
+            title=type_columns[e],
         )
         fig.show()
 

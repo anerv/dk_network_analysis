@@ -63,7 +63,7 @@ assert adm.crs == crs
 
 adm.columns = adm.columns.str.lower()
 
-useful_cols = [
+useful_columns = [
     "id.lokalid",
     # "dagiid",
     "navn",
@@ -72,7 +72,7 @@ useful_cols = [
     "geometry",
 ]
 
-adm = adm[useful_cols]
+adm = adm[useful_columns]
 
 dbf.to_postgis(geodataframe=adm, table_name="adm_boundaries", engine=engine)
 

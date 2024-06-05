@@ -462,18 +462,18 @@ with open("vacuum_analyze.py") as f:
 start = "CREATE TABLE reach.compare_reach AS (SELECT "
 end = ");"
 
-select_cols = ""
+select_columns = ""
 
 for d in distances:
     s = f"""r{d}.lts1_reach AS lts1_reach_{d}, r{d}.lts2_reach AS lts2_reach_{d}, r{d}.lts3_reach AS lts3_reach_{d}, r{d}.lts4_reach AS lts4_reach_{d}, r{d}.car_reach AS car_reach_{d},"""
-    select_cols += s
+    select_columns += s
 
 from_q = f"FROM reach.hex_reach_{distances[0]} r{distances[0]}"
 
 for d in distances[1:]:
     from_q += f" JOIN reach.hex_reach_{d} r{d} ON r{d}.hex_id = r{distances[0]}.hex_id"
 
-final_query = start + select_cols[:-1] + " " + from_q + end
+final_query = start + select_columns[:-1] + " " + from_q + end
 
 result = dbf.run_query_pg(final_query, connection)
 if result == "error":

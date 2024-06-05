@@ -59,7 +59,7 @@ for gdf in gdfs:
         gdf[p] = gdf[p] * 100
 
 # %%
-id_cols = ["municipality", "id", "hex_id"]
+id_columns = ["municipality", "id", "hex_id"]
 k_values = [k_muni, k_socio, k_hex]
 spatial_weights_values = [f"queen_{k}" for k in k_values]
 
@@ -67,10 +67,10 @@ spatial_weights = []
 
 for i, gdf in enumerate(gdfs):
 
-    w_queen = analysis_func.compute_spatial_weights(gdf, id_cols[i], w_type="queen")
+    w_queen = analysis_func.compute_spatial_weights(gdf, id_columns[i], w_type="queen")
 
     w_knn = analysis_func.compute_spatial_weights(
-        gdf, id_cols[i], w_type="knn", k=k_values[i]
+        gdf, id_columns[i], w_type="knn", k=k_values[i]
     )
     w = weights.set_operations.w_union(w_queen, w_knn)
 
@@ -87,7 +87,7 @@ all_density_columns = [
 ]
 
 aggregation_level = ["administrative", "socio", "hexgrid"]
-id_cols = ["municipality", "id", "hex_id"]
+id_columns = ["municipality", "id", "hex_id"]
 
 for i, gdf in enumerate(gdfs):
 
@@ -134,7 +134,7 @@ for i, gdf in enumerate(gdfs):
         json.dump(global_morans_results, outfile)
 
     q_columns = [c for c in gdf.columns if c.endswith("_q")]
-    q_columns.extend(["geometry", id_cols[i]])
+    q_columns.extend(["geometry", id_columns[i]])
 
     gdf[q_columns].to_parquet(
         f"../results/spatial_autocorrelation/density/{aggregation_level[i]}/lisas.parquet"
@@ -177,7 +177,7 @@ gdfs = [muni_components, socio_components, hex_components]
 # %%
 # Define spatial weights
 
-id_cols = ["municipality", "id", "hex_id"]
+id_columns = ["municipality", "id", "hex_id"]
 k_values = [k_muni, k_socio, k_hex]
 spatial_weights_values = [f"queen_{k}" for k in k_values]
 
@@ -185,10 +185,10 @@ spatial_weights = []
 
 for i, gdf in enumerate(gdfs):
 
-    w_queen = analysis_func.compute_spatial_weights(gdf, id_cols[i], w_type="queen")
+    w_queen = analysis_func.compute_spatial_weights(gdf, id_columns[i], w_type="queen")
 
     w_knn = analysis_func.compute_spatial_weights(
-        gdf, id_cols[i], w_type="knn", k=k_values[i]
+        gdf, id_columns[i], w_type="knn", k=k_values[i]
     )
     w = weights.set_operations.w_union(w_queen, w_knn)
 
@@ -200,12 +200,12 @@ for i, gdf in enumerate(gdfs):
 
 all_fragmentation_columns = [
     component_count_columns,
-    component_per_km_cols,
-    component_per_km_sqkm_cols,
+    component_per_km_columns,
+    component_per_km_sqkm_columns,
 ]
 
 aggregation_level = ["administrative", "socio", "hexgrid"]
-id_cols = ["municipality", "id", "hex_id"]
+id_columns = ["municipality", "id", "hex_id"]
 
 for i, gdf in enumerate(gdfs):
 
@@ -252,7 +252,7 @@ for i, gdf in enumerate(gdfs):
         json.dump(global_morans_results, outfile)
 
     q_columns = [c for c in gdf.columns if c.endswith("_q")]
-    q_columns.extend(["geometry", id_cols[i]])
+    q_columns.extend(["geometry", id_columns[i]])
 
     gdf[q_columns].to_parquet(
         f"../results/spatial_autocorrelation/fragmentation/{aggregation_level[i]}/lisas.parquet"
@@ -268,15 +268,15 @@ hex_comp_size = gpd.GeoDataFrame.from_postgis(
     geom_col="geometry",
 )
 
-hex_comp_size[largest_local_component_len_cols] = hex_comp_size[
-    largest_local_component_len_cols
+hex_comp_size[largest_local_component_len_columns] = hex_comp_size[
+    largest_local_component_len_columns
 ].replace(np.nan, 0)
 
 
 gdfs = [hex_comp_size]
 
 # Define spatial weights
-id_cols = ["hex_id"]
+id_columns = ["hex_id"]
 k_values = [k_hex]
 spatial_weights_values = [f"queen_{k}" for k in k_values]
 
@@ -284,10 +284,10 @@ spatial_weights = []
 
 for i, gdf in enumerate(gdfs):
 
-    w_queen = analysis_func.compute_spatial_weights(gdf, id_cols[i], w_type="queen")
+    w_queen = analysis_func.compute_spatial_weights(gdf, id_columns[i], w_type="queen")
 
     w_knn = analysis_func.compute_spatial_weights(
-        gdf, id_cols[i], w_type="knn", k=k_values[i]
+        gdf, id_columns[i], w_type="knn", k=k_values[i]
     )
     w = weights.set_operations.w_union(w_queen, w_knn)
 
@@ -297,7 +297,7 @@ for i, gdf in enumerate(gdfs):
 
 aggregation_level = ["hexgrid"]
 
-all_comp_size_columns = [largest_local_component_len_cols]
+all_comp_size_columns = [largest_local_component_len_columns]
 
 for i, gdf in enumerate(gdfs):
 
@@ -344,7 +344,7 @@ for i, gdf in enumerate(gdfs):
         json.dump(global_morans_results, outfile)
 
     q_columns = [c for c in gdf.columns if c.endswith("_q")]
-    q_columns.extend(["geometry", id_cols[i]])
+    q_columns.extend(["geometry", id_columns[i]])
 
     gdf[q_columns].to_parquet(
         f"../results/spatial_autocorrelation/fragmentation/{aggregation_level[i]}/lisas_largest_comp_size_.parquet"
@@ -368,7 +368,7 @@ hex_reach.replace(np.nan, 0, inplace=True)
 gdfs = [hex_reach]
 
 # Define spatial weights
-id_cols = ["hex_id"]
+id_columns = ["hex_id"]
 k_values = [k_hex]
 spatial_weights_values = [f"queen_{k}" for k in k_values]
 
@@ -376,10 +376,10 @@ spatial_weights = []
 
 for i, gdf in enumerate(gdfs):
 
-    w_queen = analysis_func.compute_spatial_weights(gdf, id_cols[i], w_type="queen")
+    w_queen = analysis_func.compute_spatial_weights(gdf, id_columns[i], w_type="queen")
 
     w_knn = analysis_func.compute_spatial_weights(
-        gdf, id_cols[i], w_type="knn", k=k_values[i]
+        gdf, id_columns[i], w_type="knn", k=k_values[i]
     )
     w = weights.set_operations.w_union(w_queen, w_knn)
 
@@ -436,7 +436,7 @@ for i, gdf in enumerate(gdfs):
         json.dump(global_morans_results, outfile)
 
     q_columns = [c for c in gdf.columns if c.endswith("_q")]
-    q_columns.extend(["geometry", id_cols[i]])
+    q_columns.extend(["geometry", id_columns[i]])
 
     gdf[q_columns].to_parquet(
         f"../results/spatial_autocorrelation/reach/{aggregation_level[i]}/lisas.parquet"

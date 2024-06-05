@@ -43,7 +43,7 @@ socio_ks = [4, 8, 12]
 
 all_ks = [muni_ks, socio_ks, hex_ks]
 
-id_cols = ["municipality", "id", "hex_id"]
+id_columns = ["municipality", "id", "hex_id"]
 
 metrics = ["density", "fragmentation", "reach"]
 
@@ -132,7 +132,7 @@ all_columns = [
     # length_columns,
     # length_relative_steps_columns,
     component_count_columns,
-    component_per_km_cols,
+    component_per_km_columns,
 ]
 
 for i, gdf in enumerate(gdfs):
@@ -141,13 +141,13 @@ for i, gdf in enumerate(gdfs):
 
     # Compute spatial weights
     w1 = analysis_func.compute_spatial_weights(
-        gdf, id_cols[i], "knn", k=all_ks[i][0]
+        gdf, id_columns[i], "knn", k=all_ks[i][0]
     )  # using filler col for subset
     w2 = analysis_func.compute_spatial_weights(
-        gdf, id_cols[i], "knn", k=all_ks[i][1]
+        gdf, id_columns[i], "knn", k=all_ks[i][1]
     )  # using filler col for subset
     w3 = analysis_func.compute_spatial_weights(
-        gdf, id_cols[i], "knn", k=all_ks[i][2]
+        gdf, id_columns[i], "knn", k=all_ks[i][2]
     )  # using filler col for subset
 
     all_weigths = {
@@ -196,9 +196,9 @@ for i, gdf in enumerate(gdfs):
                 all_lisas[name] = lisas_density[c]
 
                 # Export
-                q_cols = [v + "_q" for v in variable_names]
-                q_cols.append("id")
-                gdf.rename({id_cols[i]: "id"}, axis=1)[q_cols].to_csv(
+                q_columns = [v + "_q" for v in variable_names]
+                q_columns.append("id")
+                gdf.rename({id_columns[i]: "id"}, axis=1)[q_columns].to_csv(
                     "../results/spatial_autocorrelation/sensitivity_test/"
                     + f"spatial_autocorrelation_{name}_{c}_{aggregation_levels[i]}.csv",
                     index=True,
@@ -290,7 +290,7 @@ hex_ks = [6, 18, 36]  # 60
 
 all_ks = [hex_ks]
 
-id_cols = ["hex_id"]
+id_columns = ["hex_id"]
 
 metrics = ["reach"]
 
@@ -307,13 +307,13 @@ for i, gdf in enumerate(gdfs):
 
     # Compute spatial weights
     w1 = analysis_func.compute_spatial_weights(
-        gdf, id_cols[i], "knn", k=all_ks[i][0]
+        gdf, id_columns[i], "knn", k=all_ks[i][0]
     )  # using filler col for subset
     w2 = analysis_func.compute_spatial_weights(
-        gdf, id_cols[i], "knn", k=all_ks[i][1]
+        gdf, id_columns[i], "knn", k=all_ks[i][1]
     )  # using filler col for subset
     w3 = analysis_func.compute_spatial_weights(
-        gdf, id_cols[i], "knn", k=all_ks[i][2]
+        gdf, id_columns[i], "knn", k=all_ks[i][2]
     )  # using filler col for subset
 
     all_weigths = {
@@ -362,9 +362,9 @@ for i, gdf in enumerate(gdfs):
                 all_lisas[name] = lisas_density[c]
 
                 # Export
-                q_cols = [v + "_q" for v in variable_names]
-                q_cols.append("id")
-                gdf.rename({id_cols[i]: "id"}, axis=1)[q_cols].to_csv(
+                q_columns = [v + "_q" for v in variable_names]
+                q_columns.append("id")
+                gdf.rename({id_columns[i]: "id"}, axis=1)[q_columns].to_csv(
                     "../results/spatial_autocorrelation/sensitivity_test/"
                     + f"spatial_autocorrelation_{name}_{c}_{aggregation_levels[i]}.csv",
                     index=True,

@@ -103,7 +103,6 @@ def plot_correlation(
 # %%
 #### CORRELATION BETWEEN SOCIO-ECO VARIABLES ####
 
-# Load socio density data
 socio = gpd.read_postgis("SELECT * FROM socio", engine, geom_col="geometry")
 
 rename_dict = {
@@ -140,10 +139,11 @@ socio_corr_variables = [
     "urban_pct",
 ]
 
-keep_cols = socio_corr_variables + ["id"]
+keep_columns = socio_corr_variables + ["id"]
 
-socio = socio[keep_cols]
+socio = socio[keep_columns]
 
+# %%
 socio_density = gpd.read_postgis(
     "SELECT * FROM density.density_socio", engine, geom_col="geometry"
 )
@@ -155,8 +155,6 @@ socio_density = socio_density.merge(socio, on="id", how="inner")
 
 assert socio_density.shape[0] == socio.shape[0]
 
-
-# %%
 
 plot_correlation(
     socio_density,
@@ -198,7 +196,6 @@ socio_components = gpd.read_postgis(
     "SELECT * FROM fragmentation.component_length_socio;", engine, geom_col="geometry"
 )
 
-# %%
 socio_components = socio_components[
     [
         "comp_all_count",
@@ -220,8 +217,8 @@ socio_components = socio_components[
 # %%
 all_fragmentation_columns = [
     component_count_columns,
-    component_per_km_cols,
-    largest_local_component_len_cols,
+    component_per_km_columns,
+    socio_largest_component_columns,
 ]
 
 labels = [
@@ -241,7 +238,13 @@ for i, columns in enumerate(all_fragmentation_columns):
         pairplot_fp=f"../results/socio_correlation/pairplot_socio_{labels[i]}.png",
     )
 
-
 # %%
+# Fragmentation largest local component
+
+socio_components = gpd.read_postgis(
+    "SELECT * FROM fragmentation.component_length_socio;", engine, geom_col="geometry"
+)
+
+largest_local_component_len_columns,
 ##### REACH ###########
 ######################

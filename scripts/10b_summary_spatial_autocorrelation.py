@@ -134,10 +134,10 @@ for i, metric in enumerate(metrics[:-1]):
         joined_df = pd.concat(dfs, axis=1)
 
         new_col_names = [c.strip("_q") for c in joined_df.columns]
-        new_cols_dict = {}
+        new_columns_dict = {}
         for z, c in enumerate(joined_df.columns):
-            new_cols_dict[c] = new_col_names[z]
-        joined_df.rename(columns=new_cols_dict, inplace=True)
+            new_columns_dict[c] = new_col_names[z]
+        joined_df.rename(columns=new_columns_dict, inplace=True)
 
         joined_df.rename(columns=rename_dicts[i], inplace=True)
 
@@ -190,10 +190,10 @@ for c in summary.keys():
 joined_df = pd.concat(dfs, axis=1)
 
 new_col_names = [c.strip("_q") for c in joined_df.columns]
-new_cols_dict = {}
+new_columns_dict = {}
 for i, c in enumerate(joined_df.columns):
-    new_cols_dict[c] = new_col_names[i]
-joined_df.rename(columns=new_cols_dict, inplace=True)
+    new_columns_dict[c] = new_col_names[i]
+joined_df.rename(columns=new_columns_dict, inplace=True)
 
 joined_df.rename(columns=rename_dicts[2], inplace=True)
 
