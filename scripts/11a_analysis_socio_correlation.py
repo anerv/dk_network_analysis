@@ -213,7 +213,7 @@ for i, columns in enumerate(all_reach_columns):
 
     corr_columns = socio_corr_variables + columns
 
-    plot_correlation(
+    plot_func.plot_correlation(
         socio_reach,
         corr_columns,
         heatmap_fp=f"../results/socio_correlation/heatmap_socio_{labels[i]}.png",
