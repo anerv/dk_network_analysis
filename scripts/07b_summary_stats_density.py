@@ -62,6 +62,8 @@ for df in density_data:
         df[c] = df[c] * 100
 
 
+for df in density_data:
+    display(df.describe())
 # %%
 
 ## ** TOTAL NETWORK LEVELS ****

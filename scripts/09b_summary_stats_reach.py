@@ -26,6 +26,7 @@ hex_reach = gpd.read_postgis(
 
 hex_reach.replace(0, np.nan, inplace=True)
 
+hex_reach.describe()
 # %%
 labels = [
     "LTS 1",
