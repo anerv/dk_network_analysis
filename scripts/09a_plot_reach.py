@@ -26,12 +26,6 @@ hex_reach = gpd.read_postgis(
     f"SELECT * FROM reach.hex_reach_{reach_dist}", engine, geom_col="geometry"
 )
 
-for p in reach_columns:
-    hex_reach[p] = hex_reach[p] / 1000  # Convert to km
-
-for p in reach_diff_columns:
-    hex_reach[p] = hex_reach[p] / 1000  # Convert to km
-
 # %%
 ###########################################
 ####### MAPS ##############################
@@ -438,8 +432,6 @@ for c, d, r, l in zip(
 
 #### Differences in network reach: DIST ###
 ###########################################
-
-
 reach_df = pd.read_sql(f"SELECT * FROM reach.compare_reach;", engine)
 
 network_levels = ["lts1", "lts2", "lts3", "lts4", "car"]
@@ -447,9 +439,6 @@ network_levels = ["lts1", "lts2", "lts3", "lts4", "car"]
 reach_columns = reach_df.columns.to_list()
 
 distances = list(set([c.split("_")[2] for c in reach_columns]))
-
-for c in reach_columns:
-    reach_df[c] = reach_df[c] / 1000  # Convert to km
 
 # %%
 

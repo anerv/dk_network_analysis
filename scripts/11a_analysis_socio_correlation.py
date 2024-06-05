@@ -143,6 +143,17 @@ keep_columns = socio_corr_variables + ["id"]
 
 socio = socio[keep_columns]
 
+
+plot_correlation(
+    socio,
+    socio_corr_variables,
+    heatmap_fp="../results/socio_correlation/heatmap_socio_vars.png",
+    pairplot_fp="../results/socio_correlation/pairplot_socio_vars.png",
+)
+
+socio[socio_corr_variables].corr().style.background_gradient(cmap="coolwarm")
+socio[socio_corr_variables].describe()
+
 # %%
 socio_density = gpd.read_postgis(
     "SELECT * FROM density.density_socio", engine, geom_col="geometry"
@@ -155,13 +166,6 @@ socio_density = socio_density.merge(socio, on="id", how="inner")
 
 assert socio_density.shape[0] == socio.shape[0]
 
-
-plot_correlation(
-    socio_density,
-    socio_corr_variables,
-    heatmap_fp="../results/socio_correlation/heatmap_socio_vars.png",
-    pairplot_fp="../results/socio_correlation/pairplot_socio_vars.png",
-)
 # %%
 ###### NETWORK DENSITY #########
 ################################
@@ -176,7 +180,7 @@ all_density_columns = [
 ]
 
 labels = ["density", "density_steps", "length_relative", "length_relative_steps"]
-
+# %%
 for i, columns in enumerate(all_density_columns):
 
     corr_columns = socio_corr_variables + columns
@@ -189,6 +193,14 @@ for i, columns in enumerate(all_density_columns):
     )
 
 # %%
+for i, columns in enumerate(all_density_columns):
+    display(
+        socio_density[columns]
+        .corr(method="spearman")
+        .style.background_gradient(cmap="coolwarm")
+    )
+    display(socio_density[columns].describe())
+# %%
 ###### FRAGMENTATION ######
 ##########################
 
@@ -196,6 +208,10 @@ socio_components = gpd.read_postgis(
     "SELECT * FROM fragmentation.component_length_socio;", engine, geom_col="geometry"
 )
 
+socio_largest_components = gpd.read_postgis(
+    "SELECT * FROM fragmentation.socio_largest_component;", engine, geom_col="geometry"
+)
+# %%
 socio_components = socio_components[
     [
         "comp_all_count",
@@ -213,6 +229,11 @@ socio_components = socio_components[
         "id",
     ]
 ].merge(socio, on="id", how="inner")
+
+keep_columns = socio_largest_component_columns + ["id"]
+socio_components = socio_components.merge(
+    socio_largest_components[keep_columns], on="id", how="inner"
+)
 
 # %%
 all_fragmentation_columns = [
@@ -234,17 +255,53 @@ for i, columns in enumerate(all_fragmentation_columns):
     plot_correlation(
         socio_components,
         corr_columns,
+        pair_plot_x_log=True,
+        pair_plot_y_log=True,
         heatmap_fp=f"../results/socio_correlation/heatmap_socio_{labels[i]}.png",
         pairplot_fp=f"../results/socio_correlation/pairplot_socio_{labels[i]}.png",
     )
 
 # %%
-# Fragmentation largest local component
+for i, columns in enumerate(all_fragmentation_columns):
+    display(socio_components[columns].corr().style.background_gradient(cmap="coolwarm"))
+    display(socio_components[columns].describe())
 
-socio_components = gpd.read_postgis(
-    "SELECT * FROM fragmentation.component_length_socio;", engine, geom_col="geometry"
-)
-
-largest_local_component_len_columns,
+# %%
 ##### REACH ###########
 ######################
+
+socio_reach = gpd.read_postgis(
+    f"SELECT * FROM reach.socio_reach_{reach_dist}", engine, geom_col="geometry"
+)
+
+socio_reach = socio_reach.merge(socio, on="id", how="inner")
+# %%
+all_reach_columns = [
+    socio_reach_average_columns,
+    socio_reach_median_columns,
+]
+
+labels = [
+    "average_reach",
+    "median_reach",
+]
+
+for i, columns in enumerate(all_reach_columns):
+
+    corr_columns = socio_corr_variables + columns
+
+    plot_correlation(
+        socio_reach,
+        corr_columns,
+        heatmap_fp=f"../results/socio_correlation/heatmap_socio_{labels[i]}.png",
+        pairplot_fp=f"../results/socio_correlation/pairplot_socio_{labels[i]}.png",
+    )
+
+# %%
+
+for i, columns in enumerate(all_reach_columns):
+    display(socio_reach[columns].corr().style.background_gradient(cmap="coolwarm"))
+    display(socio_reach[columns].describe())
+
+# %%
+# TODO: Quantify and save the correlation values??

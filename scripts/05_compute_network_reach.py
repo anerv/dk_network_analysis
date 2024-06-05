@@ -256,11 +256,11 @@ for dist in distances:
     SELECT
         h.hex_id,
         h.geometry,
-        l1.edge_length AS lts1_reach,
-        l2.edge_length AS lts2_reach,
-        l3.edge_length AS lts3_reach,
-        l4.edge_length AS lts4_reach,
-        ca.edge_length AS car_reach
+        l1.edge_length / 1000 AS lts1_reach,
+        l2.edge_length / 1000 AS lts2_reach,
+        l3.edge_length / 1000 AS lts3_reach,
+        l4.edge_length / 1000 AS lts4_reach,
+        ca.edge_length / 1000 AS car_reach
     FROM
         hex_grid h
         LEFT JOIN {table_names[0]} l1 ON h.hex_id = l1.hex_id
@@ -426,18 +426,19 @@ for dist in distances:
     );
     """
 
-    q_update = f"""
-    UPDATE
-        reach.reach_{dist}_component_length_hex
-    SET
-        lts1_reach = lts1_reach / 1000,
-        lts2_reach = lts2_reach / 1000,
-        lts3_reach = lts3_reach / 1000,
-        lts4_reach = lts4_reach / 1000,
-        car_reach = car_reach / 1000;
-    """
+    # q_update = f"""
+    # UPDATE
+    #     reach.reach_{dist}_component_length_hex
+    # SET
+    #     lts1_reach = lts1_reach / 1000,
+    #     lts2_reach = lts2_reach / 1000,
+    #     lts3_reach = lts3_reach / 1000,
+    #     lts4_reach = lts4_reach / 1000,
+    #     car_reach = car_reach / 1000;
+    # """
 
-    for q in [q_drop, q_create, q_update]:
+    # for q in [q_drop, q_create, q_update]:
+    for q in [q_drop, q_create]:
         result = dbf.run_query_pg(q, connection)
         if result == "error":
             print("Please fix error before rerunning and reconnect to the database")

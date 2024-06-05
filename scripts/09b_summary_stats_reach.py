@@ -24,12 +24,6 @@ hex_reach = gpd.read_postgis(
     f"SELECT * FROM reach.hex_reach_{reach_dist}", engine, geom_col="geometry"
 )
 
-for p in reach_columns:
-    hex_reach[p] = hex_reach[p] / 1000  # Convert to km
-
-for p in reach_diff_columns:
-    hex_reach[p] = hex_reach[p] / 1000  # Convert to km
-
 hex_reach.replace(0, np.nan, inplace=True)
 
 # %%

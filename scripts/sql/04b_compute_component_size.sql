@@ -41,8 +41,8 @@ CREATE TABLE fragmentation.component_size_all AS (
     SELECT
         COUNT(id),
         component_all,
-        SUM(ST_Length(geometry)) AS geom_length,
-        SUM(bike_length) AS bike_length,
+        SUM(ST_Length(geometry)) / 1000 AS geom_length,
+        SUM(bike_length) / 1000 AS bike_length,
         ST_Buffer(ST_ConcaveHull(ST_Collect(geometry), 0.2), 5) AS buffer_geom,
         ARRAY_AGG(DISTINCT id) AS ids,
         ARRAY_AGG(DISTINCT highway) AS highways
@@ -58,8 +58,8 @@ CREATE TABLE fragmentation.component_size_1 AS (
     SELECT
         COUNT(id),
         component_1,
-        SUM(ST_Length(geometry)) AS geom_length,
-        SUM(bike_length) AS bike_length,
+        SUM(ST_Length(geometry)) / 1000 AS geom_length,
+        SUM(bike_length) / 1000 AS bike_length,
         ST_Buffer(ST_ConcaveHull(ST_Collect(geometry), 0.2), 5) AS buffer_geom,
         ARRAY_AGG(DISTINCT id) AS ids,
         ARRAY_AGG(DISTINCT highway) AS highways
@@ -75,8 +75,8 @@ CREATE TABLE fragmentation.component_size_2 AS (
     SELECT
         COUNT(id),
         component_1_2,
-        SUM(ST_Length(geometry)) AS geom_length,
-        SUM(bike_length) AS bike_length,
+        SUM(ST_Length(geometry)) / 1000 AS geom_length,
+        SUM(bike_length) / 1000 AS bike_length,
         ST_Buffer(ST_ConcaveHull(ST_Collect(geometry), 0.2), 5) AS buffer_geom,
         ARRAY_AGG(DISTINCT id) AS ids,
         ARRAY_AGG(DISTINCT highway) AS highways
@@ -92,8 +92,8 @@ CREATE TABLE fragmentation.component_size_3 AS (
     SELECT
         COUNT(id),
         component_1_3,
-        SUM(ST_Length(geometry)) AS geom_length,
-        SUM(bike_length) AS bike_length,
+        SUM(ST_Length(geometry)) / 1000 AS geom_length,
+        SUM(bike_length) / 1000 AS bike_length,
         ST_Buffer(ST_ConcaveHull(ST_Collect(geometry), 0.2), 5) AS buffer_geom,
         ARRAY_AGG(DISTINCT id) AS ids,
         ARRAY_AGG(DISTINCT highway) AS highways
@@ -109,8 +109,8 @@ CREATE TABLE fragmentation.component_size_4 AS (
     SELECT
         COUNT(id),
         component_1_4,
-        SUM(ST_Length(geometry)) AS geom_length,
-        SUM(bike_length) AS bike_length,
+        SUM(ST_Length(geometry)) / 1000 AS geom_length,
+        SUM(bike_length) / 1000 AS bike_length,
         ST_Buffer(ST_ConcaveHull(ST_Collect(geometry), 0.2), 5) AS buffer_geom,
         ARRAY_AGG(DISTINCT id) AS ids,
         ARRAY_AGG(DISTINCT highway) AS highways
@@ -126,8 +126,8 @@ CREATE TABLE fragmentation.component_size_car AS (
     SELECT
         COUNT(id),
         component_car,
-        SUM(ST_Length(geometry)) AS geom_length,
-        SUM(bike_length) AS bike_length,
+        SUM(ST_Length(geometry)) / 1000 AS geom_length,
+        SUM(bike_length) / 1000 AS bike_length,
         ST_Buffer(ST_ConcaveHull(ST_Collect(geometry), 0.2), 5) AS buffer_geom,
         ARRAY_AGG(DISTINCT id) AS ids,
         ARRAY_AGG(DISTINCT highway) AS highways
@@ -177,24 +177,24 @@ SET
 UPDATE
     fragmentation.component_size_1
 SET
-    buffer_area = ST_Area(buffer_geom);
+    buffer_area = ST_Area(buffer_geom) / 1000000;
 
 UPDATE
     fragmentation.component_size_2
 SET
-    buffer_area = ST_Area(buffer_geom);
+    buffer_area = ST_Area(buffer_geom) / 1000000;
 
 UPDATE
     fragmentation.component_size_3
 SET
-    buffer_area = ST_Area(buffer_geom);
+    buffer_area = ST_Area(buffer_geom) / 1000000;
 
 UPDATE
     fragmentation.component_size_4
 SET
-    buffer_area = ST_Area(buffer_geom);
+    buffer_area = ST_Area(buffer_geom) / 1000000;
 
 UPDATE
     fragmentation.component_size_car
 SET
-    buffer_area = ST_Area(buffer_geom);
+    buffer_area = ST_Area(buffer_geom) / 1000000;
