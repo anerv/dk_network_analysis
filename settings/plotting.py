@@ -139,7 +139,7 @@ largest_local_component_area_columns = [
     "component_coverage_car",
 ]
 
-socio_component_columns = [
+socio_largest_component_columns = [
     "lts1_largest_component_average",
     "lts2_largest_component_average",
     "lts3_largest_component_average",
@@ -162,6 +162,21 @@ reach_diff_pct_columns = [
     "car_lts4_diff_pct",
 ]
 
+socio_reach_average_columns = [
+    "lts1_reach_average",
+    "lts2_reach_average",
+    "lts3_reach_average",
+    "lts4_reach_average",
+    "car_reach_average",
+]
+
+socio_reach_median_columns = [
+    "lts1_reach_median",
+    "lts2_reach_median",
+    "lts3_reach_median",
+    "lts4_reach_median",
+    "car_reach_median",
+]
 
 plotly_labels = {
     "lts_1_dens": "LTS 1 density (km/sqkm)",
