@@ -18,7 +18,19 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 # %%
 
+# CREATE DATA SET:
 
+# SOCIO-ECONOMIC VARIABLES
+
+# absolute and relative densities (steps)
+
+# component count for different steps
+# component per km for different steps
+
+# largest comp size (ave, median, ??)
+
+# reach (socio average?)
+# %%
 # Use robust_scale to norm cluster variables
 
 
