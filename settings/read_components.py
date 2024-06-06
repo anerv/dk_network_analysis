@@ -36,3 +36,6 @@ hex_components = gpd.GeoDataFrame.from_postgis(
 )
 
 hex_components.replace(0, np.nan, inplace=True)
+
+
+print("Component data loaded!")

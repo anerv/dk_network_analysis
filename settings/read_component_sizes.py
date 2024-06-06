@@ -20,3 +20,5 @@ component_size_4 = pd.read_sql("SELECT * FROM fragmentation.component_size_4;", 
 component_size_car = pd.read_sql(
     "SELECT * FROM fragmentation.component_size_car;", engine
 )
+
+print("Component size data loaded!")

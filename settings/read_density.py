@@ -37,3 +37,6 @@ density_hex = gpd.GeoDataFrame.from_postgis(
 )
 
 density_hex.replace(0, np.nan, inplace=True)
+
+
+print("Density data loaded!")
