@@ -30,7 +30,6 @@ for i, q in enumerate(queries):
 
     print(f"Step {i+1} done!")
 
-
 # %%
 distances = [5, 10, 15]  # max distance in km
 distances = [5, 10]  # max distance in km
