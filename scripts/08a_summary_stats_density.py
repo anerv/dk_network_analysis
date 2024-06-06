@@ -37,11 +37,11 @@ for df in density_data:
     for c in length_relative_steps_columns[1:-1]:
         df[c] = df[c] * 100
 
-
-for df in density_data:
+# %%
+for i, df in enumerate(density_data):
+    print(f"For {aggregation_levels[i]}:")
     display(df.describe())
 # %%
-
 ## ** TOTAL NETWORK LEVELS ****
 
 lts_1_length = density_muni.lts_1_length.sum()
@@ -75,7 +75,6 @@ network_levels = labels_all
 
 network_levels_steps = labels_step_all
 
-
 # For each stepwise level
 for a, df in zip(aggregation_levels, density_data):
 
@@ -85,7 +84,7 @@ for a, df in zip(aggregation_levels, density_data):
     median_shares = []
     std_devs = []
 
-    for i, l in enumerate(network_levels_steps[1:]):
+    for i, l in enumerate(network_levels_steps[:-1]):
 
         min_share = df[length_relative_steps_columns[i]].min()
         max_share = df[length_relative_steps_columns[i]].max()
@@ -100,7 +99,7 @@ for a, df in zip(aggregation_levels, density_data):
         std_devs.append(std_dev)
 
     df = pd.DataFrame(
-        index=network_levels_steps[1:],
+        index=network_levels_steps[:-1],
         data={
             "min_share": min_shares,
             "mean_share": mean_shares,
@@ -134,7 +133,7 @@ for a, df in zip(aggregation_levels, density_data):
     median_shares = []
     std_devs = []
 
-    for i, l in enumerate(network_levels[1:]):
+    for i, l in enumerate(network_levels[:-1]):
 
         min_share = df[length_relative_columns[i]].min()
         max_share = df[length_relative_columns[i]].max()
@@ -149,7 +148,7 @@ for a, df in zip(aggregation_levels, density_data):
         std_devs.append(std_dev)
 
     df = pd.DataFrame(
-        index=network_levels[1:],
+        index=network_levels[:-1],
         data={
             "min_share": min_shares,
             "mean_share": mean_shares,
