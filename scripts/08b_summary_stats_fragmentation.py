@@ -13,11 +13,6 @@ exec(open("../settings/plotting.py").read())
 exec(open("../settings/filepaths.py").read())
 exec(open("../settings/df_styler.py").read())
 
-engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
-
-connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
-
-
 # %%
 exec(open("../settings/read_component_sizes.py").read())
 
@@ -88,13 +83,14 @@ for a, df in zip(aggregation_levels, comp_dfs):
         std_comp_counts.append(df[component_count_columns[i]].std())
 
     df = pd.DataFrame(
+        index=network_levels_steps,
         data={
             "min": min_comp_counts,
             "mean": mean_comp_counts,
             "median": median_comp_counts,
             "max": max_comp_counts,
             "std": std_comp_counts,
-        }
+        },
     )
 
     df.to_csv(
@@ -104,6 +100,6 @@ for a, df in zip(aggregation_levels, comp_dfs):
 
     print(f"Summary statistics for local component count at the {a} level:")
 
-    display(df.style.pipe(format_style_no_index))
+    display(df.style.pipe(format_style_index))
 
 # %%
