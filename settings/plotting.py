@@ -62,7 +62,7 @@ labels_pct_step = [
 
 
 id_columns = ["municipality", "id", "hex_id"]
-aggregation_levels = ["municipal", "socio", "grid"]
+aggregation_levels = ["administrative", "socio", "hexgrid"]
 
 lts_color_dict = {
     "1": "#0B7512",

@@ -13,9 +13,6 @@ exec(open("../settings/plotting.py").read())
 exec(open("../settings/filepaths.py").read())
 exec(open("../settings/df_styler.py").read())
 
-# engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
-
-# connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 # %%
 # Read data
 

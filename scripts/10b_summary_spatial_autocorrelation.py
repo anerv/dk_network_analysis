@@ -14,12 +14,7 @@ exec(open("../settings/plotting.py").read())
 exec(open("../settings/df_styler.py").read())
 plot_func.set_renderer("png")
 
-engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
-
-connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
-
 # %%
-
 k_values = [k_muni, k_socio, k_hex]
 spatial_weights_values = [f"queen_{k}" for k in k_values]
 rename_dicts = [

@@ -19,11 +19,6 @@ exec(open("../settings/df_styler.py").read())
 
 plot_func.set_renderer("png")
 
-engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
-
-connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
-
-
 # %%
 exec(open("../settings/read_density.py").read())
 
