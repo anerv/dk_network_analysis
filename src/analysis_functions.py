@@ -8,6 +8,133 @@ from pysal.lib import weights
 from splot.esda import lisa_cluster
 
 
+def compare_spatial_weights_sensitivity(
+    gdf, id_column, aggregation_level, k_values, all_columns, fp
+):
+
+    print("Starting sensitivity analysis for aggregation level:", aggregation_level)
+
+    # Compute spatial weights
+    w1 = analysis_func.compute_spatial_weights(
+        gdf, id_column, "knn", k=k_values[0]
+    )  # using filler col for subset
+    w2 = analysis_func.compute_spatial_weights(
+        gdf, id_column, "knn", k=k_values[1]
+    )  # using filler col for subset
+    w3 = analysis_func.compute_spatial_weights(
+        gdf, id_column, "knn", k=k_values[2]
+    )  # using filler col for subset
+
+    all_weigths = {
+        "w1": w1,
+        "w2": w2,
+        "w3": w3,
+    }
+
+    for columns in all_columns:
+
+        for c in columns:
+
+            # dictionaries for results
+            all_morans = {}
+            all_lisas = {}
+            hotspot_count = {}
+            coldspot_count = {}
+
+            col_names = [c]
+            variable_names = [c]
+
+            for name, w in all_weigths.items():
+
+                morans_density = analysis_func.compute_spatial_autocorrelation(
+                    col_names,
+                    variable_names,
+                    gdf,
+                    w,
+                    [fp + f"moransi_{aggregation_level}_{c}"],
+                    show_plot=False,
+                )
+
+                all_morans[name] = morans_density[c].I
+
+                filepaths = [fp + f"lisa_{c}_{name}_{aggregation_level}.png"]
+
+                lisas_density = analysis_func.compute_lisa(
+                    col_names, variable_names, gdf, w, filepaths, show_plot=False
+                )
+
+                all_lisas[name] = lisas_density[c]
+
+                # Export
+                q_columns = [v + "_q" for v in variable_names]
+                q_columns.append("id")
+                gdf.rename({id_column: "id"}, axis=1)[q_columns].to_csv(
+                    fp + f"spatial_autocorrelation_{name}_{c}_{aggregation_level}.csv",
+                    index=True,
+                )
+
+                for v in variable_names:
+                    hotspot = len(gdf[gdf[f"{v}_q"] == "HH"])
+                    coldspot = len(gdf[gdf[f"{v}_q"] == "LL"])
+
+                    print(
+                        f"Using spatial weights {name}, for '{v}', {hotspot} out of {len(gdf)} units ({hotspot/len(gdf)*100:.2f}%) are part of a hotspot."
+                    )
+                    print(
+                        f"Using spatial weights {name}, for '{v}', {coldspot} out of {len(gdf)} units ({coldspot/len(gdf)*100:.2f}%) are part of a coldspot."
+                    )
+                    print("\n")
+
+                    hotspot_count[name] = hotspot
+                    coldspot_count[name] = coldspot
+
+            _ = plt.figure(figsize=(10, 5))
+
+            # creating the bar plot
+            plt.bar(all_morans.keys(), all_morans.values(), color="#AA336A", width=0.4)
+
+            plt.xlabel("Spatial weights")
+            plt.ylabel("Moran's I")
+            plt.title(
+                f"Comparison of global spatial autocorrelation for {c} at aggregation {aggregation_level}"
+            )
+            plt.show()
+
+            _ = plt.figure(figsize=(10, 5))
+
+            # creating the bar plot
+            plt.bar(
+                hotspot_count.keys(),
+                hotspot_count.values(),
+                color="#916E99",
+                width=0.4,
+            )
+
+            plt.xlabel("Spatial weights")
+            plt.ylabel("Number of units in hot spot")
+            plt.title(
+                f"Comparison of areas in hot spot for {c} at aggregation {aggregation_level}"
+            )
+            plt.show()
+
+            _ = plt.figure(figsize=(10, 5))
+
+            # creating the bar plot
+            plt.bar(
+                coldspot_count.keys(),
+                coldspot_count.values(),
+                color="#658CBB",
+                width=0.4,
+            )
+
+            plt.xlabel("Spatial weights")
+            plt.ylabel("Number of grid cells in cold spot")
+            plt.title(
+                f"Comparison of areas in cold spot for {c} at aggregation {aggregation_level}"
+            )
+            plt.show()
+
+
 def compute_spatial_weights(gdf, na_columns, w_type, dist=1000, k=6):
     """
     Wrapper function for computing the spatial weights for the analysis/results grids.
