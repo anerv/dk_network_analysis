@@ -22,51 +22,6 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 exec(open("../settings/read_density.py").read())
 
 # %%
-### COMPARE MUNICIPAL NETWORK DISTRIBUTION ####
-
-municipalities = density_muni.municipality.unique()
-
-for m in municipalities:
-    data = density_muni[density_muni.municipality == m]
-
-    if len(data) > 0:
-
-        dens_list = data[density_columns].values[0]
-        length_list = data[length_columns].values[0]
-        lts = ["1", "2", "3", "4", "car", "all"]
-
-        df = pd.DataFrame({"density": dens_list, "length": length_list, "lts": lts})
-
-        plt.figure()
-
-        fig = sns.barplot(df, x="lts", y="length").set(title=f"{m} network length")
-
-        plt.show()
-
-        plt.close()
-
-for m in municipalities:
-    data = density_muni[density_muni.municipality == m]
-
-    if len(data) > 0:
-
-        dens_list = data[density_steps_columns].values[0]
-        length_list = data[length_steps_columns].values[0]
-        lts = ["1", "1-2", "1-3", "1-4", "car", "all"]
-
-        df = pd.DataFrame({"density": dens_list, "length": length_list, "lts": lts})
-
-        plt.figure()
-
-        fig = sns.barplot(df, x="lts", y="length").set(
-            title=f"{m} network length (stepwise)"
-        )
-
-        plt.show()
-
-        plt.close()
-
-# %%
 ###########################################
 ####### MAPS ##############################
 ###########################################
