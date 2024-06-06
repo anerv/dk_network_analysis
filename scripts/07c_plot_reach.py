@@ -31,8 +31,6 @@ exec(open("../settings/read_reach.py").read())
 
 # Absolute reach length
 
-# Use norm/same color scale for all maps?
-
 plot_titles = [
     f"Network reach: LTS 1 ({reach_dist})",
     f"Network reach: LTS 1-2 ({reach_dist})",
@@ -78,9 +76,6 @@ for i, p in enumerate(plot_columns):
 
 # %%
 # Absolute reach differences
-
-# Use diverging color map
-# Use norm/same color scale for all maps?
 
 plot_titles = [
     f"Difference in network reach: Car VS. LTS 1 ({reach_dist})",
@@ -128,9 +123,6 @@ for i, p in enumerate(plot_columns):
 
 # %%
 # Pct differences between LTS and car reach
-
-# Use diverging color map
-# Use norm/same color scale for all maps?
 
 plot_titles = [
     f"Difference in network reach: Car VS. LTS 1 (%) ({reach_dist})",
@@ -213,7 +205,7 @@ for i, p in enumerate(reach_columns):
 reach_len = []
 lts_all = []
 
-lts = ["1", "2", "3", "4", "car"]
+lts = labels
 
 for i, l in enumerate(lts):
 
@@ -251,7 +243,7 @@ plt.close()
 reach_len_diff = []
 lts_all = []
 
-lts = ["1", "2", "3", "4"]
+lts = labels[:-1]
 
 for i, l in enumerate(lts):
 
@@ -286,13 +278,12 @@ plt.show()
 plt.close()
 
 # %%
-###########################################
 ####### Violin plots ######################
 ###########################################
 
-colors = [v for v in lts_color_dict.values()]
+# REACH
 
-# reach
+colors = [v for v in lts_color_dict.values()]
 
 filepaths = filepaths_violin_reach
 
@@ -538,7 +529,6 @@ for n in network_levels:
 socio_reach = gpd.read_postgis(
     f"SELECT * FROM reach.socio_reach_{reach_dist}", engine, geom_col="geometry"
 )
-
 
 # %%
 average_columns = [c for c in socio_reach.columns if "average" in c]

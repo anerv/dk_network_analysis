@@ -34,7 +34,6 @@ for gdf in gdfs:
         gdf[p] = gdf[p] * 100
 
 # %%
-id_columns = ["municipality", "id", "hex_id"]
 k_values = [k_muni, k_socio, k_hex]
 spatial_weights_values = [f"queen_{k}" for k in k_values]
 
