@@ -235,3 +235,15 @@ w3 usually lower.
 Same for socio and hexgrid.
 
 Comp per length usually very low.
+
+#### Component size
+
+# TODO!
+
+### Reach
+
+# TODO!
+
+### Correlation
+
+## TODO!
