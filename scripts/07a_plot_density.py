@@ -14,10 +14,6 @@ exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 exec(open("../settings/filepaths.py").read())
 
-engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
-
-connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
-
 # %%
 exec(open("../settings/read_density.py").read())
 
@@ -205,7 +201,6 @@ for e, gdf in enumerate(gdfs):
             cx_tile=cx_tile_2,
         )
 
-
 # %%
 ###########################################
 ####### PLOTS #############################
@@ -232,7 +227,6 @@ hex_ids = density_hex.hex_id.unique()
 id_lists = [municipalities, socio_ids, hex_ids]
 
 stacked_dfs = {}
-
 
 ## Make stacked dfs
 for e, gdf in enumerate(gdfs):
@@ -272,9 +266,6 @@ for e, gdf in enumerate(gdfs):
 # %%
 # ***** KDE PLOTS *****
 
-# cumulative=True, common_norm=False, common_grid=True,
-# palette="crest", alpha=.5, linewidth=0,
-
 filepaths_length = filepaths_kde_length
 filepaths_density = filepaths_kde_density
 
@@ -286,8 +277,6 @@ for label, df in stacked_dfs.items():
         data=df,
         x="length",
         hue="Network level",
-        # multiple="stack",
-        # fill=True,
         log_scale=True,
         palette=lts_color_dict.values(),
     )
@@ -304,8 +293,6 @@ for label, df in stacked_dfs.items():
         data=df,
         x="density",
         hue="Network level",
-        # multiple="stack",
-        # fill=True,
         log_scale=True,
         palette=lts_color_dict.values(),
     )
@@ -318,12 +305,11 @@ for label, df in stacked_dfs.items():
     plt.close
 
 # %%
-# **** BAR CHARTS ****
+# **** BAR CHARTS - MUNI ****
 
 dfs = [
     stacked_dfs["Municipal"],
-    # stacked_dfs["Local"],
-]  # Do not make stacked bar chart for grid cells or socio
+]
 
 filepaths_density = filepaths_bar_density
 filepaths_length = filepaths_bar_length
