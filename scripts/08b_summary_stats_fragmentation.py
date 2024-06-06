@@ -19,21 +19,9 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 
 # %%
-component_size_all = pd.read_sql(
-    "SELECT * FROM fragmentation.component_size_all;", engine
-)
-component_size_1 = pd.read_sql("SELECT * FROM fragmentation.component_size_1;", engine)
-component_size_2 = pd.read_sql("SELECT * FROM fragmentation.component_size_2;", engine)
-component_size_3 = pd.read_sql("SELECT * FROM fragmentation.component_size_3;", engine)
-component_size_4 = pd.read_sql("SELECT * FROM fragmentation.component_size_4;", engine)
-component_size_car = pd.read_sql(
-    "SELECT * FROM fragmentation.component_size_car;", engine
-)
+exec(open("../settings/read_component_sizes.py").read())
 
-comp_count_muni = pd.read_sql("SELECT * FROM fragmentation.comp_count_muni;", engine)
-comp_count_socio = pd.read_sql("SELECT * FROM fragmentation.comp_count_socio;", engine)
-comp_count_hex = pd.read_sql("SELECT * FROM fragmentation.comp_count_hex;", engine)
-
+exec(open("../settings/read_components.py").read())
 # %%
 
 comp_dfs = [
@@ -87,7 +75,7 @@ display(df.style.pipe(format_style_index))
 # %%
 aggregation_levels = ["municipal", "local", "grid"]
 
-comp_dfs = [comp_count_muni, comp_count_socio, comp_count_hex]
+comp_dfs = [muni_components, socio_components, hex_components]
 
 network_levels_steps = [
     "LTS 1",

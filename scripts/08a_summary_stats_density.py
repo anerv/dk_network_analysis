@@ -25,31 +25,7 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 
 # %%
-density_muni = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM density.density_municipality;",
-    engine,
-    crs=crs,
-    geom_col="geometry",
-)
-density_muni.replace(0, np.nan, inplace=True)
-
-density_socio = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM density.density_socio;",
-    engine,
-    crs=crs,
-    geom_col="geometry",
-)
-
-density_socio.replace(0, np.nan, inplace=True)
-
-density_hex = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM density.density_hex;",
-    engine,
-    crs=crs,
-    geom_col="geometry",
-)
-
-density_hex.replace(0, np.nan, inplace=True)
+exec(open("../settings/read_density.py").read())
 
 density_data = [density_muni, density_socio, density_hex]
 

@@ -20,7 +20,8 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 # %%
-#### CORRELATION BETWEEN SOCIO-ECO VARIABLES ####
+###### SOCIO-ECO VARIABLES #####
+################################
 
 socio = gpd.read_postgis("SELECT * FROM socio", engine, geom_col="geometry")
 
@@ -98,6 +99,7 @@ all_density_columns = [
 
 labels = ["density", "density_steps", "length_relative", "length_relative_steps"]
 # %%
+# Density plot correlation
 for i, columns in enumerate(all_density_columns):
 
     corr_columns = socio_corr_variables + columns
@@ -110,6 +112,7 @@ for i, columns in enumerate(all_density_columns):
     )
 
 # %%
+# Density display correlation
 for i, columns in enumerate(all_density_columns):
     display(
         socio_density[columns]
@@ -166,6 +169,7 @@ labels = [
 ]
 
 # %%
+# Fragmentation plot correlation
 for i, columns in enumerate(all_fragmentation_columns):
 
     corr_columns = socio_corr_variables + columns
@@ -180,6 +184,7 @@ for i, columns in enumerate(all_fragmentation_columns):
     )
 
 # %%
+# Fragmentation display correlation
 for i, columns in enumerate(all_fragmentation_columns):
     display(
         socio_components[columns]
@@ -209,6 +214,7 @@ labels = [
 ]
 
 # %%
+# Reach plot correlation
 for i, columns in enumerate(all_reach_columns):
 
     corr_columns = socio_corr_variables + columns
@@ -221,7 +227,7 @@ for i, columns in enumerate(all_reach_columns):
     )
 
 # %%
-
+# Reach display correlation
 for i, columns in enumerate(all_reach_columns):
     display(
         socio_reach[columns]

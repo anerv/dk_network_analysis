@@ -22,16 +22,7 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 # %%
 # ********** Plot total component size distributions **********
 
-component_size_all = pd.read_sql(
-    "SELECT * FROM fragmentation.component_size_all;", engine
-)
-component_size_1 = pd.read_sql("SELECT * FROM fragmentation.component_size_1;", engine)
-component_size_2 = pd.read_sql("SELECT * FROM fragmentation.component_size_2;", engine)
-component_size_3 = pd.read_sql("SELECT * FROM fragmentation.component_size_3;", engine)
-component_size_4 = pd.read_sql("SELECT * FROM fragmentation.component_size_4;", engine)
-component_size_car = pd.read_sql(
-    "SELECT * FROM fragmentation.component_size_car;", engine
-)
+exec(open("../settings/read_component_sizes.py").read())
 
 component_size_dfs = [
     component_size_all,
@@ -146,32 +137,7 @@ for muni in municipalities:
 # %%
 # **** PLOT LOCAL COMPONENT COUNT (MAPS) ****
 
-muni_components = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM fragmentation.comp_count_muni;",
-    engine,
-    crs=crs,
-    geom_col="geometry",
-)
-
-muni_components.replace(0, np.nan, inplace=True)
-
-socio_components = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM fragmentation.comp_count_socio;",
-    engine,
-    crs=crs,
-    geom_col="geometry",
-)
-
-socio_components.replace(0, np.nan, inplace=True)
-
-hex_components = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM fragmentation.comp_count_hex;",
-    engine,
-    crs=crs,
-    geom_col="geometry",
-)
-
-hex_components.replace(0, np.nan, inplace=True)
+exec(open("../settings/read_components.py").read())
 
 gdfs = [muni_components, socio_components, hex_components]
 
@@ -496,32 +462,7 @@ for i, df_subset in enumerate(dfs):
 # %%
 # **** PLOT COMPONENTS PER LENGTH AND DENSITY ****
 
-muni_components = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM fragmentation.component_length_muni;",
-    engine,
-    crs=crs,
-    geom_col="geometry",
-)
-
-muni_components.replace(0, np.nan, inplace=True)
-
-socio_components = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM fragmentation.component_length_socio;",
-    engine,
-    crs=crs,
-    geom_col="geometry",
-)
-
-socio_components.replace(0, np.nan, inplace=True)
-
-hex_components = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM fragmentation.component_length_hex;",
-    engine,
-    crs=crs,
-    geom_col="geometry",
-)
-
-hex_components.replace(0, np.nan, inplace=True)
+exec(open("../settings/read_component_sizes.py").read())
 
 gdfs = [muni_components, socio_components, hex_components]
 

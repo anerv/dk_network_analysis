@@ -20,9 +20,7 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 # Read data
 
-hex_reach = gpd.read_postgis(
-    f"SELECT * FROM reach.hex_reach_{reach_dist}", engine, geom_col="geometry"
-)
+exec(open("../settings/read_reach.py").read())
 
 hex_reach.replace(0, np.nan, inplace=True)
 

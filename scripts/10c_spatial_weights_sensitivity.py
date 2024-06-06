@@ -34,32 +34,7 @@ fp = "../results/spatial_autocorrelation/sensitivity_test/"
 ############################
 
 ### READ DATA ###
-density_muni = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM density.density_municipality;",
-    engine,
-    crs=crs,
-    geom_col="geometry",
-)
-
-density_muni.replace(np.nan, 0, inplace=True)
-
-density_socio = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM density.density_socio;",
-    engine,
-    crs=crs,
-    geom_col="geometry",
-)
-
-density_socio.replace(np.nan, 0, inplace=True)
-
-density_hex = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM density.density_hex;",
-    engine,
-    crs=crs,
-    geom_col="geometry",
-)
-
-density_hex.replace(np.nan, 0, inplace=True)
+exec(open("../settings/read_density.py").read())
 
 gdfs = [density_muni, density_socio, density_hex]
 
@@ -91,32 +66,7 @@ for i, gdf in enumerate(gdfs):
 ####### FRAGMENTATION ######
 ############################
 
-muni_components = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM fragmentation.component_length_muni;",
-    engine,
-    crs=crs,
-    geom_col="geometry",
-)
-
-muni_components.replace(np.nan, 0, inplace=True)
-
-socio_components = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM fragmentation.component_length_socio;",
-    engine,
-    crs=crs,
-    geom_col="geometry",
-)
-
-socio_components.replace(np.nan, 0, inplace=True)
-
-hex_components = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM fragmentation.component_length_hex;",
-    engine,
-    crs=crs,
-    geom_col="geometry",
-)
-
-hex_components.replace(np.nan, 0, inplace=True)
+exec(open("../settings/read_components.py").read())
 
 gdfs = [muni_components, socio_components, hex_components]
 
@@ -142,9 +92,7 @@ for i, gdf in enumerate(gdfs):
 ####### REACH ##############
 ############################
 
-hex_reach = gpd.read_postgis(
-    f"SELECT * FROM reach.hex_reach_{reach_dist}", engine, geom_col="geometry"
-)
+exec(open("../settings/read_reach.py").read())
 
 hex_reach.replace(np.nan, 0, inplace=True)
 

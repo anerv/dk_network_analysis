@@ -24,6 +24,11 @@ mpl.rcParams["hatch.linewidth"] = 0.5
 scheme = "fisherjenks"
 # number of classes in classification scheme
 k = 5
+
+labels = []
+labels_step = []
+labels_all = []
+
 lts_color_dict = {
     "1": "#0B7512",
     "2": "#7ABA78",
