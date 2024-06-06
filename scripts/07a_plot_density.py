@@ -281,9 +281,8 @@ density_titles = [
     "Local network density (km/sqkm)",
     "Grid network density (km/sqkm)",
 ]
-id_columns = ["municipality", "id", "hex_id"]
 
-type_columns = ["Municipal", "Local", "Grid"]
+type_columns = aggregation_levels
 
 municipalities = density_muni.municipality.unique()
 socio_ids = density_socio.id.unique()

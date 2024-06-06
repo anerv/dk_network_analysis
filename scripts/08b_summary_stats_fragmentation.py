@@ -73,7 +73,6 @@ df = pd.DataFrame(
 df.to_csv(filepath_sum_fragmentation_summary_stats, index=True)
 display(df.style.pipe(format_style_index))
 # %%
-aggregation_levels = ["municipal", "local", "grid"]
 
 comp_dfs = [muni_components, socio_components, hex_components]
 

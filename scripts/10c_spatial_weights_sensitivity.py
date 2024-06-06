@@ -26,8 +26,6 @@ all_ks = [muni_ks, socio_ks, hex_ks]
 
 id_columns = ["municipality", "id", "hex_id"]
 
-aggregation_levels = ["administrative", "socio", "hexgrid"]
-
 fp = "../results/spatial_autocorrelation/sensitivity_test/"
 # %%
 ####### DENSITY ############
@@ -99,14 +97,12 @@ hex_reach.replace(np.nan, 0, inplace=True)
 # K-values to test
 hex_ks = [6, 18, 36]  # 60
 
-aggregation_levels = ["hexgrid"]
-
 all_columns = [reach_columns]
 
 analysis_func.compare_spatial_weights_sensitivity(
     gdf=hex_reach,
     id_column="hex_id",
-    aggregation_level="hex_grid",
+    aggregation_level=aggregation_levels[-1],
     k_values=hex_ks,
     all_columns=all_columns,
     fp=fp,

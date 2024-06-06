@@ -29,6 +29,9 @@ labels = []
 labels_step = []
 labels_all = []
 
+id_columns = ["municipality", "id", "hex_id"]
+aggregation_levels = ["municipal", "socio", "grid"]
+
 lts_color_dict = {
     "1": "#0B7512",
     "2": "#7ABA78",

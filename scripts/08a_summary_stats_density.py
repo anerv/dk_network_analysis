@@ -77,9 +77,6 @@ display(df.style.pipe(format_style_no_index))
 # %%
 ### VALUE RANGES FOR EACH LTS LEVEL FOR EACH AGGREGATION LEVEL
 
-aggregation_levels = ["municipal", "local", "grid"]
-
-
 network_levels = [
     "full",
     "LTS 1",
