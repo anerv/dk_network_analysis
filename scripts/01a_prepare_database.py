@@ -16,6 +16,6 @@ dbf.run_query_pg("sql/00_create_db.sql", connection)
 
 connection.close()
 
-print("Script 00 complete!")
+print("Script 01a complete!")
 
 # %%

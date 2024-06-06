@@ -5,7 +5,6 @@ import numpy as np
 
 exec(open("../settings/yaml_variables.py").read())
 
-# %%
 pop = pd.read_csv(
     "../data/input/socioeconomic/Befolkning.csv", sep=";", encoding="utf-8"
 )
@@ -62,7 +61,6 @@ pop.replace("-", np.nan, inplace=True)
 for col in pop.columns[1:]:
     pop[col] = pop[col].str.replace(",", ".").astype(float)
 
-# %%
 # Fill missing value
 pop_2024 = pd.read_csv(
     "../data/input/socioeconomic/Befolkning_2024.csv", sep=";", encoding="utf-8"
@@ -109,8 +107,6 @@ pop = pd.concat([pop, pop_2024[pop_2024.ValgstedId == missing_id]])
 
 assert org_shape == pop.shape
 
-# %%
-
 geoms = gpd.read_file("../data/input/socioeconomic/voting_areas.gpkg")
 geoms = geoms[["ValgstedId", "area_name", "municipal_id", "geometry"]]
 
@@ -126,4 +122,7 @@ assert len(areas.ValgstedId.unique()) == len(areas)
 
 # Export
 areas.to_file("../data/processed/voting_areas.gpkg", driver="GPKG")
+
+
+print("Script 00 complete!")
 # %%
