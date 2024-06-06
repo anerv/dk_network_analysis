@@ -392,7 +392,7 @@ for i, r in enumerate(reach_diff_pct_columns):
 
 df = pd.read_sql(f"SELECT * FROM reach.reach_{reach_dist}_component_length_hex;", engine)
 
-labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Car network"]
+labels = labels_step
 for c, d, r, l in zip(
     component_count_columns[:-1], density_steps_columns[:-1], reach_columns, labels
 ):
@@ -432,7 +432,7 @@ for c, d, r, l in zip(
 ###########################################
 reach_df = pd.read_sql(f"SELECT * FROM reach.compare_reach;", engine)
 
-network_levels = ["lts1", "lts2", "lts3", "lts4", "car"]
+network_levels = labels
 
 reach_columns = reach_df.columns.to_list()
 
@@ -440,7 +440,7 @@ distances = list(set([c.split("_")[2] for c in reach_columns]))
 
 # %%
 
-labels = ["Median", "Mean", "Max", "Std"]
+labels_stat = ["Median", "Mean", "Max", "Std"]
 
 for i, e in enumerate([np.median, np.mean, np.max, np.std]):
 
@@ -469,9 +469,9 @@ for i, e in enumerate([np.median, np.mean, np.max, np.std]):
     # Set the labels and title
     plt.xlabel("Network type")
     plt.ylabel("Reach (km)")
-    plt.title(f"{labels[i]} network reach per network type")
+    plt.title(f"{labels_stat[i]} network reach per network type")
 
-    plt.savefig(fp_reach_compare_dist_bars + labels[i].lower() + ".png")
+    plt.savefig(fp_reach_compare_dist_bars + labels_stat[i].lower() + ".png")
     plt.show()
     plt.close()
 
@@ -499,9 +499,6 @@ plt.close()
 
 # %%
 
-
-# %%
-
 # KDE plots
 for n in network_levels:
     cols = [c for c in reach_columns if n in c]
@@ -511,11 +508,11 @@ for n in network_levels:
 
     values = df.values.flatten()
     distances = [c.split("_")[2] for c in cols]
-    labels = []
+    labels_dist = []
     for d in distances:
-        labels.extend([d] * len(df))
+        labels_dist.extend([d] * len(df))
 
-    df_flat = pd.DataFrame({"reach_length": values, "reach_distance": labels})
+    df_flat = pd.DataFrame({"reach_length": values, "reach_distance": labels_dist})
 
     fig = sns.kdeplot(
         data=df_flat,
@@ -535,8 +532,6 @@ for n in network_levels:
 
     plt.close()
 
-    # df["diff"] = df[cols[-1]] - df[cols[0]]
-
 # %%
 
 # Read data
@@ -553,7 +548,7 @@ max_columns = [c for c in socio_reach.columns if "max" in c]
 
 metrics = ["Average", "Median", "Min", "Max"]
 
-network_levels = ["LTS 1", "LTS 2", "LTS 3", "LTS 4", "car"]
+network_levels = labels
 # %%
 
 for i, plot_columns in enumerate(

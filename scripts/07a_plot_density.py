@@ -87,7 +87,7 @@ for e, gdf in enumerate(gdfs):
 
     plot_columns = density_columns
 
-    labels = ["LTS 1", "LTS 2", "LTS 3", "LTS 4", "Total car", "Total network"]
+    labels = labels_all
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l for l in labels]
 
@@ -126,7 +126,7 @@ for e, gdf in enumerate(gdfs):
     ###### Plot stepwise LTS densities #####
     plot_columns = density_steps_columns
 
-    labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car", "Total network"]
+    labels = labels_step_all
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l for l in labels]
 
@@ -168,14 +168,7 @@ for e, gdf in enumerate(gdfs):
     for p in plot_columns:
         gdf[p] = gdf[p] * 100
 
-    labels = [
-        "LTS 1 (%)",
-        "LTS 2 (%)",
-        "LTS 3 (%)",
-        "LTS 4 (%)",
-        # "No biking (%)",
-        "Total car (%)",
-    ]
+    labels = labels_pct
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l for l in labels]
 
@@ -221,14 +214,7 @@ for e, gdf in enumerate(gdfs):
     for p in convert_columns:
         gdf[p] = gdf[p] * 100
 
-    labels = [
-        "LTS 1 (%)",
-        "LTS 1-2 (%)",
-        "LTS 1-3 (%)",
-        "LTS 1-4 (%)",
-        # "No biking (%)",
-        "Total car (%)",
-    ]
+    labels = labels_pct_step
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l for l in labels]
 

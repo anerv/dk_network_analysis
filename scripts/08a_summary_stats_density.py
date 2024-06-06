@@ -44,28 +44,22 @@ for df in density_data:
 
 ## ** TOTAL NETWORK LEVELS ****
 
-total_network_length = density_muni.total_network_length.sum()
 lts_1_length = density_muni.lts_1_length.sum()
 lts_2_length = density_muni.lts_2_length.sum()
 lts_3_length = density_muni.lts_3_length.sum()
 lts_4_length = density_muni.lts_4_length.sum()
 lts_car_length = density_muni.total_car_length.sum()
+total_network_length = density_muni.total_network_length.sum()
 
-network_levels = [
-    "full",
-    "LTS 1",
-    "LTS 2",
-    "LTS 3",
-    "LTS 4",
-    "car",
-]
+network_levels = labels_all
+
 network_lengths = [
-    total_network_length,
     lts_1_length,
     lts_2_length,
     lts_3_length,
     lts_4_length,
     lts_car_length,
+    total_network_length,
 ]
 
 df = pd.DataFrame(data={"network_type": network_levels, "length (km)": network_lengths})
@@ -77,23 +71,9 @@ display(df.style.pipe(format_style_no_index))
 # %%
 ### VALUE RANGES FOR EACH LTS LEVEL FOR EACH AGGREGATION LEVEL
 
-network_levels = [
-    "full",
-    "LTS 1",
-    "LTS 2",
-    "LTS 3",
-    "LTS 4",
-    "car",
-]
+network_levels = labels_all
 
-network_levels_steps = [
-    "full",
-    "LTS 1",
-    "LTS 1-2",
-    "LTS 1-3",
-    "LTS 1-4",
-    "car",
-]
+network_levels_steps = labels_step_all
 
 
 # For each stepwise level

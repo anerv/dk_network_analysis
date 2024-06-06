@@ -25,22 +25,15 @@ exec(open("../settings/read_components.py").read())
 # %%
 
 comp_dfs = [
-    component_size_all,
     component_size_1,
     component_size_2,
     component_size_3,
     component_size_4,
     component_size_car,
+    component_size_all,
 ]
 
-network_levels_steps = [
-    "full",
-    "LTS 1",
-    "LTS 1-2",
-    "LTS 1-3",
-    "LTS 1-4",
-    "car",
-]
+network_levels_steps = labels_step_all
 
 comp_count = []
 smallest_comp_size = []
@@ -76,14 +69,7 @@ display(df.style.pipe(format_style_index))
 
 comp_dfs = [muni_components, socio_components, hex_components]
 
-network_levels_steps = [
-    "LTS 1",
-    "LTS 1-2",
-    "LTS 1-3",
-    "LTS 1-4",
-    "car",
-    "full",
-]
+network_levels_steps = labels_step_all
 
 for a, df in zip(aggregation_levels, comp_dfs):
 

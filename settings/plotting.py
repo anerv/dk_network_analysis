@@ -25,9 +25,41 @@ scheme = "fisherjenks"
 # number of classes in classification scheme
 k = 5
 
-labels = []
-labels_step = []
-labels_all = []
+labels = ["LTS 1", "LTS 2", "LTS 3", "LTS 4", "Total car"]
+labels_all = ["LTS 1", "LTS 2", "LTS 3", "LTS 4", "Total car", "Total network"]
+
+labels_step = [
+    "LTS 1",
+    "LTS 1-2",
+    "LTS 1-3",
+    "LTS 1-4",
+    "Total car",
+]
+labels_step_all = [
+    "LTS 1",
+    "LTS 1-2",
+    "LTS 1-3",
+    "LTS 1-4",
+    "Total car",
+    "Total network",
+]
+
+
+labels_pct = [
+    "LTS 1 (%)",
+    "LTS 2 (%)",
+    "LTS 3 (%)",
+    "LTS 4 (%)",
+    "Total car (%)",
+]
+labels_pct_step = [
+    "LTS 1 (%)",
+    "LTS 1-2 (%)",
+    "LTS 1-3 (%)",
+    "LTS 1-4 (%)",
+    "Total car (%)",
+]
+
 
 id_columns = ["municipality", "id", "hex_id"]
 aggregation_levels = ["municipal", "socio", "grid"]

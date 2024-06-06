@@ -26,13 +26,7 @@ hex_reach.replace(0, np.nan, inplace=True)
 
 hex_reach.describe()
 # %%
-labels = [
-    "LTS 1",
-    "LTS 1-2",
-    "LTS 1-3",
-    "LTS 1-4",
-    "car",
-]
+labels = labels_step
 
 min_reach = []
 mean_reach = []

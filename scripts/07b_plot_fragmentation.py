@@ -18,30 +18,29 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
-
 # %%
 # ********** Plot total component size distributions **********
 
 exec(open("../settings/read_component_sizes.py").read())
 
 component_size_dfs = [
-    component_size_all,
     component_size_1,
     component_size_2,
     component_size_3,
     component_size_4,
     component_size_car,
+    component_size_all,
 ]
 
-labels = [
-    "total network",
-    "LTS 1 network",
-    "LTS 2 network",
-    "LTS 3 network",
-    "LTS 4 network",
-    "total car network",
+labels = labels_step_all
+columns = [
+    "bike_length",
+    "bike_length",
+    "bike_length",
+    "bike_length",
+    "geom_length",  # use geom for car network
+    "bike_length",
 ]
-columns = ["bike_length"] * 5 + ["geom_length"]
 # %%
 for i, df in enumerate(component_size_dfs):
     plot_func.make_zipf_component_plot(
@@ -143,7 +142,7 @@ gdfs = [muni_components, socio_components, hex_components]
 
 plot_columns = component_count_columns
 
-labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car", "Total network"]
+labels = labels_step_all
 
 all_filepaths = filepaths_local_component_count
 
@@ -470,7 +469,7 @@ gdfs = [muni_components, socio_components, hex_components]
 # comp per km
 plot_columns = component_per_km_columns
 
-labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car", "Total network"]
+labels = labels_step_all
 
 all_filepaths = filepaths_local_component_count
 
@@ -594,13 +593,7 @@ plot_titles = [
     "Largest component length for car network",
 ]
 
-labels = [
-    "LTS 1",
-    "LTS 1-2",
-    "LTS 1-3",
-    "LTS 1-4",
-    "Total car",
-]
+labels = labels_step
 filepaths = [
     "../results/component_size_maps/largest_component_length_" + l for l in labels
 ]
@@ -667,17 +660,10 @@ plot_titles = [
     "Largest component area for car network",
 ]
 
-labels = [
-    "LTS 1",
-    "LTS 1-2",
-    "LTS 1-3",
-    "LTS 1-4",
-    "Total car",
-]
+labels = labels_step
 filepaths = [
     "../results/component_size_maps/largest_component_area_" + l for l in labels
 ]
-
 
 min_vals = [hex_gdf[p].min() for p in plot_columns]
 max_vals = [hex_gdf[p].max() for p in plot_columns]
@@ -722,7 +708,7 @@ for i, p in enumerate(plot_columns):
 # %%
 # *** Correlation between hex largest component length and area ***
 
-labels = ["LTS 1", "LTS 1-2", "LTS 1-3", "LTS 1-4", "Total car"]
+labels = labels_step
 
 colors = [v for v in lts_color_dict.values()]
 
