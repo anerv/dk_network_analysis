@@ -13,11 +13,10 @@ exec(open("../settings/plotting.py").read())
 exec(open("../settings/filepaths.py").read())
 exec(open("../settings/df_styler.py").read())
 
-engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
+# engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
-connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
+# connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 # %%
-
 # Read data
 
 exec(open("../settings/read_reach.py").read())
@@ -87,7 +86,7 @@ df = pd.DataFrame(
 
 df.to_csv(filepath_summary_stats_reach_diff, index=True)
 
-display(df.style.pipe(format_style_no_index))
+display(df.style.pipe(format_style_index))
 # %%
 
 min_reach_diff_pct = []
@@ -118,5 +117,5 @@ df = pd.DataFrame(
 
 df.to_csv(filepath_summary_stats_reach_diff_pct, index=True)
 
-display(df.style.pipe(format_style_no_index))
+display(df.style.pipe(format_style_index))
 # %%
