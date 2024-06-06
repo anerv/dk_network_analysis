@@ -19,7 +19,9 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 # %%
-# ********** Plot total component size distributions **********
+############# COMPONENT SIZE DISTRIBUTION #############
+
+# **** Plot total component size distributions *****
 
 exec(open("../settings/read_component_sizes.py").read())
 
@@ -33,6 +35,7 @@ component_size_dfs = [
 ]
 
 labels = labels_step_all
+
 columns = [
     "bike_length",
     "bike_length",
@@ -42,6 +45,8 @@ columns = [
     "bike_length",
 ]
 # %%
+## Zipf plots
+
 for i, df in enumerate(component_size_dfs):
     plot_func.make_zipf_component_plot(
         df,
@@ -63,7 +68,7 @@ plot_func.combined_zipf_plot(
 )
 
 # %%
-# ************ Plot component size distribution per municipality **************************
+# **** Plot component size distribution per municipality *******
 
 munis = dbf.run_query_pg("SELECT DISTINCT municipality from edges;", connection)
 
@@ -134,6 +139,8 @@ for muni in municipalities:
         pass
 
 # %%
+########### MAPS ############
+
 # **** PLOT LOCAL COMPONENT COUNT (MAPS) ****
 
 exec(open("../settings/read_components.py").read())
@@ -151,7 +158,6 @@ all_plot_titles = [
     "Local component count for: ",
     "Hexagonal grid component count for: ",
 ]
-
 for e, gdf in enumerate(gdfs):
 
     plot_titles = [all_plot_titles[e] + l for l in labels]
@@ -189,283 +195,12 @@ for e, gdf in enumerate(gdfs):
         )
 
 # %%
-# ***** CORRELATION BETWEEN LOCAL COMPONENT COUNT AND NETWORK DENSITY *****
-
-component_length_muni = pd.read_sql(
-    "SELECT * FROM fragmentation.component_length_muni;", engine
-)
-component_length_socio = pd.read_sql(
-    "SELECT * FROM fragmentation.component_length_socio;", engine
-)
-component_length_hex = pd.read_sql(
-    "SELECT * FROM fragmentation.component_length_hex;", engine
-)
-
-dfs = [component_length_muni, component_length_socio, component_length_hex]
-
-id_columns = [["municipality"], ["id"], ["hex_id"]]
-titles = ["Municipalities", "Local", "Hexagonal grid"]
-
-all_filepaths = filepaths_component_density_correlation
-# %%
-for i, df in enumerate(dfs):
-
-    for c, d, l in zip(
-        component_count_columns, density_steps_columns, length_steps_columns
-    ):
-
-        fig = px.scatter(
-            df,
-            x=d,
-            y=c,
-            color=l,
-            # color_discrete_sequence=["black"],
-            # color_continuous_scale=px.colors.sequential.Viridis,
-            hover_data=id_columns[i],
-            opacity=0.5,
-            labels=plotly_labels,
-            log_x=True,
-            log_y=True,
-        )
-
-        fig.update_layout(
-            font=dict(size=12, color="black"),
-            autosize=False,
-            width=800,
-            height=600,
-            yaxis_title="Component count",
-            title=titles[i],
-        )
-
-        fig.write_image(
-            all_filepaths[i] + "_".join([c, d]) + ".jpeg",
-            width=1000,
-            height=750,
-        )
-        fig.show()
-
-# %%
-# **** FOR EACH MUNICIPALITY ****
-munis = dbf.run_query_pg("SELECT DISTINCT municipality from edges;", connection)
-
-municipalities = [m[0] for m in munis]
-municipalities.remove(None)
-
-for m in municipalities:
-    data = component_length_muni[component_length_muni.municipality == m]
-
-    if len(data) > 0:
-
-        dens_list = data[density_steps_columns].values[0]
-        comp_list = data[component_count_columns].values[0]
-        lts = ["1", "1_2", "1_3", "1_4", "car", "all"]
-
-        df = pd.DataFrame(
-            {"density": dens_list, "component_count": comp_list, "lts": lts}
-        )
-
-        fig = px.scatter(
-            df,
-            x="density",
-            y="component_count",
-            color="lts",
-            # color_discrete_sequence=["black"],
-            # color_continuous_scale=px.colors.sequential.Viridis,
-            hover_data="lts",
-            opacity=0.8,
-            labels=plotly_labels,
-            # log_x=True,
-            # log_y=True,
-        )
-
-        fig.update_layout(
-            font=dict(size=12, color="black"),
-            autosize=False,
-            width=800,
-            height=600,
-            yaxis_title="Component count",
-            title=f"Municipality: {m}",
-        )
-
-        # fig.write_image(
-        #     f"../results/component_correlation/administrative/component_count_infra_density_{m}.jpeg",
-        #     width=1000,
-        #     height=750,
-        # )
-    fig.show()
-
-# %%
-# SCATTER AND RUG PLOTS FOR COMPONENT AND INFRASTRUCTURE DENSITY
-
-dfs = [component_length_muni, component_length_socio, component_length_hex]
-
-municipalities = component_length_muni.municipality.unique()
-socio_ids = component_length_socio.id.unique()
-hex_ids = component_length_hex.hex_id.unique()
-
-id_lists = [municipalities, socio_ids, hex_ids]
-
-id_columns = ["municipality", "id", "hex_id"]
-
-scatter_titles = [
-    "Municipal component count and infrastructure density",
-    "Local component count and infrastructure density",
-    "Hexagonal grid component count and infrastructure density",
-]
-
-rug_titles = [
-    "Distribution of local component count at the municipal level",
-    "Distribution of local component count at the local level",
-    "Distribution of local component count at the hexagonal grid level",
-]
-scatter_filepaths = filepaths_components_scatter
-rug_filepaths = filepaths_components_rug
-
-for e, df in enumerate(dfs):
-
-    dens_all = []
-    comp_all = []
-    lts_all = []
-    ids_all = []
-
-    for i in id_lists[e]:
-
-        data = df[df[id_columns[e]] == i]
-
-        if len(data) > 0:
-
-            dens_list = data[density_steps_columns].values[0]
-            comp_list = data[component_count_columns].values[0]
-            lts = ["1", "1_2", "1_3", "1_4", "car", "all"]
-            ids = [i] * 6
-
-            dens_all.extend(dens_list)
-            comp_all.extend(comp_list)
-            lts_all.extend(lts)
-            ids_all.extend(ids)
-
-    df = pd.DataFrame(
-        {
-            "density": dens_all,
-            "component_count": comp_all,
-            "lts": lts_all,
-            "id": ids_all,
-        }
-    )
-
-    fig = px.scatter(
-        df,
-        x="density",
-        y="component_count",
-        color="lts",
-        color_discrete_sequence=[v for v in lts_color_dict.values()],
-        # color_continuous_scale=px.colors.sequential.Viridis,
-        hover_data="id",
-        opacity=0.6,
-        labels=plotly_labels,
-        log_x=True,
-        log_y=True,
-    )
-
-    fig.update_layout(
-        font=dict(size=12, color="black"),
-        autosize=False,
-        width=800,
-        height=600,
-        yaxis_title="Component count",
-        title=scatter_titles[e],
-    )
-
-    fig.write_image(
-        scatter_filepaths[e],
-        width=1000,
-        height=750,
-    )
-    fig.show()
-
-    fig = px.histogram(
-        df,
-        x="component_count",
-        color="lts",
-        labels=plotly_labels,
-        nbins=18,
-        opacity=[0.8],
-        hover_data="id",
-        # text_auto=True,
-        marginal="rug",
-        color_discrete_sequence=[v for v in lts_color_dict.values()],
-        title=rug_titles[e],
-    )
-    fig.update_layout(
-        font=dict(size=12, color="black"),
-        autosize=False,
-        width=800,
-        height=600,
-        yaxis_title="Count",
-    )
-    fig.write_image(
-        rug_filepaths[e],
-        width=1000,
-        height=750,
-    )
-
-    fig.show()
-
-# %%
-
-# Corr between component count and density for each step of LTS
-
-df_1 = df.loc[df["lts"] == "1"]
-df_2 = df.loc[df["lts"] == "1_2"]
-df_3 = df.loc[df["lts"] == "1_3"]
-df_4 = df.loc[df["lts"] == "1_4"]
-df_car = df.loc[df["lts"] == "car"]
-df_all = df.loc[df["lts"] == "all"]
-
-dfs = [df_1, df_2, df_3, df_4, df_car, df_all]
-
-scatter_filepaths_subsets = filepaths_components_scatter_lts
-
-for i, df_subset in enumerate(dfs):
-
-    fig = px.scatter(
-        df_subset,
-        x="density",
-        y="component_count",
-        color="lts",
-        color_discrete_sequence=[v for v in lts_color_dict.values()],
-        # color_continuous_scale=px.colors.sequential.Viridis,
-        hover_data="id",
-        opacity=0.4,
-        labels=plotly_labels,
-        log_x=True,
-        log_y=True,
-    )
-
-    fig.update_layout(
-        font=dict(size=12, color="black"),
-        autosize=False,
-        width=800,
-        height=600,
-        yaxis_title="Component count",
-        title=scatter_titles[e],
-    )
-
-    fig.write_image(
-        scatter_filepaths_subsets[i],
-        width=1000,
-        height=750,
-    )
-    fig.show()
-
-# %%
-# **** PLOT COMPONENTS PER LENGTH AND DENSITY ****
+# **** MAPS: PLOT COMPONENTS PER LENGTH AND DENSITY ****
 
 exec(open("../settings/read_component_sizes.py").read())
 
 gdfs = [muni_components, socio_components, hex_components]
 
-# %%
 # comp per km
 plot_columns = component_per_km_columns
 
@@ -514,8 +249,6 @@ for e, gdf in enumerate(gdfs):
             norm_max=v_max,
             cx_tile=cx_tile_2,
         )
-
-
 # %%
 # comp per km sqkm
 all_plot_titles = [
@@ -563,26 +296,11 @@ for e, gdf in enumerate(gdfs):
         )
 
 # %%
-
 # ****** MAPS OF LARGEST COMPONENTS *******
 
-hex_gdf = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM fragmentation.hex_largest_components;",
-    engine,
-    crs=crs,
-    geom_col="geometry",
-)
+exec(open("../settings/read_largest_components.py").read())
 
-hex_gdf[largest_local_component_len_columns] = hex_gdf[
-    largest_local_component_len_columns
-].replace(np.nan, 0)
-
-hex_gdf[largest_local_component_area_columns] = hex_gdf[
-    largest_local_component_area_columns
-].replace(np.nan, 0)
-
-
-# %%
+# Largest component length
 plot_columns = largest_local_component_len_columns
 
 plot_titles = [
@@ -598,18 +316,18 @@ filepaths = [
     "../results/component_size_maps/largest_component_length_" + l for l in labels
 ]
 
-min_vals = [hex_gdf[p].min() for p in plot_columns]
-max_vals = [hex_gdf[p].max() for p in plot_columns]
+min_vals = [hex_largest_components[p].min() for p in plot_columns]
+max_vals = [hex_largest_components[p].max() for p in plot_columns]
 v_min = min(min_vals)
 v_max = max(max_vals)
 
 for i, p in enumerate(plot_columns):
 
-    k_check = plot_func.get_unique_bins(hex_gdf, p, scheme, k)
+    k_check = plot_func.get_unique_bins(hex_largest_components, p, scheme, k)
 
     try:
         plot_func.plot_classified_poly(
-            gdf=hex_gdf,
+            gdf=hex_largest_components,
             plot_col=p,
             scheme=scheme,
             k=k_check,
@@ -625,7 +343,7 @@ for i, p in enumerate(plot_columns):
         k_check -= 1
 
         plot_func.plot_classified_poly(
-            gdf=hex_gdf,
+            gdf=hex_largest_components,
             plot_col=p,
             scheme=scheme,
             k=k_check,
@@ -638,7 +356,7 @@ for i, p in enumerate(plot_columns):
         )
 
     plot_func.plot_unclassified_poly(
-        poly_gdf=hex_gdf,
+        poly_gdf=hex_largest_components,
         plot_col=p,
         plot_title=plot_titles[i],
         filepath=filepaths[i] + "_unclassified",
@@ -648,8 +366,8 @@ for i, p in enumerate(plot_columns):
         norm_max=v_max,
         cx_tile=cx_tile_2,
     )
-
 # %%
+# Largest component area
 plot_columns = largest_local_component_area_columns
 
 plot_titles = [
@@ -665,19 +383,19 @@ filepaths = [
     "../results/component_size_maps/largest_component_area_" + l for l in labels
 ]
 
-min_vals = [hex_gdf[p].min() for p in plot_columns]
-max_vals = [hex_gdf[p].max() for p in plot_columns]
+min_vals = [hex_largest_components[p].min() for p in plot_columns]
+max_vals = [hex_largest_components[p].max() for p in plot_columns]
 v_min = min(min_vals)
 v_max = max(max_vals)
 
 
 for i, p in enumerate(plot_columns):
 
-    k_check = plot_func.get_unique_bins(hex_gdf, p, scheme, k)
+    k_check = plot_func.get_unique_bins(hex_largest_components, p, scheme, k)
 
     try:
         plot_func.plot_classified_poly(
-            gdf=hex_gdf,
+            gdf=hex_largest_components,
             plot_col=p,
             scheme=scheme,
             k=k_check,
@@ -693,7 +411,7 @@ for i, p in enumerate(plot_columns):
         k_check -= 1
 
     plot_func.plot_unclassified_poly(
-        poly_gdf=hex_gdf,
+        poly_gdf=hex_largest_components,
         plot_col=p,
         plot_title=plot_titles[i],
         filepath=filepaths[i] + "_unclassified",
@@ -704,9 +422,13 @@ for i, p in enumerate(plot_columns):
         cx_tile=cx_tile_2,
     )
 
-
 # %%
+
+##### CORRELATION AND DENSITY PLOTS #####
+
 # *** Correlation between hex largest component length and area ***
+
+exec(open("../settings/read_largest_components.py").read())
 
 labels = labels_step
 
@@ -714,7 +436,7 @@ colors = [v for v in lts_color_dict.values()]
 
 for i in range(len(labels)):
     fig = px.scatter(
-        hex_gdf,
+        hex_largest_components,
         x=largest_local_component_len_columns[i],
         y=largest_local_component_area_columns[i],
         hover_data="hex_id",
@@ -741,11 +463,10 @@ for i in range(len(labels)):
         height=750,
     )
     fig.show()
-# %%
 
 # **** KDES OF LARGEST COMPONENT DISTRIBUTIONS
 
-df = hex_gdf[largest_local_component_len_columns].melt()
+df = hex_largest_components[largest_local_component_len_columns].melt()
 
 df.rename(columns={"variable": "Network level", "value": "length"}, inplace=True)
 
@@ -773,4 +494,218 @@ plt.savefig("../results/component_size_distribution/largest_component_length_kde
 plt.show()
 
 plt.close()
+# %%
+
+# ***** CORRELATION BETWEEN LOCAL COMPONENT COUNT AND NETWORK DENSITY *****
+
+exec(open("../settings/read_component_length_agg.py").read())
+
+dfs = [component_length_muni, component_length_socio, component_length_hex]
+
+titles = [a.capitalize() for a in aggregation_levels]
+
+all_filepaths = filepaths_component_density_correlation
+
+for i, df in enumerate(dfs):
+
+    for c, d, l in zip(
+        component_count_columns, density_steps_columns, length_steps_columns
+    ):
+
+        fig = px.scatter(
+            df,
+            x=d,
+            y=c,
+            color=l,
+            hover_data=[id_columns[i]],
+            opacity=0.5,
+            labels=plotly_labels,
+            log_x=True,
+            log_y=True,
+        )
+
+        fig.update_layout(
+            font=dict(size=12, color="black"),
+            autosize=False,
+            width=800,
+            height=600,
+            yaxis_title="Component count",
+            title=titles[i],
+        )
+
+        fig.write_image(
+            all_filepaths[i] + "_".join([c, d]) + ".jpeg",
+            width=1000,
+            height=750,
+        )
+        fig.show()
+
+# %%
+# SCATTER AND RUG PLOTS FOR COMPONENT AND INFRASTRUCTURE DENSITY
+
+dfs = [component_length_muni, component_length_socio, component_length_hex]
+
+municipalities = component_length_muni.municipality.unique()
+socio_ids = component_length_socio.id.unique()
+hex_ids = component_length_hex.hex_id.unique()
+
+id_lists = [municipalities, socio_ids, hex_ids]
+
+scatter_titles = [
+    f"{i.capitalize()} component count and infrastructure density"
+    for i in aggregation_levels
+]
+
+rug_titles = [
+    f"Distribution of local component count at the {i} level"
+    for i in aggregation_levels
+]
+scatter_filepaths = filepaths_components_scatter
+rug_filepaths = filepaths_components_rug
+
+new_dfs = []
+
+for e, df in enumerate(dfs):
+
+    dens_all = []
+    comp_all = []
+    lts_all = []
+    ids_all = []
+
+    for i in id_lists[e]:
+
+        data = df[df[id_columns[e]] == i]
+
+        if len(data) > 0:
+
+            dens_list = data[density_steps_columns].values[0]
+            comp_list = data[component_count_columns].values[0]
+            lts = labels_step_all
+            ids = [i] * 6
+
+            dens_all.extend(dens_list)
+            comp_all.extend(comp_list)
+            lts_all.extend(lts)
+            ids_all.extend(ids)
+
+    new_df = pd.DataFrame(
+        {
+            "density": dens_all,
+            "component_count": comp_all,
+            "lts": lts_all,
+            "id": ids_all,
+        }
+    )
+
+    new_dfs.append(new_df)
+
+    fig = px.scatter(
+        new_df,
+        x="density",
+        y="component_count",
+        color="lts",
+        color_discrete_sequence=[v for v in lts_color_dict.values()],
+        # color_continuous_scale=px.colors.sequential.Viridis,
+        hover_data="id",
+        opacity=0.6,
+        labels=plotly_labels,
+        log_x=True,
+        log_y=True,
+    )
+
+    fig.update_layout(
+        font=dict(size=12, color="black"),
+        autosize=False,
+        width=800,
+        height=600,
+        yaxis_title="Component count",
+        title=scatter_titles[e],
+    )
+
+    fig.write_image(
+        scatter_filepaths[e],
+        width=1000,
+        height=750,
+    )
+    fig.show()
+
+    fig = px.histogram(
+        new_df,
+        x="component_count",
+        color="lts",
+        labels=plotly_labels,
+        nbins=18,
+        opacity=[0.8],
+        hover_data="id",
+        # text_auto=True,
+        marginal="rug",
+        color_discrete_sequence=[v for v in lts_color_dict.values()],
+        title=rug_titles[e],
+    )
+    fig.update_layout(
+        font=dict(size=12, color="black"),
+        autosize=False,
+        width=800,
+        height=600,
+        yaxis_title="Count",
+    )
+    fig.write_image(
+        rug_filepaths[e],
+        width=1000,
+        height=750,
+    )
+
+    fig.show()
+
+# %%
+
+# Corr between component count and density for each step of LTS
+
+# Only for hex grid
+df = new_dfs[2]
+
+df_1 = df.loc[df["lts"] == "LTS 1"]
+df_2 = df.loc[df["lts"] == "LTS 1-2"]
+df_3 = df.loc[df["lts"] == "LTS 1-3"]
+df_4 = df.loc[df["lts"] == "LTS 1-4"]
+df_car = df.loc[df["lts"] == "Total car"]
+df_all = df.loc[df["lts"] == "Total network"]
+
+dfs = [df_1, df_2, df_3, df_4, df_car, df_all]
+
+scatter_filepaths_subsets = filepaths_components_scatter_lts
+
+colors = [v for v in lts_color_dict.values()]
+for i, df_subset in enumerate(dfs):
+
+    fig = px.scatter(
+        df_subset,
+        x="density",
+        y="component_count",
+        color="lts",
+        color_discrete_sequence=[colors[i]],
+        # color_continuous_scale=px.colors.sequential.Viridis,
+        # hover_data="id",
+        opacity=0.4,
+        labels=plotly_labels,
+        log_x=True,
+        log_y=True,
+    )
+
+    fig.update_layout(
+        font=dict(size=12, color="black"),
+        autosize=False,
+        width=800,
+        height=600,
+        yaxis_title="Component count",
+        title=scatter_titles[e],
+    )
+
+    fig.write_image(
+        scatter_filepaths_subsets[i],
+        width=1000,
+        height=750,
+    )
+    fig.show()
+
 # %%
