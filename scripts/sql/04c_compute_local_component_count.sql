@@ -134,7 +134,7 @@ CREATE TABLE fragmentation.hex_largest_components AS WITH joined_edges AS (
         co3.buffer_area AS component_coverage_3,
         co4.bike_length AS component_length_4,
         co4.buffer_area AS component_coverage_4,
-        coc.bike_length AS component_length_car,
+        coc.geom_length AS component_length_car,
         coc.buffer_area AS component_coverage_car
     FROM
         fragmentation.hex_component_edges h
