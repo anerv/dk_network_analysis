@@ -1,6 +1,5 @@
 # %%
 from src import db_functions as dbf
-from src import h3_functions as h3f
 import geopandas as gpd
 import numpy as np
 
@@ -10,30 +9,6 @@ exec(open("../settings/plotting.py").read())
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
-
-
-# %%
-q = f"SELECT ST_Union(geometry) as geometry FROM adm_boundaries;"
-
-study_area_poly = gpd.GeoDataFrame.from_postgis(
-    q, engine, crs="EPSG:25832", geom_col="geometry"
-)
-
-hex_grid = h3f.create_hex_grid(study_area_poly, h3_resolution, crs, 500)
-
-assert hex_grid.crs == crs
-
-hex_grid.columns = hex_grid.columns.str.lower()
-
-dbf.to_postgis(geodataframe=hex_grid, table_name="hex_grid", engine=engine)
-
-print("H3 grid created and saved to database!")
-
-q = "SELECT hex_id FROM hex_grid LIMIT 10;"
-
-test = dbf.run_query_pg(q, connection)
-
-print(test)
 
 # %%
 queries = [

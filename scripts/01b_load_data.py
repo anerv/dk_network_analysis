@@ -3,6 +3,7 @@
 import subprocess
 import geopandas as gpd
 from src import db_functions as dbf
+from src import h3_functions as h3f
 
 exec(open("../settings/yaml_variables.py").read())
 
@@ -43,7 +44,7 @@ dbf.run_query_pg(q, connection)
 q_ix = "CREATE INDEX IF NOT EXISTS nodes_geom_ix ON nodes USING GIST (geometry);"
 
 dbf.run_query_pg(q_ix, connection)
-# %%
+
 # LOAD URBAN AREAS DATA
 urban = gpd.read_parquet(urban_areas_fp)
 
@@ -55,7 +56,6 @@ q_ix = "CREATE INDEX IF NOT EXISTS urban_geom_ix ON urban_areas USING GIST (geom
 
 dbf.run_query_pg(q_ix, connection)
 
-# %%
 # LOAD ADM DATA
 adm = gpd.read_file(adm_fp)
 
@@ -112,8 +112,28 @@ if result == "error":
     print("Please fix error before rerunning and reconnect to the database")
 
 
-# # CREATE INDICES
-# dbf.run_query_pg("sql/create_indices.sql", connection)
+# CREATE HEX GRID
+q = f"SELECT ST_Union(geometry) as geometry FROM adm_boundaries;"
+
+study_area_poly = gpd.GeoDataFrame.from_postgis(
+    q, engine, crs="EPSG:25832", geom_col="geometry"
+)
+
+hex_grid = h3f.create_hex_grid(study_area_poly, h3_resolution, crs, 500)
+
+assert hex_grid.crs == crs
+
+hex_grid.columns = hex_grid.columns.str.lower()
+
+dbf.to_postgis(geodataframe=hex_grid, table_name="hex_grid", engine=engine)
+
+print("H3 grid created and saved to database!")
+
+q = "SELECT hex_id FROM hex_grid LIMIT 10;"
+
+test = dbf.run_query_pg(q, connection)
+
+print(test)
 
 connection.close()
 
