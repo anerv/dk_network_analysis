@@ -34,20 +34,9 @@ for i, metric in enumerate(metrics[:-1]):
 
     for e, a in enumerate(aggregation_levels):
 
-        # print(f"Global Moran's I for {metric} for {a}:")
         fp = f"../results/spatial_autocorrelation/{metric}/{a}/global_moransi_{spatial_weights_values[e]}.json"
 
-        df = pd.read_json(
-            fp,
-            orient="index",
-        )
-
-        df.rename(columns={0: f"morans I: {a}"}, inplace=True)
-
-        df.rename(
-            index=rename_dicts[i],
-            inplace=True,
-        )
+        df = plot_func.process_plot_moransi(fp, metric, a, rename_dicts[i])
 
         dfs.append(df)
 
@@ -55,167 +44,69 @@ for i, metric in enumerate(metrics[:-1]):
 
     display(joined_df.style.pipe(format_style_index))
 
-    fig = px.bar(
-        df.reset_index(),
-        x="index",
-        y=f"morans I: {a}",
-        # color="Network level",
-        title=f"Moran's I for {metric} at {a}",
-        labels={
-            "index": "Metric type",
-        },
-    )
 
-    fig.show()
+# %%
+# FRAGMENTATION COMPONENT SIZE
+
+fp = f"../results/spatial_autocorrelation/fragmentation/hexgrid/global_moransi_largest_comp_size_{spatial_weights_values[e]}.json"
+df = plot_func.process_plot_moransi(
+    fp=fp,
+    metric="largest component size",
+    aggregation_level="hexgrid",
+    rename_dict=rename_index_dict_largest_comp,
+)
+
+display(df.style.pipe(format_style_index))
 
 
 # %%
 # REACH
 
-df = pd.read_json(
-    f"../results/spatial_autocorrelation/reach/hexgrid/global_moransi_{spatial_weights_values[e]}.json",
-    orient="index",
-)
-
-df.rename(columns={0: "morans I: hexgrid"}, inplace=True)
-
-df.rename(
-    index=rename_dicts[2],
-    inplace=True,
+fp = f"../results/spatial_autocorrelation/reach/hexgrid/global_moransi_{spatial_weights_values[e]}.json"
+df = plot_func.process_plot_moransi(
+    fp=fp,
+    metric="network reach",
+    aggregation_level="hexgrid",
+    rename_dict=rename_dicts[2],
 )
 
 display(df.style.pipe(format_style_index))
 
-fig = px.bar(
-    df.reset_index(),
-    x="index",
-    y="morans I: hexgrid",
-    # color="Network level",
-    title="Moran's I for network reach",
-    labels={
-        "index": "Metric type",
-    },
-)
-
-fig.show()
-
 # %%
+
+# DENSITY AND FRAGMENTATION
 for i, metric in enumerate(metrics[:-1]):
 
     for e, a in enumerate(aggregation_levels):
 
-        summary = {}
-
         fp = f"../results/spatial_autocorrelation/{metric}/{a}/lisas.parquet"
 
-        gdf = gpd.read_parquet(fp)
-
-        cols = [
-            c
-            for c in gdf.columns
-            if c not in ["geometry", "hex_id", "municipality", "id"]
-        ]
-
-        for c in cols:
-            summary[c] = gdf[c].value_counts().to_dict()
-
-        dfs = []
-        for c in summary.keys():
-            df = pd.DataFrame.from_dict(summary[c], orient="index", columns=[c])
-
-            dfs.append(df)
-
-        joined_df = pd.concat(dfs, axis=1)
-
-        new_col_names = [c.strip("_q") for c in joined_df.columns]
-        new_columns_dict = {}
-        for z, c in enumerate(joined_df.columns):
-            new_columns_dict[c] = new_col_names[z]
-        joined_df.rename(columns=new_columns_dict, inplace=True)
-
-        joined_df.rename(columns=rename_dicts[i], inplace=True)
-
-        print(f"LISA summary for {metric} at {a}")
-        display(joined_df.style.pipe(format_style_index))
-
-        long_df = joined_df.reset_index().melt(
-            id_vars="index", var_name="Metric", value_name="Count"
+        plot_func.compare_lisa_results(
+            fp, metric, a, rename_dicts[i], format_style_index
         )
 
-        # Create the stacked bar chart
-        fig = px.bar(
-            long_df,
-            x="Metric",
-            y="Count",
-            color="index",
-            title=f"LISA for {metric} at {a}",
-            labels={"index": "LISA Type", "Count": "Count", "Metric": "Metric"},
-            hover_data=["Metric", "index", "Count"],
-            color_discrete_map={
-                "Non-Significant": "#d3d3d3",
-                "HH": "#d62728",
-                "HL": "#e6bbad",
-                "LH": "#add8e6",
-                "LL": "#1f77b4",
-            },
-        )
 
-        # Show the figure
-        fig.show()
+# LARGEST COMPONENT SIZE
+fp = f"../results/spatial_autocorrelation/fragmentation/hexgrid/lisas_largest_comp_size_.parquet"
 
-# %%
-summary = {}
+plot_func.compare_lisa_results(
+    fp,
+    metric="largest component size",
+    aggregation_level=aggregation_levels[-1],
+    rename_dict=rename_index_dict_largest_comp,
+    format_style=format_style_index,
+)
 
+
+# REACH
 fp = f"../results/spatial_autocorrelation/reach/hexgrid/lisas.parquet"
 
-gdf = gpd.read_parquet(fp)
-
-cols = [c for c in gdf.columns if c not in ["geometry", "hex_id", "municipality", "id"]]
-
-for c in cols:
-    summary[c] = gdf[c].value_counts().to_dict()
-
-dfs = []
-for c in summary.keys():
-    df = pd.DataFrame.from_dict(summary[c], orient="index", columns=[c])
-
-    dfs.append(df)
-
-joined_df = pd.concat(dfs, axis=1)
-
-new_col_names = [c.strip("_q") for c in joined_df.columns]
-new_columns_dict = {}
-for i, c in enumerate(joined_df.columns):
-    new_columns_dict[c] = new_col_names[i]
-joined_df.rename(columns=new_columns_dict, inplace=True)
-
-joined_df.rename(columns=rename_dicts[2], inplace=True)
-
-print(f"LISA summary for reach at hexgrid")
-display(joined_df.style.pipe(format_style_index))
-
-long_df = joined_df.reset_index().melt(
-    id_vars="index", var_name="Metric", value_name="Count"
+plot_func.compare_lisa_results(
+    fp,
+    metric="network reach",
+    aggregation_level=aggregation_levels[-1],
+    rename_dict=rename_dicts[2],
+    format_style=format_style_index,
 )
 
-# Create the stacked bar chart
-fig = px.bar(
-    long_df,
-    x="Metric",
-    y="Count",
-    color="index",
-    title=f"LISA for reach at hexgrid",
-    labels={"index": "LISA Type", "Count": "Count", "Metric": "Metric"},
-    hover_data=["Metric", "index", "Count"],
-    color_discrete_map={
-        "Non-Significant": "#d3d3d3",
-        "HH": "#d62728",
-        "HL": "#e6bbad",
-        "LH": "#add8e6",
-        "LL": "#1f77b4",
-    },
-)
-
-# Show the figure
-fig.show()
 # %%

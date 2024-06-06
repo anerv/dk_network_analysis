@@ -8,20 +8,105 @@ import math
 import mapclassify
 import seaborn as sns
 import numpy as np
+import pandas as pd
+import geopandas as gpd
+from collections import Counter
+from IPython.display import Image, HTML, display
+import plotly.express as px
+
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 
 
-import geopandas as gpd
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-from matplotlib import cm, colors
-import contextily as cx
-from collections import Counter
-from mpl_toolkits.axes_grid1 import make_axes_locatable
-from IPython.display import Image, HTML, display
-import mapclassify
+def compare_lisa_results(fp, metric, aggregation_level, rename_dict, format_style):
+
+    summary = {}
+
+    gdf = gpd.read_parquet(fp)
+
+    cols = [
+        c for c in gdf.columns if c not in ["geometry", "hex_id", "municipality", "id"]
+    ]
+
+    for c in cols:
+        summary[c] = gdf[c].value_counts().to_dict()
+
+    dfs = []
+    for c in summary.keys():
+        df = pd.DataFrame.from_dict(summary[c], orient="index", columns=[c])
+
+        dfs.append(df)
+
+    joined_df = pd.concat(dfs, axis=1)
+
+    new_col_names = [c.strip("_q") for c in joined_df.columns]
+    new_columns_dict = {}
+    for z, c in enumerate(joined_df.columns):
+        new_columns_dict[c] = new_col_names[z]
+    joined_df.rename(columns=new_columns_dict, inplace=True)
+
+    joined_df.rename(columns=rename_dict, inplace=True)
+
+    print(f"LISA summary for {metric} at {aggregation_level}")
+
+    display(joined_df.style.pipe(format_style))
+
+    long_df = joined_df.reset_index().melt(
+        id_vars="index", var_name="Metric", value_name="Count"
+    )
+
+    # Create the stacked bar chart
+    fig = px.bar(
+        long_df,
+        x="Metric",
+        y="Count",
+        color="index",
+        title=f"LISA for {metric} at {aggregation_level}",
+        labels={"index": "LISA Type", "Count": "Count", "Metric": "Metric"},
+        hover_data=["Metric", "index", "Count"],
+        color_discrete_map={
+            "Non-Significant": "#d3d3d3",
+            "HH": "#d62728",
+            "HL": "#e6bbad",
+            "LH": "#add8e6",
+            "LL": "#1f77b4",
+        },
+    )
+
+    # Show the figure
+    fig.show()
+
+
+def process_plot_moransi(fp, metric, aggregation_level, rename_dict):
+
+    df = pd.read_json(
+        fp,
+        orient="index",
+    )
+
+    df.rename(columns={0: f"morans I: {aggregation_level}"}, inplace=True)
+
+    df.rename(
+        index=rename_dict,
+        inplace=True,
+    )
+
+    fig = px.bar(
+        df.reset_index(),
+        x="index",
+        y=f"morans I: {aggregation_level}",
+        title=f"Moran's I for {metric} at {aggregation_level}",
+        labels={
+            "index": "Metric type",
+        },
+    )
+
+    fig.show()
+
+    plt.close()
+
+    return df
 
 
 def plot_correlation(

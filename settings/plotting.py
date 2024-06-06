@@ -382,3 +382,16 @@ rename_index_dict_reach = {
     "car_lts3_diff_pct": "Difference car-LTS 3 reach %",
     "car_lts4_diff_pct": "Difference car-LTS 4 reach %",
 }
+
+rename_index_dict_largest_comp = {
+    "component_length_1": "LTS 1 largest component length",
+    "component_length_2": "LTS 2 largest component length",
+    "component_length_3": "LTS 3 largest component length",
+    "component_length_4": "LTS 4 largest component length",
+    "component_length_car": "Car largest component length",
+    # "component_coverage_1": "LTS 1 largest component coverage",
+    # "component_coverage_2": "LTS 2 largest component coverage",
+    # "component_coverage_3": "LTS 3 largest component coverage",
+    # "component_coverage_4": "LTS 4 largest component coverage",
+    # "component_coverage_car": "Car largest component coverage",
+}
