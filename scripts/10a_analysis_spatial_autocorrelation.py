@@ -69,16 +69,14 @@ for i, gdf in enumerate(gdfs):
     for columns in all_density_columns:
 
         filepaths_morans = [
-            f"../results/spatial_autocorrelation/density/{aggregation_levels[i]}/morans_{c}.png".replace(
-                " ", "_"
-            )
+            fp_spatial_auto_density
+            + f"{aggregation_levels[i]}/morans_{c}.png".replace(" ", "_")
             for c in columns
         ]
 
         filepaths_lisa = [
-            f"../results/spatial_autocorrelation/density/{aggregation_levels[i]}/lisa_{c}.png".replace(
-                " ", "_"
-            )
+            fp_spatial_auto_density
+            + f"{aggregation_levels[i]}/lisa_{c}.png".replace(" ", "_")
             for c in columns
         ]
 
@@ -99,7 +97,8 @@ for i, gdf in enumerate(gdfs):
             global_morans_results[key] = value.I
 
     with open(
-        f"../results/spatial_autocorrelation/density/{aggregation_levels[i]}/global_moransi_{spatial_weights_values[i]}.json",
+        fp_spatial_auto_density
+        + f"{aggregation_levels[i]}/global_moransi_{spatial_weights_values[i]}.json",
         "w",
     ) as outfile:
         json.dump(global_morans_results, outfile)
@@ -108,7 +107,7 @@ for i, gdf in enumerate(gdfs):
     q_columns.extend(["geometry", id_columns[i]])
 
     gdf[q_columns].to_parquet(
-        f"../results/spatial_autocorrelation/density/{aggregation_levels[i]}/lisas.parquet"
+        fp_spatial_auto_density + f"{aggregation_levels[i]}/lisas.parquet"
     )
 
 # %%
@@ -158,16 +157,14 @@ for i, gdf in enumerate(gdfs):
     for columns in all_fragmentation_columns:
 
         filepaths_morans = [
-            f"../results/spatial_autocorrelation/fragmentation/{aggregation_levels[i]}/morans_{c}.png".replace(
-                " ", "_"
-            )
+            fp_spatial_auto_fragmentation
+            + f"{aggregation_levels[i]}/morans_{c}.png".replace(" ", "_")
             for c in columns
         ]
 
         filepaths_lisa = [
-            f"../results/spatial_autocorrelation/fragmentation/{aggregation_levels[i]}/lisa_{c}.png".replace(
-                " ", "_"
-            )
+            fp_spatial_auto_fragmentation
+            + f"{aggregation_levels[i]}/lisa_{c}.png".replace(" ", "_")
             for c in columns
         ]
 
@@ -188,7 +185,8 @@ for i, gdf in enumerate(gdfs):
             global_morans_results[key] = value.I
 
     with open(
-        f"../results/spatial_autocorrelation/fragmentation/{aggregation_levels[i]}/global_moransi_{spatial_weights_values[i]}.json",
+        fp_spatial_auto_fragmentation
+        + f"{aggregation_levels[i]}/global_moransi_{spatial_weights_values[i]}.json",
         "w",
     ) as outfile:
         json.dump(global_morans_results, outfile)
@@ -197,7 +195,7 @@ for i, gdf in enumerate(gdfs):
     q_columns.extend(["geometry", id_columns[i]])
 
     gdf[q_columns].to_parquet(
-        f"../results/spatial_autocorrelation/fragmentation/{aggregation_levels[i]}/lisas.parquet"
+        fp_spatial_auto_fragmentation + f"{aggregation_levels[i]}/lisas.parquet"
     )
 
 # %%
@@ -250,16 +248,14 @@ for i, gdf in enumerate(gdfs):
     for columns in all_comp_size_columns:
 
         filepaths_morans = [
-            f"../results/spatial_autocorrelation/fragmentation/{aggregation_level[i]}/morans_{c}.png".replace(
-                " ", "_"
-            )
+            fp_spatial_auto_fragmentation
+            + f"{aggregation_level[i]}/morans_{c}.png".replace(" ", "_")
             for c in columns
         ]
 
         filepaths_lisa = [
-            f"../results/spatial_autocorrelation/fragmentation/{aggregation_level[i]}/lisa_{c}.png".replace(
-                " ", "_"
-            )
+            fp_spatial_auto_fragmentation
+            + f"{aggregation_level[i]}/lisa_{c}.png".replace(" ", "_")
             for c in columns
         ]
 
@@ -280,7 +276,8 @@ for i, gdf in enumerate(gdfs):
             global_morans_results[key] = value.I
 
     with open(
-        f"../results/spatial_autocorrelation/fragmentation/{aggregation_level[i]}/global_moransi_largest_comp_size_{spatial_weights_values[i]}.json",
+        fp_spatial_auto_fragmentation
+        + f"{aggregation_level[i]}/global_moransi_largest_comp_size_{spatial_weights_values[i]}.json",
         "w",
     ) as outfile:
         json.dump(global_morans_results, outfile)
@@ -289,7 +286,8 @@ for i, gdf in enumerate(gdfs):
     q_columns.extend(["geometry", id_columns[i]])
 
     gdf[q_columns].to_parquet(
-        f"../results/spatial_autocorrelation/fragmentation/{aggregation_level[i]}/lisas_largest_comp_size_.parquet"
+        fp_spatial_auto_fragmentation
+        + f"{aggregation_level[i]}/lisas_largest_comp_size_.parquet"
     )
 
 # %%
@@ -334,16 +332,14 @@ for i, gdf in enumerate(gdfs):
     for columns in all_reach_columns:
 
         filepaths_morans = [
-            f"../results/spatial_autocorrelation/reach/{aggregation_level[i]}/morans_{c}.png".replace(
-                " ", "_"
-            )
+            fp_spatial_auto_reach
+            + f"{aggregation_level[i]}/morans_{c}.png".replace(" ", "_")
             for c in columns
         ]
 
         filepaths_lisa = [
-            f"../results/spatial_autocorrelation/reach/{aggregation_level[i]}/lisa_{c}.png".replace(
-                " ", "_"
-            )
+            fp_spatial_auto_reach
+            + f"{aggregation_level[i]}/lisa_{c}.png".replace(" ", "_")
             for c in columns
         ]
 
@@ -364,7 +360,8 @@ for i, gdf in enumerate(gdfs):
             global_morans_results[key] = value.I
 
     with open(
-        f"../results/spatial_autocorrelation/reach/{aggregation_level[i]}/global_moransi_{spatial_weights_values[i]}.json",
+        fp_spatial_auto_reach
+        + f"{aggregation_level[i]}/global_moransi_{spatial_weights_values[i]}.json",
         "w",
     ) as outfile:
         json.dump(global_morans_results, outfile)
@@ -373,7 +370,7 @@ for i, gdf in enumerate(gdfs):
     q_columns.extend(["geometry", id_columns[i]])
 
     gdf[q_columns].to_parquet(
-        f"../results/spatial_autocorrelation/reach/{aggregation_level[i]}/lisas.parquet"
+        fp_spatial_auto_reach + f"{aggregation_level[i]}/lisas.parquet"
     )
 # %%
 ## Confirm spatial clustering of population density and socio-economic variables
@@ -416,13 +413,11 @@ global_morans_results = {}
 
 
 filepaths_morans = [
-    f"../results/spatial_autocorrelation/socio_pop/morans_{c}.png".replace(" ", "_")
-    for c in columns
+    fp_spatial_auto_socio + f"morans_{c}.png".replace(" ", "_") for c in columns
 ]
 
 filepaths_lisa = [
-    f"../results/spatial_autocorrelation/socio_pop/lisa_{c}.png".replace(" ", "_")
-    for c in columns
+    fp_spatial_auto_socio + f"lisa_{c}.png".replace(" ", "_") for c in columns
 ]
 
 morans_results = analysis_func.compute_spatial_autocorrelation(
@@ -442,7 +437,7 @@ for key, value in morans_results.items():
     global_morans_results[key] = value.I
 
 with open(
-    f"../results/spatial_autocorrelation/socio_pop/global_moransi_queens_{k_socio}.json",
+    fp_spatial_auto_socio + f"global_moransi_queens_{k_socio}.json",
     "w",
 ) as outfile:
     json.dump(global_morans_results, outfile)
@@ -450,8 +445,6 @@ with open(
 q_columns = [c for c in socio_gdf.columns if c.endswith("_q")]
 q_columns.extend(["geometry", "id"])
 
-socio_gdf[q_columns].to_parquet(
-    f"../results/spatial_autocorrelation/socio_pop/lisas.parquet"
-)
+socio_gdf[q_columns].to_parquet(fp_spatial_auto_socio + f"lisas.parquet")
 
 # %%

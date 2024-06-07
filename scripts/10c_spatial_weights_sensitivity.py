@@ -26,7 +26,7 @@ all_ks = [muni_ks, socio_ks, hex_ks]
 
 id_columns = ["municipality", "id", "hex_id"]
 
-fp = "../results/spatial_autocorrelation/sensitivity_test/"
+fp = fp_spatial_weights_sensitivity
 # %%
 ####### DENSITY ############
 ############################

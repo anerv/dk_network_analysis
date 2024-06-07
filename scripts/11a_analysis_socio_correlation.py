@@ -66,8 +66,8 @@ socio = socio[keep_columns]
 plot_func.plot_correlation(
     socio,
     socio_corr_variables,
-    heatmap_fp="../results/socio_correlation/heatmap_socio_vars.png",
-    pairplot_fp="../results/socio_correlation/pairplot_socio_vars.png",
+    heatmap_fp=fp_socio_vars_heatmap,
+    pairplot_fp=fp_socio_vars_pairplot,
 )
 
 display(socio[socio_corr_variables].corr().style.background_gradient(cmap="coolwarm"))
@@ -107,8 +107,8 @@ for i, columns in enumerate(all_density_columns):
     plot_func.plot_correlation(
         socio_density,
         corr_columns,
-        heatmap_fp=f"../results/socio_correlation/heatmap_socio_{labels[i]}.png",
-        pairplot_fp=f"../results/socio_correlation/pairplot_socio_{labels[i]}.png",
+        heatmap_fp=fp_socio_heatmap + f"{labels[i]}.png",
+        pairplot_fp=fp_socio_pairplot + f"{labels[i]}.png",
     )
 
 # %%
@@ -179,8 +179,8 @@ for i, columns in enumerate(all_fragmentation_columns):
         corr_columns,
         pair_plot_x_log=True,
         pair_plot_y_log=True,
-        heatmap_fp=f"../results/socio_correlation/heatmap_socio_{labels[i]}.png",
-        pairplot_fp=f"../results/socio_correlation/pairplot_socio_{labels[i]}.png",
+        heatmap_fp=fp_socio_heatmap + f"{labels[i]}.png",
+        pairplot_fp=fp_socio_pairplot + f"{labels[i]}.png",
     )
 
 # %%
@@ -222,8 +222,8 @@ for i, columns in enumerate(all_reach_columns):
     plot_func.plot_correlation(
         socio_reach,
         corr_columns,
-        heatmap_fp=f"../results/socio_correlation/heatmap_socio_{labels[i]}.png",
-        pairplot_fp=f"../results/socio_correlation/pairplot_socio_{labels[i]}.png",
+        heatmap_fp=fp_socio_heatmap + f"{labels[i]}.png",
+        pairplot_fp=fp_socio_pairplot + f"{labels[i]}.png",
     )
 
 # %%

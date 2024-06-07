@@ -34,7 +34,10 @@ for i, metric in enumerate(metrics[:-1]):
 
     for e, a in enumerate(aggregation_levels):
 
-        fp = f"../results/spatial_autocorrelation/{metric}/{a}/global_moransi_{spatial_weights_values[e]}.json"
+        fp = (
+            fp_spatial_auto_base
+            + f"{metric}/{a}/global_moransi_{spatial_weights_values[e]}.json"
+        )
 
         df = plot_func.process_plot_moransi(fp, metric, a, rename_dicts[i])
 
@@ -48,7 +51,10 @@ for i, metric in enumerate(metrics[:-1]):
 # %%
 # FRAGMENTATION COMPONENT SIZE
 
-fp = f"../results/spatial_autocorrelation/fragmentation/hexgrid/global_moransi_largest_comp_size_{spatial_weights_values[e]}.json"
+fp = (
+    fp_spatial_auto_fragmentation
+    + f"hexgrid/global_moransi_largest_comp_size_{spatial_weights_values[e]}.json"
+)
 df = plot_func.process_plot_moransi(
     fp=fp,
     metric="largest component size",
@@ -62,7 +68,7 @@ display(df.style.pipe(format_style_index))
 # %%
 # REACH
 
-fp = f"../results/spatial_autocorrelation/reach/hexgrid/global_moransi_{spatial_weights_values[e]}.json"
+fp = fp_spatial_auto_reach + f"hexgrid/global_moransi_{spatial_weights_values[e]}.json"
 df = plot_func.process_plot_moransi(
     fp=fp,
     metric="network reach",
@@ -79,7 +85,7 @@ for i, metric in enumerate(metrics[:-1]):
 
     for e, a in enumerate(aggregation_levels):
 
-        fp = f"../results/spatial_autocorrelation/{metric}/{a}/lisas.parquet"
+        fp = fp_spatial_auto__base + f"{metric}/{a}/lisas.parquet"
 
         plot_func.compare_lisa_results(
             fp, metric, a, rename_dicts[i], format_style_index
@@ -87,7 +93,7 @@ for i, metric in enumerate(metrics[:-1]):
 
 
 # LARGEST COMPONENT SIZE
-fp = f"../results/spatial_autocorrelation/fragmentation/hexgrid/lisas_largest_comp_size_.parquet"
+fp = fp_spatial_auto_fragmentation + f"hexgrid/lisas_largest_comp_size_.parquet"
 
 plot_func.compare_lisa_results(
     fp,
@@ -99,7 +105,7 @@ plot_func.compare_lisa_results(
 
 
 # REACH
-fp = f"../results/spatial_autocorrelation/reach/hexgrid/lisas.parquet"
+fp = fp_spatial_auto_reach + f"hexgrid/lisas.parquet"
 
 plot_func.compare_lisa_results(
     fp,

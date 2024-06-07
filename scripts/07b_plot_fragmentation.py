@@ -305,9 +305,7 @@ plot_titles = [
 ]
 
 labels = labels_step
-filepaths = [
-    "../results/component_size_maps/largest_component_length_" + l for l in labels
-]
+filepaths = [filepath_largest_component_length + l for l in labels]
 
 vmin, vmax = plot_func.get_min_max_vals(hex_largest_components, plot_columns)
 
@@ -369,9 +367,7 @@ plot_titles = [
 ]
 
 labels = labels_step
-filepaths = [
-    "../results/component_size_maps/largest_component_area_" + l for l in labels
-]
+filepaths = [filepath_largest_component_area + l for l in labels]
 
 vmin, vmax = plot_func.get_min_max_vals(hex_largest_components, plot_columns)
 
@@ -445,7 +441,7 @@ for i in range(len(labels)):
     )
 
     fig.write_image(
-        f"../results/component_len_area_correlation/{labels[i]}.jpg",
+        filepath_component_len_area_correlation + f"{labels[i]}.jpg",
         width=1000,
         height=750,
     )
@@ -476,7 +472,7 @@ fig = sns.kdeplot(
 
 fig.set_xlabel("Length")
 fig.set_title(f"Length of the largest component in each hexagon")
-plt.savefig("../results/component_size_distribution/largest_component_length_kde.png")
+plt.savefig(filepath_component_size_distribution)
 
 plt.show()
 

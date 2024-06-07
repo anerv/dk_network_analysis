@@ -443,8 +443,8 @@ for c, d, r, l in zip(
         y=r,
         opacity=0.3,
         labels=plotly_labels,
-        log_x=True,
-        log_y=True,
+        # log_x=True,
+        # log_y=True,
     )
 
     fig.update_layout(

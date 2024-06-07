@@ -178,3 +178,37 @@ filepath_summary_stats_reach_diff = (
 filepath_summary_stats_reach_diff_pct = (
     "../results/summary_stats/reach_diff_pct_summary_stats.csv"
 )
+
+filepath_largest_component_length = (
+    "../results/component_size_maps/largest_component_length_"
+)
+
+filepath_largest_component_area = (
+    "../results/component_size_maps/largest_component_area_"
+)
+
+filepath_component_len_area_correlation = "../results/component_len_area_correlation/"
+
+filepath_component_size_distribution = (
+    "../results/component_size_distribution/largest_component_length_kde.png"
+)
+
+
+# Spatial weights sensitivity test
+fp_spatial_weights_sensitivity = "../results/spatial_autocorrelation/sensitivity_test/"
+
+
+# Socio correlation
+fp_socio_vars_heatmap = "../results/socio_correlation/heatmap_socio_vars.png"
+fp_socio_vars_pairplot = "../results/socio_correlation/pairplot_socio_vars.png"
+
+fp_socio_heatmap = "../results/socio_correlation/heatmap_socio_"
+fp_socio_pairplot = "../results/socio_correlation/pairplot_socio_"
+
+
+# Spatial autocorrelation
+fp_spatial_auto_base = "../results/spatial_autocorrelation/"
+fp_spatial_auto_density = "../results/spatial_autocorrelation/density/"
+fp_spatial_auto_fragmentation = "../results/spatial_autocorrelation/fragmentation/"
+fp_spatial_auto_reach = "../results/spatial_autocorrelation/reach/"
+fp_spatial_auto_socio = "../results/spatial_autocorrelation/socio_pop/"
