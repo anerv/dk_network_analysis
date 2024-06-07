@@ -137,6 +137,6 @@ print(test)
 
 connection.close()
 
-print("Script 01 complete!")
+print("Script 01b complete!")
 
 # %%
