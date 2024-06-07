@@ -5,7 +5,6 @@ CREATE TABLE component_size_all AS (
         COUNT(id),
         component_all,
         SUM(ST_Length(geometry)) AS geom_length,
-        SUM(bike_length) AS bike_length,
         ARRAY_AGG(DISTINCT id) AS ids,
         ARRAY_AGG(DISTINCT highway) AS highways
     FROM
@@ -41,9 +40,7 @@ WHERE
             highways = ARRAY [ 'service' ]
     );
 
-DELETE
-    *
-FROM
+DELETE FROM
     edges
 WHERE
     component_all IN (
@@ -56,9 +53,7 @@ WHERE
             AND geom_length < 500
     );
 
-DELETE
-    *
-FROM
+DELETE FROM
     edges
 WHERE
     component_all IN (
@@ -72,8 +67,16 @@ WHERE
     );
 
 DROP TABLE IF EXISTS component_size_all,
+component_all,
 components,
 components_1,
 components_2,
 components_3,
 components_4;
+
+ALTER TABLE
+    edges DROP COLUMN component_all,
+    DROP COLUMN component_1,
+    DROP COLUMN component_2,
+    DROP COLUMN component_3,
+    DROP COLUMN component_4;

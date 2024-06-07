@@ -428,10 +428,3 @@ DROP TABLE IF EXISTS components_2;
 DROP TABLE IF EXISTS components_3;
 
 DROP TABLE IF EXISTS components_4;
-
-ALTER TABLE
-    edges DROP COLUMN component_all,
-    DROP COLUMN component_1,
-    DROP COLUMN component_2,
-    DROP COLUMN component_3,
-    DROP COLUMN component_4;
