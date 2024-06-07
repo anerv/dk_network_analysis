@@ -6,6 +6,52 @@ import seaborn as sns
 from pysal.explore import esda
 from pysal.lib import weights
 from splot.esda import lisa_cluster
+from sklearn import metrics
+from scipy.spatial.distance import cdist
+from sklearn.cluster import KMeans
+
+
+def find_k_elbow_method(input_data, min_k=1, max_k=10):
+    # Based on https://www.geeksforgeeks.org/elbow-method-for-optimal-value-of-k-in-kmeans/
+    distortions = []
+    inertias = []
+    mapping1 = {}
+    mapping2 = {}
+    K = range(min_k, max_k)
+
+    for k in K:
+        # Building and fitting the model
+        kmeanModel = KMeans(n_clusters=k).fit(input_data)
+
+        distortions.append(
+            sum(
+                np.min(
+                    cdist(input_data, kmeanModel.cluster_centers_, "euclidean"),
+                    axis=1,
+                )
+            )
+            / input_data.shape[0]
+        )
+        inertias.append(kmeanModel.inertia_)
+
+        mapping1[k] = (
+            sum(
+                np.min(
+                    cdist(input_data, kmeanModel.cluster_centers_, "euclidean"),
+                    axis=1,
+                )
+            )
+            / input_data.shape[0]
+        )
+        mapping2[k] = kmeanModel.inertia_
+
+    plt.plot(K, distortions, "bx-")
+    plt.xlabel("K")
+    plt.ylabel("Distortion")
+    plt.title("The Elbow Method - find best K")
+    plt.show()
+
+    return mapping1, mapping2
 
 
 def compare_spatial_weights_sensitivity(
