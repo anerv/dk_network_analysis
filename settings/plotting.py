@@ -179,12 +179,36 @@ largest_local_component_area_columns = [
     "component_coverage_car",
 ]
 
-socio_largest_component_columns = [
+socio_largest_component_columns_ave = [
     "lts1_largest_component_average",
     "lts2_largest_component_average",
     "lts3_largest_component_average",
     "lts4_largest_component_average",
     "car_largest_component_average",
+]
+
+socio_largest_component_columns_max = [
+    "lts1_largest_component_max",
+    "lts2_largest_component_max",
+    "lts3_largest_component_max",
+    "lts4_largest_component_max",
+    "car_largest_component_max",
+]
+
+socio_largest_component_columns_median = [
+    "lts1_largest_component_median",
+    "lts2_largest_component_median",
+    "lts3_largest_component_median",
+    "lts4_largest_component_median",
+    "car_largest_component_median",
+]
+
+socio_largest_component_columns_min = [
+    "lts1_largest_component_min",
+    "lts2_largest_component_min",
+    "lts3_largest_component_min",
+    "lts4_largest_component_min",
+    "car_largest_component_min",
 ]
 
 reach_columns = ["lts1_reach", "lts2_reach", "lts3_reach", "lts4_reach", "car_reach"]

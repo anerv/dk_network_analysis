@@ -1,10 +1,5 @@
 # %%
 from src import db_functions as dbf
-from src import plotting_functions as plot_func
-import geopandas as gpd
-import pandas as pd
-import math
-import matplotlib.pyplot as plt
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
