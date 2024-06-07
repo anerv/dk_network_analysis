@@ -29,9 +29,7 @@ WHERE
             AND 'cycleway' <> ANY (highways)
     );
 
-DELETE
-    *
-FROM
+DELETE FROM
     edges
 WHERE
     component_all IN (
@@ -73,4 +71,9 @@ WHERE
             AND geom_length < 500
     );
 
-DROP TABLE IF EXISTS component_size_all;
+DROP TABLE IF EXISTS component_size_all,
+components,
+components_1,
+components_2,
+components_3,
+components_4;
