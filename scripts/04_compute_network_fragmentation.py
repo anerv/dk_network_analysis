@@ -8,7 +8,6 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
-# %%
 queries = [
     "sql/04a_compute_components.sql",
     "sql/04b_compute_component_size.sql",
