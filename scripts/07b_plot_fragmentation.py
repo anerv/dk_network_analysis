@@ -165,10 +165,7 @@ for e, gdf in enumerate(gdfs):
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l for l in labels]
 
-    min_vals = [gdf[p].min() for p in plot_columns]
-    max_vals = [gdf[p].max() for p in plot_columns]
-    v_min = min(min_vals)
-    v_max = max(max_vals)
+    vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
     for i, p in enumerate(plot_columns):
         plot_func.plot_classified_poly(
@@ -221,10 +218,7 @@ for e, gdf in enumerate(gdfs):
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l + "_per_km" for l in labels]
 
-    min_vals = [gdf[p].min() for p in plot_columns]
-    max_vals = [gdf[p].max() for p in plot_columns]
-    v_min = min(min_vals)
-    v_max = max(max_vals)
+    vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
     for i, p in enumerate(plot_columns):
         plot_func.plot_classified_poly(
@@ -266,10 +260,7 @@ for e, gdf in enumerate(gdfs):
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l + "_per_km_sqkm" for l in labels]
 
-    min_vals = [gdf[p].min() for p in plot_columns]
-    max_vals = [gdf[p].max() for p in plot_columns]
-    v_min = min(min_vals)
-    v_max = max(max_vals)
+    vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
     for i, p in enumerate(plot_columns):
         plot_func.plot_classified_poly(
@@ -318,10 +309,7 @@ filepaths = [
     "../results/component_size_maps/largest_component_length_" + l for l in labels
 ]
 
-min_vals = [hex_largest_components[p].min() for p in plot_columns]
-max_vals = [hex_largest_components[p].max() for p in plot_columns]
-v_min = min(min_vals)
-v_max = max(max_vals)
+vmin, vmax = plot_func.get_min_max_vals(hex_largest_components, plot_columns)
 
 for i, p in enumerate(plot_columns):
 
@@ -385,10 +373,7 @@ filepaths = [
     "../results/component_size_maps/largest_component_area_" + l for l in labels
 ]
 
-min_vals = [hex_largest_components[p].min() for p in plot_columns]
-max_vals = [hex_largest_components[p].max() for p in plot_columns]
-v_min = min(min_vals)
-v_max = max(max_vals)
+vmin, vmax = plot_func.get_min_max_vals(hex_largest_components, plot_columns)
 
 
 for i, p in enumerate(plot_columns):

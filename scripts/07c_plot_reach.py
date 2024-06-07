@@ -19,14 +19,12 @@ plot_func.set_renderer("png")
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
-# %%
-# Read data
 
+# Read data
 exec(open("../settings/read_reach.py").read())
 
 # %%
-###########################################
-####### MAPS ##############################
+####### MAPS - HEX REACH ##################
 ###########################################
 
 # Absolute reach length
@@ -42,10 +40,7 @@ plot_titles = [
 plot_columns = reach_columns
 filepaths = filepaths_reach
 
-min_vals = [hex_reach[p].min() for p in plot_columns]
-max_vals = [hex_reach[p].max() for p in plot_columns]
-v_min = min(min_vals)
-v_max = max(max_vals)
+vmin, vmax = plot_func.get_min_max_vals(hex_reach, plot_columns)
 
 for i, p in enumerate(plot_columns):
 
@@ -75,6 +70,7 @@ for i, p in enumerate(plot_columns):
     )
 
 # %%
+
 # Absolute reach differences
 
 plot_titles = [
@@ -88,11 +84,7 @@ filepaths = filepaths_reach_diff
 
 plot_columns = reach_diff_columns
 
-
-min_vals = [hex_reach[p].min() for p in plot_columns]
-max_vals = [hex_reach[p].max() for p in plot_columns]
-v_min = min(min_vals)
-v_max = max(max_vals)
+vmin, vmax = plot_func.get_min_max_vals(hex_reach, plot_columns)
 
 for i, p in enumerate(plot_columns):
 
@@ -122,8 +114,8 @@ for i, p in enumerate(plot_columns):
     )
 
 # %%
-# Pct differences between LTS and car reach
 
+# Pct differences between LTS and car reach
 plot_titles = [
     f"Difference in network reach: Car VS. LTS 1 (%) ({reach_dist})",
     f"Difference in network reach: Car VS. LTS 1-2 (%) ({reach_dist})",
@@ -135,12 +127,7 @@ filepaths = filepaths_reach_diff_pct
 
 plot_columns = reach_diff_pct_columns
 
-
-min_vals = [hex_reach[p].min() for p in plot_columns]
-max_vals = [hex_reach[p].max() for p in plot_columns]
-v_min = min(min_vals)
-v_max = max(max_vals)
-
+vmin, vmax = plot_func.get_min_max_vals(hex_reach, plot_columns)
 
 for i, p in enumerate(plot_columns):
 
@@ -169,6 +156,65 @@ for i, p in enumerate(plot_columns):
         cx_tile=cx_tile_2,
     )
 
+#%%
+#### MAPS - SOCIO REACH ###################
+
+# Read data
+socio_reach = gpd.read_postgis(
+    f"SELECT * FROM reach.socio_reach_{reach_dist}", engine, geom_col="geometry"
+)
+
+average_columns = [c for c in socio_reach.columns if "average" in c]
+median_columns = [c for c in socio_reach.columns if "median" in c]
+min_columns = [c for c in socio_reach.columns if "min" in c]
+max_columns = [c for c in socio_reach.columns if "max" in c]
+
+metrics = ["Average", "Median", "Min", "Max"]
+
+network_levels = labels
+
+for i, plot_columns in enumerate(
+    [average_columns, median_columns, min_columns, max_columns]
+):
+
+    plot_titles = [
+        f"{metrics[i]} network reach at the socio level using the {n} network"
+        for n in network_levels
+    ]
+
+    filepaths = [
+        fp_socio_reach + f"{metrics[i].lower()}_{n.replace(" ", "_")}" for n in network_levels
+    ]
+
+    vmin, vmax = plot_func.get_min_max_vals(socio_reach, plot_columns)
+
+
+    for i, p in enumerate(plot_columns):
+
+        plot_func.plot_classified_poly(
+            gdf=socio_reach,
+            plot_col=p,
+            scheme=scheme,
+            k=k,
+            cx_tile=cx_tile_2,
+            plot_na=True,
+            cmap=pdict["pos"],
+            edgecolor="none",
+            title=plot_titles[i],
+            fp=filepaths[i],
+        )
+
+        plot_func.plot_unclassified_poly(
+            poly_gdf=socio_reach,
+            plot_col=p,
+            plot_title=plot_titles[i],
+            filepath=filepaths[i] + "_unclassified",
+            cmap=pdict["pos"],
+            use_norm=True,
+            norm_min=v_min,
+            norm_max=v_max,
+            cx_tile=cx_tile_2,
+        )
 # %%
 ###########################################
 ####### Histograms ########################
@@ -193,9 +239,11 @@ for i, p in enumerate(reach_columns):
     )  # kde=True
     fig.set_title(plot_titles[i])
     fig.set_xlabel("Local network reach (km)")
+    plt.savefig(filepaths_reach_hist[i])
 
     plt.show()
     plt.close()
+
 # %%
 ###########################################
 ####### KDE PLOTS #########################
@@ -316,7 +364,7 @@ for i, r in enumerate(reach_columns):
 
 # %%
 
-# reach_diff
+# REACH DIFF
 
 filepaths = filepaths_violin_reach_diff
 
@@ -347,7 +395,7 @@ for i, r in enumerate(reach_diff_columns):
     )
 
 # %%
-# reach_diff_pct
+# REACH DIFF PCT
 
 filepaths = filepaths_violin_reach_diff_pct
 
@@ -378,8 +426,9 @@ for i, r in enumerate(reach_diff_pct_columns):
     )
 
 # %%
+##### CORRELATION PLOTS ###################
 
-# Correlation plots
+# REACH VS DENSITY
 
 df = pd.read_sql(f"SELECT * FROM reach.reach_{reach_dist}_component_length_hex;", engine)
 
@@ -392,9 +441,6 @@ for c, d, r, l in zip(
         df,
         x=d,
         y=r,
-        # color=c,
-        # color_discrete_sequence=["black"],
-        # color_continuous_scale=px.colors.sequential.Viridis,
         opacity=0.3,
         labels=plotly_labels,
         log_x=True,
@@ -421,6 +467,7 @@ for c, d, r, l in zip(
 
 #### Differences in network reach: DIST ###
 ###########################################
+
 reach_df = pd.read_sql(f"SELECT * FROM reach.compare_reach;", engine)
 
 network_levels = labels
@@ -428,8 +475,6 @@ network_levels = labels
 reach_columns = reach_df.columns.to_list()
 
 distances = list(set([c.split("_")[2] for c in reach_columns]))
-
-# %%
 
 labels_stat = ["Median", "Mean", "Max", "Std"]
 
@@ -468,6 +513,8 @@ for i, e in enumerate([np.median, np.mean, np.max, np.std]):
 
 # %%
 
+# Violin plots - showing distribution of reach per distance
+
 plt.figure(figsize=(10, 6))
 sns.violinplot(
     data=reach_melt,
@@ -490,13 +537,12 @@ plt.close()
 
 # %%
 
-# KDE plots
+# KDE plots - differences in reach per distance
+
 for n in network_levels:
     cols = [c for c in reach_columns if n in c]
 
-    # TODO: plot KDE for reach columns
     df = reach_df[cols]
-
     values = df.values.flatten()
     distances = [c.split("_")[2] for c in cols]
     labels_dist = []
@@ -512,79 +558,15 @@ for n in network_levels:
         # multiple="stack",
         # fill=True,
         # log_scale=True,
-        # palette=lts_color_dict.values(),
     )
 
     fig.set_xlabel("Network reach (km)")
     fig.set_title(f"Network reach KDE for {n} network")
-    # plt.savefig(filepaths_length[list(stacked_dfs.keys()).index(label)])
 
     plt.show()
 
     plt.close()
 
 # %%
-
-# Read data
-socio_reach = gpd.read_postgis(
-    f"SELECT * FROM reach.socio_reach_{reach_dist}", engine, geom_col="geometry"
-)
-
-# %%
-average_columns = [c for c in socio_reach.columns if "average" in c]
-median_columns = [c for c in socio_reach.columns if "median" in c]
-min_columns = [c for c in socio_reach.columns if "min" in c]
-max_columns = [c for c in socio_reach.columns if "max" in c]
-
-metrics = ["Average", "Median", "Min", "Max"]
-
-network_levels = labels
-# %%
-
-for i, plot_columns in enumerate(
-    [average_columns, median_columns, min_columns, max_columns]
-):
-
-    plot_titles = [
-        f"{metrics[i]} network reach at the socio level using the {n} network"
-        for n in network_levels
-    ]
-
-    filepaths = [
-        fp_socio_reach + f"{metrics[i].lower()}_{n.replace(" ", "_")}" for n in network_levels
-    ]
-
-    min_vals = [socio_reach[p].min() for p in plot_columns]
-    max_vals = [socio_reach[p].max() for p in plot_columns]
-    v_min = min(min_vals)
-    v_max = max(max_vals)
-
-
-    for i, p in enumerate(plot_columns):
-
-        plot_func.plot_classified_poly(
-            gdf=socio_reach,
-            plot_col=p,
-            scheme=scheme,
-            k=k,
-            cx_tile=cx_tile_2,
-            plot_na=True,
-            cmap=pdict["pos"],
-            edgecolor="none",
-            title=plot_titles[i],
-            fp=filepaths[i],
-        )
-
-        plot_func.plot_unclassified_poly(
-            poly_gdf=socio_reach,
-            plot_col=p,
-            plot_title=plot_titles[i],
-            filepath=filepaths[i] + "_unclassified",
-            cmap=pdict["pos"],
-            use_norm=True,
-            norm_min=v_min,
-            norm_max=v_max,
-            cx_tile=cx_tile_2,
-        )
 
 # %%

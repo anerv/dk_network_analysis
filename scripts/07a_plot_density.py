@@ -42,10 +42,7 @@ for e, gdf in enumerate(gdfs):
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l for l in labels]
 
-    min_vals = [gdf[p].min() for p in plot_columns]
-    max_vals = [gdf[p].max() for p in plot_columns]
-    v_min = min(min_vals)
-    v_max = max(max_vals)
+    vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
     for i, p in enumerate(plot_columns):
 
@@ -81,10 +78,7 @@ for e, gdf in enumerate(gdfs):
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l for l in labels]
 
-    min_vals = [gdf[p].min() for p in plot_columns]
-    max_vals = [gdf[p].max() for p in plot_columns]
-    v_min = min(min_vals)
-    v_max = max(max_vals)
+    vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
     for i, p in enumerate(plot_columns):
 
@@ -123,10 +117,7 @@ for e, gdf in enumerate(gdfs):
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l for l in labels]
 
-    min_vals = [gdf[p].min() for p in plot_columns]
-    max_vals = [gdf[p].max() for p in plot_columns]
-    v_min = min(min_vals)
-    v_max = max(max_vals)
+    vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
     for i, p in enumerate(plot_columns):
 
@@ -169,10 +160,7 @@ for e, gdf in enumerate(gdfs):
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l for l in labels]
 
-    min_vals = [gdf[p].min() for p in plot_columns]
-    max_vals = [gdf[p].max() for p in plot_columns]
-    v_min = min(min_vals)
-    v_max = max(max_vals)
+    vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
     for i, p in enumerate(plot_columns):
 

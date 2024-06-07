@@ -19,6 +19,12 @@ exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 
 
+def get_min_max_vals(gdf, columns):
+    min_vals = [gdf[p].min() for p in columns]
+    max_vals = [gdf[p].max() for p in columns]
+    return min(min_vals), max(max_vals)
+
+
 def compare_lisa_results(fp, metric, aggregation_level, rename_dict, format_style):
 
     summary = {}
