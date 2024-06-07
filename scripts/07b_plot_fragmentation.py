@@ -84,10 +84,12 @@ for muni in municipalities:
         geom_col="geometry",
     )
 
-    muni_edges.loc[muni_edges.bike_length.isna(), "bike_length"] = (
-        muni_edges.geometry.length
+    # muni_edges.loc[muni_edges.bike_length.isna(), "bike_length"] = (
+    #     muni_edges.geometry.length
+    # )
+    muni_edges.loc[muni_edges.bike_length.notna(), "bike_length"] = (
+        muni_edges["bike_length"] / 1000
     )
-    muni_edges["bike_length"] = muni_edges["bike_length"] / 1000
     muni_edges["geom_length"] = muni_edges.geometry.length / 1000
 
     if len(muni_edges) > 0:
