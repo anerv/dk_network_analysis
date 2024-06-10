@@ -331,7 +331,7 @@ pdict = {
     "fsbar_small": (4, 3.5),
     "fsbar_short": (6, 3),
     "fsbar_sub": (4, 3),  # size per subplot
-    "map_attr": "GeoDanmark",
+    "map_attr": "OSM Contributors, GeoDanmark",
     "background_color": "#e0ecf4",
 }
 

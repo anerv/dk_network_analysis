@@ -328,7 +328,7 @@ def plot_classified_poly(
     if attr is not None:
         cx.add_attribution(ax=ax, text="(C) " + attr)
         txt = ax.texts[-1]
-        txt.set_position([1, 0.00])
+        txt.set_position([0.99, 0.01])
         txt.set_ha("right")
         txt.set_va("bottom")
 
@@ -472,7 +472,7 @@ def plot_unclassified_poly(
     if attr is not None:
         cx.add_attribution(ax=ax, text="(C) " + attr)
         txt = ax.texts[-1]
-        txt.set_position([1, 0.00])
+        txt.set_position([0.99, 0.01])
         txt.set_ha("right")
         txt.set_va("bottom")
 
