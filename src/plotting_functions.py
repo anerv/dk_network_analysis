@@ -235,6 +235,7 @@ def plot_classified_poly(
     dpi=pdict["dpi"],
     classification_kwds=None,
     background_color=None,
+    legend_kwds={"fmt": "{:.0f}"},
 ):
     """
     Plots a classified polygon based on the given parameters.
@@ -280,6 +281,7 @@ def plot_classified_poly(
                 edgecolor=edgecolor,
                 linewidth=linewidth,
                 legend=legend,
+                legend_kwds=legend_kwds,
                 missing_kwds={"color": pdict["nodata"], "label": "No data"},
                 classification_kwds=classification_kwds,
             )
@@ -296,6 +298,7 @@ def plot_classified_poly(
                 edgecolor=edgecolor,
                 linewidth=linewidth,
                 legend=legend,
+                legend_kwds=legend_kwds,
                 missing_kwds={"color": pdict["nodata"], "label": "No data"},
             )
         else:
@@ -310,6 +313,7 @@ def plot_classified_poly(
                 edgecolor=edgecolor,
                 linewidth=linewidth,
                 legend=legend,
+                legend_kwds=legend_kwds,
             )
 
     if cx_tile is not None:
@@ -365,6 +369,7 @@ def plot_unclassified_poly(
     attr=pdict["map_attr"],
     plot_na=True,
     background_color=None,
+    legend_kwds={"fmt": "{:.0f}"},
 ):
     """
     Plots an unclassified polygon based on the given parameters.
@@ -407,6 +412,7 @@ def plot_unclassified_poly(
                 ax=ax,
                 column=plot_col,
                 legend=legend,
+                legend_kwds=legend_kwds,
                 edgecolor=edgecolor,
                 linewidth=linewidth,
                 alpha=alpha,
@@ -424,6 +430,7 @@ def plot_unclassified_poly(
                 edgecolor=edgecolor,
                 linewidth=linewidth,
                 legend=legend,
+                legend_kwds=legend_kwds,
                 alpha=alpha,
                 norm=cbnorm,
                 cmap=cmap,
@@ -439,6 +446,7 @@ def plot_unclassified_poly(
                 edgecolor=edgecolor,
                 linewidth=linewidth,
                 legend=legend,
+                legend_kwds=legend_kwds,
                 alpha=alpha,
                 cmap=cmap,
                 missing_kwds={"color": pdict["nodata"], "label": "No data"},
@@ -452,6 +460,7 @@ def plot_unclassified_poly(
                 edgecolor=edgecolor,
                 linewidth=linewidth,
                 legend=legend,
+                legend_kwds=legend_kwds,
                 alpha=alpha,
                 cmap=cmap,
             )
