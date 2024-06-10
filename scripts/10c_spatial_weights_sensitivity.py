@@ -38,6 +38,9 @@ exec(open("../settings/read_density.py").read())
 gdfs = [density_muni, density_socio, density_hex]
 
 for gdf in gdfs:
+    gdf.replace(np.nan, 0, inplace=True)
+
+for gdf in gdfs:
 
     for p in length_relative_columns:
         gdf[p] = gdf[p] * 100
@@ -69,6 +72,9 @@ exec(open("../settings/read_components.py").read())
 
 gdfs = [muni_components, socio_components, hex_components]
 
+for gdf in gdfs:
+    gdf.replace(np.nan, 0, inplace=True)
+
 
 all_columns = [
     component_count_columns,
@@ -77,7 +83,7 @@ all_columns = [
 
 for i, gdf in enumerate(gdfs):
 
-    compare_spatial_weights_sensitivity(
+    analysis_func.compare_spatial_weights_sensitivity(
         gdf=gdf,
         id_column=id_columns[i],
         aggregation_level=aggregation_levels[i],
