@@ -23,6 +23,7 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 # Read data
 exec(open("../settings/read_reach.py").read())
 
+hex_reach.replace(0, np.nan, inplace=True)
 # %%
 ####### MAPS - HEX REACH ##################
 ###########################################
@@ -49,9 +50,9 @@ for i, p in enumerate(plot_columns):
         plot_col=p,
         scheme=scheme,
         k=k,
-        cx_tile=cx_tile_2,
+        #cx_tile=cx_tile_2,
         plot_na=True,
-        #cmap=pdict["pos"],
+        cmap=pdict["pos"],
         edgecolor="none",
         title=plot_titles[i],
         fp=filepaths[i],
@@ -69,6 +70,7 @@ for i, p in enumerate(plot_columns):
         norm_max=vmax,
         #cx_tile=cx_tile_2,
         background_color=pdict["background_color"],
+        plot_na=True,
     )
 
 # %%
