@@ -62,7 +62,7 @@ CREATE TABLE fragmentation.component_length_socio AS (
         comp.comp_car_count
     FROM
         density.density_socio dens
-        JOIN fragmentation.comp_count_socio comp ON dens.id = comp.socio_id
+        JOIN fragmentation.comp_count_socio comp ON dens.id = comp.id
 );
 
 CREATE TABLE fragmentation.component_length_hex AS (

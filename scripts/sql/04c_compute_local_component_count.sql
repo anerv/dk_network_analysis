@@ -70,7 +70,7 @@ FROM
 
 CREATE TABLE fragmentation.comp_count_socio AS WITH comp_count AS (
     SELECT
-        socio_id,
+        socio_id AS id,
         COUNT(DISTINCT component_all) AS comp_all_count,
         COUNT(DISTINCT component_1) AS comp_1_count,
         COUNT(DISTINCT component_1_2) AS comp_2_count,
@@ -83,7 +83,7 @@ CREATE TABLE fragmentation.comp_count_socio AS WITH comp_count AS (
         socio_id
 )
 SELECT
-    co.socio_id,
+    co.id,
     co.comp_all_count,
     co.comp_1_count,
     co.comp_2_count,
@@ -93,7 +93,7 @@ SELECT
     so.geometry
 FROM
     comp_count co
-    JOIN socio so ON co.socio_id = so.id;
+    JOIN socio so ON co.id = so.id;
 
 CREATE TABLE fragmentation.comp_count_hex AS WITH comp_count AS (
     SELECT
