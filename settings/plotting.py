@@ -296,7 +296,7 @@ pdict = {
     "base2": "grey",
     "compare_base": "black",  # "dimgray",
     # colormaps for grid cell plots
-    "pos": "Blues",  # Positive values (but not percentages)
+    "pos": "PuRd",  # "Blues",  # Positive values (but not percentages)
     "neg": "Reds",  # Negative/Missing/Unmatched values
     "diff": "RdBu",  # for osm-ref difference plots (alternatives: "PiYG", "PRGn", "PuOr")
     "seq": "YlGnBu",  # for sequential plots where low should not be white (usually percentages)
@@ -317,10 +317,10 @@ pdict = {
     # "mark_base": 2,
     # "mark_emp": 6,
     # Colors of no-data grid cell patches
-    "nodata": "grey",
-    "nodata_face": "none",
-    "nodata_edge": "grey",
-    "nodata_hatch": "//",
+    "nodata": "lightgrey",
+    # "nodata_face": "none",
+    # "nodata_edge": "grey",
+    # "nodata_hatch": "//",
     # GLOBAL SETTINGS FOR PLOTS
     "dpi": 300,  # resolution
     "plot_res": "low",  # "high" for exporting to svg, "low" for png
@@ -332,19 +332,20 @@ pdict = {
     "fsbar_short": (6, 3),
     "fsbar_sub": (4, 3),  # size per subplot
     "map_attr": "GeoDanmark",
+    "background_color": "#e0ecf4",
 }
 
 # patches for geopandas plots legend of "no data"
-import matplotlib.patches as mpatches
+# import matplotlib.patches as mpatches
 
-nodata_patch = mpatches.Patch(
-    facecolor=pdict["nodata_face"],
-    edgecolor=pdict["nodata_edge"],
-    linewidth=0.3,
-    label="No data",
-    hatch=pdict["nodata_hatch"],
-    alpha=pdict["alpha_nodata"],
-)
+# nodata_patch = mpatches.Patch(
+#     facecolor=pdict["nodata_face"],
+#     edgecolor=pdict["nodata_edge"],
+#     linewidth=0.3,
+#     label="No data",
+#     hatch=pdict["nodata_hatch"],
+#     alpha=pdict["alpha_nodata"],
+# )
 
 import contextily as cx
 

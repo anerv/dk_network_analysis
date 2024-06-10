@@ -219,10 +219,10 @@ def plot_classified_poly(
     plot_col,
     scheme,
     k,
-    cx_tile,
     plot_na,
     cmap,
     title,
+    cx_tile=None,
     edgecolor="black",
     linewidth=0.5,
     fp=None,
@@ -234,6 +234,7 @@ def plot_classified_poly(
     plot_res=pdict["plot_res"],
     dpi=pdict["dpi"],
     classification_kwds=None,
+    background_color=None,
 ):
     """
     Plots a classified polygon based on the given parameters.
@@ -279,7 +280,7 @@ def plot_classified_poly(
                 edgecolor=edgecolor,
                 linewidth=linewidth,
                 legend=legend,
-                missing_kwds={"color": "lightgrey", "label": "No data"},
+                missing_kwds={"color": pdict["nodata"], "label": "No data"},
                 classification_kwds=classification_kwds,
             )
     else:
@@ -295,7 +296,7 @@ def plot_classified_poly(
                 edgecolor=edgecolor,
                 linewidth=linewidth,
                 legend=legend,
-                missing_kwds={"color": "lightgrey", "label": "No data"},
+                missing_kwds={"color": pdict["nodata"], "label": "No data"},
             )
         else:
             gdf.plot(
@@ -311,7 +312,18 @@ def plot_classified_poly(
                 legend=legend,
             )
 
-    cx.add_basemap(ax=ax, crs=gdf.crs, source=cx_tile)
+    if cx_tile is not None:
+        cx.add_basemap(ax=ax, crs=gdf.crs, source=cx_tile)
+
+    if cx_tile is None and background_color is not None:
+        ax.set_facecolor(background_color)
+
+    if set_axis_off:
+        ax.set_axis_off()
+
+    if cx_tile is None and background_color is not None:
+        ax.add_artist(ax.patch)
+        ax.patch.set_zorder(-1)
 
     if attr is not None:
         cx.add_attribution(ax=ax, text="(C) " + attr)
@@ -321,9 +333,6 @@ def plot_classified_poly(
         txt.set_va("bottom")
 
     ax.set_title(title)
-
-    if set_axis_off:
-        ax.set_axis_off()
 
     if fp:
         if plot_res == "high":
@@ -341,7 +350,7 @@ def plot_unclassified_poly(
     plot_title,
     filepath,
     cmap,
-    cx_tile,
+    cx_tile=None,
     alpha=1,
     edgecolor="white",
     linewidth=0.1,
@@ -355,6 +364,7 @@ def plot_unclassified_poly(
     plot_res=pdict["plot_res"],
     attr=pdict["map_attr"],
     plot_na=True,
+    background_color=None,
 ):
     """
     Plots an unclassified polygon based on the given parameters.
@@ -402,7 +412,7 @@ def plot_unclassified_poly(
                 alpha=alpha,
                 norm=cbnorm,
                 cmap=cmap,
-                missing_kwds={"color": "lightgrey", "label": "No data"},
+                missing_kwds={"color": pdict["nodata"], "label": "No data"},
             )
 
         else:
@@ -431,7 +441,7 @@ def plot_unclassified_poly(
                 legend=legend,
                 alpha=alpha,
                 cmap=cmap,
-                missing_kwds={"color": "lightgrey", "label": "No data"},
+                missing_kwds={"color": pdict["nodata"], "label": "No data"},
             )
 
         else:
@@ -446,7 +456,18 @@ def plot_unclassified_poly(
                 cmap=cmap,
             )
 
-    cx.add_basemap(ax=ax, crs=poly_gdf.crs, source=cx_tile)
+    if cx_tile is not None:
+        cx.add_basemap(ax=ax, crs=poly_gdf.crs, source=cx_tile)
+
+    if cx_tile is None and background_color is not None:
+        ax.set_facecolor(background_color)
+
+    if set_axis_off:
+        ax.set_axis_off()
+
+    if cx_tile is None and background_color is not None:
+        ax.add_artist(ax.patch)
+        ax.patch.set_zorder(-1)
 
     if attr is not None:
         cx.add_attribution(ax=ax, text="(C) " + attr)
@@ -456,9 +477,6 @@ def plot_unclassified_poly(
         txt.set_va("bottom")
 
     ax.set_title(plot_title)
-
-    if set_axis_off:
-        ax.set_axis_off()
 
     if plot_res == "high":
         fig.savefig(filepath + ".svg", dpi=dpi)
