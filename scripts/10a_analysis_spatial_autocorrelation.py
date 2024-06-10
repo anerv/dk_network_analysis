@@ -26,6 +26,9 @@ exec(open("../settings/read_density.py").read())
 gdfs = [density_muni, density_socio, density_hex]
 
 for gdf in gdfs:
+    gdf.replace(np.nan, 0, inplace=True)
+
+for gdf in gdfs:
 
     for p in length_relative_columns:
         gdf[p] = gdf[p] * 100
@@ -115,9 +118,12 @@ for i, gdf in enumerate(gdfs):
 
 # READ DATA
 
-exec(open("../settings/read_components.py").read())
+exec(open("../settings/read_component_length_agg.py").read())
 
-gdfs = [muni_components, socio_components, hex_components]
+gdfs = [component_length_muni, component_length_socio, component_length_hex]
+
+for gdf in gdfs:
+    gdf.replace(np.nan, 0, inplace=True)
 
 # %%
 # Define spatial weights
