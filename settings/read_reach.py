@@ -15,4 +15,4 @@ hex_reach = gpd.read_postgis(
     f"SELECT * FROM reach.hex_reach_{reach_dist}", engine, geom_col="geometry"
 )
 
-print("Fragmentation data loaded!")
+print("Reach data loaded!")
