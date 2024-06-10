@@ -12,6 +12,7 @@ import plotly.express as px
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 exec(open("../settings/df_styler.py").read())
+exec(open("../settings/filepaths.py").read())
 plot_func.set_renderer("png")
 
 # %%
@@ -85,7 +86,7 @@ for i, metric in enumerate(metrics[:-1]):
 
     for e, a in enumerate(aggregation_levels):
 
-        fp = fp_spatial_auto__base + f"{metric}/{a}/lisas.parquet"
+        fp = fp_spatial_auto_base + f"{metric}/{a}/lisas.parquet"
 
         plot_func.compare_lisa_results(
             fp, metric, a, rename_dicts[i], format_style_index
