@@ -269,6 +269,7 @@ plotly_labels = {
     "comp_car_count": "Total car component count",
     "comp_all_count": "Total network component count",
     "density": "Density (km/sqkm)",
+    "length": "Length (km)",
     "lts": "LTS",
     "component_count": "Component count",
     "all": "All",

@@ -18,7 +18,6 @@ exec(open("../settings/filepaths.py").read())
 exec(open("../settings/read_density.py").read())
 
 # %%
-###########################################
 ####### MAPS ##############################
 ###########################################
 
@@ -190,7 +189,6 @@ for e, gdf in enumerate(gdfs):
         )
 
 # %%
-###########################################
 ####### PLOTS #############################
 ###########################################
 
@@ -296,11 +294,13 @@ for label, df in stacked_dfs.items():
 # **** BAR CHARTS - MUNI ****
 
 dfs = [
-    stacked_dfs["Municipal"],
+    stacked_dfs[aggregation_levels[0]],
 ]
 
 filepaths_density = filepaths_bar_density
 filepaths_length = filepaths_bar_length
+
+plotly_labels["id"] = "municipality"
 
 for i, df in enumerate(dfs):
 
