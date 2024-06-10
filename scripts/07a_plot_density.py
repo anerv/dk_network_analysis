@@ -66,8 +66,8 @@ for e, gdf in enumerate(gdfs):
             filepath=filepaths[i] + "_unclassified",
             cmap=pdict["pos"],
             use_norm=True,
-            norm_min=v_min,
-            norm_max=v_max,
+            norm_min=vmin,
+            norm_max=vmax,
             cx_tile=cx_tile_2,
         )
 
@@ -102,8 +102,8 @@ for e, gdf in enumerate(gdfs):
             filepath=filepaths[i] + "_unclassified",
             cmap=pdict["pos"],
             use_norm=True,
-            norm_min=v_min,
-            norm_max=v_max,
+            norm_min=vmin,
+            norm_max=vmax,
             cx_tile=cx_tile_2,
         )
 
@@ -141,8 +141,8 @@ for e, gdf in enumerate(gdfs):
             filepath=filepaths[i] + "_unclassified",
             cmap=pdict["pos"],
             use_norm=True,
-            norm_min=v_min,
-            norm_max=v_max,
+            norm_min=vmin,
+            norm_max=vmax,
             cx_tile=cx_tile_2,
         )
 
@@ -184,8 +184,8 @@ for e, gdf in enumerate(gdfs):
             filepath=filepaths[i] + "_unclassified",
             cmap=pdict["pos"],
             use_norm=True,
-            norm_min=v_min,
-            norm_max=v_max,
+            norm_min=vmin,
+            norm_max=vmax,
             cx_tile=cx_tile_2,
         )
 
