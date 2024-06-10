@@ -27,13 +27,20 @@ for i, q in enumerate(queries):
 
 # %%
 distances = [5, 10, 15]  # max distance in km
-distances = [5, 10]  # max distance in km
+# distances = [5, 10]  # max distance in km
+# distances = [15]
 
 chunk_sizes_5 = [1000, 1000, 1000, 1000, 1000]
 chunk_sizes_10 = [1000, 500, 200, 200, 200]
 chunk_sizes_15 = [1000, 200, 100, 100, 100]
 
+all_chunk_sizes = [chunk_sizes_5, chunk_sizes_10, chunk_sizes_15]
+# all_chunk_sizes = [chunk_sizes_15]
+
+# %%
 for dist in distances:
+
+    chunk_sizes = all_chunk_sizes[distances.index(dist)]
 
     print(f"Computing reach for distance: {dist} km")
 
@@ -420,17 +427,6 @@ for dist in distances:
     );
     """
 
-    # q_update = f"""
-    # UPDATE
-    #     reach.reach_{dist}_component_length_hex
-    # SET
-    #     lts1_reach = lts1_reach / 1000,
-    #     lts2_reach = lts2_reach / 1000,
-    #     lts3_reach = lts3_reach / 1000,
-    #     lts4_reach = lts4_reach / 1000,
-    #     car_reach = car_reach / 1000;
-    # """
-
     # for q in [q_drop, q_create, q_update]:
     for q in [q_drop, q_create]:
         result = dbf.run_query_pg(q, connection)
@@ -454,6 +450,13 @@ with open("vacuum_analyze.py") as f:
 
 # %%
 
+distances = [5, 10, 15]  # max distance in km
+
+result = dbf.run_query_pg("DROP TABLE IF EXISTS reach.compare_reach;", connection)
+if result == "error":
+    print("Please fix error before rerunning and reconnect to the database")
+
+
 start = "CREATE TABLE reach.compare_reach AS (SELECT "
 end = ");"
 
@@ -469,13 +472,12 @@ for d in distances[1:]:
     from_q += f" JOIN reach.hex_reach_{d} r{d} ON r{d}.hex_id = r{distances[0]}.hex_id"
 
 final_query = start + select_columns[:-1] + " " + from_q + end
-
+# %%
 result = dbf.run_query_pg(final_query, connection)
 if result == "error":
     print("Please fix error before rerunning and reconnect to the database")
 
 # %%
-
 # Compute average socio reach
 
 q_socio = "sql/05c_compute_socio_reach.sql"
