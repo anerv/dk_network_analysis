@@ -61,13 +61,13 @@ def compare_spatial_weights_sensitivity(
     print("Starting sensitivity analysis for aggregation level:", aggregation_level)
 
     # Compute spatial weights
-    w1 = analysis_func.compute_spatial_weights(
+    w1 = compute_spatial_weights(
         gdf, id_column, "knn", k=k_values[0]
     )  # using filler col for subset
-    w2 = analysis_func.compute_spatial_weights(
+    w2 = compute_spatial_weights(
         gdf, id_column, "knn", k=k_values[1]
     )  # using filler col for subset
-    w3 = analysis_func.compute_spatial_weights(
+    w3 = compute_spatial_weights(
         gdf, id_column, "knn", k=k_values[2]
     )  # using filler col for subset
 
@@ -92,7 +92,7 @@ def compare_spatial_weights_sensitivity(
 
             for name, w in all_weigths.items():
 
-                morans_density = analysis_func.compute_spatial_autocorrelation(
+                morans_density = compute_spatial_autocorrelation(
                     col_names,
                     variable_names,
                     gdf,
@@ -105,7 +105,7 @@ def compare_spatial_weights_sensitivity(
 
                 filepaths = [fp + f"lisa_{c}_{name}_{aggregation_level}.png"]
 
-                lisas_density = analysis_func.compute_lisa(
+                lisas_density = compute_lisa(
                     col_names, variable_names, gdf, w, filepaths, show_plot=False
                 )
 
