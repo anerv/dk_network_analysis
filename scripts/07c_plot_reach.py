@@ -487,7 +487,7 @@ reach_columns = reach_df.columns.to_list()
 distances = list(set([c.split("_")[2] for c in reach_columns]))
 
 labels_stat = ["Median", "Mean", "Max", "Std"]
-
+#%%
 for i, e in enumerate([np.median, np.mean, np.max, np.std]):
 
     reach_melt = reach_df.melt()
@@ -499,6 +499,15 @@ for i, e in enumerate([np.median, np.mean, np.max, np.std]):
     reach_melt["distance"] = reach_melt["distance"].astype(int)
 
     reach_melt = reach_melt.sort_values("distance")
+
+    org_labels_rename = {
+        "lts1": labels[0],
+        "lts2": labels[1],
+        "lts3": labels[2],
+        "lts4": labels[3],
+        "car": labels[4],
+    }
+    reach_melt.replace(org_labels_rename, inplace=True)
 
     plt.figure(figsize=(10, 6))
     sns.barplot(
@@ -549,7 +558,7 @@ plt.close()
 
 # KDE plots - differences in reach per distance
 
-for n in network_levels:
+for n in org_labels_rename.keys():
     cols = [c for c in reach_columns if n in c]
 
     df = reach_df[cols]
