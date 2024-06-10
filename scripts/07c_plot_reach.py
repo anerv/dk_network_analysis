@@ -51,10 +51,11 @@ for i, p in enumerate(plot_columns):
         k=k,
         cx_tile=cx_tile_2,
         plot_na=True,
-        cmap=pdict["pos"],
+        #cmap=pdict["pos"],
         edgecolor="none",
         title=plot_titles[i],
         fp=filepaths[i],
+        background_color=pdict["background_color"],
     )
 
     plot_func.plot_unclassified_poly(
@@ -66,7 +67,8 @@ for i, p in enumerate(plot_columns):
         use_norm=True,
         norm_min=vmin,
         norm_max=vmax,
-        cx_tile=cx_tile_2,
+        #cx_tile=cx_tile_2,
+        background_color=pdict["background_color"],
     )
 
 # %%
@@ -93,12 +95,13 @@ for i, p in enumerate(plot_columns):
         plot_col=p,
         scheme=scheme,
         k=k,
-        cx_tile=cx_tile_2,
+        #cx_tile=cx_tile_2,
         plot_na=True,
         cmap=pdict["pos"],
         edgecolor="none",
         title=plot_titles[i],
         fp=filepaths[i],
+        background_color=pdict["background_color"],
     )
 
     plot_func.plot_unclassified_poly(
@@ -110,7 +113,8 @@ for i, p in enumerate(plot_columns):
         use_norm=True,
         norm_min=vmin,
         norm_max=vmax,
-        cx_tile=cx_tile_2,
+        #cx_tile=cx_tile_2,
+        background_color=pdict["background_color"],
     )
 
 # %%
@@ -136,12 +140,13 @@ for i, p in enumerate(plot_columns):
         plot_col=p,
         scheme=scheme,
         k=k,
-        cx_tile=cx_tile_2,
+        #cx_tile=cx_tile_2,
         plot_na=True,
         cmap=pdict["pos"],
         edgecolor="none",
         title=plot_titles[i],
         fp=filepaths[i],
+        background_color=pdict["background_color"],
     )
 
     plot_func.plot_unclassified_poly(
@@ -153,7 +158,8 @@ for i, p in enumerate(plot_columns):
         use_norm=True,
         norm_min=vmin,
         norm_max=vmax,
-        cx_tile=cx_tile_2,
+        #cx_tile=cx_tile_2,
+        background_color=pdict["background_color"],
     )
 
 #%%
@@ -196,12 +202,13 @@ for i, plot_columns in enumerate(
             plot_col=p,
             scheme=scheme,
             k=k,
-            cx_tile=cx_tile_2,
+            #cx_tile=cx_tile_2,
             plot_na=True,
             cmap=pdict["pos"],
             edgecolor="none",
             title=plot_titles[i],
             fp=filepaths[i],
+            background_color=pdict["background_color"],
         )
 
         plot_func.plot_unclassified_poly(
@@ -213,7 +220,8 @@ for i, plot_columns in enumerate(
             use_norm=True,
             norm_min=vmin,
             norm_max=vmax,
-            cx_tile=cx_tile_2,
+            #cx_tile=cx_tile_2,
+            background_color=pdict["background_color"],
         )
 # %%
 ###########################################

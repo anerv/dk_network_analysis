@@ -173,12 +173,13 @@ for e, gdf in enumerate(gdfs):
             plot_col=p,
             scheme=scheme,
             k=k,
-            cx_tile=cx_tile_2,
+            # cx_tile=cx_tile_2,
             plot_na=True,
             cmap=pdict["neg"],
             edgecolor="none",
             title=plot_titles[i],
             fp=filepaths[i],
+            background_color=pdict["background_color"],
         )
 
         plot_func.plot_unclassified_poly(
@@ -190,15 +191,16 @@ for e, gdf in enumerate(gdfs):
             use_norm=True,
             norm_min=vmin,
             norm_max=vmax,
-            cx_tile=cx_tile_2,
+            # cx_tile=cx_tile_2,
+            background_color=pdict["background_color"],
         )
 
 # %%
 # **** MAPS: PLOT COMPONENTS PER LENGTH AND DENSITY ****
 
-exec(open("../settings/read_component_sizes.py").read())
+exec(open("../settings/read_component_length_agg.py").read())
 
-gdfs = [muni_components, socio_components, hex_components]
+gdfs = [component_length_muni, component_length_socio, component_length_hex]
 
 # comp per km
 plot_columns = component_per_km_columns
@@ -226,12 +228,13 @@ for e, gdf in enumerate(gdfs):
             plot_col=p,
             scheme=scheme,
             k=k,
-            cx_tile=cx_tile_2,
+            # cx_tile=cx_tile_2,
             plot_na=True,
             cmap=pdict["neg"],
             edgecolor="none",
             title=plot_titles[i],
             fp=filepaths[i],
+            background_color=pdict["background_color"],
         )
 
         plot_func.plot_unclassified_poly(
@@ -243,7 +246,8 @@ for e, gdf in enumerate(gdfs):
             use_norm=True,
             norm_min=vmin,
             norm_max=vmax,
-            cx_tile=cx_tile_2,
+            # cx_tile=cx_tile_2,
+            background_color=pdict["background_color"],
         )
 # %%
 # comp per km sqkm
@@ -268,12 +272,13 @@ for e, gdf in enumerate(gdfs):
             plot_col=p,
             scheme=scheme,
             k=k,
-            cx_tile=cx_tile_2,
+            # cx_tile=cx_tile_2,
             plot_na=True,
             cmap=pdict["neg"],
             edgecolor="none",
             title=plot_titles[i],
             fp=filepaths[i],
+            background_color=pdict["background_color"],
         )
 
         plot_func.plot_unclassified_poly(
@@ -285,7 +290,8 @@ for e, gdf in enumerate(gdfs):
             use_norm=True,
             norm_min=vmin,
             norm_max=vmax,
-            cx_tile=cx_tile_2,
+            # cx_tile=cx_tile_2,
+            background_color=pdict["background_color"],
         )
 
 # %%
@@ -319,12 +325,13 @@ for i, p in enumerate(plot_columns):
             plot_col=p,
             scheme=scheme,
             k=k_check,
-            cx_tile=cx_tile_2,
+            # cx_tile=cx_tile_2,
             plot_na=True,
             cmap=pdict["pos"],
             edgecolor="none",
             title=plot_titles[i],
             fp=filepaths[i],
+            background_color=pdict["background_color"],
         )
     except ValueError:
 
@@ -335,12 +342,13 @@ for i, p in enumerate(plot_columns):
             plot_col=p,
             scheme=scheme,
             k=k_check,
-            cx_tile=cx_tile_2,
+            # cx_tile=cx_tile_2,
             plot_na=True,
             cmap=pdict["pos"],
             edgecolor="none",
             title=plot_titles[i],
             fp=filepaths[i],
+            background_color=pdict["background_color"],
         )
 
     plot_func.plot_unclassified_poly(
@@ -352,7 +360,8 @@ for i, p in enumerate(plot_columns):
         use_norm=True,
         norm_min=vmin,
         norm_max=vmax,
-        cx_tile=cx_tile_2,
+        # cx_tile=cx_tile_2,
+        background_color=pdict["background_color"],
     )
 # %%
 # Largest component area
@@ -384,10 +393,11 @@ for i, p in enumerate(plot_columns):
             k=k_check,
             cx_tile=cx_tile_2,
             plot_na=True,
-            cmap=pdict["pos"],
+            # cmap=pdict["pos"],
             edgecolor="none",
             title=plot_titles[i],
             fp=filepaths[i],
+            background_color=pdict["background_color"],
         )
     except ValueError:
 
@@ -402,7 +412,8 @@ for i, p in enumerate(plot_columns):
         use_norm=True,
         norm_min=vmin,
         norm_max=vmax,
-        cx_tile=cx_tile_2,
+        # cx_tile=cx_tile_2,
+        background_color=pdict["background_color"],
     )
 
 # %%
@@ -483,6 +494,7 @@ plt.close()
 
 exec(open("../settings/read_component_length_agg.py").read())
 
+# %%
 dfs = [component_length_muni, component_length_socio, component_length_hex]
 
 titles = [a.capitalize() for a in aggregation_levels]
@@ -610,7 +622,7 @@ for e, df in enumerate(dfs):
         width=1000,
         height=750,
     )
-    fig.show()
+    # fig.show()
 
     fig = px.histogram(
         new_df,
@@ -638,7 +650,7 @@ for e, df in enumerate(dfs):
         height=750,
     )
 
-    fig.show()
+    # fig.show()
 
 # %%
 
@@ -689,6 +701,6 @@ for i, df_subset in enumerate(dfs):
         width=1000,
         height=750,
     )
-    fig.show()
+    # fig.show()
 
 # %%

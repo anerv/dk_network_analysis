@@ -22,6 +22,7 @@ exec(open("../settings/read_density.py").read())
 ###########################################
 
 gdfs = [density_muni, density_socio, density_hex]
+gdfs = [density_muni]
 
 all_plot_titles = [
     "Municipal network density for: ",
@@ -50,12 +51,13 @@ for e, gdf in enumerate(gdfs):
             plot_col=p,
             scheme=scheme,
             k=k,
-            cx_tile=cx_tile_2,
+            # cx_tile=cx_tile_2,
             plot_na=True,
             cmap=pdict["pos"],
             edgecolor="none",
             title=plot_titles[i],
             fp=filepaths[i],
+            background_color=pdict["background_color"],
         )
 
         plot_func.plot_unclassified_poly(
@@ -67,7 +69,8 @@ for e, gdf in enumerate(gdfs):
             use_norm=True,
             norm_min=vmin,
             norm_max=vmax,
-            cx_tile=cx_tile_2,
+            # cx_tile=cx_tile_2,
+            background_color=pdict["background_color"],
         )
 
     ###### Plot stepwise LTS densities #####
@@ -86,12 +89,13 @@ for e, gdf in enumerate(gdfs):
             plot_col=p,
             scheme=scheme,
             k=k,
-            cx_tile=cx_tile_2,
+            # cx_tile=cx_tile_2,
             plot_na=True,
             cmap=pdict["pos"],
             edgecolor="none",
             title=plot_titles[i],
             fp=filepaths[i],
+            background_color=pdict["background_color"],
         )
 
         plot_func.plot_unclassified_poly(
@@ -103,7 +107,8 @@ for e, gdf in enumerate(gdfs):
             use_norm=True,
             norm_min=vmin,
             norm_max=vmax,
-            cx_tile=cx_tile_2,
+            # cx_tile=cx_tile_2,
+            background_color=pdict["background_color"],
         )
 
     ###### Plot relative network length #####
@@ -125,12 +130,13 @@ for e, gdf in enumerate(gdfs):
             plot_col=p,
             scheme=scheme,
             k=k,
-            cx_tile=cx_tile_2,
+            # cx_tile=cx_tile_2,
             plot_na=True,
             cmap=pdict["pos"],
             edgecolor="none",
             title=plot_titles[i],
             fp=filepaths[i],
+            background_color=pdict["background_color"],
         )
 
         plot_func.plot_unclassified_poly(
@@ -142,7 +148,8 @@ for e, gdf in enumerate(gdfs):
             use_norm=True,
             norm_min=vmin,
             norm_max=vmax,
-            cx_tile=cx_tile_2,
+            # cx_tile=cx_tile_2,
+            background_color=pdict["background_color"],
         )
 
     ###### Plot relative network length #####
@@ -168,12 +175,13 @@ for e, gdf in enumerate(gdfs):
             plot_col=p,
             scheme=scheme,
             k=k,
-            cx_tile=cx_tile_2,
+            # cx_tile=cx_tile_2,
             plot_na=True,
             cmap=pdict["pos"],
             edgecolor="none",
             title=plot_titles[i],
             fp=filepaths[i],
+            background_color=pdict["background_color"],
         )
 
         plot_func.plot_unclassified_poly(
@@ -185,7 +193,8 @@ for e, gdf in enumerate(gdfs):
             use_norm=True,
             norm_min=vmin,
             norm_max=vmax,
-            cx_tile=cx_tile_2,
+            # cx_tile=cx_tile_2,
+            background_color=pdict["background_color"],
         )
 
 # %%
