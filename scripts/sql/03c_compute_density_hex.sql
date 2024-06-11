@@ -10,7 +10,7 @@ CREATE INDEX IF NOT EXISTS lts_access_ix ON edges (lts_access);
 
 CREATE INDEX IF NOT EXISTS edges_geom_ix ON edges USING GIST (geometry);
 
-CREATE INDEX IF NOT EXISTS h3_geom_ix ON hex_grid USING GIST(geometry);
+CREATE INDEX IF NOT EXISTS hex_geom_ix ON hex_grid USING GIST(geometry);
 
 --SPLIT EDGES WITH HEXAGONS 
 CREATE TABLE density.split_edges_hex AS
