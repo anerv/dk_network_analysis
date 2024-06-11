@@ -202,12 +202,17 @@ fp_spatial_weights_sensitivity = "../results/spatial_autocorrelation/sensitivity
 
 
 # Socio correlation
-fp_socio_vars_heatmap = "../results/socio_correlation/heatmap_socio_vars.png"
-fp_socio_vars_pairplot = "../results/socio_correlation/pairplot_socio_vars.png"
+fp_socio_vars_heatmap = "../results/correlation/heatmap_socio_vars.png"
+fp_socio_vars_pairplot = "../results/correlation/pairplot_socio_vars.png"
 
-fp_socio_heatmap = "../results/socio_correlation/heatmap_socio_"
-fp_socio_pairplot = "../results/socio_correlation/pairplot_socio_"
+fp_socio_heatmap = "../results/correlation/heatmap_socio_"
+fp_socio_pairplot = "../results/correlation/pairplot_socio_"
 
+fp_hex_network_heatmap = "../results/correlation/heatmap_hex_network.png"
+fp_hex_network_pairplot = "../results/correlation/pairplot_hex_network.png"
+
+fp_socio_network_heatmap = "../results/correlation/heatmap_socio_network.png"
+fp_socio_network_pairplot = "../results/correlation/pairplot_socio_network.png"
 
 # Spatial autocorrelation
 fp_spatial_auto_base = "../results/spatial_autocorrelation/"

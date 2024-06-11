@@ -40,7 +40,7 @@ results_subfolders = [
     "reach_distance_comparisons",
     "clustering",
     "spatial_autocorrelation",
-    "socio_correlation",
+    "correlation",
 ]
 for f in results_subfolders:
     if not os.path.exists("results/" + f):
