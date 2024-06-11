@@ -199,3 +199,5 @@ for i, columns in enumerate(all_reach_columns):
     display(socio_reach[columns].describe())
 
 # %%
+
+# TODO: ALL NETWORK VARIABLES**
