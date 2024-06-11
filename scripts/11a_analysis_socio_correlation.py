@@ -13,6 +13,7 @@ import seaborn as sns
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 exec(open("../settings/df_styler.py").read())
+exec(open("../settings/filepaths.py").read())
 plot_func.set_renderer("png")
 
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
@@ -23,7 +24,7 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 ###### SOCIO-ECO VARIABLES #####
 ################################
 
-exec(open("../settings/read_socio_pop").read())
+exec(open("../settings/read_socio_pop.py").read())
 
 plot_func.plot_correlation(
     socio,
