@@ -52,9 +52,11 @@ assert urban.crs == crs
 
 dbf.to_postgis(geodataframe=urban, table_name="urban_areas", engine=engine)
 
-q_ix = "CREATE INDEX IF NOT EXISTS urban_geom_ix ON urban_areas USING GIST (geometry);"
-
-dbf.run_query_pg(q_ix, connection)
+# Preprocess urban data
+q = "sql/01a_preprocess_urban.sql"
+result = dbf.run_query_pg(q, connection)
+if result == "error":
+    print("Please fix error before rerunning and reconnect to the database")
 
 # LOAD ADM DATA
 adm = gpd.read_file(adm_fp)
@@ -106,7 +108,7 @@ test = dbf.run_query_pg(q, connection)
 print(test)
 
 # Preprocess socio data
-q = "sql/01a_preprocess_socio.sql"
+q = "sql/01b_preprocess_socio.sql"
 result = dbf.run_query_pg(q, connection)
 if result == "error":
     print("Please fix error before rerunning and reconnect to the database")
@@ -134,6 +136,12 @@ q = "SELECT hex_id FROM hex_grid LIMIT 10;"
 test = dbf.run_query_pg(q, connection)
 
 print(test)
+
+# Preprocess socio data
+q = "sql/01c_preprocess_hexgrid.sql"
+result = dbf.run_query_pg(q, connection)
+if result == "error":
+    print("Please fix error before rerunning and reconnect to the database")
 
 connection.close()
 
