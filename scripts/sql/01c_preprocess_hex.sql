@@ -32,18 +32,9 @@ FROM
 WHERE
     hex_grid.hex_id = inter.hex_id;
 
-CREATE TABLE inter AS (
-    SELECT
-        h.hex_id,
-        SUM(
-            ST_Area(ST_Intersection(h.geometry, ub.geometry))
-        ) AS intersection_area,
-        ST_Intersection(h.geometry, ub.geometry) AS geometry
-    FROM
-        hex_grid AS h,
-        urban_areas AS ub
-    WHERE
-        ST_Intersects(h.geometry, ub.geometry)
-    GROUP BY
-        h.hex_id
-)
+UPDATE
+    hex_grid
+SET
+    urban_pct = 0
+WHERE
+    urban_pct IS NULL;
