@@ -116,3 +116,43 @@ df.to_csv(filepath_summary_stats_reach_diff_pct, index=True)
 
 display(df.style.pipe(format_style_index))
 # %%
+# Increases in reach at different distance thresholds
+
+exec(open("../settings/read_reach_comparison.py").read())
+
+columns = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
+
+display(hex_reach_comparison[columns].describe().style.pipe(format_style_index))
+
+lts1_5_10 = len(hex_reach_comparison[hex_reach_comparison["lts1_pct_diff_5_10"] == 0])
+lts1_10_15 = len(hex_reach_comparison[hex_reach_comparison["lts1_pct_diff_10_15"] == 0])
+lts2_5_10 = len(hex_reach_comparison[hex_reach_comparison["lts2_pct_diff_5_10"] == 0])
+lts2_10_15 = len(hex_reach_comparison[hex_reach_comparison["lts2_pct_diff_10_15"] == 0])
+lts3_5_10 = len(hex_reach_comparison[hex_reach_comparison["lts3_pct_diff_5_10"] == 0])
+lts3_10_15 = len(hex_reach_comparison[hex_reach_comparison["lts3_pct_diff_10_15"] == 0])
+lts4_5_10 = len(hex_reach_comparison[hex_reach_comparison["lts4_pct_diff_5_10"] == 0])
+lts4_10_15 = len(hex_reach_comparison[hex_reach_comparison["lts4_pct_diff_10_15"] == 0])
+car_5_10 = len(hex_reach_comparison[hex_reach_comparison["car_pct_diff_5_10"] == 0])
+car_10_15 = len(hex_reach_comparison[hex_reach_comparison["car_pct_diff_10_15"] == 0])
+
+values = [
+    (lts1_5_10, lts1_10_15),
+    (lts2_10_15, lts2_10_15),
+    (lts3_5_10, lts3_10_15),
+    (lts4_5_10, lts4_10_15),
+    (car_5_10, car_10_15),
+]
+
+for l, n, v in zip(labels_step, network_levels, values):
+
+    total_count = len(hex_reach_comparison[hex_reach_comparison[f"{n}_reach_5"] > 0])
+    print(
+        f"{v[0]/total_count*100:.2f}% of {l} cells have no improvements in reach when increasing distance from 5 to 10 km"
+    )
+    print(
+        f"{v[1]/total_count*100:.2f}% of {l} cells have no improvements in reach when increasing distance from 10 to 15 km"
+    )
+
+    print("\n")
+
+# %%
