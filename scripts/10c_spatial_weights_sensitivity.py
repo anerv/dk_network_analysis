@@ -68,9 +68,9 @@ for i, gdf in enumerate(gdfs):
 ####### FRAGMENTATION ######
 ############################
 
-exec(open("../settings/read_components.py").read())
+exec(open("../settings/read_component_length_agg.py").read())
 
-gdfs = [muni_components, socio_components, hex_components]
+gdfs = [component_length_muni, component_length_socio, component_length_hex]
 
 for gdf in gdfs:
     gdf.replace(np.nan, 0, inplace=True)
