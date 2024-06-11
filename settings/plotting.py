@@ -75,6 +75,7 @@ lts_color_dict = {
     "total": "#151515",
 }
 
+
 component_columns = [
     "component_all",
     "component_1",
