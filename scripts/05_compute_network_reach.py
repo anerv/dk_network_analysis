@@ -70,8 +70,6 @@ for dist in distances:
         "reach.hex_car",
     ]
 
-    network_types = ["lts1", "lts2", "lts3", "lts4", "car"]
-
     # **** COMPUT REACHABLE NODES ****
 
     # CREATE TABLES
@@ -232,7 +230,7 @@ for dist in distances:
     for i, t in enumerate(table_names):
         q1 = f"ALTER TABLE {t} ADD COLUMN IF NOT EXISTS hex_id VARCHAR;"
         q2 = f"UPDATE {t} SET hex_id = h.hex_id FROM {hex_tables[i]} h WHERE {t}.start_node = h.node_id;"
-        q3 = f"CREATE INDEX IF NOT EXISTS {network_types[i]}_reach_{dist}_ix ON {t} (hex_id);"
+        q3 = f"CREATE INDEX IF NOT EXISTS {network_levels[i]}_reach_{dist}_ix ON {t} (hex_id);"
 
         for q in [q1, q2, q3]:
             result = dbf.run_query_pg(q, connection)
@@ -333,7 +331,7 @@ for dist in distances:
         if result == "error":
             print("Please fix error before rerunning and reconnect to the database")
 
-    for n in network_types:
+    for n in network_levels:
         q = f"""
         UPDATE
             reach.hex_reach_{dist}
@@ -378,7 +376,7 @@ for dist in distances:
             print("Please fix error before rerunning and reconnect to the database")
             break
 
-    for n in network_types[-1]:
+    for n in network_levels[-1]:
         f"""
         UPDATE
             reach.hex_reach_{dist}

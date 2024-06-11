@@ -60,6 +60,8 @@ labels_pct_step = [
     "Total car (%)",
 ]
 
+network_levels = ["lts1", "lts2", "lts3", "lts4", "car"]
+
 
 id_columns = ["municipality", "id", "hex_id"]
 aggregation_levels = ["administrative", "socio", "hexgrid"]
