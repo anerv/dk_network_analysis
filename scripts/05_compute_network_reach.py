@@ -489,13 +489,13 @@ for q in [q_geo, q_update]:
 # %%
 # Compute percentage difference between reach values
 
-for n in ["lts1", "lts2", "lts3", "lts4", "car"]:
+for n in network_levels:
 
     for comb in itertools.combinations(distances, 2):
 
         q1 = f"ALTER TABLE reach.compare_reach ADD COLUMN IF NOT EXISTS {n}_pct_diff_{comb[0]}_{comb[1]} DECIMAL;"
 
-        q2 = f"""UPDATE reach.compare_reach SET {n}_pct_diff_{comb[0]}_{comb[1]} = ({n}_reach_{comb[0]} / {n}_reach_{comb[1]}) * 100 WHERE {n}_reach_{distances[0]} > 0;"""
+        q2 = f"""UPDATE reach.compare_reach SET {n}_pct_diff_{comb[0]}_{comb[1]} = (({n}_reach_{comb[1]} - {n}_reach_{comb[0]})) / (({n}_reach_{comb[1]} + {n}_reach_{comb[0]})/2) * 100 WHERE {n}_reach_{distances[0]} > 0;"""
         for q in [q1, q2]:
             result = dbf.run_query_pg(q, connection)
             if result == "error":
