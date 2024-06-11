@@ -61,6 +61,7 @@ labels_pct_step = [
 ]
 
 network_levels = ["lts1", "lts2", "lts3", "lts4", "car"]
+network_levels_step = ["lts1", "lts1_2", "lts1_3", "lts1_4", "car"]
 
 
 id_columns = ["municipality", "id", "hex_id"]

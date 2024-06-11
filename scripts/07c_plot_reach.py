@@ -8,6 +8,7 @@ import numpy as np
 import plotly_express as px
 import pandas as pd
 import seaborn as sns
+import itertools
 
 sns.set_theme("paper")
 
@@ -163,6 +164,59 @@ for i, p in enumerate(plot_columns):
         #cx_tile=cx_tile_2,
         background_color=pdict["background_color"],
     )
+
+#%%
+#### MAPS - HEX REACH COMPARISON ##########
+
+exec(open("../settings/read_reach_comparison.py").read())
+
+distances = [5, 10, 15]
+
+plot_columns = []
+filepaths = []
+plot_titles = []
+
+for i, n in enumerate(network_levels):
+
+    for comb in itertools.combinations(distances, 2):
+
+        plot_columns.append(f"{n}_pct_diff_{comb[0]}_{comb[1]}")
+
+        plot_titles.append(f"% difference in network reach for {labels_step[i]} ({comb[0]} - {comb[1]})")
+
+        filepaths.append(fp_reach_diff_pct + f"{network_levels_step[i]}_{comb[0]}_{comb[1]}")
+
+vmin, vmax = plot_func.get_min_max_vals(hex_reach_comparison, plot_columns)
+#%%
+for i, c in enumerate(plot_columns):
+        
+        plot_func.plot_classified_poly(
+            gdf=hex_reach_comparison,
+            plot_col=c,
+            scheme=scheme,
+            k=k,
+            #cx_tile=cx_tile_2,
+            plot_na=True,
+            cmap=pdict["pos"],
+            edgecolor="none",
+            title=plot_titles[i],
+            fp=filepaths[i],
+            background_color=pdict["background_color"],
+        )
+
+        plot_func.plot_unclassified_poly(
+            poly_gdf=hex_reach_comparison,
+            plot_col=c,
+            plot_title=plot_titles[i],
+            filepath=filepaths[i] + "_unclassified",
+            cmap=pdict["pos"],
+            use_norm=True,
+            norm_min=vmin,
+            norm_max=vmax,
+            #cx_tile=cx_tile_2,
+            background_color=pdict["background_color"],
+            plot_na=True,
+        )
 
 #%%
 #### MAPS - SOCIO REACH ###################
@@ -555,7 +609,6 @@ plt.show()
 plt.close()
 
 # %%
-
 # KDE plots - differences in reach per distance
 
 for n in org_labels_rename.keys():
@@ -587,5 +640,56 @@ for n in org_labels_rename.keys():
     plt.close()
 
 # %%
+# KDE PLOTS - DIFFERENCES IN REACH PER DISTANCE (%)
 
+exec(open("../settings/read_reach_comparison.py").read())
+hex_reach_comparison.replace(np.nan, 0, inplace=True)
+
+distances = [5, 10, 15]
+
+plot_cols = []
+comparison_types = []
+
+for n in network_levels:
+
+    for comb in itertools.combinations(distances, 2):
+
+        plot_cols.append(f"{n}_pct_diff_{comb[0]}_{comb[1]}")
+        
+        comparison_types.append(f"{comb[0]}_{comb[1]}")
+
+comparison_types = list(set(comparison_types))
+
+rename_dict = {}
+
+for n, l in zip(network_levels, labels):
+    rename_dict[n] = l
+
+for c in comparison_types:
+    # Get columns which ends with c
+    cols = [col for col in plot_cols if c in col]
+
+    df = hex_reach_comparison[cols]
+
+    df_flat = df.melt()
+    df_flat["network"] = df_flat["variable"].str.split("_").str[0]
+
+    df_flat.replace(rename_dict, inplace=True)
+
+    fig = sns.kdeplot(
+        data=df_flat,
+        x="value",
+        hue="network",
+        multiple="stack",
+        # fill=True,
+        palette=lts_color_dict.values(),
+    )
+
+    fig.set_xlabel(f"% difference between in network reach")
+    fig.set_title(f"Comparison of network reach between distance {c.split('_')[0]} and {c.split('_')[1]} km")
+
+    plt.savefig(fp_reach_diff_pct_kde + c + ".png")
+    plt.show()
+
+    plt.close()
 # %%
