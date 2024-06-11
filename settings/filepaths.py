@@ -104,6 +104,8 @@ fp_reach_compare_dist_violin = (
     "../results/reach_distance_comparisons/distance_comparison_violin.png"
 )
 
+fp_reach_diff_pct = "../results/reach_distance_comparisons/reach_diff_pct_"
+
 fp_socio_reach = "../results/reach_maps/socio_reach_"
 
 # Fragmentation plots
