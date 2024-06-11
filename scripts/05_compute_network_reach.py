@@ -2,6 +2,7 @@
 
 from src import db_functions as dbf
 import pandas as pd
+import itertools
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -29,7 +30,7 @@ for i, q in enumerate(queries):
 distances = [5, 10, 15]  # max distance in km
 # distances = [5, 10]  # max distance in km
 # distances = [15]
-
+# %%
 chunk_sizes_5 = [1000, 1000, 1000, 1000, 1000]
 chunk_sizes_10 = [1000, 500, 200, 200, 200]
 chunk_sizes_15 = [1000, 200, 100, 100, 100]
@@ -456,8 +457,7 @@ result = dbf.run_query_pg("DROP TABLE IF EXISTS reach.compare_reach;", connectio
 if result == "error":
     print("Please fix error before rerunning and reconnect to the database")
 
-
-start = "CREATE TABLE reach.compare_reach AS (SELECT "
+start = f"CREATE TABLE reach.compare_reach AS (SELECT r{distances[0]}.hex_id, "
 end = ");"
 
 select_columns = ""
@@ -472,10 +472,38 @@ for d in distances[1:]:
     from_q += f" JOIN reach.hex_reach_{d} r{d} ON r{d}.hex_id = r{distances[0]}.hex_id"
 
 final_query = start + select_columns[:-1] + " " + from_q + end
-# %%
+
 result = dbf.run_query_pg(final_query, connection)
 if result == "error":
     print("Please fix error before rerunning and reconnect to the database")
+
+# %%
+# ADD geometry column
+q_geo = "ALTER TABLE reach.compare_reach ADD COLUMN geometry geometry;"
+q_update = "UPDATE reach.compare_reach SET geometry = h.geometry FROM hex_grid h WHERE reach.compare_reach.hex_id = h.hex_id;"
+
+for q in [q_geo, q_update]:
+    result = dbf.run_query_pg(q, connection)
+    if result == "error":
+        print("Please fix error before rerunning and reconnect to the database")
+        break
+
+# %%
+# Compute percentage difference between reach values
+
+for n in ["lts1", "lts2", "lts3", "lts4", "car"]:
+
+    for comb in itertools.combinations(distances, 2):
+
+        q1 = f"ALTER TABLE reach.compare_reach ADD COLUMN IF NOT EXISTS {n}_pct_diff_{comb[0]}_{comb[1]} DECIMAL;"
+
+        q2 = f"""UPDATE reach.compare_reach SET {n}_pct_diff_{comb[0]}_{comb[1]} = ({n}_reach_{comb[0]} / {n}_reach_{comb[1]}) * 100 WHERE {n}_reach_{distances[0]} > 0;"""
+        for q in [q1, q2]:
+            result = dbf.run_query_pg(q, connection)
+            if result == "error":
+                print("Please fix error before rerunning and reconnect to the database")
+                break
+
 
 # %%
 # Compute average socio reach
