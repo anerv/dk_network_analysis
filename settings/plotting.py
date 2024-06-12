@@ -109,7 +109,6 @@ length_relative_steps_columns = [
     "lts_1_2_length_rel",
     "lts_1_3_length_rel",
     "lts_1_4_length_rel",
-    # "lts_7_length_rel",
     "total_car_length_rel",
 ]
 
@@ -118,7 +117,6 @@ length_relative_columns = [
     "lts_2_length_rel",
     "lts_3_length_rel",
     "lts_4_length_rel",
-    # "lts_7_length_rel",
     "total_car_length_rel",
 ]
 
@@ -338,18 +336,6 @@ pdict = {
     "map_attr": "OSM Contributors, GeoDanmark",
     "background_color": "#e0ecf4",
 }
-
-# patches for geopandas plots legend of "no data"
-# import matplotlib.patches as mpatches
-
-# nodata_patch = mpatches.Patch(
-#     facecolor=pdict["nodata_face"],
-#     edgecolor=pdict["nodata_edge"],
-#     linewidth=0.3,
-#     label="No data",
-#     hatch=pdict["nodata_hatch"],
-#     alpha=pdict["alpha_nodata"],
-# )
 
 import contextily as cx
 
