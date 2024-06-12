@@ -244,6 +244,14 @@ socio_reach_median_columns = [
     "car_reach_median",
 ]
 
+socio_reach_max_columns = [
+    "lts1_reach_max",
+    "lts2_reach_max",
+    "lts3_reach_max",
+    "lts4_reach_max",
+    "car_reach_max",
+]
+
 plotly_labels = {
     "lts_1_dens": "LTS 1 density (km/sqkm)",
     "lts_2_dens": "LTS 2 density (km/sqkm)",
