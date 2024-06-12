@@ -84,7 +84,7 @@ def evaluate_geographical_coherence(gdf, cluster_columns):
         result = ipqs.to_frame(cluster_type)
         results.append(result)
 
-    return pd.concat(results, axis=1)
+    display(pd.concat(results, axis=1))
 
 
 def evaluate_feature_coherence(gdf, cluster_columns, cluster_variables):
@@ -114,7 +114,7 @@ def evaluate_solution_similarity(gdf, cluster_columns):
             )
             scores.append((i_cluster_type, j_cluster_type, score))
     results = pd.DataFrame(scores, columns=["source", "target", "similarity"])
-    return results.pivot("source", "target", "similarity")
+    return results.pivot(index="source", columns="target", values="similarity")
 
 
 def find_k_elbow_method(input_data, min_k=1, max_k=10):
