@@ -13,6 +13,7 @@ from pysal.lib import weights
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
+exec(open("../settings/df_styler.py").read())
 
 plot_func.set_renderer("png")
 
@@ -141,16 +142,21 @@ plot_func.plot_cluster_variable_distributions(
 # %%
 
 cluster_columns = [kmeans_col, hier_col, reg_col]
-titles = ["K-Means", "Hierarchical", "Regionalization"]
+plot_titles = ["K-Means", "Hierarchical", "Regionalization"]
 
-analysis_func.evaluate_geographical_coherence(socio_cluster_gdf, cluster_columns)
+geo = analysis_func.evaluate_geographical_coherence(socio_cluster_gdf, cluster_columns)
 
-analysis_func.evaluate_feature_coherence(
+display(geo.style.pipe(format_style_index))
+
+feature = analysis_func.evaluate_feature_coherence(
     socio_cluster_gdf, cluster_columns, socio_cluster_variables
 )
-analysis_func.evaluate_solution_similarity(socio_cluster_gdf)
 
-plot_func.map_clusters(socio_cluster_gdf, cluster_columns, titles)
+display(feature.style.pipe(format_style_index))
+
+analysis_func.evaluate_solution_similarity(socio_cluster_gdf, cluster_columns)
+
+plot_func.map_clusters(socio_cluster_gdf, cluster_columns, plot_titles)
 
 # %%
 
