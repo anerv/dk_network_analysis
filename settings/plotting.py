@@ -252,6 +252,23 @@ socio_reach_max_columns = [
     "car_reach_max",
 ]
 
+socio_corr_variables = [
+    "Income under 100k",
+    "Income 100-150k",
+    "Income 150-200k",
+    "Income 200-300k",
+    "Income 300-400k",
+    "Income 400-500k",
+    "Income 500-750k",
+    "Income 750k",
+    "Households w car",
+    "Households 1 car",
+    "Households 2 cars",
+    "Households no car",
+    "population_density",
+    "urban_pct",
+]
+
 plotly_labels = {
     "lts_1_dens": "LTS 1 density (km/sqkm)",
     "lts_2_dens": "LTS 2 density (km/sqkm)",
