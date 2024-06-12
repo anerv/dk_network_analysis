@@ -95,21 +95,7 @@ socio_largest_components = gpd.read_postgis(
 )
 
 socio_components = socio_components[
-    [
-        "comp_all_count",
-        "comp_1_count",
-        "comp_2_count",
-        "comp_3_count",
-        "comp_4_count",
-        "comp_car_count",
-        "component_per_length_all",
-        "component_per_length_1",
-        "component_per_length_2",
-        "component_per_length_3",
-        "component_per_length_4",
-        "component_per_length_car",
-        "id",
-    ]
+    component_count_columns + component_per_km_columns + ["id"]
 ].merge(socio, on="id", how="inner")
 
 keep_columns = socio_largest_component_columns_ave + ["id"]
