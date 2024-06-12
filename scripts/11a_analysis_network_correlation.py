@@ -19,55 +19,12 @@ plot_func.set_renderer("png")
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 # %%
-
-#### HEX #####
-hex_gdf = gpd.read_postgis(
-    "SELECT hex_id, urban_pct, geometry FROM hex_grid;", engine, geom_col="geometry"
-)
-
-hex_density = gpd.read_postgis(
-    "SELECT * FROM density.density_hex;", engine, geom_col="geometry"
-)
-hex_density = hex_density[
-    ["hex_id"] + density_columns + density_steps_columns[1:4] + length_relative_columns
-]
-# hex_components = gpd.read_postgis(
-#     "SELECT * FROM fragmentation.comp_count_hex;", engine, geom_col="geometry"
-# )
-hex_components = gpd.read_postgis(
-    "SELECT * FROM fragmentation.component_length_hex;", engine, geom_col="geometry"
-)
-hex_components = hex_components[
-    ["hex_id"] + component_count_columns + component_per_km_columns
-]
-
-hex_largest_components = gpd.read_postgis(
-    "SELECT * FROM fragmentation.hex_largest_components;", engine, geom_col="geometry"
-)
-hex_largest_components = hex_largest_components[
-    largest_local_component_len_columns + ["hex_id"]
-]
-hex_reach = gpd.read_postgis(
-    f"SELECT * FROM reach.hex_reach_{reach_dist};", engine, geom_col="geometry"
-)
-
-hex_reach = hex_reach[["hex_id"] + reach_columns]
+exec(open("../settings/read_hex_results.py").read())
 
 exec(open("../settings/read_reach_comparison.py").read())
-
 hex_reach_comp_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
+del hex_reach_comparison
 
-hex_reach_comparison = hex_reach_comparison[["hex_id"] + hex_reach_comp_cols]
-
-hex_gdf = hex_gdf.merge(hex_density, on="hex_id", how="left")
-hex_gdf = hex_gdf.merge(hex_components, on="hex_id", how="left")
-hex_gdf = hex_gdf.merge(hex_reach, on="hex_id", how="left")
-hex_gdf = hex_gdf.merge(hex_reach_comparison, on="hex_id", how="left")
-hex_gdf = hex_gdf.merge(hex_largest_components, on="hex_id", how="left")
-
-assert hex_gdf.shape[0] == hex_density.shape[0]
-
-# %%
 hex_corr_variables = (
     density_columns
     + density_steps_columns[1:4]
@@ -80,7 +37,6 @@ hex_corr_variables = (
     + ["urban_pct"]
 )
 
-# %%
 display(
     hex_gdf[hex_corr_variables]
     .corr(method="spearman")
@@ -98,53 +54,13 @@ plot_func.plot_correlation(
 # %%
 ##### SOCIO #####
 
-socio = gpd.read_postgis(
-    "SELECT id, urban_pct, geometry FROM socio;", engine, geom_col="geometry"
-)
+exec(open("../settings/prepare_socio_network_corr_data.py").read())
 
-socio_density = gpd.read_postgis(
-    "SELECT * FROM density.density_socio", engine, geom_col="geometry"
-)
-socio_density = socio_density[
-    density_columns + density_steps_columns[1:4] + length_relative_columns + ["id"]
-]
-
-socio_components = gpd.read_postgis(
-    "SELECT * FROM fragmentation.component_length_socio;", engine, geom_col="geometry"
-)
-socio_components = socio_components[
-    component_count_columns + component_per_km_columns + ["id"]
-]
-
-socio_largest_components = gpd.read_postgis(
-    "SELECT * FROM fragmentation.socio_largest_component;", engine, geom_col="geometry"
-)
-
-socio_largest_components = socio_largest_components[
-    socio_largest_component_columns_median + ["id"]
-]
-
-socio_reach = gpd.read_postgis(
-    f"SELECT * FROM reach.socio_reach_{reach_dist}", engine, geom_col="geometry"
-)
-
-socio_reach = socio_reach[socio_reach_median_columns + socio_reach_max_columns + ["id"]]
-
-socio_reach_comparison = gpd.read_postgis(
-    "SELECT * FROM reach.socio_reach_comparison", engine, geom_col="geometry"
-)
+# generate socio reach comparison columns
 exec(open("../settings/read_reach_comparison.py").read())
 hex_reach_comp_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
 socio_reach_compare_columns = [c + "_median" for c in hex_reach_comp_cols]
-socio_reach_comparison = socio_reach_comparison[socio_reach_compare_columns + ["id"]]
-
-socio_gdf = socio.merge(socio_density, on="id", how="left")
-socio_gdf = socio_gdf.merge(socio_components, on="id", how="left")
-socio_gdf = socio_gdf.merge(socio_largest_components, on="id", how="left")
-socio_gdf = socio_gdf.merge(socio_reach, on="id", how="left")
-socio_gdf = socio_gdf.merge(socio_reach_comparison, on="id", how="left")
-
-assert socio_density.shape[0] == socio_gdf.shape[0]
+del hex_reach_comparison
 
 socio_corr_variables = (
     density_columns
@@ -158,7 +74,7 @@ socio_corr_variables = (
     + socio_reach_compare_columns
     + ["urban_pct"]
 )
-# %%
+
 display(
     socio_gdf[socio_corr_variables]
     .corr(method="spearman")

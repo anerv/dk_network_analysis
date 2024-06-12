@@ -5,8 +5,6 @@ exec(open("../settings/yaml_variables.py").read())
 
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
-connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
-
 socio = gpd.read_postgis("SELECT * FROM socio", engine, geom_col="geometry")
 
 rename_dict = {

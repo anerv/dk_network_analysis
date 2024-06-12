@@ -7,9 +7,6 @@ exec(open("../settings/filepaths.py").read())
 
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
-connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
-
-
 component_size_all = pd.read_sql(
     "SELECT * FROM fragmentation.component_size_all;", engine
 )

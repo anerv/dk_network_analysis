@@ -9,7 +9,6 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
-
 hex_reach_comparison = gpd.read_postgis(
     "SELECT * FROM reach.compare_reach;", engine, geom_col="geometry"
 )
