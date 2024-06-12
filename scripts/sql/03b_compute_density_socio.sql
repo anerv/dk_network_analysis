@@ -226,7 +226,6 @@ total_car AS (
 )
 SELECT
     socio.id,
-    socio.area_name,
     lts_1.lts_1_length,
     lts_2.lts_2_length,
     lts_3.lts_3_length,

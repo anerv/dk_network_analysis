@@ -37,7 +37,6 @@ CREATE TABLE fragmentation.component_length_muni AS (
 CREATE TABLE fragmentation.component_length_socio AS (
     SELECT
         dens.id,
-        dens.area_name,
         dens.lts_1_length,
         dens.lts_2_length,
         dens.lts_3_length,
