@@ -20,7 +20,6 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 # %%
 
-
 #### HEX #####
 hex_gdf = gpd.read_postgis(
     "SELECT hex_id, urban_pct, geometry FROM hex_grid;", engine, geom_col="geometry"
@@ -56,7 +55,6 @@ hex_reach = hex_reach[["hex_id"] + reach_columns]
 
 exec(open("../settings/read_reach_comparison.py").read())
 
-distances = [5, 10, 15]
 hex_reach_comp_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
 
 hex_reach_comparison = hex_reach_comparison[["hex_id"] + hex_reach_comp_cols]
@@ -98,7 +96,6 @@ plot_func.plot_correlation(
     pairplot_fp=fp_hex_network_pairplot,
 )
 # %%
-# TODO: include average reach diff
 ##### SOCIO #####
 
 socio = gpd.read_postgis(
@@ -131,16 +128,18 @@ socio_reach = gpd.read_postgis(
     f"SELECT * FROM reach.socio_reach_{reach_dist}", engine, geom_col="geometry"
 )
 
-socio_reach = socio_reach[socio_reach_median_columns + ["id"]]
+socio_reach = socio_reach[socio_reach_median_columns + socio_reach_max_columns + ["id"]]
 
 socio_reach_comparison = gpd.read_postgis(
     "SELECT * FROM reach.socio_reach_comparison", engine, geom_col="geometry"
 )
+exec(open("../settings/read_reach_comparison.py").read())
+hex_reach_comp_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
 socio_reach_compare_columns = [c + "_median" for c in hex_reach_comp_cols]
 socio_reach_comparison = socio_reach_comparison[socio_reach_compare_columns + ["id"]]
 
-socio = socio.merge(socio_density, on="id", how="left")
-socio_gdf = socio_density.merge(socio_components, on="id", how="left")
+socio_gdf = socio.merge(socio_density, on="id", how="left")
+socio_gdf = socio_gdf.merge(socio_components, on="id", how="left")
 socio_gdf = socio_gdf.merge(socio_largest_components, on="id", how="left")
 socio_gdf = socio_gdf.merge(socio_reach, on="id", how="left")
 socio_gdf = socio_gdf.merge(socio_reach_comparison, on="id", how="left")
