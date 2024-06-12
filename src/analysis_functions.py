@@ -48,7 +48,7 @@ def find_k_elbow_method(input_data, min_k=1, max_k=10):
     plt.plot(K, distortions, "bx-")
     plt.xlabel("K")
     plt.ylabel("Distortion")
-    plt.title("The Elbow Method - find best K")
+    plt.title("Elbow Method: Find best K")
     plt.show()
 
     return mapping1, mapping2
