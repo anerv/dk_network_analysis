@@ -73,3 +73,10 @@ FROM
     inter
 WHERE
     socio.id = inter.id;
+
+UPDATE
+    socio
+SET
+    urban_pct = 0
+WHERE
+    urban_pct IS NULL;
