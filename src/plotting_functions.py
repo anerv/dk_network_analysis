@@ -61,7 +61,7 @@ def plot_cluster_variable_distributions(gdf, cluster_col, cluster_variables):
 
 def map_clusters(gdf, cluster_columns, titles):
 
-    _, axs = plt.subplots(1, len(cluster_columns), figsize=(12, 6))
+    _, axs = plt.subplots(1, len(cluster_columns), figsize=(15, 10))
 
     for i, cluster_col in enumerate(cluster_columns):
 
