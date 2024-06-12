@@ -2,6 +2,7 @@
 
 from src import db_functions as dbf
 import pandas as pd
+import geopandas as gpd
 import itertools
 
 exec(open("../settings/yaml_variables.py").read())
@@ -511,6 +512,51 @@ result = dbf.run_query_pg(q_socio, connection)
 if result == "error":
     print("Please fix error before rerunning and reconnect to the database")
 
+# %%
+q_socio_comparison = "sql/05d_compute_socio_reach_comparison.sql"
+result = dbf.run_query_pg(q_socio_comparison, connection)
+if result == "error":
+    print("Please fix error before rerunning and reconnect to the database")
+
+# %%
+
+hex_reach_comparison = gpd.read_postgis(
+    "SELECT * FROM reach.compare_reach LIMIT 1;", engine, geom_col="geometry"
+)
+
+compare_columns = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
+
+# %%
+q_start = """CREATE TABLE reach.socio_reach_comparison AS SELECT j.id,"""
+
+q_end = """ FROM reach.joined j GROUP BY j.id;"""
+
+select_columns = ""
+
+for c in compare_columns:
+    s = f"AVG(j.{c}) AS {c}_average, "
+    select_columns += s
+
+    s = f"MIN(j.{c}) AS {c}_min, "
+    select_columns += s
+
+    s = f"MAX(j.{c}) AS {c}_max, "
+    select_columns += s
+
+    s = f"PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY j.{c}) AS {c}_median, "
+    select_columns += s
+
+final_query = q_start + select_columns[:-2] + q_end
+
+# %%
+result = dbf.run_query_pg(final_query, connection)
+if result == "error":
+    print("Please fix error before rerunning and reconnect to the database")
+# %%
+q_socio_comparison_end = "sql/05e_finish_socio_reach_comparison.sql"
+result = dbf.run_query_pg(q_socio_comparison_end, connection)
+if result == "error":
+    print("Please fix error before rerunning and reconnect to the database")
 # %%
 with open("vacuum_analyze.py") as f:
     exec(f.read())
