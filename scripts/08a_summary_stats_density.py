@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import plotly_express as px
 import pandas as pd
+from IPython.display import display
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())

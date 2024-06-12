@@ -9,6 +9,112 @@ from splot.esda import lisa_cluster
 from sklearn import metrics
 from scipy.spatial.distance import cdist
 from sklearn.cluster import KMeans
+from sklearn.cluster import AgglomerativeClustering
+from sklearn.preprocessing import robust_scale
+from IPython.display import display
+
+# Clustering functions based on https://geographicdata.science/book/notebooks/10_clustering_and_regionalization.html#
+
+
+def run_kmeans(k, scaled_data):
+
+    np.random.seed(13)
+
+    kmeans = KMeans(n_clusters=k)
+    k_class = kmeans.fit(scaled_data)
+
+    return k_class.labels_
+
+
+def run_regionalization(scaled_data, weights, n_clusters):
+
+    np.random.seed(18)
+    # Specify cluster model with spatial constraint
+    model = AgglomerativeClustering(
+        linkage="ward", connectivity=weights.sparse, n_clusters=n_clusters
+    )
+    # Fit algorithm to the data
+    model.fit(scaled_data)
+
+    return model.labels_
+
+
+def run_agg_clustering(scaled_data, linkage, n_clusters):
+
+    np.random.seed(17)
+
+    model = AgglomerativeClustering(linkage=linkage, n_clusters=n_clusters)
+    model.fit(scaled_data)
+
+    return model.labels_
+
+
+def evaluate_cluster_sizes(gdf, cluster_col):
+
+    cluster_sizes = gdf.groupby(cluster_col).size()
+
+    return cluster_sizes
+
+
+def evaluate_cluster_areas(gdf, cluster_col):
+
+    gdf["area_sqkm"] = gdf.area / 10**6
+    cluster_areas = gdf.dissolve(by=cluster_col, aggfunc="sum")["area_sqkm"]
+
+    return cluster_areas
+
+
+def get_mean_cluster_variables(gdf, cluster_col, cluster_variables):
+
+    cluster_means = gdf.groupby(cluster_col)[cluster_variables].mean()
+
+    cluster_means = cluster_means.T.round(3)
+
+    display(cluster_means)
+
+
+def evaluate_geographical_coherence(gdf, cluster_columns):
+
+    results = []
+
+    for cluster_type in cluster_columns:
+
+        regions = gdf[[cluster_type, "geometry"]].dissolve(by=cluster_type)
+        ipqs = regions.area * 4 * np.pi / (regions.boundary.length**2)
+        result = ipqs.to_frame(cluster_type)
+        results.append(result)
+
+    return pd.concat(results, axis=1)
+
+
+def evaluate_feature_coherence(gdf, cluster_columns, cluster_variables):
+
+    ch_scores = []
+
+    for cluster_type in cluster_columns:
+
+        ch_score = metrics.calinski_harabasz_score(
+            robust_scale(gdf[cluster_variables]), gdf[cluster_type]
+        )
+
+        ch_scores.append((cluster_type, ch_score))
+
+    return pd.DataFrame(ch_scores, columns=["cluster type", "CH score"]).set_index(
+        "cluster type"
+    )
+
+
+def evaluate_solution_similarity(gdf, cluster_columns):
+
+    scores = []
+    for i_cluster_type in cluster_columns:
+        for j_cluster_type in cluster_columns:
+            score = metrics.adjusted_mutual_info_score(
+                gdf[i_cluster_type], gdf[j_cluster_type]
+            )
+            scores.append((i_cluster_type, j_cluster_type, score))
+    results = pd.DataFrame(scores, columns=["source", "target", "similarity"])
+    return results.pivot("source", "target", "similarity")
 
 
 def find_k_elbow_method(input_data, min_k=1, max_k=10):

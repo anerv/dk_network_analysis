@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import json
 import plotly.express as px
+from IPython.display import display
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())

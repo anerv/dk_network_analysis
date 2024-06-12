@@ -11,12 +11,73 @@ import numpy as np
 import pandas as pd
 import geopandas as gpd
 from collections import Counter
-from IPython.display import Image, HTML, display
+from IPython.display import display
 import plotly.express as px
 
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
+
+# Clustering functions based on https://geographicdata.science/book/notebooks/10_clustering_and_regionalization.html#
+
+
+def plot_clustering(gdf, cluster_col):
+
+    _, ax = plt.subplots(1, figsize=(10, 5))
+
+    gdf.plot(column=cluster_col, categorical=True, legend=True, linewidth=0, ax=ax)
+    ax.set_axis_off()
+
+
+def plot_cluster_sizes(cluster_sizes, cluster_areas):
+
+    _, ax = plt.subplots(1, figsize=(10, 5))
+    area_tracts = pd.DataFrame({"No. Tracts": cluster_sizes, "Area": cluster_areas})
+    area_tracts = area_tracts * 100 / area_tracts.sum()
+    ax = area_tracts.plot.bar(ax=ax)
+    ax.set_xlabel("Cluster labels")
+    ax.set_ylabel("Percentage by cluster")
+
+
+def plot_cluster_variable_distributions(gdf, cluster_col, cluster_variables):
+
+    tidy_df = gdf.set_index(cluster_col)
+    tidy_df = tidy_df[cluster_variables]
+    tidy_df = tidy_df.stack()
+    tidy_df = tidy_df.reset_index()
+    tidy_df = tidy_df.rename(columns={"level_1": "Attribute", 0: "Values"})
+    sns.set(font_scale=1.5)
+    facets = sns.FacetGrid(
+        data=tidy_df,
+        col="Attribute",
+        hue=cluster_col,
+        sharey=False,
+        sharex=False,
+        aspect=2,
+        col_wrap=3,
+    )
+    _ = facets.map(sns.kdeplot, "Values", fill=True).add_legend()
+
+
+def map_clusters(gdf, cluster_columns, titles):
+
+    _, axs = plt.subplots(1, len(cluster_columns), figsize=(12, 6))
+
+    for i, cluster_col in enumerate(cluster_columns):
+
+        gdf.plot(
+            column=cluster_col,
+            categorical=True,
+            cmap="Set2",
+            legend=True,
+            linewidth=0,
+            ax=axs[i],
+        )
+
+        axs[i].set_axis_off()
+        axs[i].set_title(titles[i])
+
+    plt.show()
 
 
 def get_min_max_vals(gdf, columns):

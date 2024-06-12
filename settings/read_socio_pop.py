@@ -25,6 +25,6 @@ pop_rename_dict = {
 
 socio.rename(columns=pop_rename_dict, inplace=True)
 
-keep_columns = socio_corr_variables + ["id", "area_name"]
+keep_columns = socio_corr_variables + ["id", "area_name", "geometry"]
 
 socio = socio[keep_columns]
