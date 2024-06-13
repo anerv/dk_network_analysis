@@ -39,7 +39,6 @@ socio_cluster_variables = (
     density_columns
     + length_relative_columns
     + component_per_km_columns
-    + socio_corr_variables
     + socio_reach_median_columns
     + socio_reach_compare_columns
     + ["urban_pct"]
@@ -69,6 +68,7 @@ k_labels = analysis_func.run_kmeans(k, socio_scaled)
 socio_cluster_gdf[kmeans_col] = k_labels
 
 plot_func.plot_clustering(socio_cluster_gdf, kmeans_col)
+
 
 kmean_sizes = analysis_func.evaluate_cluster_sizes(socio_cluster_gdf, kmeans_col)
 kmean_areas = analysis_func.evaluate_cluster_areas(socio_cluster_gdf, kmeans_col)
@@ -160,4 +160,8 @@ plot_func.map_clusters(socio_cluster_gdf, cluster_columns, plot_titles)
 
 # %%
 
+
 # TODO Make step that compares the fit etc based on clustering method and variables used
+
+
+# %%
