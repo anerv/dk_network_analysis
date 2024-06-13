@@ -44,16 +44,7 @@ spatial_weights = []
 
 for i, gdf in enumerate(gdfs):
 
-    w_queen = analysis_func.compute_spatial_weights(gdf, id_columns[i], w_type="queen")
-
-    w_knn = analysis_func.compute_spatial_weights(
-        gdf, id_columns[i], w_type="knn", k=k_values[i]
-    )
-    w = weights.set_operations.w_union(w_queen, w_knn)
-
-    assert len(w.islands) == 0
-
-    spatial_weights.append(w)
+    w = analysis_func.spatial_weights_combined(gdf, id_columns[i], k_values[i])
 
 # %%
 all_density_columns = [
@@ -135,14 +126,7 @@ spatial_weights = []
 
 for i, gdf in enumerate(gdfs):
 
-    w_queen = analysis_func.compute_spatial_weights(gdf, id_columns[i], w_type="queen")
-
-    w_knn = analysis_func.compute_spatial_weights(
-        gdf, id_columns[i], w_type="knn", k=k_values[i]
-    )
-    w = weights.set_operations.w_union(w_queen, w_knn)
-
-    assert len(w.islands) == 0
+    w = analysis_func.spatial_weights_combined(gdf, id_columns[i], k_values[i])
 
     spatial_weights.append(w)
 
@@ -230,14 +214,7 @@ spatial_weights = []
 
 for i, gdf in enumerate(gdfs):
 
-    w_queen = analysis_func.compute_spatial_weights(gdf, id_columns[i], w_type="queen")
-
-    w_knn = analysis_func.compute_spatial_weights(
-        gdf, id_columns[i], w_type="knn", k=k_values[i]
-    )
-    w = weights.set_operations.w_union(w_queen, w_knn)
-
-    assert len(w.islands) == 0
+    w = analysis_func.spatial_weights_combined(gdf, id_columns[i], k_values[i])
 
     spatial_weights.append(w)
 
@@ -314,14 +291,7 @@ spatial_weights = []
 
 for i, gdf in enumerate(gdfs):
 
-    w_queen = analysis_func.compute_spatial_weights(gdf, id_columns[i], w_type="queen")
-
-    w_knn = analysis_func.compute_spatial_weights(
-        gdf, id_columns[i], w_type="knn", k=k_values[i]
-    )
-    w = weights.set_operations.w_union(w_queen, w_knn)
-
-    assert len(w.islands) == 0
+    w = analysis_func.spatial_weights_combined(gdf, id_columns[i], k_values[i])
 
     spatial_weights.append(w)
 
@@ -391,13 +361,7 @@ print("Dropped rows with missing population density:", org_len - len(socio_gdf))
 
 socio_gdf.replace(np.nan, 0, inplace=True)
 
-w_queen = analysis_func.compute_spatial_weights(socio_gdf, "id", w_type="queen")
-
-w_knn = analysis_func.compute_spatial_weights(socio_gdf, "id", w_type="knn", k=k_socio)
-w = weights.set_operations.w_union(w_queen, w_knn)
-
-assert len(w.islands) == 0
-
+w = analysis_func.spatial_weights_combined(socio_gdf, id_columns[1], k_socio)
 
 columns = [
     "population_density",

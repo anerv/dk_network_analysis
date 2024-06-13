@@ -12,8 +12,51 @@ from sklearn.cluster import KMeans
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.preprocessing import robust_scale
 from IPython.display import display
+from src import plotting_functions as plot_func
 
 # Clustering functions based on https://geographicdata.science/book/notebooks/10_clustering_and_regionalization.html#
+
+
+def spatial_weights_combined(gdf, id_column, k=3):
+
+    w_queen = compute_spatial_weights(gdf, id_column, "queen")
+    w_knn = compute_spatial_weights(gdf, id_column, w_type="knn", k=3)
+    w = weights.set_operations.w_union(w_queen, w_knn)
+
+    assert len(w.islands) == 0
+
+    return w
+
+
+def examine_cluster_results(gdf, cluster_col, cluster_variables):
+
+    plot_func.plot_clustering(gdf, cluster_col)
+
+    cluster_sizes = evaluate_cluster_sizes(gdf, cluster_col)
+    cluster_areas = evaluate_cluster_areas(gdf, cluster_col)
+
+    plot_func.plot_cluster_sizes(cluster_sizes, cluster_areas)
+
+    get_mean_cluster_variables(gdf, cluster_col, cluster_variables)
+
+    plot_func.plot_cluster_variable_distributions(gdf, cluster_col, cluster_variables)
+
+
+def compare_clustering(gdf, cluster_columns, plot_titles):
+
+    geo = analysis_func.evaluate_geographical_coherence(gdf, cluster_columns)
+
+    display(geo.style.pipe(df_styler))
+
+    feature = analysis_func.evaluate_feature_coherence(
+        gdf, cluster_columns, socio_cluster_variables
+    )
+
+    display(feature.style.pipe(format_style_index))
+
+    analysis_func.evaluate_solution_similarity(gdf, cluster_columns)
+
+    plot_func.map_all_cluster_results(gdf, cluster_columns, plot_titles)
 
 
 def run_kmeans(k, scaled_data):
