@@ -42,19 +42,21 @@ def examine_cluster_results(gdf, cluster_col, cluster_variables):
     plot_func.plot_cluster_variable_distributions(gdf, cluster_col, cluster_variables)
 
 
-def compare_clustering(gdf, cluster_columns, plot_titles):
+def compare_clustering(gdf, cluster_columns, cluster_variables, plot_titles, df_styler):
 
-    geo = analysis_func.evaluate_geographical_coherence(gdf, cluster_columns)
+    geo = evaluate_geographical_coherence(gdf, cluster_columns)
 
+    print("Geographical coherence:")
     display(geo.style.pipe(df_styler))
 
-    feature = analysis_func.evaluate_feature_coherence(
-        gdf, cluster_columns, socio_cluster_variables
-    )
+    feature = evaluate_feature_coherence(gdf, cluster_columns, cluster_variables)
 
-    display(feature.style.pipe(format_style_index))
+    print("Feature coherence (goodness of fit):")
+    display(feature.style.pipe(df_styler))
 
-    analysis_func.evaluate_solution_similarity(gdf, cluster_columns)
+    print("Solution similarity:")
+    similiarity = evaluate_solution_similarity(gdf, cluster_columns)
+    display(similiarity.style.pipe(df_styler))
 
     plot_func.map_all_cluster_results(gdf, cluster_columns, plot_titles)
 
