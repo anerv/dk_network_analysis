@@ -21,9 +21,9 @@ exec(open("../settings/plotting.py").read())
 # Clustering functions based on https://geographicdata.science/book/notebooks/10_clustering_and_regionalization.html#
 
 
-def plot_clustering(gdf, cluster_col):
+def plot_clustering(gdf, cluster_col, figsize=(15, 10)):
 
-    _, ax = plt.subplots(1, figsize=(10, 5))
+    _, ax = plt.subplots(1, figsize=figsize)
 
     gdf.plot(column=cluster_col, categorical=True, legend=True, linewidth=0, ax=ax)
     ax.set_axis_off()
@@ -59,9 +59,9 @@ def plot_cluster_variable_distributions(gdf, cluster_col, cluster_variables):
     _ = facets.map(sns.kdeplot, "Values", fill=True).add_legend()
 
 
-def map_clusters(gdf, cluster_columns, titles):
+def map_clusters(gdf, cluster_columns, titles, figsize=(30,25)):
 
-    _, axs = plt.subplots(1, len(cluster_columns), figsize=(15, 10))
+    _, axs = plt.subplots(1, len(cluster_columns), figsize=figsize)
 
     for i, cluster_col in enumerate(cluster_columns):
 
