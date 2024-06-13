@@ -58,7 +58,15 @@ network_lengths = [
     total_network_length,
 ]
 
-df = pd.DataFrame(data={"network_type": network_levels, "length (km)": network_lengths})
+network_shares = [l / total_network_length * 100 for l in network_lengths]
+
+df = pd.DataFrame(
+    data={
+        "network_type": network_levels,
+        "length (km)": network_lengths,
+        "share (%)": network_shares,
+    }
+)
 
 df.to_csv(filepath_summmary_stats_network_length, index=False)
 
@@ -168,6 +176,8 @@ for a, df in zip(aggregation_levels, density_data):
 # How many have more bikeable network than car network?
 
 for a, df in zip(aggregation_levels, density_data):
+
+    print(a, ":")
     more_lts_1 = df[df["lts_1_length"] > df["total_car_length"]].shape[0]
     more_lts_1_2 = df[df["lts_1_2_length"] > df["total_car_length"]].shape[0]
     more_lts_1_3 = df[df["lts_1_3_length"] > df["total_car_length"]].shape[0]
@@ -187,7 +197,7 @@ for a, df in zip(aggregation_levels, density_data):
     ]
 
     df = pd.DataFrame(
-        index=network_levels_steps[1:-1],
+        index=network_levels_steps[0:-2],
         data={"more_bike_count": more_bike_count, "more_bike_share": more_bike_share},
     )
 
