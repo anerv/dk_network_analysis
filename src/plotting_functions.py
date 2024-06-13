@@ -70,6 +70,7 @@ def plot_cluster_variable_distributions(
         "Values",
         fill=True,
         warn_singular=False,
+        multiple="stack",
     ).add_legend()
 
 
