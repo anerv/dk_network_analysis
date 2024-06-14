@@ -349,6 +349,85 @@ for i, gdf in enumerate(gdfs):
         fp_spatial_auto_reach + f"{aggregation_level[i]}/lisas.parquet"
     )
 # %%
+# Reach distance comparison
+
+exec(open("../settings/read_reach_comparison.py").read())
+
+hex_reach_comparison.replace(np.nan, 0, inplace=True)
+
+gdfs = [hex_reach_comparison]
+
+# Define spatial weights
+id_columns = id_columns[-1:]
+k_values = [k_hex]
+spatial_weights_values = [f"queen_{k}" for k in k_values]
+
+spatial_weights = []
+
+for i, gdf in enumerate(gdfs):
+
+    w = analysis_func.spatial_weights_combined(gdf, id_columns[i], k_values[i])
+
+    spatial_weights.append(w)
+
+compare_reach_columns = hex_reach_comparison.columns.to_list()
+compare_reach_columns = [c for c in columns if "pct_diff" in c]
+# %%
+all_reach_columns = [compare_reach_columns]
+
+aggregation_level = aggregation_levels[-1:]
+
+for i, gdf in enumerate(gdfs):
+
+    print(f"At aggregation level: {aggregation_level[i]}:")
+
+    global_morans_results = {}
+
+    for columns in all_reach_columns:
+
+        filepaths_morans = [
+            fp_spatial_auto_reach
+            + f"{aggregation_level[i]}/morans_{c}.png".replace(" ", "_")
+            for c in columns
+        ]
+
+        filepaths_lisa = [
+            fp_spatial_auto_reach
+            + f"{aggregation_level[i]}/lisa_{c}.png".replace(" ", "_")
+            for c in columns
+        ]
+
+        morans_results = analysis_func.compute_spatial_autocorrelation(
+            columns, columns, gdf, spatial_weights[i], filepaths_morans, show_plot=False
+        )
+
+        lisa_results = analysis_func.compute_lisa(
+            columns,
+            columns,
+            gdf,
+            spatial_weights[i],
+            filepaths_lisa,
+            show_plot=False,
+        )
+
+        for key, value in morans_results.items():
+            global_morans_results[key] = value.I
+
+    with open(
+        fp_spatial_auto_reach
+        + f"{aggregation_level[i]}/global_moransi_compare_reach_{spatial_weights_values[i]}.json",
+        "w",
+    ) as outfile:
+        json.dump(global_morans_results, outfile)
+
+    q_columns = [c for c in gdf.columns if c.endswith("_q")]
+    q_columns.extend(["geometry", id_columns[i]])
+
+    gdf[q_columns].to_parquet(
+        fp_spatial_auto_reach + f"{aggregation_level[i]}/lisas_compare_reach.parquet"
+    )
+
+# %%
 ## Confirm spatial clustering of population density and socio-economic variables
 
 socio_gdf = gpd.read_postgis("SELECT * FROM socio;", engine, geom_col="geometry")
