@@ -71,8 +71,17 @@ k_labels = analysis_func.run_kmeans(k, socio_network_scaled)
 
 socio_cluster_gdf[kmeans_col] = k_labels
 
+fp_map = f"../results/clustering/socio_network_clusters_map_{kmeans_col}.png"
+fp_size = f"../results/clustering/socio_network_clusters_size_{kmeans_col}.png"
+fp_kde = f"../results/clustering/socio_network_clusters_kde_{kmeans_col}.png"
+
 analysis_func.examine_cluster_results(
-    socio_cluster_gdf, kmeans_col, socio_network_cluster_variables
+    socio_cluster_gdf,
+    kmeans_col,
+    socio_network_cluster_variables,
+    fp_map,
+    fp_size,
+    fp_kde,
 )
 
 ##### Hiearchical clustering #######
@@ -82,8 +91,17 @@ hier_labels = analysis_func.run_agg_clustering(socio_network_scaled, "ward", k)
 
 socio_cluster_gdf[hier_col] = hier_labels
 
+fp_map = f"../results/clustering/socio_network_clusters_map_{hier_col}.png"
+fp_size = f"../results/clustering/socio_network_clusters_size_{hier_col}.png"
+fp_kde = f"../results/clustering/socio_network_clusters_kde_{hier_col}.png"
+
 analysis_func.examine_cluster_results(
-    socio_cluster_gdf, hier_col, socio_network_cluster_variables
+    socio_cluster_gdf,
+    hier_col,
+    socio_network_cluster_variables,
+    fp_map,
+    fp_size,
+    fp_kde,
 )
 
 ##### Regionalization #######
@@ -96,13 +114,27 @@ reg_labels = analysis_func.run_regionalization(socio_network_scaled, w, k)
 
 socio_cluster_gdf[reg_col] = reg_labels
 
+fp_map = f"../results/clustering/socio_network_clusters_map_{reg_col}.png"
+fp_size = f"../results/clustering/socio_network_clusters_size_{reg_col}.png"
+fp_kde = f"../results/clustering/socio_network_clusters_kde_{reg_col}.png"
+
 analysis_func.examine_cluster_results(
-    socio_cluster_gdf, reg_col, socio_network_cluster_variables
+    socio_cluster_gdf,
+    reg_col,
+    socio_network_cluster_variables,
+    fp_map,
+    fp_size,
+    fp_kde,
 )
 
 # Compare clustering results
 cluster_columns = [kmeans_col, hier_col, reg_col]
 plot_titles = ["K-Means", "Hierarchical", "Regionalization"]
+
+fp_geo = f"../results/clustering/socio_network_clusters_geo.csv"
+fp_feature = f"../results/clustering/socio_network_clusters_feature.csv"
+fp_similarity = f"../results/clustering/socio_network_clusters_similarity.csv"
+fp_map = f"../results/clustering/socio_network_all_clusters_map.png"
 
 analysis_func.compare_clustering(
     socio_cluster_gdf,
@@ -110,19 +142,19 @@ analysis_func.compare_clustering(
     socio_network_cluster_variables,
     plot_titles,
     format_style_index,
+    fp_geo,
+    fp_feature,
+    fp_similarity,
+    fp_map,
 )
 
-socio_cluster_gdf[cluster_columns + ["geometry", id_columns[1]]].to_file(
-    "../results/clustering/socio_network_clusters.gpkg", driver="GPKG"
-)
 # %%
 # SOCIO CLUSTERING: Socio-economic variables
 
 # Define cluster variables
-socio_soc_cluster_variables = socio_corr_variables
-# socio_soc_cluster_variables = [
-#     c for c in socio_soc_cluster_variables if "1 car" not in c and "2 cars" not in c
-# ]
+# socio_soc_cluster_variables = socio_corr_variables
+# Drop households with cars variable
+socio_soc_cluster_variables = [c for c in socio_corr_variables if "w car" not in c]
 
 # Use robust_scale to norm cluster variables
 socio_soc_scaled = robust_scale(socio_cluster_gdf[socio_soc_cluster_variables])
@@ -133,7 +165,6 @@ m1, m2 = analysis_func.find_k_elbow_method(socio_soc_scaled, min_k=1, max_k=20)
 for key, val in m1.items():
     print(f"{key} : {val:.2f}")
 
-# %%
 # Define K!
 k = 9
 
@@ -145,8 +176,17 @@ k_labels = analysis_func.run_kmeans(k, socio_soc_scaled)
 
 socio_cluster_gdf[kmeans_col] = k_labels
 
+fp_map = f"../results/clustering/socio_socio_clusters_map_{kmeans_col}.png"
+fp_size = f"../results/clustering/socio_socio_clusters_size_{kmeans_col}.png"
+fp_kde = f"../results/clustering/socio_socio_clusters_kde_{kmeans_col}.png"
+
 analysis_func.examine_cluster_results(
-    socio_cluster_gdf, kmeans_col, socio_soc_cluster_variables
+    socio_cluster_gdf,
+    kmeans_col,
+    socio_soc_cluster_variables,
+    fp_map,
+    fp_size,
+    fp_kde,
 )
 
 ##### Hiearchical clustering #######
@@ -156,8 +196,17 @@ hier_labels = analysis_func.run_agg_clustering(socio_soc_scaled, "ward", k)
 
 socio_cluster_gdf[hier_col] = hier_labels
 
+fp_map = f"../results/clustering/socio_socio_clusters_map_{hier_col}.png"
+fp_size = f"../results/clustering/socio_socio_clusters_size_{hier_col}.png"
+fp_kde = f"../results/clustering/socio_socio_clusters_kde_{hier_col}.png"
+
 analysis_func.examine_cluster_results(
-    socio_cluster_gdf, hier_col, socio_soc_cluster_variables
+    socio_cluster_gdf,
+    hier_col,
+    socio_soc_cluster_variables,
+    fp_map,
+    fp_size,
+    fp_kde,
 )
 
 ##### Regionalization #######
@@ -169,14 +218,28 @@ w = analysis_func.spatial_weights_combined(socio_cluster_gdf, id_columns[1], k)
 reg_labels = analysis_func.run_regionalization(socio_soc_scaled, w, k)
 
 socio_cluster_gdf[reg_col] = reg_labels
+fp_map = f"../results/clustering/socio_socio_clusters_map_{reg_col}.png"
+fp_size = f"../results/clustering/socio_socio_clusters_size_{reg_col}.png"
+fp_kde = f"../results/clustering/socio_socio_clusters_kde_{reg_col}.png"
 
 analysis_func.examine_cluster_results(
-    socio_cluster_gdf, reg_col, socio_soc_cluster_variables
+    socio_cluster_gdf,
+    reg_col,
+    socio_soc_cluster_variables,
+    fp_map,
+    fp_size,
+    fp_kde,
 )
 
 # Compare clustering results
 cluster_columns = [kmeans_col, hier_col, reg_col]
 plot_titles = ["K-Means", "Hierarchical", "Regionalization"]
+
+fp_geo = f"../results/clustering/socio_socio_clusters_geo.csv"
+fp_feature = f"../results/clustering/socio_socio_clusters_feature.csv"
+fp_similarity = f"../results/clustering/socio_socio_clusters_similarity.csv"
+fp_map = f"../results/clustering/socio_socio_all_clusters_map.png"
+
 
 analysis_func.compare_clustering(
     socio_cluster_gdf,
@@ -184,11 +247,12 @@ analysis_func.compare_clustering(
     socio_soc_cluster_variables,
     plot_titles,
     format_style_index,
+    fp_geo,
+    fp_feature,
+    fp_similarity,
+    fp_map,
 )
 
-socio_cluster_gdf[cluster_columns + ["geometry", id_columns[1]]].to_file(
-    "../results/clustering/socio_socioeconomic_clusters.gpkg", driver="GPKG"
-)
 # %%
 ##### HEX #######
 
@@ -240,6 +304,10 @@ k_labels = analysis_func.run_kmeans(k, hex_scaled)
 
 hex_gdf[kmeans_col] = k_labels
 
+fp_map = f"../results/clustering/hex_network_clusters_map_{kmeans_col}.png"
+fp_size = f"../results/clustering/hex_network_clusters_size_{kmeans_col}.png"
+fp_kde = f"../results/clustering/hex_network_clusters_kde_{kmeans_col}.png"
+
 analysis_func.examine_cluster_results(hex_gdf, kmeans_col, hex_cluster_variables)
 
 # %%
@@ -249,6 +317,12 @@ hier_col = f"hier_{k}"
 hier_labels = analysis_func.run_agg_clustering(hex_scaled, "ward", k)
 
 hex_gdf[hier_col] = hier_labels
+
+
+fp_map = f"../results/clustering/hex_network_clusters_map_{hier_col}.png"
+fp_size = f"../results/clustering/hex_network_clusters_size_{hier_col}.png"
+fp_kde = f"../results/clustering/hex_network_clusters_kde_{hier_col}.png"
+
 
 analysis_func.examine_cluster_results(hex_gdf, hier_col, hex_cluster_variables)
 
@@ -261,6 +335,11 @@ w = analysis_func.spatial_weights_combined(hex_gdf, id_columns[2], k)
 
 reg_labels = analysis_func.run_regionalization(hex_scaled, w, k)
 
+fp_map = f"../results/clustering/hex_network_clusters_map_{reg_col}.png"
+fp_size = f"../results/clustering/hex_network_clusters_size_{reg_col}.png"
+fp_kde = f"../results/clustering/hex_network_clusters_kde_{reg_col}.png"
+
+
 hex_gdf[reg_col] = reg_labels
 
 analysis_func.examine_cluster_results(hex_gdf, reg_col, hex_cluster_variables)
@@ -269,12 +348,22 @@ analysis_func.examine_cluster_results(hex_gdf, reg_col, hex_cluster_variables)
 cluster_columns = [kmeans_col, hier_col, reg_col]
 plot_titles = ["K-Means", "Hierarchical", "Regionalization"]
 
+fp_geo = f"../results/clustering/hex_network_clusters_geo.csv"
+fp_feature = f"../results/clustering/hex_network_clusters_feature.csv"
+fp_similarity = f"../results/clustering/hex_network_clusters_similarity.csv"
+fp_map = f"../results/clustering/hex_network_all_clusters_map.png"
+
 analysis_func.compare_clustering(
-    hex_gdf, cluster_columns, hex_cluster_variables, plot_titles, format_style_index
+    hex_gdf,
+    cluster_columns,
+    hex_cluster_variables,
+    plot_titles,
+    format_style_index,
+    fp_geo,
+    fp_feature,
+    fp_similarity,
+    fp_map,
 )
 
-hex_gdf[cluster_columns + ["geometry", id_columns[0]]].to_file(
-    "../results/clustering/hex_network_clusters.gpkg", driver="GPKG"
-)
 
 # %%
