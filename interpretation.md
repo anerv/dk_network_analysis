@@ -133,9 +133,132 @@ At hex grid:
 ![alt text](results/reach_distance_comparisons/reach_diff_pct_kde_5_15.png)
 
 * Clear spatial patterns in reach - both for distance 5 reach and for where there is no reach increase when increasing distance!
+* Sig. clustering in reach differences - high differences in 5-10/5-15 in urban areas - and some others! - low in non urban for LTS 1, 1-2. Opposite for LTS 4 and car.
 
 ## Correlation
 
+### Socio socio
+
+**Under 100k:**
+
+* Very low income positively correlated with other low income - with decreasing strength - up untill 500+ K, which is negatively correlated
+* Very low income is negatively correlated with share of households with cars
+* Positive with urban pct and pop density
+
+**100-150k:**
+
+* Similar for income 100-150 - but even stronger association with urban, pop, no car
+
+**Income 150-200 + 200-300:**
+
+* Similar, but positive corr with share of households with 1 car - but negative with 2!
+* Positive but weak corr with pop and urban
+
+**Income 400 - 500k:**
+
+* positive corr with almot all income groups - but weak, except 200-300,400-400, and negative for 750+!
+* Positive for share of households with 1 car, but negative for households with 2 cars --> results in negative in households w car and pos for no car
+* Weak positive corr with urban, pop
+
+**Income 500-750k:**
+
+* Negativ corr with all income segments except 400-500 and 750+
+* Strong positive with cars and 2 cars (!) - weaker positive corr with 1 car
+* Negative corr with pop density and urban
+
+**Income 750+:**
+
+* Negative corr with all groups except 500-750
+* Positive corr with car and 2 cars - but negative with 1 car!
+* Negative corr with pop dens and urban (but only weak corr for urban)
+* Fairly weak positive corr with total number of households with cars
+
+**1 car:**
+
+* Negatively correlated with two lowest income groups
+* Positively corr with 3-6
+* Negatively with two higest
+* Quite weak corr between 1 car and 2 car
+* Negative with urban and pop
+
+**2 cars:**
+
+* Negative corr with all income groups except two highest
+* Strong positive corr with households with car
+* Strong negative corr with pop and urban pct
+
+**POP & Urban pct:**
+
+* Pop and urban have similar corrs
+* Positive with lower income groups - up to 200-300 k for pop and 300-400k for urban
+* Negative with higer incomes
+* Negative with car ownership
+
+## Socio density
+
+* Lower income groups live in areas with higher network density and higher density of low LTS network
+* Medium income weak positive corr with high density/high lts 1 and 2 density
+* High income live in low density areas, low dens of lts 1 and 2
+* Negative corr with 1 and 2 dens and total network dens vs. cars
+* Positve corr with 3 and 4 dens and cars (might change with updated data!)
+
+## Socio fragmentation
+
+* Low income associated with lower fragmentation of LTS 1 and 2 networks
+* weak both pos and negative corr with middle income and lts 1 and 2 fragmentation
+* 500-700 live in areas iwth high fragmentation of 1-3 lts but low fragmenation of lts 4
+* weaker pattern for 750+ (they live in slightly more urban areas?)
+
+* Car ownership positively correlated with fragmentation of low lts network - negatively correlated with fragmentation of car and lts 4 network
+
+## Socio reach
+
+* High network reach possitive cor with income groups up to 300-400k - this group has slightly negative corr with network reach
+* Slightly positive for 400-500
+* Negative for high income - especially 500-700 (matches results for fragmentation and dens?)
+
+## Socio network
+ 
+* Positive corr between LTS 1 and 2 density
+* Positive corr between 3 and 4
+* Negative corr between 1-2 and 3-4 (weaker for 3!)
+* Also holds for relative length!
+
+* Negative corr between lts 1 dens and lts comp count and comp per length - but positive with 4 and car comp count and comp per length
+* Similar with lts 2
+
+* On the other hand, high lts 3 and 4 positively correlated with many components of LTS 1 and 2 (lts 4 density also positively correlated with many lts 3 comps!)
+
+* BUT - high lts 3 and 4 density is negatively correlated with all levels of network reach! Only positively correlated with differences in 5-10 and 10-15 reach for own LTS level
+
+* High fragmentation results in low network reach
+
+## Hex network
+
+* Much weaker pattern between components/fragmentation and density
+
+* Similar pattern as socio with areas with high 1-2 and low 3-4 and vice versa.
+
+* Different pattern for relative length - high relative LTS X is usually negatively associated with high relative lenght of other levels - because of the scale.
+
+* Reach corrs a bit different - still a stronger pos corr between LTS 1 reach and lts 4 dens, but also a weak positive corr between lts 4 dens and lts 4 reach (same for 3)
+
+* Reach comparison interesting - a high jump from lts 1 and lts 2 5 to 10 reach or 10 to 15 is associoated with low 3 and 4 dens. For LTS 3, associated with low lts 4 dens. For 4, associated with low lts 1-2 dens to, weaker assoc wiht low lts 3 --> seems like good network reach for low lts do not happen in areas with high lts 4, and vice versa.
+
 ## Spatial weights sensitivity tests
 
+### Socio densi
 
+Moran's I decrease for most LTS levels as K increase, clusters increase - but smaller differences and still positive
+
+Same for relative length - mostly the same, but smaller variations
+
+### Hex grid densi
+
+Usually higest Moran's I for smallest k - but only smaller differences.
+
+### Socio fragmentation
+
+Similar - does change number of areas in clusters, but does not change the general trend/global value a lot
+
+### Hex fragmentation
