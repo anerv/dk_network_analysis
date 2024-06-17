@@ -21,8 +21,6 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
-# TODO Make step that compares the fit etc based on clustering method and variables used
-
 # %%
 
 #### SOCIO CLUSTERING ####
@@ -84,7 +82,7 @@ analysis_func.examine_cluster_results(
     fp_kde,
 )
 
-##### Hiearchical clustering #######
+#####  Hierarchical clustering #######
 hier_col = f"hier_{k}"
 
 hier_labels = analysis_func.run_agg_clustering(socio_network_scaled, "ward", k)
@@ -189,7 +187,7 @@ analysis_func.examine_cluster_results(
     fp_kde,
 )
 
-##### Hiearchical clustering #######
+#####  Hierarchical clustering #######
 hier_col = f"hier_{k}"
 
 hier_labels = analysis_func.run_agg_clustering(socio_soc_scaled, "ward", k)
@@ -308,23 +306,27 @@ fp_map = f"../results/clustering/hex_network_clusters_map_{kmeans_col}.png"
 fp_size = f"../results/clustering/hex_network_clusters_size_{kmeans_col}.png"
 fp_kde = f"../results/clustering/hex_network_clusters_kde_{kmeans_col}.png"
 
-analysis_func.examine_cluster_results(hex_gdf, kmeans_col, hex_cluster_variables)
+analysis_func.examine_cluster_results(
+    hex_gdf, kmeans_col, hex_cluster_variables, fp_map, fp_size, fp_kde
+)
 
 # %%
-##### Hiearchical clustering #######
-hier_col = f"hier_{k}"
+# ##### Hierarchical clustering #######
+# hier_col = f"hier_{k}"
 
-hier_labels = analysis_func.run_agg_clustering(hex_scaled, "ward", k)
+# hier_labels = analysis_func.run_agg_clustering(hex_scaled, "ward", k)
 
-hex_gdf[hier_col] = hier_labels
-
-
-fp_map = f"../results/clustering/hex_network_clusters_map_{hier_col}.png"
-fp_size = f"../results/clustering/hex_network_clusters_size_{hier_col}.png"
-fp_kde = f"../results/clustering/hex_network_clusters_kde_{hier_col}.png"
+# hex_gdf[hier_col] = hier_labels
 
 
-analysis_func.examine_cluster_results(hex_gdf, hier_col, hex_cluster_variables)
+# fp_map = f"../results/clustering/hex_network_clusters_map_{hier_col}.png"
+# fp_size = f"../results/clustering/hex_network_clusters_size_{hier_col}.png"
+# fp_kde = f"../results/clustering/hex_network_clusters_kde_{hier_col}.png"
+
+
+# analysis_func.examine_cluster_results(
+#     hex_gdf, hier_col, hex_cluster_variables, fp_map, fp_size, fp_kde
+# )
 
 # %%
 ##### Regionalization #######
@@ -342,11 +344,14 @@ fp_kde = f"../results/clustering/hex_network_clusters_kde_{reg_col}.png"
 
 hex_gdf[reg_col] = reg_labels
 
-analysis_func.examine_cluster_results(hex_gdf, reg_col, hex_cluster_variables)
+analysis_func.examine_cluster_results(
+    hex_gdf, reg_col, hex_cluster_variables, fp_map, fp_size, fp_kde
+)
 
+# %%
 # Compare clustering results
-cluster_columns = [kmeans_col, hier_col, reg_col]
-plot_titles = ["K-Means", "Hierarchical", "Regionalization"]
+cluster_columns = [kmeans_col, reg_col]
+plot_titles = ["K-Means", "Regionalization"]
 
 fp_geo = f"../results/clustering/hex_network_clusters_geo.csv"
 fp_feature = f"../results/clustering/hex_network_clusters_feature.csv"

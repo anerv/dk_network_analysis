@@ -23,7 +23,6 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 
 # %%
-
 #### SOCIO CLUSTERING ####
 
 exec(open("../settings/prepare_socio_cluster_data.py").read())
@@ -70,21 +69,28 @@ k_labels = analysis_func.run_kmeans(k, socio_network_scaled)
 
 socio_cluster_gdf[kmeans_col] = k_labels
 
+fp_map = f"../results/clustering/socio_network_clusters_map_{kmeans_col}.png"
+fp_size = f"../results/clustering/socio_network_clusters_size_{kmeans_col}.png"
+fp_kde = f"../results/clustering/socio_network_clusters_kde_{kmeans_col}.png"
+
 analysis_func.examine_cluster_results(
-    socio_cluster_gdf, kmeans_col, socio_network_cluster_variables
+    socio_cluster_gdf,
+    kmeans_col,
+    socio_network_cluster_variables,
+    fp_map,
+    fp_size,
+    fp_kde,
 )
 
-
-socio_cluster_gdf[kmeans_col + ["geometry", id_columns[1]]].to_file(
+socio_cluster_gdf[[kmeans_col] + ["geometry", id_columns[1]]].to_file(
     "../results/clustering/socio_network_clusters.gpkg", driver="GPKG"
 )
 # %%
 # SOCIO CLUSTERING: Socio-economic variables
 
 # Define cluster variables
-socio_soc_cluster_variables = socio_corr_variables
-# TODO: drop households with cars
-# %%
+socio_soc_cluster_variables = [c for c in socio_corr_variables if "w car" not in c]
+
 # Use robust_scale to norm cluster variables
 socio_soc_scaled = robust_scale(socio_cluster_gdf[socio_soc_cluster_variables])
 
@@ -94,7 +100,7 @@ m1, m2 = analysis_func.find_k_elbow_method(socio_soc_scaled, min_k=1, max_k=20)
 for key, val in m1.items():
     print(f"{key} : {val:.2f}")
 
-# %%
+
 # Define K!
 k = 9
 
@@ -106,11 +112,20 @@ k_labels = analysis_func.run_kmeans(k, socio_soc_scaled)
 
 socio_cluster_gdf[kmeans_col] = k_labels
 
+fp_map = f"../results/clustering/socio_socio_clusters_map_{kmeans_col}.png"
+fp_size = f"../results/clustering/socio_socio_clusters_size_{kmeans_col}.png"
+fp_kde = f"../results/clustering/socio_socio_clusters_kde_{kmeans_col}.png"
+
 analysis_func.examine_cluster_results(
-    socio_cluster_gdf, kmeans_col, socio_soc_cluster_variables
+    socio_cluster_gdf,
+    kmeans_col,
+    socio_soc_cluster_variables,
+    fp_map,
+    fp_size,
+    fp_kde,
 )
 
-socio_cluster_gdf[kmeans_col + ["geometry", id_columns[1]]].to_file(
+socio_cluster_gdf[[kmeans_col] + ["geometry", id_columns[1]]].to_file(
     "../results/clustering/socio_socioeconomic_clusters.gpkg", driver="GPKG"
 )
 # %%
@@ -128,7 +143,7 @@ hex_reach_comp_cols = [
 ]
 del hex_reach_comparison
 
-# %%
+
 # define cluster variables
 
 hex_cluster_variables = (
@@ -143,7 +158,6 @@ hex_cluster_variables = (
     # + ["urban_pct"]
 )
 
-# %%
 # Use robust_scale to norm cluster variables
 hex_scaled = robust_scale(hex_gdf[hex_cluster_variables])
 
@@ -152,7 +166,7 @@ m1, m2 = analysis_func.find_k_elbow_method(hex_scaled, min_k=1, max_k=30)
 
 for key, val in m1.items():
     print(f"{key} : {val:.2f}")
-# %%
+
 # Define K!
 k = 5
 
@@ -164,41 +178,16 @@ k_labels = analysis_func.run_kmeans(k, hex_scaled)
 
 hex_gdf[kmeans_col] = k_labels
 
-analysis_func.examine_cluster_results(hex_gdf, kmeans_col, hex_cluster_variables)
+fp_map = f"../results/clustering/hex_network_clusters_map_{kmeans_col}.png"
+fp_size = f"../results/clustering/hex_network_clusters_size_{kmeans_col}.png"
+fp_kde = f"../results/clustering/hex_network_clusters_kde_{kmeans_col}.png"
 
-# %%
-##### Hiearchical clustering #######
-hier_col = f"hier_{k}"
-
-hier_labels = analysis_func.run_agg_clustering(hex_scaled, "ward", k)
-
-hex_gdf[hier_col] = hier_labels
-
-analysis_func.examine_cluster_results(hex_gdf, hier_col, hex_cluster_variables)
-
-# %%
-##### Regionalization #######
-
-reg_col = f"reg_{k}"
-
-w = analysis_func.spatial_weights_combined(hex_gdf, id_columns[2], k)
-
-reg_labels = analysis_func.run_regionalization(hex_scaled, w, k)
-
-hex_gdf[reg_col] = reg_labels
-
-analysis_func.examine_cluster_results(hex_gdf, reg_col, hex_cluster_variables)
-
-# Compare clustering results
-cluster_columns = [kmeans_col, hier_col, reg_col]
-plot_titles = ["K-Means", "Hierarchical", "Regionalization"]
-
-analysis_func.compare_clustering(
-    hex_gdf, cluster_columns, hex_cluster_variables, plot_titles, format_style_index
+analysis_func.examine_cluster_results(
+    hex_gdf, kmeans_col, hex_cluster_variables, fp_map, fp_size, fp_kde
 )
 
-hex_gdf[cluster_columns + ["geometry", id_columns[0]]].to_file(
-    "../results/clustering/hex_network_clusters.gpkg", driver="GPKG"
+hex_gdf[[kmeans_col] + ["geometry", id_columns[2]]].to_parquet(
+    "../results/clustering/hex_network_clusters.parquet"
 )
 
 # %%
