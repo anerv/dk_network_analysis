@@ -206,7 +206,12 @@ def find_k_elbow_method(input_data, min_k=1, max_k=10):
 
 
 def compare_spatial_weights_sensitivity(
-    gdf, id_column, aggregation_level, k_values, all_columns, fp
+    gdf,
+    id_column,
+    aggregation_level,
+    k_values,
+    all_columns,
+    fp,
 ):
 
     print("Starting sensitivity analysis for aggregation level:", aggregation_level)
