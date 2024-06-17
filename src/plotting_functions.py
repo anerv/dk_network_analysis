@@ -21,7 +21,7 @@ exec(open("../settings/plotting.py").read())
 # Clustering functions based on https://geographicdata.science/book/notebooks/10_clustering_and_regionalization.html#
 
 
-def plot_clustering(gdf, cluster_col, figsize=(15, 10), cmap="Set2"):
+def plot_clustering(gdf, cluster_col, fp, figsize=(15, 10), cmap="Set2"):
 
     _, ax = plt.subplots(1, figsize=figsize)
 
@@ -30,10 +30,12 @@ def plot_clustering(gdf, cluster_col, figsize=(15, 10), cmap="Set2"):
     )
     ax.set_axis_off()
 
+    plt.savefig(fp)
+
     plt.show()
 
 
-def plot_cluster_sizes(cluster_sizes, cluster_areas):
+def plot_cluster_sizes(cluster_sizes, cluster_areas, fp):
 
     __, ax = plt.subplots(1, figsize=(15, 10))
     area_tracts = pd.DataFrame({"No. Tracts": cluster_sizes, "Area": cluster_areas})
@@ -42,11 +44,17 @@ def plot_cluster_sizes(cluster_sizes, cluster_areas):
     ax.set_xlabel("Cluster labels")
     ax.set_ylabel("Percentage by cluster")
 
+    plt.savefig(fp)
+
     plt.show()
 
 
 def plot_cluster_variable_distributions(
-    gdf, cluster_col, cluster_variables, palette="Set2"
+    gdf,
+    cluster_col,
+    cluster_variables,
+    fp,
+    palette="Set2",
 ):
 
     tidy_df = gdf.set_index(cluster_col)
@@ -65,17 +73,21 @@ def plot_cluster_variable_distributions(
         col_wrap=3,
         palette=palette,
     )
-    _ = facets.map(
-        sns.kdeplot,
-        "Values",
-        fill=True,
-        warn_singular=False,
-        multiple="stack",
-    ).add_legend()
+    _ = (
+        facets.map(
+            sns.kdeplot,
+            "Values",
+            fill=False,
+            warn_singular=False,
+            multiple="stack",
+        )
+        .add_legend()
+        .savefig(fp)
+    )
 
 
 def map_all_cluster_results(
-    gdf, cluster_columns, titles, figsize=(30, 25), cmap="Set2"
+    gdf, cluster_columns, titles, fp, figsize=(30, 25), cmap="Set2"
 ):
 
     _, axs = plt.subplots(1, len(cluster_columns), figsize=figsize)
@@ -94,6 +106,7 @@ def map_all_cluster_results(
         axs[i].set_axis_off()
         axs[i].set_title(titles[i])
 
+    plt.savefig(fp)
     plt.show()
 
 

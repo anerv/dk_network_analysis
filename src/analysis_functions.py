@@ -28,37 +28,55 @@ def spatial_weights_combined(gdf, id_column, k=3):
     return w
 
 
-def examine_cluster_results(gdf, cluster_col, cluster_variables):
+def examine_cluster_results(
+    gdf, cluster_col, cluster_variables, fp_map, fp_size, fp_kde
+):
 
-    plot_func.plot_clustering(gdf, cluster_col)
+    plot_func.plot_clustering(gdf, cluster_col, fp_map)
 
     cluster_sizes = evaluate_cluster_sizes(gdf, cluster_col)
     cluster_areas = evaluate_cluster_areas(gdf, cluster_col)
 
-    plot_func.plot_cluster_sizes(cluster_sizes, cluster_areas)
+    plot_func.plot_cluster_sizes(cluster_sizes, cluster_areas, fp_size)
 
     get_mean_cluster_variables(gdf, cluster_col, cluster_variables)
 
-    plot_func.plot_cluster_variable_distributions(gdf, cluster_col, cluster_variables)
+    plot_func.plot_cluster_variable_distributions(
+        gdf, cluster_col, cluster_variables, fp_kde
+    )
 
 
-def compare_clustering(gdf, cluster_columns, cluster_variables, plot_titles, df_styler):
+def compare_clustering(
+    gdf,
+    cluster_columns,
+    cluster_variables,
+    plot_titles,
+    df_styler,
+    fp_geo,
+    fp_feature,
+    fp_similarity,
+    fp_map,
+):
 
     geo = evaluate_geographical_coherence(gdf, cluster_columns)
+
+    geo.to_csv(fp_geo, index=True)
 
     print("Geographical coherence:")
     display(geo.style.pipe(df_styler))
 
     feature = evaluate_feature_coherence(gdf, cluster_columns, cluster_variables)
+    feature.to_csv(fp_feature, index=True)
 
     print("Feature coherence (goodness of fit):")
     display(feature.style.pipe(df_styler))
 
     print("Solution similarity:")
     similiarity = evaluate_solution_similarity(gdf, cluster_columns)
+    similiarity.to_csv(fp_similarity, index=True)
     display(similiarity.style.pipe(df_styler))
 
-    plot_func.map_all_cluster_results(gdf, cluster_columns, plot_titles)
+    plot_func.map_all_cluster_results(gdf, cluster_columns, plot_titles, fp_map)
 
 
 def run_kmeans(k, scaled_data):
