@@ -10,6 +10,8 @@ import plotly_express as px
 import pandas as pd
 from sklearn.preprocessing import robust_scale
 from pysal.lib import weights
+import contextily as cx
+from matplotlib.patches import Patch
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -69,9 +71,9 @@ k_labels = analysis_func.run_kmeans(k, socio_network_scaled)
 
 socio_cluster_gdf[kmeans_col] = k_labels
 
-fp_map = f"../results/clustering/socio_network_clusters_map_{kmeans_col}.png"
-fp_size = f"../results/clustering/socio_network_clusters_size_{kmeans_col}.png"
-fp_kde = f"../results/clustering/socio_network_clusters_kde_{kmeans_col}.png"
+fp_map = fp_socio_network_cluster_base + f"_map_{kmeans_col}.png"
+fp_size = fp_socio_network_cluster_base + f"_size_{kmeans_col}.png"
+fp_kde = fp_socio_network_cluster_base + f"_kde_{kmeans_col}.png"
 
 analysis_func.examine_cluster_results(
     socio_cluster_gdf,
@@ -83,7 +85,7 @@ analysis_func.examine_cluster_results(
 )
 
 socio_cluster_gdf[[kmeans_col] + ["geometry", id_columns[1]]].to_file(
-    "../results/clustering/socio_network_clusters.gpkg", driver="GPKG"
+    fp_socio_network_clusters, driver="GPKG"
 )
 # %%
 # SOCIO CLUSTERING: Socio-economic variables
@@ -112,9 +114,9 @@ k_labels = analysis_func.run_kmeans(k, socio_soc_scaled)
 
 socio_cluster_gdf[kmeans_col] = k_labels
 
-fp_map = f"../results/clustering/socio_socio_clusters_map_{kmeans_col}.png"
-fp_size = f"../results/clustering/socio_socio_clusters_size_{kmeans_col}.png"
-fp_kde = f"../results/clustering/socio_socio_clusters_kde_{kmeans_col}.png"
+fp_map = fp_socio_socio_cluster_base + f"__map_{kmeans_col}.png"
+fp_size = fp_socio_socio_cluster_base + f"_size_{kmeans_col}.png"
+fp_kde = fp_socio_socio_cluster_base + f"_kde_{kmeans_col}.png"
 
 analysis_func.examine_cluster_results(
     socio_cluster_gdf,
@@ -126,7 +128,7 @@ analysis_func.examine_cluster_results(
 )
 
 socio_cluster_gdf[[kmeans_col] + ["geometry", id_columns[1]]].to_file(
-    "../results/clustering/socio_socioeconomic_clusters.gpkg", driver="GPKG"
+    fp_socio_socio_clusters, driver="GPKG"
 )
 # %%
 ##### HEX #######
@@ -178,16 +180,69 @@ k_labels = analysis_func.run_kmeans(k, hex_scaled)
 
 hex_gdf[kmeans_col] = k_labels
 
-fp_map = f"../results/clustering/hex_network_clusters_map_{kmeans_col}.png"
-fp_size = f"../results/clustering/hex_network_clusters_size_{kmeans_col}.png"
-fp_kde = f"../results/clustering/hex_network_clusters_kde_{kmeans_col}.png"
+fp_map = fp_hex_network_cluster_base + f"_map_{kmeans_col}.png"
+fp_size = fp_hex_network_cluster_base + f"_size_{kmeans_col}.png"
+fp_kde = fp_hex_network_cluster_base + f"_kde_{kmeans_col}.png"
 
 analysis_func.examine_cluster_results(
     hex_gdf, kmeans_col, hex_cluster_variables, fp_map, fp_size, fp_kde
 )
 
-hex_gdf[[kmeans_col] + ["geometry", id_columns[2]]].to_parquet(
-    "../results/clustering/hex_network_clusters.parquet"
+hex_gdf[[kmeans_col] + ["geometry", id_columns[2]]].to_parquet(fp_hex_network_clusters)
+
+# %%
+# plot spatial overlay of clusters
+# based on https://darribas.org/gds_course/content/bG/lab_G.html
+
+
+hex_network_clusters = hex_gdf.dissolve(by="kmeans_5")
+hex_network_clusters.reset_index(inplace=True)
+
+socio_network_clusters = socio_cluster_gdf.dissolve(by="kmeans_8")
+socio_network_clusters.reset_index(inplace=True)
+
+socio_socio_clusters = socio_cluster_gdf.dissolve(by="kmeans_9")
+
+# %%
+f, ax = plt.subplots(1, figsize=(15, 15))
+
+labels = [
+    "Socio-Network",
+    "Socio-Socio",
+]  # "Hex-Network"
+colors = ["xkcd:salmon", "xkcd:lime"]  #  "xkcd:sky blue",
+
+for i, cluster in enumerate(
+    [
+        socio_network_clusters,
+        socio_socio_clusters,
+    ]  # hex_network_clusters
+):
+    cluster.plot(
+        ax=ax,
+        edgecolor=colors[i],
+        facecolor="none",
+        # hatch="//",
+        linewidth=1,
+        label=labels[i],
+    )
+
+legend_handles = [
+    Patch(edgecolor=colors[i], fill=False, linewidth=1.5, label=labels[i])
+    for i in range(len(labels))
+]
+
+ax.legend(handles=legend_handles, loc="upper right")
+
+
+cx.add_basemap(
+    ax, crs=socio_network_clusters.crs, source=cx.providers.CartoDB.DarkMatterNoLabels
 )
+
+ax.set_axis_off()
+
+plt.savefig(fp_cluster_map_overlay, dpi=300)
+
+plt.show()
 
 # %%

@@ -220,3 +220,19 @@ fp_spatial_auto_density = "../results/spatial_autocorrelation/density/"
 fp_spatial_auto_fragmentation = "../results/spatial_autocorrelation/fragmentation/"
 fp_spatial_auto_reach = "../results/spatial_autocorrelation/reach/"
 fp_spatial_auto_socio = "../results/spatial_autocorrelation/socio_pop/"
+
+
+# clustering
+fp_cluster_map_overlay = "../results/clustering/cluster_map_overlay.png"
+
+fp_hex_network_clusters = "../results/clustering/hex_network_clusters.parquet"
+
+fp_hex_network_cluster_base = "../results/clustering/hex_network_clusters_"
+
+fp_socio_socio_clusters = "../results/clustering/socio_socioeconomic_clusters.gpkg"
+
+fp_socio_socio_cluster_base = "../results/clustering/socio_socioeconomic_clusters_"
+
+fp_socio_network_clusters = "../results/clustering/socio_network_clusters.gpkg"
+
+fp_socio_network_cluster_base = "../results/clustering/socio_network_clusters_"
