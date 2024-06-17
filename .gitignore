@@ -11,3 +11,6 @@ network_analysis_exploration.qgz
 
 data/edges_udtraek.gpkg
 data/nodes_udtraek.gpkg
+scripts/test.gpkg
+scripts/test.gpkg-shm
+scripts/test.gpkg-wal

@@ -262,3 +262,19 @@ Usually higest Moran's I for smallest k - but only smaller differences.
 Similar - does change number of areas in clusters, but does not change the general trend/global value a lot
 
 ### Hex fragmentation
+
+# Clustering
+
+## Socio network
+
+**0:**
+
+* Low LTS 1-2 density
+* High LTS 3-4 density
+* Low car and total network density
+* Very high car relative density
+* High LTS 1-2 fragmentation
+* Low LTS 4 and car fragmentation
+* Low network reach for all
+* High pct difference between 5 to 10 reach for LTS 4 and car (well connected?)
+
