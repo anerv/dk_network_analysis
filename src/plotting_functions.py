@@ -21,6 +21,25 @@ exec(open("../settings/plotting.py").read())
 # Clustering functions based on https://geographicdata.science/book/notebooks/10_clustering_and_regionalization.html#
 
 
+def style_cluster_means(cluster_means, cmap="coolwarm"):
+
+    styler = cluster_means.style
+    styler_dict = {}
+    for i in cluster_means.index:
+        styler_dict[i] = "coolwarm"
+
+    for idx, cmap in styler_dict.items():
+        styler = styler.background_gradient(
+            cmap=cmap, subset=pd.IndexSlice[idx, :], axis=1
+        )
+
+        cluster_means_styled = cluster_means.style.background_gradient(
+            cmap=cmap, subset=pd.IndexSlice[:, :], axis=1
+        )
+
+    display(cluster_means_styled)
+
+
 def plot_clustering(gdf, cluster_col, fp, figsize=(15, 10), cmap="Set2"):
 
     _, ax = plt.subplots(1, figsize=figsize)

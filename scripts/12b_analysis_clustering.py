@@ -6,12 +6,11 @@ import geopandas as gpd
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-import plotly_express as px
 import pandas as pd
 from sklearn.preprocessing import robust_scale
-from pysal.lib import weights
 import contextily as cx
 from matplotlib.patches import Patch
+from IPython.display import display
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -62,7 +61,7 @@ for key, val in m1.items():
 
 # Define K!
 k = 8
-# %%
+
 ##### K-Means #######
 
 kmeans_col = f"kmeans_{k}"
@@ -75,7 +74,7 @@ fp_map = fp_socio_network_cluster_base + f"_map_{kmeans_col}.png"
 fp_size = fp_socio_network_cluster_base + f"_size_{kmeans_col}.png"
 fp_kde = fp_socio_network_cluster_base + f"_kde_{kmeans_col}.png"
 
-analysis_func.examine_cluster_results(
+cluster_means_soc_net = analysis_func.examine_cluster_results(
     socio_cluster_gdf,
     kmeans_col,
     socio_network_cluster_variables,
@@ -87,6 +86,10 @@ analysis_func.examine_cluster_results(
 socio_cluster_gdf[[kmeans_col] + ["geometry", id_columns[1]]].to_file(
     fp_socio_network_clusters, driver="GPKG"
 )
+
+plot_func.style_cluster_means(cluster_means_soc_net)
+
+
 # %%
 # SOCIO CLUSTERING: Socio-economic variables
 
@@ -118,7 +121,7 @@ fp_map = fp_socio_socio_cluster_base + f"__map_{kmeans_col}.png"
 fp_size = fp_socio_socio_cluster_base + f"_size_{kmeans_col}.png"
 fp_kde = fp_socio_socio_cluster_base + f"_kde_{kmeans_col}.png"
 
-analysis_func.examine_cluster_results(
+cluster_means_soc_soc = analysis_func.examine_cluster_results(
     socio_cluster_gdf,
     kmeans_col,
     socio_soc_cluster_variables,
@@ -130,6 +133,8 @@ analysis_func.examine_cluster_results(
 socio_cluster_gdf[[kmeans_col] + ["geometry", id_columns[1]]].to_file(
     fp_socio_socio_clusters, driver="GPKG"
 )
+
+plot_func.style_cluster_means(cluster_means_soc_soc)
 # %%
 ##### HEX #######
 
@@ -184,16 +189,16 @@ fp_map = fp_hex_network_cluster_base + f"_map_{kmeans_col}.png"
 fp_size = fp_hex_network_cluster_base + f"_size_{kmeans_col}.png"
 fp_kde = fp_hex_network_cluster_base + f"_kde_{kmeans_col}.png"
 
-analysis_func.examine_cluster_results(
+cluster_means_hex = analysis_func.examine_cluster_results(
     hex_gdf, kmeans_col, hex_cluster_variables, fp_map, fp_size, fp_kde
 )
 
 hex_gdf[[kmeans_col] + ["geometry", id_columns[2]]].to_parquet(fp_hex_network_clusters)
 
+plot_func.style_cluster_means(cluster_means_hex)
 # %%
 # plot spatial overlay of clusters
 # based on https://darribas.org/gds_course/content/bG/lab_G.html
-
 
 hex_network_clusters = hex_gdf.dissolve(by="kmeans_5")
 hex_network_clusters.reset_index(inplace=True)
@@ -202,6 +207,19 @@ socio_network_clusters = socio_cluster_gdf.dissolve(by="kmeans_8")
 socio_network_clusters.reset_index(inplace=True)
 
 socio_socio_clusters = socio_cluster_gdf.dissolve(by="kmeans_9")
+socio_socio_clusters.reset_index(inplace=True)
+# %%
+socio_network_clusters[["geometry", id_columns[1], "kmeans_8"]].to_file(
+    fp_socio_network_clusters, driver="GPKG"
+)
+
+socio_socio_clusters[["geometry", id_columns[1], "kmeans_9"]].to_file(
+    fp_socio_socio_clusters, driver="GPKG"
+)
+
+hex_network_clusters[["geometry", id_columns[2], "kmeans_5"]].to_parquet(
+    fp_hex_network_clusters
+)
 
 # %%
 f, ax = plt.subplots(1, figsize=(15, 15))

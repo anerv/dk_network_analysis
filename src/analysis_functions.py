@@ -39,11 +39,13 @@ def examine_cluster_results(
 
     plot_func.plot_cluster_sizes(cluster_sizes, cluster_areas, fp_size)
 
-    get_mean_cluster_variables(gdf, cluster_col, cluster_variables)
+    cluster_means = get_mean_cluster_variables(gdf, cluster_col, cluster_variables)
 
     plot_func.plot_cluster_variable_distributions(
         gdf, cluster_col, cluster_variables, fp_kde
     )
+
+    return cluster_means
 
 
 def compare_clustering(
@@ -134,6 +136,8 @@ def get_mean_cluster_variables(gdf, cluster_col, cluster_variables):
     cluster_means = cluster_means.T.round(3)
 
     display(cluster_means)
+
+    return cluster_means
 
 
 def evaluate_geographical_coherence(gdf, cluster_columns):
