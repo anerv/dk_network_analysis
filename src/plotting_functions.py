@@ -13,12 +13,31 @@ import geopandas as gpd
 from collections import Counter
 from IPython.display import display
 import plotly.express as px
-
+from matplotlib.colors import to_hex
+from matplotlib.colors import ListedColormap
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 
 # Clustering functions based on https://geographicdata.science/book/notebooks/10_clustering_and_regionalization.html#
+
+
+def color_list_to_cmap(color_list):
+    colors = {i: color_list[i] for i in range(len(color_list))}
+    return ListedColormap([t[1] for t in sorted(colors.items())])
+
+
+def get_hex_colors_from_colormap(colormap_name, n_colors):
+    # Get the colormap
+    colormap = plt.colormaps[colormap_name]
+
+    # Generate n_colors evenly spaced values between 0 and 1
+    values = [i / n_colors for i in range(n_colors)]
+
+    # Convert these values to hex colors
+    hex_colors = [to_hex(colormap(value)) for value in values]
+
+    return hex_colors
 
 
 def style_cluster_means(cluster_means, cmap="coolwarm"):
@@ -45,8 +64,14 @@ def plot_clustering(gdf, cluster_col, fp, figsize=(15, 10), cmap="Set2"):
     _, ax = plt.subplots(1, figsize=figsize)
 
     gdf.plot(
-        column=cluster_col, categorical=True, legend=True, linewidth=0, ax=ax, cmap=cmap
+        column=cluster_col,
+        categorical=True,
+        legend=True,
+        linewidth=0,
+        ax=ax,
+        cmap=cmap,
     )
+
     ax.set_axis_off()
 
     plt.savefig(fp)

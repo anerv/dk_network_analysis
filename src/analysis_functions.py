@@ -29,10 +29,10 @@ def spatial_weights_combined(gdf, id_column, k=3):
 
 
 def examine_cluster_results(
-    gdf, cluster_col, cluster_variables, fp_map, fp_size, fp_kde
+    gdf, cluster_col, cluster_variables, fp_map, fp_size, fp_kde, cmap, palette
 ):
 
-    plot_func.plot_clustering(gdf, cluster_col, fp_map)
+    plot_func.plot_clustering(gdf, cluster_col, fp_map, cmap=cmap)
 
     cluster_sizes = evaluate_cluster_sizes(gdf, cluster_col)
     cluster_areas = evaluate_cluster_areas(gdf, cluster_col)
@@ -42,7 +42,7 @@ def examine_cluster_results(
     cluster_means = get_mean_cluster_variables(gdf, cluster_col, cluster_variables)
 
     plot_func.plot_cluster_variable_distributions(
-        gdf, cluster_col, cluster_variables, fp_kde
+        gdf, cluster_col, cluster_variables, fp_kde, palette=palette
     )
 
     return cluster_means
