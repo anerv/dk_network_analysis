@@ -358,7 +358,7 @@ hex_reach_comparison.replace(np.nan, 0, inplace=True)
 gdfs = [hex_reach_comparison]
 
 # Define spatial weights
-id_columns = id_columns[-1:]
+id_column = id_columns[-1:]
 k_values = [k_hex]
 spatial_weights_values = [f"queen_{k}" for k in k_values]
 
@@ -366,7 +366,7 @@ spatial_weights = []
 
 for i, gdf in enumerate(gdfs):
 
-    w = analysis_func.spatial_weights_combined(gdf, id_columns[i], k_values[i])
+    w = analysis_func.spatial_weights_combined(gdf, id_column[i], k_values[i])
 
     spatial_weights.append(w)
 
