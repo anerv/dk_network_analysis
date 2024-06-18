@@ -263,18 +263,87 @@ Similar - does change number of areas in clusters, but does not change the gener
 
 ### Hex fragmentation
 
+Somewhat sensitive to spatial weights - but very low Moran's I, not significant
+
+### Reach
+
+Not sensitive to changing weights.
+
 # Clustering
 
 ## Socio network
 
+kmeans_7
+
+Far more areas and area in cluster 0
+
 **0:**
 
-* Low LTS 1-2 density
-* High LTS 3-4 density
-* Low car and total network density
-* Very high car relative density
-* High LTS 1-2 fragmentation
-* Low LTS 4 and car fragmentation
-* Low network reach for all
-* High pct difference between 5 to 10 reach for LTS 4 and car (well connected?)
+*Well-connected, but sparse - for cars.*
+*Fragmentented and sparse for cyclists.*
+
+* Non-urban (viz)
+* By far the biggest
+* High LTS 3 and 4 (compared to the amount of those)
+* Almost only car
+* High fragmentation for low LTS
+* Low fragmentation for car and high lts but also low reach
+* High difference between reach distances for car and LTS 4 - almost 0 for LTS 1 and 2
+
+* OBS! KDE plots - large spread for some values and some clusters - e.g. also areas in cluster 0 with higher rel length of LTS 2
+
+**1:**
+
+*Well-connected, high density, high reach.*
+
+* Urban
+* LTS 2 network almost on par with car network.
+* Very little LTS 4
+* Low fragmentation
+
+**2:**
+
+*Bike-friendly urban periphery?*
+
+* Very similar to cluster 1, but:
+* slightly lower LTS 1 and 2 density
+* slightly higher LTS 3 and 4 dens
+* Also dominated by LTS 2
+* a bit lower car and network density
+* Much lower networ reach, both abs and pct diff when increasing distance
+
+**3:**
+
+*The urban version of cluster 0 - for the adult cyclist.*
+
+* Similiar-ish to cluster 0
+* Low 1-2 density
+* High 3 (for 3)
+* Medium/medium low 4
+* Low car and total network density (but higher than in 0)
+* High LTS 2 relative density
+* High car relative density
+* Low fragmentation
+* Low reach
+* Low reach increase
+* Often in coastal areas
+
+**4:**
+
+* Ignore, only one cluster.
+
+**5:**
+
+*Second best for bikes?*
+*High lts 1 density, but poor connectivity.*
+
+* High LTS 1-2
+* High 3 (for 3 value range)
+* Low LTS 4
+* Very high LTS 1 relative length, high lts 2 rel length
+* But also high fragmentation for LTS 1! - and thus low LTS 1 reach and little increase in reach
+* Much better LTS 2 reach
+* Even though comparable LTS 1 and 2 density - fragmentation of LTS 1 means LTS 2 performs much better in terms of reach.
+
+## Socio socioeconomic
 
