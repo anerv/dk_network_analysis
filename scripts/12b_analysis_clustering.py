@@ -89,20 +89,45 @@ cluster_means_soc_net = analysis_func.examine_cluster_results(
     palette=colors,
 )
 
-socio_cluster_gdf[[kmeans_col_net] + ["geometry", id_columns[1]]].to_file(
-    fp_socio_network_clusters, driver="GPKG"
-)
-
 plot_func.style_cluster_means(cluster_means_soc_net)
 
+# %%
+# Label clusters after bikeability rank
+
+socio_cluster_gdf["network_rank"] = None
+
+rank = [1, 2, 5, 4, 3, 0]
+assert len(rank) == k
+
+for i, r in enumerate(rank):
+    socio_cluster_gdf.loc[
+        socio_cluster_gdf[kmeans_col_net] == r,
+        "network_rank",
+    ] = (
+        i + 1
+    )
+
+socio_cluster_gdf.network_rank = socio_cluster_gdf.network_rank.astype(int)
+socio_cluster_gdf[
+    [kmeans_col_net] + ["geometry", id_columns[1], "network_rank"]
+].to_file(fp_socio_network_clusters, driver="GPKG")
 
 # %%
 # SOCIO CLUSTERING: Socio-economic variables
 
 socio_cluster_gdf = socio_cluster_gdf[socio_cluster_gdf["population_density"] > 0]
 
+socio_cluster_gdf["Income -150k"] = (
+    socio_cluster_gdf["Income 100-150k"] + socio_cluster_gdf["Income under 100k"]
+)
+
 # Define cluster variables
 socio_soc_cluster_variables = [c for c in socio_corr_variables if "w car" not in c]
+socio_soc_cluster_variables = ["Income -150k"] + socio_soc_cluster_variables
+socio_soc_cluster_variables.remove("Income 100-150k")
+socio_soc_cluster_variables.remove("Income under 100k")
+socio_soc_cluster_variables.remove("urban_pct")
+socio_soc_cluster_variables.remove("population_density")
 
 # Use robust_scale to norm cluster variables
 socio_soc_scaled = robust_scale(socio_cluster_gdf[socio_soc_cluster_variables])
@@ -144,77 +169,101 @@ cluster_means_soc_soc = analysis_func.examine_cluster_results(
     palette=colors,
 )
 
-socio_cluster_gdf[[kmeans_col_soc] + ["geometry", id_columns[1]]].to_file(
-    fp_socio_socio_clusters, driver="GPKG"
-)
-
 plot_func.style_cluster_means(cluster_means_soc_soc)
 # %%
-# ###### PLOT CLUSTER OVERLAY ######
+# Label clusters after type
 
-# based on https://darribas.org/gds_course/content/bG/lab_G.html
+socio_cluster_gdf["socio_label"] = None
 
+label_dict = {
+    0: "Medium income - high car - rural",
+    1: "Low income - low car - urban",
+    2: "High income - low car - urban",
+    3: "Very high income - very high car - rural",
+    4: "Low-medium income - low-medium car - suburban",
+}
+assert len(label_dict) == k
 
-socio_network_clusters = socio_cluster_gdf.dissolve(by=kmeans_col_net)
-socio_network_clusters.reset_index(inplace=True)
-
-socio_socio_clusters = socio_cluster_gdf.dissolve(by=kmeans_col_soc)
-socio_socio_clusters.reset_index(inplace=True)
-
-socio_network_clusters[["geometry", id_columns[1], kmeans_col_net]].to_file(
-    fp_socio_network_clusters, driver="GPKG"
-)
-
-socio_socio_clusters[["geometry", id_columns[1], kmeans_col_soc]].to_file(
-    fp_socio_socio_clusters, driver="GPKG"
-)
-
-f, ax = plt.subplots(1, figsize=(15, 15))
-
-labels = [
-    "Socio-Network",
-    "Socio-Socio",
-]  # "Hex-Network"
-colors = ["xkcd:salmon", "xkcd:lime"]  #  "xkcd:sky blue",
-
-for i, cluster in enumerate(
-    [
-        socio_network_clusters,
-        socio_socio_clusters,
-    ]  # hex_network_clusters
-):
-    cluster.plot(
-        ax=ax,
-        edgecolor=colors[i],
-        facecolor="none",
-        # hatch="//",
-        linewidth=1,
-        label=labels[i],
-    )
-
-legend_handles = [
-    Patch(edgecolor=colors[i], fill=False, linewidth=1.5, label=labels[i])
-    for i in range(len(labels))
-]
-
-ax.legend(handles=legend_handles, loc="upper right")
+for key, val in label_dict.items():
+    socio_cluster_gdf.loc[
+        socio_cluster_gdf[kmeans_col_soc] == key,
+        "socio_label",
+    ] = val
 
 
-cx.add_basemap(
-    ax, crs=socio_network_clusters.crs, source=cx.providers.CartoDB.DarkMatterNoLabels
-)
+socio_cluster_gdf[
+    [kmeans_col_soc] + ["geometry", id_columns[1], "socio_label"]
+].to_file(fp_socio_socio_clusters, driver="GPKG")
+# %%
+# # ###### PLOT CLUSTER OVERLAY ######
 
-ax.set_axis_off()
+# # based on https://darribas.org/gds_course/content/bG/lab_G.html
 
-plt.savefig(fp_cluster_map_overlay, dpi=300)
 
-plt.show()
+# socio_network_clusters = socio_cluster_gdf.dissolve(by=kmeans_col_net)
+# socio_network_clusters.reset_index(inplace=True)
+
+# socio_socio_clusters = socio_cluster_gdf.dissolve(by=kmeans_col_soc)
+# socio_socio_clusters.reset_index(inplace=True)
+
+# socio_network_clusters[
+#     ["geometry", id_columns[1], kmeans_col_net, "network_rank"]
+# ].to_file(fp_socio_network_clusters, driver="GPKG")
+
+# socio_socio_clusters[
+#     ["geometry", id_columns[1], kmeans_col_soc, "socio_label"]
+# ].to_file(fp_socio_socio_clusters, driver="GPKG")
+
+# f, ax = plt.subplots(1, figsize=(15, 15))
+
+# labels = [
+#     "Socio-Network",
+#     "Socio-Socio",
+# ]  # "Hex-Network"
+# colors = ["xkcd:salmon", "xkcd:lime"]  #  "xkcd:sky blue",
+
+# for i, cluster in enumerate(
+#     [
+#         socio_network_clusters,
+#         socio_socio_clusters,
+#     ]  # hex_network_clusters
+# ):
+#     cluster.plot(
+#         ax=ax,
+#         edgecolor=colors[i],
+#         facecolor="none",
+#         # hatch="//",
+#         linewidth=1,
+#         label=labels[i],
+#     )
+
+# legend_handles = [
+#     Patch(edgecolor=colors[i], fill=False, linewidth=1.5, label=labels[i])
+#     for i in range(len(labels))
+# ]
+
+# ax.legend(handles=legend_handles, loc="upper right")
+
+
+# cx.add_basemap(
+#     ax, crs=socio_network_clusters.crs, source=cx.providers.CartoDB.DarkMatterNoLabels
+# )
+
+# ax.set_axis_off()
+
+# plt.savefig(fp_cluster_map_overlay, dpi=300)
+
+# plt.show()
 
 # %%
 # Compute cluster intersections
 
-socio_cluster_gdf["network_cluster"] = socio_cluster_gdf[kmeans_col_net]
-socio_cluster_gdf["socio_cluster"] = socio_cluster_gdf[kmeans_col_soc]
+socio_cluster_gdf["network_cluster"] = socio_cluster_gdf[
+    "network_rank"
+]  # socio_cluster_gdf[kmeans_col_net]
+socio_cluster_gdf["socio_cluster"] = socio_cluster_gdf[
+    "socio_label"
+]  # socio_cluster_gdf[kmeans_col_soc]
 
 intersections = gpd.overlay(
     socio_cluster_gdf[["network_cluster", "geometry"]],
@@ -235,7 +284,6 @@ inter_dissolved.reset_index(inplace=True)
 
 inter_dissolved["area_sqkm"] = inter_dissolved.geometry.area / 1000000
 
-
 intersecting_clusters = inter_dissolved[inter_dissolved.area_sqkm > 0.1]
 
 display(
@@ -244,70 +292,119 @@ display(
     .style.pipe(format_style_index)
 )
 
-# %%
-inter_dissolved.to_file("test.gpkg", driver="GPKG")
+intersecting_clusters.to_file(fp_cluster_intersections, driver="GPKG")
 
 # %%
-# ##### HEX #######
+# # ##### HEX #######
 
-# Read data
-exec(open("../settings/read_hex_results.py").read())
+# # Read data
+# exec(open("../settings/read_hex_results.py").read())
 
-hex_gdf.replace(np.nan, 0, inplace=True)
+# hex_gdf.replace(np.nan, 0, inplace=True)
 
-exec(open("../settings/read_reach_comparison.py").read())
-hex_reach_comp_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
-hex_reach_comp_cols = [
-    c for c in hex_reach_comp_cols if "10_15" not in c and "5_15" not in c
-]
-del hex_reach_comparison
+# exec(open("../settings/read_reach_comparison.py").read())
+# hex_reach_comp_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
+# hex_reach_comp_cols = [
+#     c for c in hex_reach_comp_cols if "10_15" not in c and "5_15" not in c
+# ]
+# del hex_reach_comparison
 
 
-# define cluster variables
+# # define cluster variables
 
-hex_cluster_variables = (
-    density_columns
-    + density_steps_columns[1:4]
-    + length_relative_columns
-    # + component_count_columns
-    + component_per_km_columns
-    + largest_local_component_len_columns
-    + reach_columns
-    + hex_reach_comp_cols
-    # + ["urban_pct"]
-)
+# hex_cluster_variables = (
+#     density_columns
+#     + density_steps_columns[1:4]
+#     + length_relative_columns
+#     # + component_count_columns
+#     + component_per_km_columns
+#     + largest_local_component_len_columns
+#     + reach_columns
+#     + hex_reach_comp_cols
+#     # + ["urban_pct"]
+# )
+
+# # Use robust_scale to norm cluster variables
+# hex_scaled = robust_scale(hex_gdf[hex_cluster_variables])
+
+# # Find appropriate number of clusters
+# m1, m2 = analysis_func.find_k_elbow_method(hex_scaled, min_k=1, max_k=30)
+
+# for key, val in m1.items():
+#     print(f"{key} : {val:.2f}")
+
+# # Define K!
+# k = 5
+# # %%
+# ##### K-Means #######
+
+# kmeans_col = f"kmeans_{k}"
+
+# k_labels = analysis_func.run_kmeans(k, hex_scaled)
+
+# hex_gdf[kmeans_col] = k_labels
+
+# fp_map = fp_hex_network_cluster_base + f"_map_{kmeans_col}.png"
+# fp_size = fp_hex_network_cluster_base + f"_size_{kmeans_col}.png"
+# fp_kde = fp_hex_network_cluster_base + f"_kde_{kmeans_col}.png"
+
+# colors = plot_func.get_hex_colors_from_colormap("Set2", k)
+# cmap = plot_func.color_list_to_cmap(colors)
+
+# cluster_means_hex = analysis_func.examine_cluster_results(
+#     hex_gdf,
+#     kmeans_col,
+#     hex_cluster_variables,
+#     fp_map,
+#     fp_size,
+#     fp_kde,
+#     cmap=cmap,
+#     palette=colors,
+# )
+
+# hex_gdf[[kmeans_col] + ["geometry", id_columns[2]]].to_parquet(fp_hex_network_clusters)
+
+# plot_func.style_cluster_means(cluster_means_hex)
+
+# %
+
+# %%
+
+all_socio_variables = socio_network_cluster_variables + socio_soc_cluster_variables
 
 # Use robust_scale to norm cluster variables
-hex_scaled = robust_scale(hex_gdf[hex_cluster_variables])
+socio_all_scaled = robust_scale(socio_cluster_gdf[all_socio_variables])
 
 # Find appropriate number of clusters
-m1, m2 = analysis_func.find_k_elbow_method(hex_scaled, min_k=1, max_k=30)
+m1, m2 = analysis_func.find_k_elbow_method(socio_all_scaled, min_k=1, max_k=20)
 
 for key, val in m1.items():
     print(f"{key} : {val:.2f}")
 
-# Define K!
-k = 5
 # %%
+
+# Define K!
+k = 10
+
 ##### K-Means #######
 
-kmeans_col = f"kmeans_{k}"
+kmeans_col_all = f"kmeans_all_{k}"
 
-k_labels = analysis_func.run_kmeans(k, hex_scaled)
+k_labels = analysis_func.run_kmeans(k, socio_all_scaled)
 
-hex_gdf[kmeans_col] = k_labels
+socio_cluster_gdf[kmeans_col_all] = k_labels
 
-fp_map = fp_hex_network_cluster_base + f"_map_{kmeans_col}.png"
-fp_size = fp_hex_network_cluster_base + f"_size_{kmeans_col}.png"
-fp_kde = fp_hex_network_cluster_base + f"_kde_{kmeans_col}.png"
+fp_map = fp_socio_socio_cluster_base + f"__map_{kmeans_col_all}.png"
+fp_size = fp_socio_socio_cluster_base + f"_size_{kmeans_col_all}.png"
+fp_kde = fp_socio_socio_cluster_base + f"_kde_{kmeans_col_all}.png"
 
 colors = plot_func.get_hex_colors_from_colormap("Set2", k)
 cmap = plot_func.color_list_to_cmap(colors)
 
-cluster_means_hex = analysis_func.examine_cluster_results(
-    hex_gdf,
-    kmeans_col,
-    hex_cluster_variables,
+cluster_means_all = analysis_func.examine_cluster_results(
+    socio_cluster_gdf,
+    kmeans_col_all,
+    all_socio_variables,
     fp_map,
     fp_size,
     fp_kde,
@@ -315,13 +412,6 @@ cluster_means_hex = analysis_func.examine_cluster_results(
     palette=colors,
 )
 
-hex_gdf[[kmeans_col] + ["geometry", id_columns[2]]].to_parquet(fp_hex_network_clusters)
-
-plot_func.style_cluster_means(cluster_means_hex)
-
-# %
-
-# %%
-
+plot_func.style_cluster_means(cluster_means_all)
 
 # %%
