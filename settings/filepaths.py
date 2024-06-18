@@ -236,3 +236,5 @@ fp_socio_socio_cluster_base = "../results/clustering/socio_socioeconomic_cluster
 fp_socio_network_clusters = "../results/clustering/socio_network_clusters.gpkg"
 
 fp_socio_network_cluster_base = "../results/clustering/socio_network_clusters_"
+
+fp_cluster_intersections = "../results/clustering/cluster_intersections.gpkg"
