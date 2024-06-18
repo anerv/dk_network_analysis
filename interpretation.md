@@ -273,6 +273,14 @@ Not sensitive to changing weights.
 
 ## Socio network
 
+**Ranked:**
+1
+2
+5
+4
+3
+0
+
 kmeans_7
 
 Far more areas and area in cluster 0
@@ -347,3 +355,54 @@ Far more areas and area in cluster 0
 
 ## Socio socioeconomic
 
+**Labels:**
+0: Medium income - high car - rural
+1: Low income - low car - urban
+2: High income - low car - urban
+3: Very high income - very high car - suburban/rural
+4: Low-medium income - low-medium car - suburban
+
+**0:**
+
+* Rural
+* Big cluster
+* Low share of very low income and very high income
+* High share of 200 - 400k income
+* High car ownership (low no car)
+* Most have 2 cars - but relative high share of households with 1 car
+* Low pop density, low urban
+
+**1:**
+
+* Small cluster
+* Completely urban
+* High (relative) shares of low income people
+* Low very high income - otherwise a mix
+* High share of no car households
+* Medium/high pop density
+
+**2:**
+
+* Small custer, competely urban
+* High (relative) share of low income
+* Low share of lower/medium income
+* Higher share of upper-medium income
+* Low share of very high
+* Low car ownership (lowest)
+* Highest pop density and urban
+
+**3:**
+
+* High share of high income
+* Low share of low and medium income
+* High car ownership and high share of 2 car households
+* Low population density and low urban
+
+**4:**
+
+* High low income and low/medium
+* Low higher income
+* Medium-low car ownership
+* Low 2 cars
+* Medium-low pop density
+* High urban

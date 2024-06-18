@@ -22,6 +22,33 @@ exec(open("../settings/plotting.py").read())
 # Clustering functions based on https://geographicdata.science/book/notebooks/10_clustering_and_regionalization.html#
 
 
+def plot_labels(gdf, label_col):
+    fig, ax = plt.subplots(1, 1, figsize=(15, 15))
+    ax.set_axis_off()
+    gdf.plot(
+        column=label_col,
+        categorical=True,
+        legend=True,
+        ax=ax,
+        cmap="Set2",
+        linewidth=0.1,
+    )
+    plt.tight_layout()
+
+
+def plot_rank(gdf, label_col):
+    fig, ax = plt.subplots(1, 1, figsize=(15, 15))
+    ax.set_axis_off()
+    gdf.plot(
+        column=label_col,
+        legend=True,
+        ax=ax,
+        cmap="viridis",
+        linewidth=0.1,
+    )
+    plt.tight_layout()
+
+
 def color_list_to_cmap(color_list):
     colors = {i: color_list[i] for i in range(len(color_list))}
     return ListedColormap([t[1] for t in sorted(colors.items())])
