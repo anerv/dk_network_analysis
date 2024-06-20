@@ -61,11 +61,11 @@ filepaths_reach_diff_pct = [
 ]
 
 filepaths_reach_hist = [
-    "../results/reach_maps/lts1_reach_hist.png",
-    "../results/reach_maps/lts2_reach_hist.png",
-    "../results/reach_maps/lts3_reach_hist.png",
-    "../results/reach_maps/lts4_reach_hist.png",
-    "../results/reach_maps/car_reach_hist.png",
+    "../results/reach_distributions/lts1_reach_hist.png",
+    "../results/reach_distributions/lts2_reach_hist.png",
+    "../results/reach_distributions/lts3_reach_hist.png",
+    "../results/reach_distributions/lts4_reach_hist.png",
+    "../results/reach_distributions/car_reach_hist.png",
 ]
 
 fp_network_reach_kde = "../results/reach_distributions/kde_network_reach.png"
