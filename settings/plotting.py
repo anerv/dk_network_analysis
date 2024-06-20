@@ -1,5 +1,8 @@
 import matplotlib as mpl
 from matplotlib import cm, colors
+import seaborn as sns
+
+sns.set_theme(style="white")
 
 import matplotlib_inline.backend_inline
 
