@@ -168,7 +168,7 @@ for i, p in enumerate(plot_columns):
 
 exec(open("../settings/read_reach_comparison.py").read())
 
-hex_reach_comparison.replace(np.nan, 0, inplace=True)
+#hex_reach_comparison.replace(np.nan, 0, inplace=True)
 
 distances = [5, 10, 15]
 
