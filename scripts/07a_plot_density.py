@@ -8,8 +8,6 @@ import pandas as pd
 from matplotlib import pyplot as plt
 import plotly.express as px
 
-sns.set_theme("paper")
-
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 exec(open("../settings/filepaths.py").read())

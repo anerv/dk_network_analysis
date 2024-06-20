@@ -10,8 +10,6 @@ import pandas as pd
 import seaborn as sns
 import itertools
 
-sns.set_theme("paper")
-
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 exec(open("../settings/filepaths.py").read())
@@ -169,6 +167,8 @@ for i, p in enumerate(plot_columns):
 #### MAPS - HEX REACH COMPARISON ##########
 
 exec(open("../settings/read_reach_comparison.py").read())
+
+hex_reach_comparison.replace(np.nan, 0, inplace=True)
 
 distances = [5, 10, 15]
 
