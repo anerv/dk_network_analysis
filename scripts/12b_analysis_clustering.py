@@ -112,7 +112,32 @@ socio_cluster_gdf[
     [kmeans_col_net] + ["geometry", id_columns[1], "network_rank"]
 ].to_file(fp_socio_network_clusters, driver="GPKG")
 
+
 plot_func.plot_rank(socio_cluster_gdf, "network_rank")
+
+
+# %%
+
+# input = [v for v in lts_color_dict.values()]
+# test_colors = plot_func.color_list_to_cmap(input)
+
+
+# def plot_rank(gdf, label_col, cmap="viridis"):
+#     fig, ax = plt.subplots(1, 1, figsize=(10, 10))
+#     ax.set_axis_off()
+#     gdf.plot(
+#         column=label_col,
+#         legend=True,
+#         ax=ax,
+#         cmap=cmap,
+#         linewidth=0.1,
+#         categorical=True,
+#     )
+#     plt.tight_layout()
+
+
+# plot_rank(socio_cluster_gdf, "network_rank", cmap=test_colors)
+
 # %%
 # SOCIO CLUSTERING: Socio-economic variables
 
@@ -204,8 +229,6 @@ socio_cluster_gdf[
     [kmeans_col_soc] + ["geometry", id_columns[1], "socio_label"]
 ].to_file(fp_socio_socio_clusters, driver="GPKG")
 
-plot_func.plot_labels(socio_cluster_gdf, "socio_label")
-
 
 # %%
 
@@ -257,10 +280,10 @@ correlation = (
 )
 correlation = correlation.div(correlation.sum(axis=1), axis=0)
 plt.figure(figsize=(15, 15))
-correlation.plot(kind="bar", stacked=True)
+correlation.plot(kind="bar", stacked=True, color=lts_color_dict.values())
 plt.ylabel("Proportion", fontsize=12)
 plt.title("Correlation between Socio Label and Network Rank", fontsize=14)
-plt.legend(bbox_to_anchor=(1, 1), fontsize=12)
+plt.legend(bbox_to_anchor=(1, 1), fontsize=12, title="Network Rank", title_fontsize=10)
 plt.tick_params(
     labelsize=10,
 )

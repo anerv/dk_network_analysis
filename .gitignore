@@ -14,3 +14,4 @@ data/nodes_udtraek.gpkg
 scripts/test.gpkg
 scripts/test.gpkg-shm
 scripts/test.gpkg-wal
+scripts/presentation_plots.py
