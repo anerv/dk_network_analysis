@@ -73,6 +73,53 @@ df.to_csv(filepath_summmary_stats_network_length, index=False)
 display(df.style.pipe(format_style_no_index))
 
 # %%
+new_color_dict = {}
+for i, color in enumerate(lts_color_dict.values()):
+    k = df.network_type[i]
+    new_color_dict[k] = color
+
+
+fig = px.bar(
+    df,
+    x="network_type",
+    y="share (%)",
+    color="network_type",
+    labels=plotly_labels,
+    color_discrete_map=new_color_dict,
+)
+fig.update_layout(template="simple_white")
+fig.update_traces(texttemplate="%{y:.1f}%", textposition="outside")
+fig.update_layout(showlegend=False)
+fig.update_yaxes(visible=False)
+
+config = {
+    "toImageButtonOptions": {
+        "format": "svg",  # one of png, svg, jpeg, webp
+        "filename": "custom_image",
+        "height": 500,
+        "width": 700,
+        "scale": 6,  # Multiply title/legend/axis/canvas sizes by this factor
+    }
+}
+
+
+fig.show(config=config)
+# %%
+
+plotly_labels["network_type"] = "Network Type"
+fig = px.bar(
+    df,
+    x="network_type",
+    y="share (%)",
+    color="network_type",
+    labels=plotly_labels,
+    color_discrete_map=new_color_dict,
+)
+fig.update_layout(template="simple_white")
+fig.update_traces(texttemplate="%{y:.1f}%", textposition="outside")
+fig.show()
+#
+# %%
 ### VALUE RANGES FOR EACH LTS LEVEL FOR EACH AGGREGATION LEVEL
 
 network_levels = labels_all
