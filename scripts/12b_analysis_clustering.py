@@ -231,9 +231,24 @@ socio_cluster_gdf[
     [kmeans_col_soc] + ["geometry", id_columns[1], "socio_label"]
 ].to_file(fp_socio_socio_clusters, driver="GPKG")
 
+# %%
+# EXPORT CLUSTER RESULTS TO POSTGIS
+socio_cluster_gdf[["id", "network_rank", "socio_label", "geometry"]].to_postgis(
+    "socio_clusters",
+    engine,
+    if_exists="replace",
+    index=False,
+)
+
+q = "sql/12b_analysis_clustering.sql"
+
+result = dbf.run_query_pg(q, connection)
+if result == "error":
+    print("Please fix error before rerunning and reconnect to the database")
+
 
 # %%
-
+# Plot socio clusters and pop/urban density
 plt.figure(figsize=(15, 10))
 plt.scatter(
     socio_cluster_gdf["socio_label"], socio_cluster_gdf["population_density"], alpha=0.5
@@ -248,14 +263,14 @@ plt.show()
 plt.figure(figsize=(15, 10))
 plt.scatter(socio_cluster_gdf["socio_label"], socio_cluster_gdf["urban_pct"], alpha=0.5)
 plt.xlabel("Socio Label")
-plt.ylabel("Population Density")
-plt.title("Population Density by Socio Label")
+plt.ylabel("Urban pct")
+plt.title("Urban pct by Socio Label")
 plt.xticks(rotation=45)
 plt.show()
 
 
 # %%
-
+# Plot distribution of network rank in each socio cluster
 grouped = (
     socio_cluster_gdf.groupby("socio_label")["network_rank"]
     .value_counts()
@@ -274,7 +289,7 @@ plt.show()
 
 # %%
 
-# Compute correlation between socio labels and network ranks
+# Plot proporiton of network rank in each socio cluster
 correlation = (
     socio_cluster_gdf.groupby(["socio_label", "network_rank"])
     .size()
@@ -293,8 +308,5 @@ plt.tick_params(
 )
 plt.xlabel("", fontsize=12)
 plt.show()
-
-# %%
-
 
 # %%
