@@ -170,7 +170,7 @@ exec(open("../settings/read_reach_comparison.py").read())
 
 #hex_reach_comparison.replace(np.nan, 0, inplace=True)
 
-distances = [5, 10, 15]
+distances = [2, 5, 10, 15]
 
 plot_columns = []
 filepaths = []
@@ -209,7 +209,7 @@ for i, c in enumerate(plot_columns):
             plot_col=c,
             plot_title=plot_titles[i],
             filepath=filepaths[i] + "_unclassified",
-            cmap=pdict["pos"],
+            cmap="magma", #pdict["pos"],
             use_norm=True,
             norm_min=vmin,
             norm_max=vmax,
@@ -537,8 +537,14 @@ reach_df = pd.read_sql(f"SELECT * FROM reach.compare_reach;", engine)
 network_levels = labels
 
 reach_columns = reach_df.columns.to_list()
+reach_columns.remove("hex_id")
+reach_columns.remove("geometry")
 
-distances = list(set([c.split("_")[2] for c in reach_columns]))
+distances = list(set([c.split("_")[2] for c in reach_columns if "pct_diff" not in c]))
+
+keep_columns = [c for c in reach_columns if "pct_diff" not in c]
+
+reach_df = reach_df[keep_columns]
 
 labels_stat = ["Median", "Mean", "Max", "Std"]
 #%%
@@ -611,8 +617,10 @@ plt.close()
 # %%
 # KDE plots - differences in reach per distance
 
+reach_df = pd.read_sql(f"SELECT * FROM reach.compare_reach;", engine)
+
 for n in org_labels_rename.keys():
-    cols = [c for c in reach_columns if n in c]
+    cols = [c for c in reach_df.columns if n in c and "pct_diff" not in c]
 
     df = reach_df[cols]
     values = df.values.flatten()
@@ -645,8 +653,8 @@ for n in org_labels_rename.keys():
 exec(open("../settings/read_reach_comparison.py").read())
 hex_reach_comparison.replace(np.nan, 0, inplace=True)
 
-distances = [5, 10, 15]
-
+distances = [2, 5, 10, 15]
+#%%
 plot_cols = []
 comparison_types = []
 
@@ -660,6 +668,7 @@ for n in network_levels:
 
 comparison_types = list(set(comparison_types))
 
+#%%
 rename_dict = {}
 
 for n, l in zip(network_levels, labels):
