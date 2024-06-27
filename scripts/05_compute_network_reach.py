@@ -31,7 +31,7 @@ for i, q in enumerate(queries):
 distances = [2, 5, 10, 15]  # max distance in km
 # distances = [5, 10]  # max distance in km
 # distances = [15]
-distances = [2]
+# distances = [2]
 # %%
 chunk_sizes_2 = [1000, 1000, 1000, 1000, 1000]
 chunk_sizes_5 = [1000, 1000, 1000, 1000, 1000]
@@ -499,6 +499,22 @@ for n in network_levels:
         q1 = f"ALTER TABLE reach.compare_reach ADD COLUMN IF NOT EXISTS {n}_pct_diff_{comb[0]}_{comb[1]} DECIMAL;"
 
         q2 = f"""UPDATE reach.compare_reach SET {n}_pct_diff_{comb[0]}_{comb[1]} = (({n}_reach_{comb[1]} - {n}_reach_{comb[0]})) / (({n}_reach_{comb[1]} + {n}_reach_{comb[0]})/2) * 100 WHERE {n}_reach_{distances[0]} > 0;"""
+        for q in [q1, q2]:
+            result = dbf.run_query_pg(q, connection)
+            if result == "error":
+                print("Please fix error before rerunning and reconnect to the database")
+                break
+
+
+# %%
+for n in network_levels:
+
+    for comb in itertools.combinations(distances, 2):
+
+        q1 = f"ALTER TABLE reach.compare_reach ADD COLUMN IF NOT EXISTS {n}_diff_{comb[0]}_{comb[1]} DECIMAL;"
+
+        q2 = f"""UPDATE reach.compare_reach SET {n}_diff_{comb[0]}_{comb[1]} = {n}_reach_{comb[1]} - {n}_reach_{comb[0]} WHERE {n}_reach_{distances[0]} > 0;"""
+
         for q in [q1, q2]:
             result = dbf.run_query_pg(q, connection)
             if result == "error":
