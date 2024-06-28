@@ -15,6 +15,8 @@ DROP TABLE IF EXISTS fragmentation.component_size_car;
 CREATE TABLE fragmentation.component_edges AS
 SELECT
     id,
+    source,
+    target,
     highway,
     infra_length,
     municipality,
@@ -30,12 +32,6 @@ FROM
 WHERE
     component_all IS NOT NULL;
 
--- UPDATE
---     fragmentation.component_edges
--- SET
---     infra_length = ST_Length(geometry)
--- WHERE
---     infra_length IS NULL;
 CREATE TABLE fragmentation.component_size_all AS (
     SELECT
         COUNT(id),
@@ -197,3 +193,62 @@ UPDATE
     fragmentation.component_size_car
 SET
     buffer_area = ST_Area(buffer_geom) / 1000000;
+
+-- ADD COMPONENT SIZE TO COMPONENT EDGES (for later use)
+ALTER TABLE
+    fragmentation.component_edges
+ADD
+    COLUMN IF NOT EXISTS component_size_1 DECIMAL,
+ADD
+    COLUMN IF NOT EXISTS component_size_1_2 DECIMAL,
+ADD
+    COLUMN IF NOT EXISTS component_size_1_3 DECIMAL,
+ADD
+    COLUMN IF NOT EXISTS component_size_1_4 DECIMAL,
+ADD
+    COLUMN IF NOT EXISTS component_size_car DECIMAL;
+
+UPDATE
+    fragmentation.component_edges
+SET
+    component_size_1 = component_size_1.infra_length
+FROM
+    fragmentation.component_size_1
+WHERE
+    fragmentation.component_edges.component_1 = fragmentation.component_size_1.component_1;
+
+UPDATE
+    fragmentation.component_edges
+SET
+    component_size_1_2 = component_size_2.infra_length
+FROM
+    fragmentation.component_size_2
+WHERE
+    fragmentation.component_edges.component_1_2 = fragmentation.component_size_2.component_1_2;
+
+UPDATE
+    fragmentation.component_edges
+SET
+    component_size_1_3 = component_size_3.infra_length
+FROM
+    fragmentation.component_size_3
+WHERE
+    fragmentation.component_edges.component_1_3 = fragmentation.component_size_3.component_1_3;
+
+UPDATE
+    fragmentation.component_edges
+SET
+    component_size_1_4 = component_size_4.infra_length
+FROM
+    fragmentation.component_size_4
+WHERE
+    fragmentation.component_edges.component_1_4 = fragmentation.component_size_4.component_1_4;
+
+UPDATE
+    fragmentation.component_edges
+SET
+    component_size_car = component_size_car.infra_length
+FROM
+    fragmentation.component_size_car
+WHERE
+    fragmentation.component_edges.component_car = fragmentation.component_size_car.component_car;

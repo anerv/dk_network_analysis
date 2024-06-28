@@ -241,6 +241,7 @@ WHERE
             reach.nodes_all_view
     );
 
+-- TODO: ADD COMPONENT SIZE HER
 CREATE TABLE reach.nodes_lts_1 AS
 SELECT
     id,
@@ -316,20 +317,70 @@ WHERE
             reach.nodes_car_view
     );
 
+-- TODO FILL BASED LARGEST COMPONENT SIZE FOR LTS 1 which node belongs to
+ALTER TABLE
+    reach.nodes_lts_1
+ADD
+    COLUMN component_size FLOAT DEFAULT NULL;
+
+ALTER TABLE
+    reach.nodes_lts_2
+ADD
+    COLUMN component_size FLOAT DEFAULT NULL;
+
+ALTER TABLE
+    reach.nodes_lts_3
+ADD
+    COLUMN component_size FLOAT DEFAULT NULL;
+
+ALTER TABLE
+    reach.nodes_lts_4
+ADD
+    COLUMN component_size FLOAT DEFAULT NULL;
+
+ALTER TABLE
+    reach.nodes_lts_car
+ADD
+    COLUMN component_size FLOAT DEFAULT NULL;
+
+CREATE INDEX IF NOT EXISTS nodes_lts_1_hex_id_ix ON reach.nodes_lts_1 (id);
+
+-- DEBUG
+WITH points AS (
+    SELECT
+        source,
+        target,
+        component_size_1
+    FROM
+        fragmentation.component_edges
+)
+UPDATE
+    reach.nodes_lts_1
+SET
+    component_size = e.component_size_1
+FROM
+    points p
+WHERE
+    p.source = reach.nodes_lts_1.id
+    OR p.target = reach.nodes_lts_1.id;
+
+-- TODO: FIX HERE
+---- *****
 CREATE TABLE reach.hex_lts_1 AS WITH joined_points AS (
     SELECT
         ce.hex_id AS hex_id,
-        b.id AS node_id,
+        n.id AS node_id,
         ce.geometry AS hex_centroid,
-        b.geometry AS node_geom,
+        n.geometry AS node_geom,
+        n.component_size AS component_size,
         ROW_NUMBER() OVER (
             PARTITION BY ce.hex_id
             ORDER BY
-                ST_Distance(ce.geometry, b.geometry)
+                ST_Distance(ce.geometry, n.geometry)
         ) AS rn
     FROM
         reach.centroids ce
-        JOIN reach.nodes_lts_1 b ON ce.hex_id = b.hex_id
+        JOIN reach.nodes_lts_1 n ON ce.hex_id = n.hex_id
 )
 SELECT
     hex_id,
