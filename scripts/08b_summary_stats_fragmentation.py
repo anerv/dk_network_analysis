@@ -40,21 +40,12 @@ std_dev_comp_size = []
 
 for c, n in zip(comp_dfs, network_levels_steps):
 
-    if n == "Total car":
-        comp_count.append(len(c))
-        smallest_comp_size.append(c["geom_length"].min())
-        mean_comp_size.append(c["geom_length"].mean())
-        median_comp_size.append(c["geom_length"].median())
-        max_comp_size.append(c["geom_length"].max())
-        std_dev_comp_size.append(c["geom_length"].std())
-
-    else:
-        comp_count.append(len(c))
-        smallest_comp_size.append(c["bike_length"].min())
-        mean_comp_size.append(c["bike_length"].mean())
-        median_comp_size.append(c["bike_length"].median())
-        max_comp_size.append(c["bike_length"].max())
-        std_dev_comp_size.append(c["bike_length"].std())
+    comp_count.append(len(c))
+    smallest_comp_size.append(c["infra_length"].min())
+    mean_comp_size.append(c["infra_length"].mean())
+    median_comp_size.append(c["infra_length"].median())
+    max_comp_size.append(c["infra_length"].max())
+    std_dev_comp_size.append(c["infra_length"].std())
 
 df = pd.DataFrame(
     index=network_levels_steps,

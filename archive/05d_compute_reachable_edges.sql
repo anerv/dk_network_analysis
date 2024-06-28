@@ -14,7 +14,7 @@ WITH joined_edges AS (
     SELECT
         start_node,
         array_agg(e.id) AS reachable_edges,
-        SUM(ST_Length(e.geometry)) AS total_length
+        SUM(ST_Length(e.geometry)) AS total_length -- OBS: Not using bike or car length
     FROM
         reach.lts_1_reach
         JOIN lts_1_edges e ON e.source = ANY(reach.lts_1_reach.reachable_nodes)

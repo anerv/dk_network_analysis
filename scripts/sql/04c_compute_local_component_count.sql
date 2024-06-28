@@ -41,7 +41,7 @@ FROM
 CREATE TABLE fragmentation.socio_component_edges AS
 SELECT
     s.id,
-    s.bike_length,
+    s.infra_length,
     s.socio_id,
     co.component_all,
     co.component_1,
@@ -56,7 +56,7 @@ FROM
 CREATE TABLE fragmentation.hex_component_edges AS
 SELECT
     h.id,
-    h.bike_length,
+    h.infra_length,
     h.hex_id,
     co.component_all,
     co.component_1,
@@ -126,15 +126,15 @@ CREATE TABLE fragmentation.hex_largest_components AS WITH joined_edges AS (
     SELECT
         h.id,
         h.hex_id,
-        co1.bike_length AS component_length_1,
+        co1.infra_length AS component_length_1,
         co1.buffer_area AS component_coverage_1,
-        co2.bike_length AS component_length_2,
+        co2.infra_length AS component_length_2,
         co2.buffer_area AS component_coverage_2,
-        co3.bike_length AS component_length_3,
+        co3.infra_length AS component_length_3,
         co3.buffer_area AS component_coverage_3,
-        co4.bike_length AS component_length_4,
+        co4.infra_length AS component_length_4,
         co4.buffer_area AS component_coverage_4,
-        coc.geom_length AS component_length_car,
+        coc.infra_length AS component_length_car,
         coc.buffer_area AS component_coverage_car
     FROM
         fragmentation.hex_component_edges h

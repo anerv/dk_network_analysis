@@ -8,7 +8,7 @@ CREATE INDEX IF NOT EXISTS lts_access_ix ON edges (lts_access);
 
 CREATE TABLE IF NOT EXISTS density.density_municipality AS WITH lts_1 AS (
     SELECT
-        SUM(bike_length) / 1000 AS lts_1_length,
+        SUM(infra_length) / 1000 AS lts_1_length,
         municipality
     FROM
         edges
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS density.density_municipality AS WITH lts_1 AS (
 ),
 lts_2 AS (
     SELECT
-        SUM(bike_length) / 1000 AS lts_2_length,
+        SUM(infra_length) / 1000 AS lts_2_length,
         municipality
     FROM
         edges
@@ -30,7 +30,7 @@ lts_2 AS (
 ),
 lts_3 AS (
     SELECT
-        SUM(bike_length) / 1000 AS lts_3_length,
+        SUM(infra_length) / 1000 AS lts_3_length,
         municipality
     FROM
         edges
@@ -41,7 +41,7 @@ lts_3 AS (
 ),
 lts_4 AS (
     SELECT
-        SUM(bike_length) / 1000 AS lts_4_length,
+        SUM(infra_length) / 1000 AS lts_4_length,
         municipality
     FROM
         edges
@@ -52,7 +52,7 @@ lts_4 AS (
 ),
 lts_5 AS (
     SELECT
-        SUM(bike_length) / 1000 AS lts_5_length,
+        SUM(infra_length) / 1000 AS lts_5_length,
         municipality
     FROM
         edges
@@ -63,7 +63,7 @@ lts_5 AS (
 ),
 lts_6 AS (
     SELECT
-        SUM(ST_Length(geometry)) / 1000 AS lts_6_length,
+        SUM(infra_length) / 1000 AS lts_6_length,
         municipality
     FROM
         edges
@@ -74,7 +74,7 @@ lts_6 AS (
 ),
 lts_7 AS (
     SELECT
-        SUM(ST_Length(geometry)) / 1000 AS lts_7_length,
+        SUM(infra_length) / 1000 AS lts_7_length,
         municipality
     FROM
         edges
@@ -85,7 +85,7 @@ lts_7 AS (
 ),
 total_car AS (
     SELECT
-        SUM(ST_Length(geometry)) / 1000 AS total_car_length,
+        SUM(infra_length) / 1000 AS total_car_length,
         municipality
     FROM
         edges

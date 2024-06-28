@@ -36,14 +36,7 @@ component_size_dfs = [
 
 labels = labels_step_all
 
-columns = [
-    "bike_length",
-    "bike_length",
-    "bike_length",
-    "bike_length",
-    "geom_length",  # use geom for car network
-    "bike_length",
-]
+columns = ["infra_length"] * 6
 # %%
 ## Zipf plots
 
@@ -84,44 +77,38 @@ for muni in municipalities:
         geom_col="geometry",
     )
 
-    # muni_edges.loc[muni_edges.bike_length.isna(), "bike_length"] = (
-    #     muni_edges.geometry.length
-    # )
-    muni_edges.loc[muni_edges.bike_length.notna(), "bike_length"] = (
-        muni_edges["bike_length"] / 1000
-    )
-    muni_edges["geom_length"] = muni_edges.geometry.length / 1000
+    muni_edges["infra_length_km"] = muni_edges.geometry.length / 1000
 
     if len(muni_edges) > 0:
         component_size_all = (
             muni_edges[muni_edges["component_all"].notna()]
             .groupby("component_all")
-            .sum("bike_length")
+            .sum("infra_length")
         )
         component_size_1 = (
             muni_edges[muni_edges["component_1"].notna()]
             .groupby("component_1")
-            .sum("bike_length")
+            .sum("infra_length")
         )
         component_size_2 = (
             muni_edges[muni_edges["component_1_2"].notna()]
             .groupby("component_1_2")
-            .sum("bike_length")
+            .sum("infra_length")
         )
         component_size_3 = (
             muni_edges[muni_edges["component_1_3"].notna()]
             .groupby("component_1_3")
-            .sum("bike_length")
+            .sum("infra_length")
         )
         component_size_4 = (
             muni_edges[muni_edges["component_1_4"].notna()]
             .groupby("component_1_4")
-            .sum("bike_length")
+            .sum("infra_length")
         )
         component_size_car = (
             muni_edges[muni_edges["component_car"].notna()]
             .groupby("component_car")
-            .sum("geom_length")
+            .sum("infra_length")
         )
 
         plot_func.combined_zipf_plot(

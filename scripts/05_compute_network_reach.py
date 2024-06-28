@@ -196,7 +196,7 @@ for dist in distances:
                     WHERE start_node IN {ids_chunk}
                 ),
                 filtered_edges AS (
-                    SELECT e.id, e.source, e.target, e.geometry, ST_Length(e.geometry) AS length
+                    SELECT e.id, e.source, e.target, e.geometry, ST_Length(e.geometry) AS length 
                     FROM {edge_tables[i]} e
                     WHERE e.source IN (
                         SELECT unnest(reachable_nodes::int[]) FROM filtered_nodes

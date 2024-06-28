@@ -26,7 +26,7 @@ CREATE TABLE hex_edges AS
 SELECT
     s.id,
     s.geometry,
-    e.bike_length,
+    e.infra_length,
     e.bikeinfra_both_sides,
     e.cycling_allowed,
     e.lts_access,
@@ -64,21 +64,11 @@ WHERE
 UPDATE
     hex_edges
 SET
-    bike_length = CASE
-        WHEN (
-            bikeinfra_both_sides IS TRUE
-            AND cycling_allowed IS TRUE
-        ) THEN ST_Length(geometry) * 2
-        WHEN (
-            bikeinfra_both_sides IS FALSE
-            AND cycling_allowed IS TRUE
-        ) THEN ST_Length(geometry)
-        ELSE NULL
-    END;
+    infra_length = ST_Length(geometry);
 
 CREATE TABLE IF NOT EXISTS density.density_hex AS WITH lts_1 AS (
     SELECT
-        SUM(bike_length) / 1000 AS lts_1_length,
+        SUM(infra_length) / 1000 AS lts_1_length,
         hex_id
     FROM
         hex_edges
@@ -89,7 +79,7 @@ CREATE TABLE IF NOT EXISTS density.density_hex AS WITH lts_1 AS (
 ),
 lts_2 AS (
     SELECT
-        SUM(bike_length) / 1000 AS lts_2_length,
+        SUM(infra_length) / 1000 AS lts_2_length,
         hex_id
     FROM
         hex_edges
@@ -100,7 +90,7 @@ lts_2 AS (
 ),
 lts_3 AS (
     SELECT
-        SUM(bike_length) / 1000 AS lts_3_length,
+        SUM(infra_length) / 1000 AS lts_3_length,
         hex_id
     FROM
         hex_edges
@@ -111,7 +101,7 @@ lts_3 AS (
 ),
 lts_4 AS (
     SELECT
-        SUM(bike_length) / 1000 AS lts_4_length,
+        SUM(infra_length) / 1000 AS lts_4_length,
         hex_id
     FROM
         hex_edges
@@ -122,7 +112,7 @@ lts_4 AS (
 ),
 lts_5 AS (
     SELECT
-        SUM(bike_length) / 1000 AS lts_5_length,
+        SUM(infra_length) / 1000 AS lts_5_length,
         hex_id
     FROM
         hex_edges
@@ -133,7 +123,7 @@ lts_5 AS (
 ),
 lts_6 AS (
     SELECT
-        SUM(ST_Length(geometry)) / 1000 AS lts_6_length,
+        SUM(infra_length) / 1000 AS lts_6_length,
         hex_id
     FROM
         hex_edges
@@ -144,7 +134,7 @@ lts_6 AS (
 ),
 lts_7 AS (
     SELECT
-        SUM(ST_Length(geometry)) / 1000 AS lts_7_length,
+        SUM(infra_length) / 1000 AS lts_7_length,
         hex_id
     FROM
         hex_edges
@@ -155,7 +145,7 @@ lts_7 AS (
 ),
 total_car AS (
     SELECT
-        SUM(ST_Length(geometry)) / 1000 AS total_car_length,
+        SUM(infra_length) / 1000 AS total_car_length,
         hex_id
     FROM
         hex_edges

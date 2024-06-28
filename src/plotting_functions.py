@@ -680,12 +680,12 @@ def combined_zipf_plot(
     axes.set_axisbelow(True)
     axes.grid(True, which="major", ls="dotted")
 
-    all_yvals = sorted(list(component_size_all["bike_length"]), reverse=True)
-    lts1_yvals = sorted(list(component_size_1["bike_length"]), reverse=True)
-    lts2_yvals = sorted(list(component_size_2["bike_length"]), reverse=True)
-    lts3_yvals = sorted(list(component_size_3["bike_length"]), reverse=True)
-    lts4_yvals = sorted(list(component_size_4["bike_length"]), reverse=True)
-    ltscar_yvals = sorted(list(component_size_car["geom_length"]), reverse=True)
+    all_yvals = sorted(list(component_size_all["infra_length"]), reverse=True)
+    lts1_yvals = sorted(list(component_size_1["infra_length"]), reverse=True)
+    lts2_yvals = sorted(list(component_size_2["infra_length"]), reverse=True)
+    lts3_yvals = sorted(list(component_size_3["infra_length"]), reverse=True)
+    lts4_yvals = sorted(list(component_size_4["infra_length"]), reverse=True)
+    ltscar_yvals = sorted(list(component_size_car["infra_length"]), reverse=True)
 
     axes.scatter(
         x=[i + 1 for i in range(len(component_size_all))],
