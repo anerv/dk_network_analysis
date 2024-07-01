@@ -241,7 +241,6 @@ WHERE
             reach.nodes_all_view
     );
 
--- TODO: ADD COMPONENT SIZE HER
 CREATE TABLE reach.nodes_lts_1 AS
 SELECT
     id,
@@ -345,27 +344,114 @@ ADD
 
 CREATE INDEX IF NOT EXISTS nodes_lts_1_hex_id_ix ON reach.nodes_lts_1 (id);
 
--- DEBUG
-WITH points AS (
+CREATE INDEX IF NOT EXISTS nodes_lts_2_hex_id_ix ON reach.nodes_lts_2 (id);
+
+CREATE INDEX IF NOT EXISTS nodes_lts_3_hex_id_ix ON reach.nodes_lts_3 (id);
+
+CREATE INDEX IF NOT EXISTS nodes_lts_4_hex_id_ix ON reach.nodes_lts_4 (id);
+
+CREATE INDEX IF NOT EXISTS nodes_lts_car_hex_id_ix ON reach.nodes_lts_car (id);
+
+WITH comp_edges AS (
     SELECT
         source,
         target,
         component_size_1
     FROM
         fragmentation.component_edges
+    WHERE
+        component_size_1 IS NOT NULL
 )
 UPDATE
     reach.nodes_lts_1
 SET
-    component_size = e.component_size_1
+    component_size = ce.component_size_1
 FROM
-    points p
+    comp_edges ce
 WHERE
-    p.source = reach.nodes_lts_1.id
-    OR p.target = reach.nodes_lts_1.id;
+    reach.nodes_lts_1.id = ce.source
+    OR reach.nodes_lts_1.id = ce.target;
 
--- TODO: FIX HERE
----- *****
+WITH comp_edges AS (
+    SELECT
+        source,
+        target,
+        component_size_1_2
+    FROM
+        fragmentation.component_edges
+    WHERE
+        component_size_1_2 IS NOT NULL
+)
+UPDATE
+    reach.nodes_lts_2
+SET
+    component_size = ce.component_size_1_2
+FROM
+    comp_edges ce
+WHERE
+    reach.nodes_lts_2.id = ce.source
+    OR reach.nodes_lts_2.id = ce.target;
+
+WITH comp_edges AS (
+    SELECT
+        source,
+        target,
+        component_size_1_3
+    FROM
+        fragmentation.component_edges
+    WHERE
+        component_size_1_3 IS NOT NULL
+)
+UPDATE
+    reach.nodes_lts_3
+SET
+    component_size = ce.component_size_1_3
+FROM
+    comp_edges ce
+WHERE
+    reach.nodes_lts_3.id = ce.source
+    OR reach.nodes_lts_3.id = ce.target;
+
+WITH comp_edges AS (
+    SELECT
+        source,
+        target,
+        component_size_1_4
+    FROM
+        fragmentation.component_edges
+    WHERE
+        component_size_1_4 IS NOT NULL
+)
+UPDATE
+    reach.nodes_lts_4
+SET
+    component_size = ce.component_size_1_4
+FROM
+    comp_edges ce
+WHERE
+    reach.nodes_lts_4.id = ce.source
+    OR reach.nodes_lts_4.id = ce.target;
+
+WITH comp_edges AS (
+    SELECT
+        source,
+        target,
+        component_size_car
+    FROM
+        fragmentation.component_edges
+    WHERE
+        component_size_car IS NOT NULL
+)
+UPDATE
+    reach.nodes_lts_car
+SET
+    component_size = ce.component_size_car
+FROM
+    comp_edges ce
+WHERE
+    reach.nodes_lts_car.id = ce.source
+    OR reach.nodes_lts_car.id = ce.target;
+
 CREATE TABLE reach.hex_lts_1 AS WITH joined_points AS (
     SELECT
         ce.hex_id AS hex_id,
@@ -376,6 +462,7 @@ CREATE TABLE reach.hex_lts_1 AS WITH joined_points AS (
         ROW_NUMBER() OVER (
             PARTITION BY ce.hex_id
             ORDER BY
+                component_size DESC,
                 ST_Distance(ce.geometry, n.geometry)
         ) AS rn
     FROM
@@ -401,6 +488,7 @@ CREATE TABLE reach.hex_lts_2 AS WITH joined_points AS (
         ROW_NUMBER() OVER (
             PARTITION BY ce.hex_id
             ORDER BY
+                component_size DESC,
                 ST_Distance(ce.geometry, b.geometry)
         ) AS rn
     FROM
@@ -426,6 +514,7 @@ CREATE TABLE reach.hex_lts_3 AS WITH joined_points AS (
         ROW_NUMBER() OVER (
             PARTITION BY ce.hex_id
             ORDER BY
+                component_size DESC,
                 ST_Distance(ce.geometry, b.geometry)
         ) AS rn
     FROM
@@ -451,6 +540,7 @@ CREATE TABLE reach.hex_lts_4 AS WITH joined_points AS (
         ROW_NUMBER() OVER (
             PARTITION BY ce.hex_id
             ORDER BY
+                component_size DESC,
                 ST_Distance(ce.geometry, b.geometry)
         ) AS rn
     FROM
@@ -476,6 +566,7 @@ CREATE TABLE reach.hex_car AS WITH joined_points AS (
         ROW_NUMBER() OVER (
             PARTITION BY ce.hex_id
             ORDER BY
+                component_size DESC,
                 ST_Distance(ce.geometry, b.geometry)
         ) AS rn
     FROM
