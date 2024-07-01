@@ -28,6 +28,8 @@ socio_cluster_gdf = gpd.read_postgis(
     "SELECT * FROM socio_cluster_results", engine, geom_col="geometry"
 )
 
+socio_cluster_gdf.rename(columns=population_rename_dict, inplace=True)
+
 # %%
 
 socio_cluster_gdf["share_low_income"] = (
@@ -44,13 +46,11 @@ import plotly_express as px
 fig = px.scatter(
     socio_cluster_gdf,
     x="share_low_income",
-    y="Households w car",
+    y="Households w car (share)",
     hover_data=["socio_label", "id"],
     color="socio_label",
 )
 fig.show()
-
-# %%
 
 # %%
 # Plot socio clusters and pop/urban density
@@ -94,6 +94,10 @@ plt.show()
 
 # %%
 
+input_colors = plot_func.get_hex_colors_from_colormap("viridis", 6)
+input_colors.reverse()
+
+
 # Plot proporiton of network rank in each socio cluster
 correlation = (
     socio_cluster_gdf.groupby(["socio_label", "network_rank"])
@@ -114,6 +118,57 @@ plt.tick_params(
 plt.xlabel("", fontsize=12)
 plt.show()
 
+
 # %%
+x_col = "network_rank"
+cols = [
+    "Income under 100k (share)",
+    "Income 100-150k (share)",
+    "Income 150-200k (share)",
+    "Income 200-300k (share)",
+    "Income 300-400k (share)",
+    "Income 400-500k (share)",
+    "Income 500-750k (share)",
+    "Income 750k (share)",
+    "share_low_income",
+    "Households w car (share)",
+    "Households 1 car (share)",
+    "Households 2 cars (share)",
+    "Households no car (share)",
+    "urban_pct",
+    "population_density",
+]
+
+fig, ax = plt.subplots(4, 4, figsize=(20, 20))
+ax = ax.flatten()
+ax[-1].set_visible(False)
+for c in cols:
+    ax[cols.index(c)].scatter(socio_cluster_gdf[x_col], socio_cluster_gdf[c], alpha=0.5)
+    ax[cols.index(c)].set_title(c)
+    ax[cols.index(c)].set_xlabel(x_col)
+    ax[cols.index(c)].set_ylabel(c)
+
+# %%
+# input = [v for v in lts_color_dict.values()]
+input_colors = plot_func.get_hex_colors_from_colormap("viridis", k)
+input_colors.reverse()
+test_colors = plot_func.color_list_to_cmap(input_colors)
+
+
+def plot_rank(gdf, label_col, cmap="viridis"):
+    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
+    ax.set_axis_off()
+    gdf.plot(
+        column=label_col,
+        legend=True,
+        ax=ax,
+        cmap=cmap,
+        linewidth=0.1,
+        categorical=True,
+    )
+    plt.tight_layout()
+
+
+plot_rank(socio_cluster_gdf, "network_rank", cmap=test_colors)
 
 # %%
