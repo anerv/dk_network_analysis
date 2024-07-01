@@ -147,15 +147,16 @@ socio_cluster_gdf = socio_cluster_gdf[
     socio_cluster_gdf["population_density"] > 0
 ].copy()
 
-socio_cluster_gdf["Income -150k"] = (
-    socio_cluster_gdf["Income 100-150k"] + socio_cluster_gdf["Income under 100k"]
+socio_cluster_gdf["Income -150k (share)"] = (
+    socio_cluster_gdf["Income 100-150k (share)"]
+    + socio_cluster_gdf["Income under 100k (share)"]
 )
 
 # Define cluster variables
 socio_soc_cluster_variables = [c for c in socio_corr_variables if "w car" not in c]
-socio_soc_cluster_variables = ["Income -150k"] + socio_soc_cluster_variables
-socio_soc_cluster_variables.remove("Income 100-150k")
-socio_soc_cluster_variables.remove("Income under 100k")
+socio_soc_cluster_variables = ["Income -150k (share)"] + socio_soc_cluster_variables
+socio_soc_cluster_variables.remove("Income 100-150k (share)")
+socio_soc_cluster_variables.remove("Income under 100k (share)")
 socio_soc_cluster_variables.remove("urban_pct")
 socio_soc_cluster_variables.remove("population_density")
 

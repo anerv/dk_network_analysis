@@ -1,9 +1,40 @@
 # %%
+from src import db_functions as dbf
+from src import plotting_functions as plot_func
+from src import analysis_functions as analysis_func
+import geopandas as gpd
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from sklearn.preprocessing import robust_scale
+import contextily as cx
+from matplotlib.patches import Patch
+from IPython.display import display
+
+exec(open("../settings/yaml_variables.py").read())
+exec(open("../settings/plotting.py").read())
+exec(open("../settings/df_styler.py").read())
+
+plot_func.set_renderer("png")
+
+engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
+
+connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
+
+# %%
+
+socio_cluster_gdf = gpd.read_postgis(
+    "SELECT * FROM socio_cluster_results", engine, geom_col="geometry"
+)
+
+# %%
+
 socio_cluster_gdf["share_low_income"] = (
-    socio_cluster_gdf["Income under 100k"]
-    + socio_cluster_gdf["Income 100-150k"]
-    + socio_cluster_gdf["Income 150-200k"]
-    + socio_cluster_gdf["Income 200-300k"]
+    socio_cluster_gdf["Income under 100k (share)"]
+    + socio_cluster_gdf["Income 100-150k (share)"]
+    + socio_cluster_gdf["Income 150-200k (share)"]
+    + socio_cluster_gdf["Income 200-300k (share)"]
 )
 
 
