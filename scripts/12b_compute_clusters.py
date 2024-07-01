@@ -32,7 +32,9 @@ exec(open("../settings/prepare_socio_cluster_data.py").read())
 exec(open("../settings/read_reach_comparison.py").read())
 hex_reach_comp_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
 hex_reach_comp_cols = [
-    c for c in hex_reach_comp_cols if "10_15" not in c and "5_15" not in c
+    c
+    for c in hex_reach_comp_cols
+    if "_15" not in c and "5_15" not in c and "2_" not in c
 ]
 socio_reach_compare_columns = [c + "_median" for c in hex_reach_comp_cols]
 del hex_reach_comparison
@@ -96,6 +98,7 @@ plot_func.style_cluster_means(cluster_means_soc_net)
 
 socio_cluster_gdf["network_rank"] = None
 
+# TODO: UPDATE
 rank = [1, 2, 5, 4, 3, 0]
 assert len(rank) == k
 
@@ -114,31 +117,6 @@ socio_cluster_gdf[
 
 
 plot_func.plot_rank(socio_cluster_gdf, "network_rank")
-
-
-# %%
-plot_func.set_renderer("svg")
-# input = [v for v in lts_color_dict.values()]
-input_colors = plot_func.get_hex_colors_from_colormap("viridis", k)
-input_colors.reverse()
-test_colors = plot_func.color_list_to_cmap(input_colors)
-
-
-def plot_rank(gdf, label_col, cmap="viridis"):
-    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
-    ax.set_axis_off()
-    gdf.plot(
-        column=label_col,
-        legend=True,
-        ax=ax,
-        cmap=cmap,
-        linewidth=0.1,
-        categorical=True,
-    )
-    plt.tight_layout()
-
-
-plot_rank(socio_cluster_gdf, "network_rank", cmap=test_colors)
 
 # %%
 # SOCIO CLUSTERING: Socio-economic variables
