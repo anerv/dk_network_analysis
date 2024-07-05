@@ -40,13 +40,6 @@ gdfs = [density_muni, density_socio, density_hex]
 for gdf in gdfs:
     gdf.replace(np.nan, 0, inplace=True)
 
-for gdf in gdfs:
-
-    for p in length_relative_columns:
-        gdf[p] = gdf[p] * 100
-
-    for p in length_relative_steps_columns[1:-1]:
-        gdf[p] = gdf[p] * 100
 
 all_columns = [
     length_columns,

@@ -23,7 +23,7 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 exec(open("../settings/read_hex_results.py").read())
 
 exec(open("../settings/read_reach_comparison.py").read())
-hex_reach_comp_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
+hex_reach_component_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
 del hex_reach_comparison
 
 hex_corr_variables = (
@@ -34,7 +34,7 @@ hex_corr_variables = (
     + component_per_km_columns
     + largest_local_component_len_columns
     + reach_columns
-    + hex_reach_comp_cols
+    + hex_reach_component_cols
     + ["urban_pct"]
 )
 
@@ -59,8 +59,8 @@ exec(open("../settings/prepare_socio_network_corr_data.py").read())
 
 # generate socio reach comparison columns
 exec(open("../settings/read_reach_comparison.py").read())
-hex_reach_comp_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
-socio_reach_compare_columns = [c + "_median" for c in hex_reach_comp_cols]
+hex_reach_component_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
+socio_reach_compare_columns = [c + "_median" for c in hex_reach_component_cols]
 del hex_reach_comparison
 
 socio_corr_variables = (

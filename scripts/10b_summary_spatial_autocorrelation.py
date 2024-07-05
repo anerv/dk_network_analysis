@@ -55,7 +55,7 @@ for i, metric in enumerate(metrics[:-1]):
 
 fp = (
     fp_spatial_auto_fragmentation
-    + f"hexgrid/global_moransi_largest_comp_size_{spatial_weights_values[e]}.json"
+    + f"hexgrid/global_moransi_largest_component_size_{spatial_weights_values[e]}.json"
 )
 df = plot_func.process_plot_moransi(
     fp=fp,
@@ -95,7 +95,7 @@ for i, metric in enumerate(metrics[:-1]):
 
 
 # LARGEST COMPONENT SIZE
-fp = fp_spatial_auto_fragmentation + f"hexgrid/lisas_largest_comp_size_.parquet"
+fp = fp_spatial_auto_fragmentation + f"hexgrid/lisas_largest_component_size_.parquet"
 
 plot_func.compare_lisa_results(
     fp,

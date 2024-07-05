@@ -1,8 +1,8 @@
-DROP TABLE IF EXISTS fragmentation.comp_count_muni;
+DROP TABLE IF EXISTS fragmentation.component_count_muni;
 
-DROP TABLE IF EXISTS fragmentation.comp_count_socio;
+DROP TABLE IF EXISTS fragmentation.component_count_socio;
 
-DROP TABLE IF EXISTS fragmentation.comp_count_hex;
+DROP TABLE IF EXISTS fragmentation.component_count_hex;
 
 DROP TABLE IF EXISTS fragmentation.socio_component_edges;
 
@@ -10,14 +10,14 @@ DROP TABLE IF EXISTS fragmentation.hex_component_edges;
 
 DROP TABLE IF EXISTS fragmentation.hex_largest_components;
 
-CREATE TABLE fragmentation.comp_count_muni AS WITH comp_count AS (
+CREATE TABLE fragmentation.component_count_muni AS WITH component_count AS (
     SELECT
-        COUNT(DISTINCT component_all) AS comp_all_count,
-        COUNT(DISTINCT component_1) AS comp_1_count,
-        COUNT(DISTINCT component_1_2) AS comp_2_count,
-        COUNT(DISTINCT component_1_3) AS comp_3_count,
-        COUNT(DISTINCT component_1_4) AS comp_4_count,
-        COUNT(DISTINCT component_car) AS comp_car_count,
+        COUNT(DISTINCT component_all) AS component_all_count,
+        COUNT(DISTINCT component_1) AS component_1_count,
+        COUNT(DISTINCT component_1_2) AS component_1_2_count,
+        COUNT(DISTINCT component_1_3) AS component_1_3_count,
+        COUNT(DISTINCT component_1_4) AS component_1_4_count,
+        COUNT(DISTINCT component_car) AS component_car_count,
         municipality
     FROM
         fragmentation.component_edges
@@ -26,15 +26,15 @@ CREATE TABLE fragmentation.comp_count_muni AS WITH comp_count AS (
 )
 SELECT
     co.municipality,
-    co.comp_all_count,
-    co.comp_1_count,
-    co.comp_2_count,
-    co.comp_3_count,
-    co.comp_4_count,
-    co.comp_car_count,
+    co.component_all_count,
+    co.component_1_count,
+    co.component_1_2_count,
+    co.component_1_3_count,
+    co.component_1_4_count,
+    co.component_car_count,
     mu.geometry
 FROM
-    comp_count co
+    component_count co
     JOIN adm_boundaries mu ON co.municipality = mu.navn;
 
 -- JOIN SPLIT EDGES TO COMPONENT EDGES
@@ -68,15 +68,15 @@ FROM
     hex_edges h
     JOIN fragmentation.component_edges co ON h.id = co.id;
 
-CREATE TABLE fragmentation.comp_count_socio AS WITH comp_count AS (
+CREATE TABLE fragmentation.component_count_socio AS WITH component_count AS (
     SELECT
         socio_id AS id,
-        COUNT(DISTINCT component_all) AS comp_all_count,
-        COUNT(DISTINCT component_1) AS comp_1_count,
-        COUNT(DISTINCT component_1_2) AS comp_2_count,
-        COUNT(DISTINCT component_1_3) AS comp_3_count,
-        COUNT(DISTINCT component_1_4) AS comp_4_count,
-        COUNT(DISTINCT component_car) AS comp_car_count
+        COUNT(DISTINCT component_all) AS component_all_count,
+        COUNT(DISTINCT component_1) AS component_1_count,
+        COUNT(DISTINCT component_1_2) AS component_1_2_count,
+        COUNT(DISTINCT component_1_3) AS component_1_3_count,
+        COUNT(DISTINCT component_1_4) AS component_1_4_count,
+        COUNT(DISTINCT component_car) AS component_car_count
     FROM
         fragmentation.socio_component_edges
     GROUP BY
@@ -84,26 +84,26 @@ CREATE TABLE fragmentation.comp_count_socio AS WITH comp_count AS (
 )
 SELECT
     co.id,
-    co.comp_all_count,
-    co.comp_1_count,
-    co.comp_2_count,
-    co.comp_3_count,
-    co.comp_4_count,
-    co.comp_car_count,
+    co.component_all_count,
+    co.component_1_count,
+    co.component_1_2_count,
+    co.component_1_3_count,
+    co.component_1_4_count,
+    co.component_car_count,
     so.geometry
 FROM
-    comp_count co
+    component_count co
     JOIN socio so ON co.id = so.id;
 
-CREATE TABLE fragmentation.comp_count_hex AS WITH comp_count AS (
+CREATE TABLE fragmentation.component_count_hex AS WITH component_count AS (
     SELECT
         hex_id,
-        COUNT(DISTINCT component_all) AS comp_all_count,
-        COUNT(DISTINCT component_1) AS comp_1_count,
-        COUNT(DISTINCT component_1_2) AS comp_2_count,
-        COUNT(DISTINCT component_1_3) AS comp_3_count,
-        COUNT(DISTINCT component_1_4) AS comp_4_count,
-        COUNT(DISTINCT component_car) AS comp_car_count
+        COUNT(DISTINCT component_all) AS component_all_count,
+        COUNT(DISTINCT component_1) AS component_1_count,
+        COUNT(DISTINCT component_1_2) AS component_1_2_count,
+        COUNT(DISTINCT component_1_3) AS component_1_3_count,
+        COUNT(DISTINCT component_1_4) AS component_1_4_count,
+        COUNT(DISTINCT component_car) AS component_car_count
     FROM
         fragmentation.hex_component_edges
     GROUP BY
@@ -111,15 +111,15 @@ CREATE TABLE fragmentation.comp_count_hex AS WITH comp_count AS (
 )
 SELECT
     co.hex_id,
-    co.comp_all_count,
-    co.comp_1_count,
-    co.comp_2_count,
-    co.comp_3_count,
-    co.comp_4_count,
-    co.comp_car_count,
+    co.component_all_count,
+    co.component_1_count,
+    co.component_1_2_count,
+    co.component_1_3_count,
+    co.component_1_4_count,
+    co.component_car_count,
     h.geometry
 FROM
-    comp_count co
+    component_count co
     JOIN hex_grid h ON co.hex_id = h.hex_id;
 
 CREATE TABLE fragmentation.hex_largest_components AS WITH joined_edges AS (
@@ -128,32 +128,32 @@ CREATE TABLE fragmentation.hex_largest_components AS WITH joined_edges AS (
         h.hex_id,
         co1.infra_length AS component_length_1,
         co1.buffer_area AS component_coverage_1,
-        co2.infra_length AS component_length_2,
-        co2.buffer_area AS component_coverage_2,
-        co3.infra_length AS component_length_3,
-        co3.buffer_area AS component_coverage_3,
-        co4.infra_length AS component_length_4,
-        co4.buffer_area AS component_coverage_4,
+        co2.infra_length AS component_length_1_2,
+        co2.buffer_area AS component_coverage_1_2,
+        co3.infra_length AS component_length_1_3,
+        co3.buffer_area AS component_coverage_1_3,
+        co4.infra_length AS component_length_1_4,
+        co4.buffer_area AS component_coverage_1_4,
         coc.infra_length AS component_length_car,
         coc.buffer_area AS component_coverage_car
     FROM
         fragmentation.hex_component_edges h
         LEFT JOIN fragmentation.component_size_1 co1 ON h.component_1 = co1.component_1
-        LEFT JOIN fragmentation.component_size_2 co2 ON h.component_1_2 = co2.component_1_2
-        LEFT JOIN fragmentation.component_size_3 co3 ON h.component_1_3 = co3.component_1_3
-        LEFT JOIN fragmentation.component_size_4 co4 ON h.component_1_4 = co4.component_1_4
+        LEFT JOIN fragmentation.component_size_1_2 co2 ON h.component_1_2 = co2.component_1_2
+        LEFT JOIN fragmentation.component_size_1_3 co3 ON h.component_1_3 = co3.component_1_3
+        LEFT JOIN fragmentation.component_size_1_4 co4 ON h.component_1_4 = co4.component_1_4
         LEFT JOIN fragmentation.component_size_car coc ON h.component_car = coc.component_car
 )
 SELECT
     hex_id,
     MAX(component_length_1) AS component_length_1,
     MAX(component_coverage_1) AS component_coverage_1,
-    MAX(component_length_2) AS component_length_2,
-    MAX(component_coverage_2) AS component_coverage_2,
-    MAX(component_length_3) AS component_length_3,
-    MAX(component_coverage_3) AS component_coverage_3,
-    MAX(component_length_4) AS component_length_4,
-    MAX(component_coverage_4) AS component_coverage_4,
+    MAX(component_length_1_2) AS component_length_1_2,
+    MAX(component_coverage_1_2) AS component_coverage_1_2,
+    MAX(component_length_1_3) AS component_length_1_3,
+    MAX(component_coverage_1_3) AS component_coverage_1_3,
+    MAX(component_length_1_4) AS component_length_1_4,
+    MAX(component_coverage_1_4) AS component_coverage_1_4,
     MAX(component_length_car) AS component_length_car,
     MAX(component_coverage_car) AS component_coverage_car
 FROM

@@ -54,19 +54,19 @@ CREATE TABLE fragmentation.socio_largest_component AS
 SELECT
     j.id,
     AVG(j.component_length_1) AS lts1_largest_component_average,
-    AVG(j.component_length_2) AS lts2_largest_component_average,
-    AVG(j.component_length_3) AS lts3_largest_component_average,
-    AVG(j.component_length_4) AS lts4_largest_component_average,
-    AVG(j.component_length_4) AS car_largest_component_average,
+    AVG(j.component_length_1_2) AS lts2_largest_component_average,
+    AVG(j.component_length_1_3) AS lts3_largest_component_average,
+    AVG(j.component_length_1_4) AS lts4_largest_component_average,
+    AVG(j.component_length_car) AS car_largest_component_average,
     MIN(j.component_length_1) AS lts1_largest_component_min,
-    MIN(j.component_length_2) AS lts2_largest_component_min,
-    MIN(j.component_length_3) AS lts3_largest_component_min,
-    MIN(j.component_length_4) AS lts4_largest_component_min,
+    MIN(j.component_length_1_2) AS lts2_largest_component_min,
+    MIN(j.component_length_1_3) AS lts3_largest_component_min,
+    MIN(j.component_length_1_4) AS lts4_largest_component_min,
     MIN(j.component_length_car) AS car_largest_component_min,
     MAX(j.component_length_1) AS lts1_largest_component_max,
-    MAX(j.component_length_2) AS lts2_largest_component_max,
-    MAX(j.component_length_3) AS lts3_largest_component_max,
-    MAX(j.component_length_4) AS lts4_largest_component_max,
+    MAX(j.component_length_1_2) AS lts2_largest_component_max,
+    MAX(j.component_length_1_3) AS lts3_largest_component_max,
+    MAX(j.component_length_1_4) AS lts4_largest_component_max,
     MAX(j.component_length_car) AS car_largest_component_max,
     PERCENTILE_CONT(0.5) WITHIN GROUP (
         ORDER BY
@@ -74,15 +74,15 @@ SELECT
     ) AS lts1_largest_component_median,
     PERCENTILE_CONT(0.5) WITHIN GROUP (
         ORDER BY
-            j.component_length_2
+            j.component_length_1_2
     ) AS lts2_largest_component_median,
     PERCENTILE_CONT(0.5) WITHIN GROUP (
         ORDER BY
-            j.component_length_3
+            j.component_length_1_3
     ) AS lts3_largest_component_median,
     PERCENTILE_CONT(0.5) WITHIN GROUP (
         ORDER BY
-            j.component_length_4
+            j.component_length_1_4
     ) AS lts4_largest_component_median,
     PERCENTILE_CONT(0.5) WITHIN GROUP (
         ORDER BY

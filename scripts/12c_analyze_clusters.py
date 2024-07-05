@@ -172,3 +172,8 @@ def plot_rank(gdf, label_col, cmap="viridis"):
 plot_rank(socio_cluster_gdf, "network_rank", cmap=test_colors)
 
 # %%
+
+# - [ ] how many people live in xx areas?
+# - [ ] how many households?
+# - [ ] how many low income, car-free?
+# - [ ] find areas with high car ownership and low income

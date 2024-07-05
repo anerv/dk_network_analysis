@@ -28,13 +28,6 @@ gdfs = [density_muni, density_socio, density_hex]
 for gdf in gdfs:
     gdf.replace(np.nan, 0, inplace=True)
 
-for gdf in gdfs:
-
-    for p in length_relative_columns:
-        gdf[p] = gdf[p] * 100
-
-    for p in length_relative_steps_columns[1:-1]:
-        gdf[p] = gdf[p] * 100
 
 # %%
 k_values = [k_muni, k_socio, k_hex]
@@ -191,19 +184,19 @@ for i, gdf in enumerate(gdfs):
 # %%
 # *** Largest component size ****
 
-hex_comp_size = gpd.GeoDataFrame.from_postgis(
+hex_component_size = gpd.GeoDataFrame.from_postgis(
     "SELECT * FROM fragmentation.hex_largest_components;",
     engine,
     crs=crs,
     geom_col="geometry",
 )
 
-hex_comp_size[largest_local_component_len_columns] = hex_comp_size[
+hex_component_size[largest_local_component_len_columns] = hex_component_size[
     largest_local_component_len_columns
 ].replace(np.nan, 0)
 
 
-gdfs = [hex_comp_size]
+gdfs = [hex_component_size]
 
 # Define spatial weights
 id_columns = id_columns[-1:]
@@ -220,7 +213,7 @@ for i, gdf in enumerate(gdfs):
 
 aggregation_level = aggregation_levels[-1:]
 
-all_comp_size_columns = [largest_local_component_len_columns]
+all_component_size_columns = [largest_local_component_len_columns]
 
 for i, gdf in enumerate(gdfs):
 
@@ -228,7 +221,7 @@ for i, gdf in enumerate(gdfs):
 
     global_morans_results = {}
 
-    for columns in all_comp_size_columns:
+    for columns in all_component_size_columns:
 
         filepaths_morans = [
             fp_spatial_auto_fragmentation
@@ -260,7 +253,7 @@ for i, gdf in enumerate(gdfs):
 
     with open(
         fp_spatial_auto_fragmentation
-        + f"{aggregation_level[i]}/global_moransi_largest_comp_size_{spatial_weights_values[i]}.json",
+        + f"{aggregation_level[i]}/global_moransi_largest_component_size_{spatial_weights_values[i]}.json",
         "w",
     ) as outfile:
         json.dump(global_morans_results, outfile)
@@ -270,7 +263,7 @@ for i, gdf in enumerate(gdfs):
 
     gdf[q_columns].to_parquet(
         fp_spatial_auto_fragmentation
-        + f"{aggregation_level[i]}/lisas_largest_comp_size_.parquet"
+        + f"{aggregation_level[i]}/lisas_largest_component_size_.parquet"
     )
 
 # %%
@@ -444,10 +437,10 @@ w = analysis_func.spatial_weights_combined(socio_gdf, id_columns[1], k_socio)
 
 columns = [
     "population_density",
-    "households_1car_share",
+    "households_1car_pct",
     "households_2cars_share",
-    "households_nocar_share",
-    "households_with_car_share",
+    "households_nocar_pct",
+    "households_with_car_pct",
     "households_income_under_100k_share",
     "households_income_100_150k_share",
     "households_income_150_200k_share",

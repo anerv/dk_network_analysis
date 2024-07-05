@@ -9,7 +9,7 @@ exec(open("../settings/filepaths.py").read())
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 muni_components = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM fragmentation.comp_count_muni;",
+    "SELECT * FROM fragmentation.component_count_muni;",
     engine,
     crs=crs,
     geom_col="geometry",
@@ -18,7 +18,7 @@ muni_components = gpd.GeoDataFrame.from_postgis(
 muni_components.replace(0, np.nan, inplace=True)
 
 socio_components = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM fragmentation.comp_count_socio;",
+    "SELECT * FROM fragmentation.component_count_socio;",
     engine,
     crs=crs,
     geom_col="geometry",
@@ -27,7 +27,7 @@ socio_components = gpd.GeoDataFrame.from_postgis(
 socio_components.replace(0, np.nan, inplace=True)
 
 hex_components = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM fragmentation.comp_count_hex;",
+    "SELECT * FROM fragmentation.component_count_hex;",
     engine,
     crs=crs,
     geom_col="geometry",

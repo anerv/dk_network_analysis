@@ -29,11 +29,11 @@ exec(open("../settings/prepare_socio_cluster_data.py").read())
 
 # generate socio reach comparison columns
 exec(open("../settings/read_reach_comparison.py").read())
-hex_reach_comp_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
-hex_reach_comp_cols = [
-    c for c in hex_reach_comp_cols if "10_15" not in c and "5_15" not in c
+hex_reach_component_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
+hex_reach_component_cols = [
+    c for c in hex_reach_component_cols if "10_15" not in c and "5_15" not in c
 ]
-socio_reach_compare_columns = [c + "_median" for c in hex_reach_comp_cols]
+socio_reach_compare_columns = [c + "_median" for c in hex_reach_component_cols]
 del hex_reach_comparison
 
 # %%
@@ -261,9 +261,9 @@ exec(open("../settings/read_hex_results.py").read())
 hex_gdf.replace(np.nan, 0, inplace=True)
 
 exec(open("../settings/read_reach_comparison.py").read())
-hex_reach_comp_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
-hex_reach_comp_cols = [
-    c for c in hex_reach_comp_cols if "10_15" not in c and "5_15" not in c
+hex_reach_component_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
+hex_reach_component_cols = [
+    c for c in hex_reach_component_cols if "10_15" not in c and "5_15" not in c
 ]
 del hex_reach_comparison
 
@@ -278,7 +278,7 @@ hex_cluster_variables = (
     + component_per_km_columns
     + largest_local_component_len_columns
     + reach_columns
-    + hex_reach_comp_cols
+    + hex_reach_component_cols
     # + ["urban_pct"]
 )
 

@@ -4,11 +4,11 @@ DROP TABLE IF EXISTS fragmentation.component_size_all;
 
 DROP TABLE IF EXISTS fragmentation.component_size_1;
 
-DROP TABLE IF EXISTS fragmentation.component_size_2;
+DROP TABLE IF EXISTS fragmentation.component_size_1_2;
 
-DROP TABLE IF EXISTS fragmentation.component_size_3;
+DROP TABLE IF EXISTS fragmentation.component_size_1_3;
 
-DROP TABLE IF EXISTS fragmentation.component_size_4;
+DROP TABLE IF EXISTS fragmentation.component_size_1_4;
 
 DROP TABLE IF EXISTS fragmentation.component_size_car;
 
@@ -66,7 +66,7 @@ CREATE TABLE fragmentation.component_size_1 AS (
         component_1
 );
 
-CREATE TABLE fragmentation.component_size_2 AS (
+CREATE TABLE fragmentation.component_size_1_2 AS (
     SELECT
         COUNT(id),
         component_1_2,
@@ -83,7 +83,7 @@ CREATE TABLE fragmentation.component_size_2 AS (
         component_1_2
 );
 
-CREATE TABLE fragmentation.component_size_3 AS (
+CREATE TABLE fragmentation.component_size_1_3 AS (
     SELECT
         COUNT(id),
         component_1_3,
@@ -100,7 +100,7 @@ CREATE TABLE fragmentation.component_size_3 AS (
         component_1_3
 );
 
-CREATE TABLE fragmentation.component_size_4 AS (
+CREATE TABLE fragmentation.component_size_1_4 AS (
     SELECT
         COUNT(id),
         component_1_4,
@@ -145,17 +145,17 @@ ADD
     COLUMN IF NOT EXISTS buffer_area DOUBLE PRECISION;
 
 ALTER TABLE
-    fragmentation.component_size_2
+    fragmentation.component_size_1_2
 ADD
     COLUMN IF NOT EXISTS buffer_area DOUBLE PRECISION;
 
 ALTER TABLE
-    fragmentation.component_size_3
+    fragmentation.component_size_1_3
 ADD
     COLUMN IF NOT EXISTS buffer_area DOUBLE PRECISION;
 
 ALTER TABLE
-    fragmentation.component_size_4
+    fragmentation.component_size_1_4
 ADD
     COLUMN IF NOT EXISTS buffer_area DOUBLE PRECISION;
 
@@ -175,17 +175,17 @@ SET
     buffer_area = ST_Area(buffer_geom) / 1000000;
 
 UPDATE
-    fragmentation.component_size_2
+    fragmentation.component_size_1_2
 SET
     buffer_area = ST_Area(buffer_geom) / 1000000;
 
 UPDATE
-    fragmentation.component_size_3
+    fragmentation.component_size_1_3
 SET
     buffer_area = ST_Area(buffer_geom) / 1000000;
 
 UPDATE
-    fragmentation.component_size_4
+    fragmentation.component_size_1_4
 SET
     buffer_area = ST_Area(buffer_geom) / 1000000;
 
@@ -220,29 +220,29 @@ WHERE
 UPDATE
     fragmentation.component_edges
 SET
-    component_size_1_2 = component_size_2.infra_length
+    component_size_1_2 = component_size_1_2.infra_length
 FROM
-    fragmentation.component_size_2
+    fragmentation.component_size_1_2
 WHERE
-    fragmentation.component_edges.component_1_2 = fragmentation.component_size_2.component_1_2;
+    fragmentation.component_edges.component_1_2 = fragmentation.component_size_1_2.component_1_2;
 
 UPDATE
     fragmentation.component_edges
 SET
-    component_size_1_3 = component_size_3.infra_length
+    component_size_1_3 = component_size_1_3.infra_length
 FROM
-    fragmentation.component_size_3
+    fragmentation.component_size_1_3
 WHERE
-    fragmentation.component_edges.component_1_3 = fragmentation.component_size_3.component_1_3;
+    fragmentation.component_edges.component_1_3 = fragmentation.component_size_1_3.component_1_3;
 
 UPDATE
     fragmentation.component_edges
 SET
-    component_size_1_4 = component_size_4.infra_length
+    component_size_1_4 = component_size_1_4.infra_length
 FROM
-    fragmentation.component_size_4
+    fragmentation.component_size_1_4
 WHERE
-    fragmentation.component_edges.component_1_4 = fragmentation.component_size_4.component_1_4;
+    fragmentation.component_edges.component_1_4 = fragmentation.component_size_1_4.component_1_4;
 
 UPDATE
     fragmentation.component_edges

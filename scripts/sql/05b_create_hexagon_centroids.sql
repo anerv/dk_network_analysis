@@ -352,7 +352,7 @@ CREATE INDEX IF NOT EXISTS nodes_lts_4_hex_id_ix ON reach.nodes_lts_4 (id);
 
 CREATE INDEX IF NOT EXISTS nodes_lts_car_hex_id_ix ON reach.nodes_lts_car (id);
 
-WITH comp_edges AS (
+WITH component_edges AS (
     SELECT
         source,
         target,
@@ -367,12 +367,12 @@ UPDATE
 SET
     component_size = ce.component_size_1
 FROM
-    comp_edges ce
+    component_edges ce
 WHERE
     reach.nodes_lts_1.id = ce.source
     OR reach.nodes_lts_1.id = ce.target;
 
-WITH comp_edges AS (
+WITH component_edges AS (
     SELECT
         source,
         target,
@@ -387,12 +387,12 @@ UPDATE
 SET
     component_size = ce.component_size_1_2
 FROM
-    comp_edges ce
+    component_edges ce
 WHERE
     reach.nodes_lts_2.id = ce.source
     OR reach.nodes_lts_2.id = ce.target;
 
-WITH comp_edges AS (
+WITH component_edges AS (
     SELECT
         source,
         target,
@@ -407,12 +407,12 @@ UPDATE
 SET
     component_size = ce.component_size_1_3
 FROM
-    comp_edges ce
+    component_edges ce
 WHERE
     reach.nodes_lts_3.id = ce.source
     OR reach.nodes_lts_3.id = ce.target;
 
-WITH comp_edges AS (
+WITH component_edges AS (
     SELECT
         source,
         target,
@@ -427,12 +427,12 @@ UPDATE
 SET
     component_size = ce.component_size_1_4
 FROM
-    comp_edges ce
+    component_edges ce
 WHERE
     reach.nodes_lts_4.id = ce.source
     OR reach.nodes_lts_4.id = ce.target;
 
-WITH comp_edges AS (
+WITH component_edges AS (
     SELECT
         source,
         target,
@@ -447,7 +447,7 @@ UPDATE
 SET
     component_size = ce.component_size_car
 FROM
-    comp_edges ce
+    component_edges ce
 WHERE
     reach.nodes_lts_car.id = ce.source
     OR reach.nodes_lts_car.id = ce.target;

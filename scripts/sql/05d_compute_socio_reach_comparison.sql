@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS reach.joined,
 reach.joined2,
 reach.socio_reach_comparison;
 
-CREATE INDEX IF NOT EXISTS hex_reach_comp_geom_ix ON reach.compare_reach USING GIST (geometry);
+CREATE INDEX IF NOT EXISTS hex_reach_component_geom_ix ON reach.compare_reach USING GIST (geometry);
 
 CREATE TABLE reach.joined AS (
     SELECT

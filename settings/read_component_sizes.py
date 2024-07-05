@@ -11,9 +11,15 @@ component_size_all = pd.read_sql(
     "SELECT * FROM fragmentation.component_size_all;", engine
 )
 component_size_1 = pd.read_sql("SELECT * FROM fragmentation.component_size_1;", engine)
-component_size_2 = pd.read_sql("SELECT * FROM fragmentation.component_size_2;", engine)
-component_size_3 = pd.read_sql("SELECT * FROM fragmentation.component_size_3;", engine)
-component_size_4 = pd.read_sql("SELECT * FROM fragmentation.component_size_4;", engine)
+component_size_1_2 = pd.read_sql(
+    "SELECT * FROM fragmentation.component_size_1_2;", engine
+)
+component_size_1_3 = pd.read_sql(
+    "SELECT * FROM fragmentation.component_size_1_3;", engine
+)
+component_size_1_4 = pd.read_sql(
+    "SELECT * FROM fragmentation.component_size_1_4;", engine
+)
 component_size_car = pd.read_sql(
     "SELECT * FROM fragmentation.component_size_car;", engine
 )

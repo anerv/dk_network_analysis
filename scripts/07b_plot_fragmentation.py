@@ -27,9 +27,9 @@ exec(open("../settings/read_component_sizes.py").read())
 
 component_size_dfs = [
     component_size_1,
-    component_size_2,
-    component_size_3,
-    component_size_4,
+    component_size_1_2,
+    component_size_1_3,
+    component_size_1_4,
     component_size_car,
     component_size_all,
 ]
@@ -52,9 +52,9 @@ for i, df in enumerate(component_size_dfs):
 plot_func.combined_zipf_plot(
     component_size_all=component_size_all,
     component_size_1=component_size_1,
-    component_size_2=component_size_2,
-    component_size_3=component_size_3,
-    component_size_4=component_size_4,
+    component_size_1_2=component_size_1_2,
+    component_size_1_3=component_size_1_3,
+    component_size_1_4=component_size_1_4,
     component_size_car=component_size_car,
     lts_color_dict=lts_color_dict,
     fp=fp_zipf_combined,
@@ -90,17 +90,17 @@ for muni in municipalities:
             .groupby("component_1")
             .sum("infra_length")
         )
-        component_size_2 = (
+        component_size_1_2 = (
             muni_edges[muni_edges["component_1_2"].notna()]
             .groupby("component_1_2")
             .sum("infra_length")
         )
-        component_size_3 = (
+        (component_size_1_3,) = (
             muni_edges[muni_edges["component_1_3"].notna()]
             .groupby("component_1_3")
             .sum("infra_length")
         )
-        component_size_4 = (
+        (component_size_1_4,) = (
             muni_edges[muni_edges["component_1_4"].notna()]
             .groupby("component_1_4")
             .sum("infra_length")
@@ -114,9 +114,9 @@ for muni in municipalities:
         plot_func.combined_zipf_plot(
             component_size_all=component_size_all,
             component_size_1=component_size_1,
-            component_size_2=component_size_2,
-            component_size_3=component_size_3,
-            component_size_4=component_size_4,
+            component_size_1_2=component_size_1_2,
+            component_size_1_3=component_size_1_3,
+            component_size_1_4=component_size_1_4,
             component_size_car=component_size_car,
             lts_color_dict=lts_color_dict,
             fp=fp_zipf_muni + muni + ".png",
@@ -454,9 +454,9 @@ df.rename(columns={"variable": "Network level", "value": "length"}, inplace=True
 df.replace(
     {
         "component_length_1": "LTS 1",
-        "component_length_2": "LTS 2",
-        "component_length_3": "LTS 3",
-        "component_length_4": "LTS 4",
+        "component_length_1_2": "LTS 2",
+        "component_length_1_3": "LTS 3",
+        "component_length_1_4": "LTS 4",
         "component_length_car": "Car network",
     },
     inplace=True,
@@ -550,7 +550,7 @@ new_dfs = []
 for e, df in enumerate(dfs):
 
     dens_all = []
-    comp_all = []
+    component_all = []
     lts_all = []
     ids_all = []
 
@@ -561,19 +561,19 @@ for e, df in enumerate(dfs):
         if len(data) > 0:
 
             dens_list = data[density_steps_columns].values[0]
-            comp_list = data[component_count_columns].values[0]
+            component_list = data[component_count_columns].values[0]
             lts = labels_step_all
             ids = [i] * 6
 
             dens_all.extend(dens_list)
-            comp_all.extend(comp_list)
+            component_all.extend(component_list)
             lts_all.extend(lts)
             ids_all.extend(ids)
 
     new_df = pd.DataFrame(
         {
             "density": dens_all,
-            "component_count": comp_all,
+            "component_count": component_all,
             "lts": lts_all,
             "id": ids_all,
         }

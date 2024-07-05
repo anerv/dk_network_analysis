@@ -13,11 +13,11 @@
 --         dens.lts_1_4_dens,
 --         dens.total_car_dens,
 --         dens.geometry,
---         comp.comp_1_count,
---         comp.comp_2_count,
---         comp.comp_3_count,
---         comp.comp_4_count,
---         comp.comp_car_count,
+--         comp.component_1_count,
+--         comp.component_2_count,
+--         comp.component_3_count,
+--         comp.component_4_count,
+--         comp.component_car_count,
 --         reach.lts1_reach,
 --         reach.lts2_reach,
 --         reach.lts3_reach,
@@ -25,6 +25,6 @@
 --         reach.car_reach
 --     FROM
 --         density.density_hex dens
---         LEFT JOIN fragmentation.comp_count_hex comp ON dens.hex_id = comp.hex_id
+--         LEFT JOIN fragmentation.component_count_hex comp ON dens.hex_id = comp.hex_id
 --         LEFT JOIN reach.hex_reach reach ON dens.hex_id = reach.hex_id
 -- );

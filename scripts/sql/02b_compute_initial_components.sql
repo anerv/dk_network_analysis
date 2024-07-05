@@ -90,8 +90,6 @@ WHERE
     e.source = co.node
     AND lts_access IN (1, 2);
 
-;
-
 UPDATE
     edges e
 SET

@@ -25,13 +25,6 @@ exec(open("../settings/read_density.py").read())
 
 density_data = [density_muni, density_socio, density_hex]
 
-for df in density_data:
-
-    for c in length_relative_columns:
-        df[c] = df[c] * 100
-
-    for c in length_relative_steps_columns[1:-1]:
-        df[c] = df[c] * 100
 
 # %%
 for i, df in enumerate(density_data):

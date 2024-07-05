@@ -2,18 +2,6 @@ DROP SCHEMA IF EXISTS fragmentation CASCADE;
 
 CREATE SCHEMA fragmentation;
 
-DROP TABLE IF EXISTS fragmentation.components;
-
-DROP TABLE IF EXISTS fragmentation.components_1;
-
-DROP TABLE IF EXISTS fragmentation.components_2;
-
-DROP TABLE IF EXISTS fragmentation.components_3;
-
-DROP TABLE IF EXISTS fragmentation.components_4;
-
-DROP TABLE IF EXISTS fragmentation.components_car;
-
 ALTER TABLE
     edges DROP COLUMN IF EXISTS component_all,
     DROP COLUMN IF EXISTS component_1,
@@ -89,14 +77,13 @@ FROM
         'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access IN (1,2,3,4) OR lts_1_gap IS TRUE or lts_2_gap IS TRUE or lts_3_gap IS TRUE or lts_4_gap IS TRUE'
     );
 
-CREATE TABLE fragmentation.components_car AS (
-    SELECT
-        *
-    FROM
-        pgr_connectedComponents(
-            'SELECT id, source, target, cost, reverse_cost FROM edges WHERE car_traffic IS TRUE AND lts_access IN (1,2,3,4,7)' -- Should we include gaps here?
-        )
-);
+CREATE TABLE fragmentation.components_car AS
+SELECT
+    *
+FROM
+    pgr_connectedComponents(
+        'SELECT id, source, target, cost, reverse_cost FROM edges WHERE car_traffic IS TRUE AND lts_access IN (1,2,3,4,7)'
+    );
 
 UPDATE
     edges e
@@ -187,11 +174,11 @@ WHERE
 -- CHECK FOR TOO MANY COMP VALUES
 DO $$
 DECLARE
-    comp_check INT;
+    component_check INT;
 
 BEGIN
     SELECT
-        COUNT(*) INTO comp_check
+        COUNT(*) INTO component_check
     FROM
         edges
     WHERE
@@ -199,18 +186,18 @@ BEGIN
         AND lts_1_gap IS NULL
         AND component_1 IS NOT NULL;
 
-ASSERT comp_check = 0,
+ASSERT component_check = 0,
 'Problem with component calculation for LTS 1';
 
 END $$;
 
 DO $$
 DECLARE
-    comp_check INT;
+    component_check INT;
 
 BEGIN
     SELECT
-        COUNT(*) INTO comp_check
+        COUNT(*) INTO component_check
     FROM
         edges
     WHERE
@@ -219,18 +206,18 @@ BEGIN
         AND lts_2_gap IS NULL
         AND component_1_2 IS NOT NULL;
 
-ASSERT comp_check = 0,
+ASSERT component_check = 0,
 'Problem with component calculation for LTS 1_2';
 
 END $$;
 
 DO $$
 DECLARE
-    comp_check INT;
+    component_check INT;
 
 BEGIN
     SELECT
-        COUNT(*) INTO comp_check
+        COUNT(*) INTO component_check
     FROM
         edges
     WHERE
@@ -240,18 +227,18 @@ BEGIN
         AND lts_3_gap IS NULL
         AND component_1_3 IS NOT NULL;
 
-ASSERT comp_check = 0,
+ASSERT component_check = 0,
 'Problem with component calculation for LTS 1_3';
 
 END $$;
 
 DO $$
 DECLARE
-    comp_check INT;
+    component_check INT;
 
 BEGIN
     SELECT
-        COUNT(*) INTO comp_check
+        COUNT(*) INTO component_check
     FROM
         edges
     WHERE
@@ -262,18 +249,18 @@ BEGIN
         AND lts_4_gap IS NULL
         AND component_1_4 IS NOT NULL;
 
-ASSERT comp_check = 0,
+ASSERT component_check = 0,
 'Problem with component calculation for LTS 1_4';
 
 END $$;
 
 DO $$
 DECLARE
-    comp_check INT;
+    component_check INT;
 
 BEGIN
     SELECT
-        COUNT(*) INTO comp_check
+        COUNT(*) INTO component_check
     FROM
         edges
     WHERE
@@ -284,18 +271,18 @@ BEGIN
         AND lts_4_gap IS NULL
         AND component_all IS NOT NULL;
 
-ASSERT comp_check = 0,
+ASSERT component_check = 0,
 'Problem with component calculation for component all';
 
 END $$;
 
 DO $$
 DECLARE
-    comp_check INT;
+    component_check INT;
 
 BEGIN
     SELECT
-        COUNT(*) INTO comp_check
+        COUNT(*) INTO component_check
     FROM
         edges
     WHERE
@@ -305,7 +292,7 @@ BEGIN
         )
         AND component_car IS NOT NULL;
 
-ASSERT comp_check = 0,
+ASSERT component_check = 0,
 'Problem with component calculation for car fragmentation.components';
 
 END $$;
@@ -313,11 +300,11 @@ END $$;
 ----- CHECK FOR MISSING COMP VALUES
 DO $$
 DECLARE
-    comp_check INT;
+    component_check INT;
 
 BEGIN
     SELECT
-        COUNT(*) INTO comp_check
+        COUNT(*) INTO component_check
     FROM
         edges
     WHERE
@@ -327,18 +314,18 @@ BEGIN
         )
         AND component_1 IS NULL;
 
-ASSERT comp_check = 0,
+ASSERT component_check = 0,
 'Problem with component calculation for LTS 1';
 
 END $$;
 
 DO $$
 DECLARE
-    comp_check INT;
+    component_check INT;
 
 BEGIN
     SELECT
-        COUNT(*) INTO comp_check
+        COUNT(*) INTO component_check
     FROM
         edges
     WHERE
@@ -349,18 +336,18 @@ BEGIN
         )
         AND component_1_2 IS NULL;
 
-ASSERT comp_check = 0,
+ASSERT component_check = 0,
 'Problem with component calculation for LTS 1_2';
 
 END $$;
 
 DO $$
 DECLARE
-    comp_check INT;
+    component_check INT;
 
 BEGIN
     SELECT
-        COUNT(*) INTO comp_check
+        COUNT(*) INTO component_check
     FROM
         edges
     WHERE
@@ -372,18 +359,18 @@ BEGIN
         )
         AND component_1_3 IS NULL;
 
-ASSERT comp_check = 0,
+ASSERT component_check = 0,
 'Problem with component calculation for LTS 1_3';
 
 END $$;
 
 DO $$
 DECLARE
-    comp_check INT;
+    component_check INT;
 
 BEGIN
     SELECT
-        COUNT(*) INTO comp_check
+        COUNT(*) INTO component_check
     FROM
         edges
     WHERE
@@ -396,18 +383,18 @@ BEGIN
         )
         AND component_1_4 IS NULL;
 
-ASSERT comp_check = 0,
+ASSERT component_check = 0,
 'Problem with component calculation for LTS 1_4';
 
 END $$;
 
 DO $$
 DECLARE
-    comp_check INT;
+    component_check INT;
 
 BEGIN
     SELECT
-        COUNT(*) INTO comp_check
+        COUNT(*) INTO component_check
     FROM
         edges
     WHERE
@@ -420,18 +407,18 @@ BEGIN
         )
         AND component_all IS NULL;
 
-ASSERT comp_check = 0,
+ASSERT component_check = 0,
 'Problem with component calculation for component all';
 
 END $$;
 
 DO $$
 DECLARE
-    comp_check INT;
+    component_check INT;
 
 BEGIN
     SELECT
-        COUNT(*) INTO comp_check
+        COUNT(*) INTO component_check
     FROM
         edges
     WHERE
@@ -439,7 +426,7 @@ BEGIN
         AND lts_access IN (1, 2, 3, 4, 7)
         AND component_car IS NULL;
 
-ASSERT comp_check = 0,
+ASSERT component_check = 0,
 'Problem with component calculation for car fragmentation.components';
 
 END $$;

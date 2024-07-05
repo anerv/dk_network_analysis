@@ -15,6 +15,7 @@ CREATE TABLE component_size_all AS (
         component_all
 );
 
+-- DROP ALL COMPONENTS LESS THAN A 100 METERS LONG
 DELETE FROM
     edges
 WHERE
@@ -28,6 +29,7 @@ WHERE
             AND 'cycleway' <> ANY (highways)
     );
 
+-- DROP ALL COMPONENTS THAT ONLY CONSIST OF SERVICE ROADS
 DELETE FROM
     edges
 WHERE
@@ -40,6 +42,7 @@ WHERE
             highways = ARRAY [ 'service' ]
     );
 
+-- DROP ALL COMPONENTS THAT ONLY CONSIST OF TRACKS AND ARE LESS THAN 500 METERS LONG
 DELETE FROM
     edges
 WHERE
@@ -53,6 +56,7 @@ WHERE
             AND geom_length < 500
     );
 
+-- DROP ALL COMPONENTS THAT ONLY CONSIST OF FOOTWAYS AND ARE LESS THAN 500 METERS LONG
 DELETE FROM
     edges
 WHERE

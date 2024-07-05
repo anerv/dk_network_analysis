@@ -310,38 +310,38 @@ WHERE
 ALTER TABLE
     density.density_hex
 ADD
-    COLUMN IF NOT EXISTS lts_1_length_rel DOUBLE PRECISION DEFAULT NULL,
+    COLUMN IF NOT EXISTS lts_1_pct DOUBLE PRECISION DEFAULT NULL,
 ADD
-    COLUMN IF NOT EXISTS lts_1_2_length_rel DOUBLE PRECISION DEFAULT NULL,
+    COLUMN IF NOT EXISTS lts_1_2_pct DOUBLE PRECISION DEFAULT NULL,
 ADD
-    COLUMN IF NOT EXISTS lts_1_3_length_rel DOUBLE PRECISION DEFAULT NULL,
+    COLUMN IF NOT EXISTS lts_1_3_pct DOUBLE PRECISION DEFAULT NULL,
 ADD
-    COLUMN IF NOT EXISTS lts_1_4_length_rel DOUBLE PRECISION DEFAULT NULL,
+    COLUMN IF NOT EXISTS lts_1_4_pct DOUBLE PRECISION DEFAULT NULL,
 ADD
-    COLUMN IF NOT EXISTS lts_7_length_rel DOUBLE PRECISION DEFAULT NULL,
+    COLUMN IF NOT EXISTS lts_7_pct DOUBLE PRECISION DEFAULT NULL,
 ADD
-    COLUMN IF NOT EXISTS total_car_length_rel DOUBLE PRECISION DEFAULT NULL,
+    COLUMN IF NOT EXISTS total_car_pct DOUBLE PRECISION DEFAULT NULL,
 ADD
-    COLUMN IF NOT EXISTS lts_2_length_rel DOUBLE PRECISION DEFAULT NULL,
+    COLUMN IF NOT EXISTS lts_2_pct DOUBLE PRECISION DEFAULT NULL,
 ADD
-    COLUMN IF NOT EXISTS lts_3_length_rel DOUBLE PRECISION DEFAULT NULL,
+    COLUMN IF NOT EXISTS lts_3_pct DOUBLE PRECISION DEFAULT NULL,
 ADD
-    COLUMN IF NOT EXISTS lts_4_length_rel DOUBLE PRECISION DEFAULT NULL;
+    COLUMN IF NOT EXISTS lts_4_pct DOUBLE PRECISION DEFAULT NULL;
 
 UPDATE
     density.density_hex
 SET
-    lts_1_length_rel = lts_1_length / total_network_length,
-    lts_2_length_rel = lts_2_length / total_network_length,
-    lts_3_length_rel = lts_3_length / total_network_length,
-    lts_4_length_rel = lts_4_length / total_network_length,
-    lts_1_2_length_rel = (lts_1_length + lts_2_length) / total_network_length,
-    lts_1_3_length_rel = (lts_1_length + lts_2_length + lts_3_length) / total_network_length,
-    lts_1_4_length_rel = (
+    lts_1_pct = lts_1_length / total_network_length * 100,
+    lts_2_pct = lts_2_length / total_network_length * 100,
+    lts_3_pct = lts_3_length / total_network_length * 100,
+    lts_4_pct = lts_4_length / total_network_length * 100,
+    lts_1_2_pct = (lts_1_length + lts_2_length) / total_network_length * 100,
+    lts_1_3_pct = (lts_1_length + lts_2_length + lts_3_length) / total_network_length * 100,
+    lts_1_4_pct = (
         lts_1_length + lts_2_length + lts_3_length + lts_4_length
-    ) / total_network_length,
-    lts_7_length_rel = lts_7_length / total_network_length,
-    total_car_length_rel = total_car_length / total_network_length
+    ) / total_network_length * 100,
+    lts_7_pct = lts_7_length / total_network_length * 100,
+    total_car_pct = total_car_length / total_network_length * 100
 WHERE
     total_network_length > 0;
 

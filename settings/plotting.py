@@ -108,19 +108,19 @@ length_steps_columns = [
 ]
 
 length_relative_steps_columns = [
-    "lts_1_length_rel",
-    "lts_1_2_length_rel",
-    "lts_1_3_length_rel",
-    "lts_1_4_length_rel",
-    "total_car_length_rel",
+    "lts_1_pct",
+    "lts_1_2_pct",
+    "lts_1_3_pct",
+    "lts_1_4_pct",
+    "total_car_pct",
 ]
 
 length_relative_columns = [
-    "lts_1_length_rel",
-    "lts_2_length_rel",
-    "lts_3_length_rel",
-    "lts_4_length_rel",
-    "total_car_length_rel",
+    "lts_1_pct",
+    "lts_2_pct",
+    "lts_3_pct",
+    "lts_4_pct",
+    "total_car_pct",
 ]
 
 density_columns = [
@@ -142,45 +142,45 @@ density_steps_columns = [
 ]
 
 component_count_columns = [
-    "comp_1_count",
-    "comp_2_count",
-    "comp_3_count",
-    "comp_4_count",
-    "comp_car_count",
-    "comp_all_count",
+    "component_1_count",
+    "component_1_2_count",
+    "component_1_3_count",
+    "component_1_4_count",
+    "component_car_count",
+    "component_all_count",
 ]
 
 component_per_km_columns = [
     "component_per_length_1",
-    "component_per_length_2",
-    "component_per_length_3",
-    "component_per_length_4",
+    "component_per_length_1_2",
+    "component_per_length_1_3",
+    "component_per_length_1_4",
     "component_per_length_car",
     "component_per_length_all",
 ]
 
 component_per_km_sqkm_columns = [
     "component_per_dens_1",
-    "component_per_dens_2",
-    "component_per_dens_3",
-    "component_per_dens_4",
+    "component_per_dens_1_2",
+    "component_per_dens_1_3",
+    "component_per_dens_1_4",
     "component_per_dens_car",
     "component_per_dens_all",
 ]
 
 largest_local_component_len_columns = [
     "component_length_1",
-    "component_length_2",
-    "component_length_3",
-    "component_length_4",
+    "component_length_1_2",
+    "component_length_1_3",
+    "component_length_1_4",
     "component_length_car",
 ]
 
 largest_local_component_area_columns = [
     "component_coverage_1",
-    "component_coverage_2",
-    "component_coverage_3",
-    "component_coverage_4",
+    "component_coverage_1_2",
+    "component_coverage_1_3",
+    "component_coverage_1_4",
     "component_coverage_car",
 ]
 
@@ -264,10 +264,10 @@ population_rename_dict = {
     "households_income_400_500k_share": "Income 400-500k (share)",
     "households_income_500_750k_share": "Income 500-750k (share)",
     "households_income_750k_share": "Income 750k (share)",
-    "households_with_car_share": "Households w car (share)",
-    "households_1car_share": "Households 1 car (share)",
+    "households_with_car_pct": "Households w car (share)",
+    "households_1car_pct": "Households 1 car (share)",
     "households_2cars_share": "Households 2 cars (share)",
-    "households_nocar_share": "Households no car (share)",
+    "households_nocar_pct": "Households no car (share)",
 }
 
 
@@ -308,12 +308,12 @@ plotly_labels = {
     "lts_4_length": "LTS 4 length (km)",
     "total_car_length": "Total car length (km)",
     "total_network_length": "Total network length (km)",
-    "comp_1_count": "LTS 1 component count",
-    "comp_2_count": "LTS 1-2 component count",
-    "comp_3_count": "LTS 1-3 component count",
-    "comp_4_count": "LTS 1-4 component count",
-    "comp_car_count": "Total car component count",
-    "comp_all_count": "Total network component count",
+    "component_1_count": "LTS 1 component count",
+    "component_1_2_count": "LTS 1-2 component count",
+    "component_1_3_count": "LTS 1-3 component count",
+    "component_1_4_count": "LTS 1-4 component count",
+    "component_car_count": "Total car component count",
+    "component_all_count": "Total network component count",
     "density": "Density (km/sqkm)",
     "length": "Length (km)",
     "lts": "LTS",
@@ -396,43 +396,43 @@ rename_index_dict_density = {
     "lts_1_2_dens": "LTS 1-2 density",
     "lts_1_3_dens": "LTS 1-3 density",
     "lts_1_4_dens": "LTS 1-4 density",
-    "lts_1_length_rel": "LTS 1 %",
-    "lts_2_length_rel": "LTS 2 %",
-    "lts_3_length_rel": "LTS 3 %",
-    "lts_4_length_rel": "LTS 4 %",
-    "total_car_length_rel": "Car %",
-    "lts_1_2_length_rel": "LTS 1-2 %",
-    "lts_1_3_length_rel": "LTS 1-3 %",
-    "lts_1_4_length_rel": "LTS 1-4 %",
+    "lts_1_pct": "LTS 1 %",
+    "lts_2_pct": "LTS 2 %",
+    "lts_3_pct": "LTS 3 %",
+    "lts_4_pct": "LTS 4 %",
+    "total_car_pct": "Car %",
+    "lts_1_2_pct": "LTS 1-2 %",
+    "lts_1_3_pct": "LTS 1-3 %",
+    "lts_1_4_pct": "LTS 1-4 %",
 }
 
 rename_index_dict_fragmentation = {
-    "comp_1_count": "Component count LTS 1",
-    "comp_2_count": "Component count LTS 1-2",
-    "comp_3_count": "Component count LTS 1-3",
-    "comp_4_count": "Component count LTS 1-4",
-    "comp_car_count": "Component count car",
-    "comp_all_count": "Component count full",
+    "component_1_count": "Component count LTS 1",
+    "component_1_2_count": "Component count LTS 1-2",
+    "component_1_3_count": "Component count LTS 1-3",
+    "component_1_4_count": "Component count LTS 1-4",
+    "component_car_count": "Component count car",
+    "component_all_count": "Component count full",
     "component_per_length_1": "Components per km LTS 1",
-    "component_per_length_2": "Components per km LTS 1-2",
-    "component_per_length_3": "Components per km LTS 1-3",
-    "component_per_length_4": "Components per km LTS 1-4",
+    "component_per_length_1_2": "Components per km LTS 1-2",
+    "component_per_length_1_3": "Components per km LTS 1-3",
+    "component_per_length_1_4": "Components per km LTS 1-4",
     "component_per_length_car": "Components per km car",
     "component_per_length_all": "Components per km full",
     "component_per_dens_1": "Components per km/sqkm LTS 1",
-    "component_per_dens_2": "Components per km/sqkm LTS 1-2",
-    "component_per_dens_3": "Components per km/sqkm LTS 1-3",
-    "component_per_dens_4": "Components per km/sqkm LTS 1-4",
+    "component_per_dens_1_2": "Components per km/sqkm LTS 1-2",
+    "component_per_dens_1_3": "Components per km/sqkm LTS 1-3",
+    "component_per_dens_1_4": "Components per km/sqkm LTS 1-4",
     "component_per_dens_car": "Components per km/sqkm car",
     "component_per_dens_all": "Components per km/sqkm all",
 }
 
 rename_index_dict_reach = {
-    "lts1_len": "LTS 1 reach",
-    "lts2_len": "LTS 2 reach",
-    "lts3_len": "LTS 3 reach",
-    "lts4_len": "LTS 4 reach",
-    "car_len": "Car reach",
+    "lts1_reach": "LTS 1 reach",
+    "lts2_reach": "LTS 2 reach",
+    "lts3_reach": "LTS 3 reach",
+    "lts4_reach": "LTS 4 reach",
+    "car_reach": "Car reach",
     "car_lts1_diff": "Difference car-LTS 1 reach",
     "car_lts2_diff": "Difference car-LTS 2 reach",
     "car_lts3_diff": "Difference car-LTS 3 reach",
@@ -445,13 +445,13 @@ rename_index_dict_reach = {
 
 rename_index_dict_largest_comp = {
     "component_length_1": "LTS 1 largest component length",
-    "component_length_2": "LTS 2 largest component length",
-    "component_length_3": "LTS 3 largest component length",
-    "component_length_4": "LTS 4 largest component length",
+    "component_length_1_2": "LTS 2 largest component length",
+    "component_length_1_3": "LTS 3 largest component length",
+    "component_length_1_4": "LTS 4 largest component length",
     "component_length_car": "Car largest component length",
     # "component_coverage_1": "LTS 1 largest component coverage",
-    # "component_coverage_2": "LTS 2 largest component coverage",
-    # "component_coverage_3": "LTS 3 largest component coverage",
-    # "component_coverage_4": "LTS 4 largest component coverage",
+    # "component_coverage_1_2": "LTS 2 largest component coverage",
+    # "component_coverage_1_3": "LTS 3 largest component coverage",
+    # "component_coverage_1_4": "LTS 4 largest component coverage",
     # "component_coverage_car": "Car largest component coverage",
 }

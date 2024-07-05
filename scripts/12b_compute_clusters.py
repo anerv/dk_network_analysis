@@ -30,13 +30,13 @@ exec(open("../settings/prepare_socio_cluster_data.py").read())
 
 # generate socio reach comparison columns
 exec(open("../settings/read_reach_comparison.py").read())
-hex_reach_comp_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
-hex_reach_comp_cols = [
+hex_reach_component_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
+hex_reach_component_cols = [
     c
-    for c in hex_reach_comp_cols
+    for c in hex_reach_component_cols
     if "_15" not in c and "5_15" not in c and "2_" not in c
 ]
-socio_reach_compare_columns = [c + "_median" for c in hex_reach_comp_cols]
+socio_reach_compare_columns = [c + "_median" for c in hex_reach_component_cols]
 del hex_reach_comparison
 
 
