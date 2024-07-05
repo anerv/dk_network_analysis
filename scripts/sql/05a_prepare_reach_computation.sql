@@ -4,11 +4,11 @@ CREATE SCHEMA reach;
 
 DROP TABLE IF EXISTS lts_1_edges;
 
-DROP TABLE IF EXISTS lts_2_edges;
+DROP TABLE IF EXISTS lts_1_2_edges;
 
-DROP TABLE IF EXISTS lts_3_edges;
+DROP TABLE IF EXISTS lts_1_3_edges;
 
-DROP TABLE IF EXISTS lts_4_edges;
+DROP TABLE IF EXISTS lts_1_4_edges;
 
 DROP TABLE IF EXISTS car_edges;
 
@@ -26,7 +26,7 @@ WHERE
     lts_access IN (1)
     OR lts_1_gap IS TRUE;
 
-CREATE TABLE lts_2_edges AS
+CREATE TABLE lts_1_2_edges AS
 SELECT
     id,
     km,
@@ -40,7 +40,7 @@ WHERE
     OR lts_1_gap IS TRUE
     OR lts_2_gap IS TRUE;
 
-CREATE TABLE lts_3_edges AS
+CREATE TABLE lts_1_3_edges AS
 SELECT
     id,
     km,
@@ -55,7 +55,7 @@ WHERE
     OR lts_2_gap IS TRUE
     OR lts_3_gap IS TRUE;
 
-CREATE TABLE lts_4_edges AS
+CREATE TABLE lts_1_4_edges AS
 SELECT
     id,
     km,

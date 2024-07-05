@@ -39,32 +39,32 @@ all_filepaths_map_density = [
 # Reach plots
 
 filepaths_reach = [
-    "../results/reach_maps/lts1_reach_len",
-    "../results/reach_maps/lts2_reach_len",
-    "../results/reach_maps/lts3_reach_len",
-    "../results/reach_maps/lts4_reach_len",
+    "../results/reach_maps/lts_1_reach_len",
+    "../results/reach_maps/lts_1_2_reach_len",
+    "../results/reach_maps/lts_1_3_reach_len",
+    "../results/reach_maps/lts_1_4_reach_len",
     "../results/reach_maps/car_reach_len",
 ]
 
 filepaths_reach_diff = [
     "../results/reach_maps/lts1_reach_len_diff",
-    "../results/reach_maps/lts2_reach_len_diff",
-    "../results/reach_maps/lts3_reach_len_diff",
-    "../results/reach_maps/lts4_reach_len_diff",
+    "../results/reach_maps/lts_1_2_reach_len_diff",
+    "../results/reach_maps/lts_1_3_reach_len_diff",
+    "../results/reach_maps/lts_1_4_reach_len_diff",
 ]
 
 filepaths_reach_diff_pct = [
     "../results/reach_maps/lts1_reach_pct_diff",
-    "../results/reach_maps/lts2_reach_pct_diff",
-    "../results/reach_maps/lts3_reach_pct_diff",
-    "../results/reach_maps/lts4_reach_pct_diff",
+    "../results/reach_maps/lts_1_2_reach_pct_diff",
+    "../results/reach_maps/lts_1_3_reach_pct_diff",
+    "../results/reach_maps/lts_1_4_reach_pct_diff",
 ]
 
 filepaths_reach_hist = [
     "../results/reach_distributions/lts1_reach_hist.png",
-    "../results/reach_distributions/lts2_reach_hist.png",
-    "../results/reach_distributions/lts3_reach_hist.png",
-    "../results/reach_distributions/lts4_reach_hist.png",
+    "../results/reach_distributions/lts_1_2_reach_hist.png",
+    "../results/reach_distributions/lts_1_3_reach_hist.png",
+    "../results/reach_distributions/lts_1_4_reach_hist.png",
     "../results/reach_distributions/car_reach_hist.png",
 ]
 
@@ -74,24 +74,24 @@ fp_network_reach_diff_kde = "../results/reach_distributions/kde_network_reach_di
 
 filepaths_violin_reach = [
     "../results/reach_distributions/violin_lts1_reach_len.jpg",
-    "../results/reach_distributions/violin_lts2_reach_len.jpg",
-    "../results/reach_distributions/violin_lts3_reach_len.jpg",
-    "../results/reach_distributions/violin_lts4_reach_len.jpg",
+    "../results/reach_distributions/violin_lts_1_2_reach_len.jpg",
+    "../results/reach_distributions/violin_lts_1_3_reach_len.jpg",
+    "../results/reach_distributions/violin_lts_1_4_reach_len.jpg",
     "../results/reach_distributions/violin_car_reach_len.jpg",
 ]
 
 filepaths_violin_reach_diff = [
     "../results/reach_distributions/violin_lts1_reach_diff_len.jpg",
-    "../results/reach_distributions/violin_lts2_reach_diff_len.jpg",
-    "../results/reach_distributions/violin_lts3_reach_diff_len.jpg",
-    "../results/reach_distributions/violin_lts4_reach_diff_len.jpg",
+    "../results/reach_distributions/violin_lts_1_2_reach_diff_len.jpg",
+    "../results/reach_distributions/violin_lts_1_3_reach_diff_len.jpg",
+    "../results/reach_distributions/violin_lts_1_4_reach_diff_len.jpg",
 ]
 
 filepaths_violin_reach_diff_pct = [
     "../results/reach_distributions/violin_lts1_reach_diff_pct.jpg",
-    "../results/reach_distributions/violin_lts2_reach_diff_pct.jpg",
-    "../results/reach_distributions/violin_lts3_reach_diff_pct.jpg",
-    "../results/reach_distributions/violin_lts4_reach_diff_pct.jpg",
+    "../results/reach_distributions/violin_lts_1_2_reach_diff_pct.jpg",
+    "../results/reach_distributions/violin_lts_1_3_reach_diff_pct.jpg",
+    "../results/reach_distributions/violin_lts_1_4_reach_diff_pct.jpg",
 ]
 
 fp_reach_density_corr = "../results/reach_density_correlation/corr_reach_density_"

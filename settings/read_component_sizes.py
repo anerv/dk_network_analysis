@@ -11,6 +11,7 @@ component_size_all = pd.read_sql(
     "SELECT * FROM fragmentation.component_size_all;", engine
 )
 component_size_1 = pd.read_sql("SELECT * FROM fragmentation.component_size_1;", engine)
+
 component_size_1_2 = pd.read_sql(
     "SELECT * FROM fragmentation.component_size_1_2;", engine
 )

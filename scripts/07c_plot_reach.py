@@ -561,10 +561,10 @@ for i, e in enumerate([np.median, np.mean, np.max, np.std]):
     reach_melt = reach_melt.sort_values("distance")
 
     org_labels_rename = {
-        "lts1": labels[0],
-        "lts2": labels[1],
-        "lts3": labels[2],
-        "lts4": labels[3],
+        "lts_1": labels[0],
+        "lts_1_2": labels[1],
+        "lts_1_3": labels[2],
+        "lts_1_4": labels[3],
         "car": labels[4],
     }
     reach_melt.replace(org_labels_rename, inplace=True)

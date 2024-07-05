@@ -53,37 +53,37 @@ INSERT INTO
 CREATE TABLE reach.socio_reach_5 AS
 SELECT
     j.id,
-    AVG(j.lts1_reach) AS lts1_reach_average,
-    AVG(j.lts2_reach) AS lts2_reach_average,
-    AVG(j.lts3_reach) AS lts3_reach_average,
-    AVG(j.lts4_reach) AS lts4_reach_average,
+    AVG(j.lts_1_reach) AS lts_1_reach_average,
+    AVG(j.lts_1_2_reach) AS lts_1_2_reach_average,
+    AVG(j.lts_1_3_reach) AS lts_1_3_reach_average,
+    AVG(j.lts_1_4_reach) AS lts_1_4_reach_average,
     AVG(j.car_reach) AS car_reach_average,
-    MIN(j.lts1_reach) AS lts1_reach_min,
-    MIN(j.lts2_reach) AS lts2_reach_min,
-    MIN(j.lts3_reach) AS lts3_reach_min,
-    MIN(j.lts4_reach) AS lts4_reach_min,
+    MIN(j.lts_1_reach) AS lts_1_reach_min,
+    MIN(j.lts_1_2_reach) AS lts_1_2_reach_min,
+    MIN(j.lts_1_3_reach) AS lts_1_3_reach_min,
+    MIN(j.lts_1_4_reach) AS lts_1_4_reach_min,
     MIN(j.car_reach) AS car_reach_min,
-    MAX(j.lts1_reach) AS lts1_reach_max,
-    MAX(j.lts2_reach) AS lts2_reach_max,
-    MAX(j.lts3_reach) AS lts3_reach_max,
-    MAX(j.lts4_reach) AS lts4_reach_max,
+    MAX(j.lts_1_reach) AS lts_1_reach_max,
+    MAX(j.lts_1_2_reach) AS lts_1_2_reach_max,
+    MAX(j.lts_1_3_reach) AS lts_1_3_reach_max,
+    MAX(j.lts_1_4_reach) AS lts_1_4_reach_max,
     MAX(j.car_reach) AS car_reach_max,
     PERCENTILE_CONT(0.5) WITHIN GROUP (
         ORDER BY
-            j.lts1_reach
-    ) AS lts1_reach_median,
+            j.lts_1_reach
+    ) AS lts_1_reach_median,
     PERCENTILE_CONT(0.5) WITHIN GROUP (
         ORDER BY
-            j.lts2_reach
-    ) AS lts2_reach_median,
+            j.lts_1_2_reach
+    ) AS lts_1_2_reach_median,
     PERCENTILE_CONT(0.5) WITHIN GROUP (
         ORDER BY
-            j.lts3_reach
-    ) AS lts3_reach_median,
+            j.lts_1_3_reach
+    ) AS lts_1_3_reach_median,
     PERCENTILE_CONT(0.5) WITHIN GROUP (
         ORDER BY
-            j.lts4_reach
-    ) AS lts4_reach_median,
+            j.lts_1_4_reach
+    ) AS lts_1_4_reach_median,
     PERCENTILE_CONT(0.5) WITHIN GROUP (
         ORDER BY
             j.car_reach

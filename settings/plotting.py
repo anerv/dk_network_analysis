@@ -185,73 +185,79 @@ largest_local_component_area_columns = [
 ]
 
 socio_largest_component_columns_ave = [
-    "lts1_largest_component_average",
-    "lts2_largest_component_average",
-    "lts3_largest_component_average",
-    "lts4_largest_component_average",
+    "lts_1_largest_component_average",
+    "lts_1_2_largest_component_average",
+    "lts_1_3_largest_component_average",
+    "lts_1_4_largest_component_average",
     "car_largest_component_average",
 ]
 
 socio_largest_component_columns_max = [
-    "lts1_largest_component_max",
-    "lts2_largest_component_max",
-    "lts3_largest_component_max",
-    "lts4_largest_component_max",
+    "lts_1_largest_component_max",
+    "lts_1_2_largest_component_max",
+    "lts_1_3_largest_component_max",
+    "lts_1_4_largest_component_max",
     "car_largest_component_max",
 ]
 
 socio_largest_component_columns_median = [
-    "lts1_largest_component_median",
-    "lts2_largest_component_median",
-    "lts3_largest_component_median",
-    "lts4_largest_component_median",
+    "lts_1_largest_component_median",
+    "lts_1_2_largest_component_median",
+    "lts_1_3_largest_component_median",
+    "lts_1_4_largest_component_median",
     "car_largest_component_median",
 ]
 
 socio_largest_component_columns_min = [
-    "lts1_largest_component_min",
-    "lts2_largest_component_min",
-    "lts3_largest_component_min",
-    "lts4_largest_component_min",
+    "lts_1_largest_component_min",
+    "lts_1_2_largest_component_min",
+    "lts_1_3_largest_component_min",
+    "lts_1_4_largest_component_min",
     "car_largest_component_min",
 ]
 
-reach_columns = ["lts1_reach", "lts2_reach", "lts3_reach", "lts4_reach", "car_reach"]
+reach_columns = [
+    "lts_1_reach",
+    "lts_1_2_reach",
+    "lts_1_3_reach",
+    "lts_1_4_reach",
+    "car_reach",
+]
 
 reach_diff_columns = [
-    "car_lts1_diff",
-    "car_lts2_diff",
-    "car_lts3_diff",
-    "car_lts4_diff",
+    "car_lts_1_diff",
+    "car_lts_1_2_diff",
+    "car_lts_1_3_diff",
+    "car_lts_1_4_diff",
 ]
 reach_diff_pct_columns = [
-    "car_lts1_diff_pct",
-    "car_lts2_diff_pct",
-    "car_lts3_diff_pct",
-    "car_lts4_diff_pct",
+    "car_lts_1_diff_pct",
+    "car_lts_1_2_diff_pct",
+    "car_lts_1_3_diff_pct",
+    "car_lts_1_4_diff_pct",
 ]
 
 socio_reach_average_columns = [
-    "lts1_reach_average",
-    "lts2_reach_average",
-    "lts3_reach_average",
-    "lts4_reach_average",
+    "lts_1_reach_average",
+    "lts_1_2_reach_average",
+    "lts_1_3_reach_average",
+    "lts_1_4_reach_average",
     "car_reach_average",
 ]
 
 socio_reach_median_columns = [
-    "lts1_reach_median",
-    "lts2_reach_median",
-    "lts3_reach_median",
-    "lts4_reach_median",
+    "lts_1_reach_median",
+    "lts_1_2_reach_median",
+    "lts_1_3_reach_median",
+    "lts_1_4_reach_median",
     "car_reach_median",
 ]
 
 socio_reach_max_columns = [
-    "lts1_reach_max",
-    "lts2_reach_max",
-    "lts3_reach_max",
-    "lts4_reach_max",
+    "lts_1_reach_max",
+    "lts_1_2_reach_max",
+    "lts_1_3_reach_max",
+    "lts_1_4_reach_max",
     "car_reach_max",
 ]
 
@@ -321,19 +327,19 @@ plotly_labels = {
     "all": "All",
     "car": "Car",
     "municipality": "Municipality",
-    "lts1_reach": "Network reach (km) - LTS 1",
-    "lts2_reach": "Network reach (km) - LTS 2",
-    "lts3_reach": "Network reach (km) - LTS 3",
-    "lts4_reach": "Network reach (km) - LTS 4",
+    "lts_1_reach": "Network reach (km) - LTS 1",
+    "lts_1_2_reach": "Network reach (km) - LTS 2",
+    "lts_1_3_reach": "Network reach (km) - LTS 3",
+    "lts_1_4_reach": "Network reach (km) - LTS 4",
     "car_reach": "Network reach (km) - car",
-    "car_lts1_diff": "Difference in network reach (km)",
-    "car_lts2_diff": "Difference in network reach (km)",
-    "car_lts3_diff": "Difference in network reach (km)",
-    "car_lts4_diff": "Difference in network reach (km)",
-    "car_lts1_diff_pct": "Difference in network reach (%)",
-    "car_lts2_diff_pct": "Difference in network reach (%)",
-    "car_lts3_diff_pct": "Difference in network reach (%)",
-    "car_lts4_diff_pct": "Difference in network reach (%)",
+    "car_lts_1_diff": "Difference in network reach (km)",
+    "car_lts_1_2_diff": "Difference in network reach (km)",
+    "car_lts_1_3_diff": "Difference in network reach (km)",
+    "car_lts_1_4_diff": "Difference in network reach (km)",
+    "car_lts_1_diff_pct": "Difference in network reach (%)",
+    "car_lts_1_2_diff_pct": "Difference in network reach (%)",
+    "car_lts_1_3_diff_pct": "Difference in network reach (%)",
+    "car_lts_1_4_diff_pct": "Difference in network reach (%)",
 }
 
 pdict = {
@@ -428,26 +434,26 @@ rename_index_dict_fragmentation = {
 }
 
 rename_index_dict_reach = {
-    "lts1_reach": "LTS 1 reach",
-    "lts2_reach": "LTS 2 reach",
-    "lts3_reach": "LTS 3 reach",
-    "lts4_reach": "LTS 4 reach",
+    "lts_1_reach": "LTS 1 reach",
+    "lts_1_2_reach": "LTS 1-2 reach",
+    "lts_1_3_reach": "LTS 1-3 reach",
+    "lts_1_4_reach": "LTS 1-4 reach",
     "car_reach": "Car reach",
-    "car_lts1_diff": "Difference car-LTS 1 reach",
-    "car_lts2_diff": "Difference car-LTS 2 reach",
-    "car_lts3_diff": "Difference car-LTS 3 reach",
-    "car_lts4_diff": "Difference car-LTS 4 reach",
-    "car_lts1_diff_pct": "Difference car-LTS 1 reach %",
-    "car_lts2_diff_pct": "Difference car-LTS 2 reach %",
-    "car_lts3_diff_pct": "Difference car-LTS 3 reach %",
-    "car_lts4_diff_pct": "Difference car-LTS 4 reach %",
+    "car_lts_1_diff": "Difference car-LTS 1 reach",
+    "car_lts_1_2_diff": "Difference car-LTS 1-2 reach",
+    "car_lts_1_3_diff": "Difference car-LTS 1-3 reach",
+    "car_lts_1_4_diff": "Difference car-LTS 1-4 reach",
+    "car_lts_1_diff_pct": "Difference car-LTS 1 reach %",
+    "car_lts_1_2_diff_pct": "Difference car-LTS 1-2 reach %",
+    "car_lts_1_3_diff_pct": "Difference car-LTS 1-3 reach %",
+    "car_lts_1_4_diff_pct": "Difference car-LTS 1-4 reach %",
 }
 
 rename_index_dict_largest_comp = {
     "component_length_1": "LTS 1 largest component length",
-    "component_length_1_2": "LTS 2 largest component length",
-    "component_length_1_3": "LTS 3 largest component length",
-    "component_length_1_4": "LTS 4 largest component length",
+    "component_length_1_2": "LTS 1-2 largest component length",
+    "component_length_1_3": "LTS 1-3 largest component length",
+    "component_length_1_4": "LTS 1-4 largest component length",
     "component_length_car": "Car largest component length",
     # "component_coverage_1": "LTS 1 largest component coverage",
     # "component_coverage_1_2": "LTS 2 largest component coverage",

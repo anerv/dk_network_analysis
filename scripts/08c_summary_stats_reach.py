@@ -125,23 +125,39 @@ columns = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
 
 display(hex_reach_comparison[columns].describe().style.pipe(format_style_index))
 
-lts1_5_10 = len(hex_reach_comparison[hex_reach_comparison["lts1_pct_diff_5_10"] == 0])
-lts1_10_15 = len(hex_reach_comparison[hex_reach_comparison["lts1_pct_diff_10_15"] == 0])
-lts2_5_10 = len(hex_reach_comparison[hex_reach_comparison["lts2_pct_diff_5_10"] == 0])
-lts2_10_15 = len(hex_reach_comparison[hex_reach_comparison["lts2_pct_diff_10_15"] == 0])
-lts3_5_10 = len(hex_reach_comparison[hex_reach_comparison["lts3_pct_diff_5_10"] == 0])
-lts3_10_15 = len(hex_reach_comparison[hex_reach_comparison["lts3_pct_diff_10_15"] == 0])
-lts4_5_10 = len(hex_reach_comparison[hex_reach_comparison["lts4_pct_diff_5_10"] == 0])
-lts4_10_15 = len(hex_reach_comparison[hex_reach_comparison["lts4_pct_diff_10_15"] == 0])
-car_5_10 = len(hex_reach_comparison[hex_reach_comparison["car_pct_diff_5_10"] == 0])
-car_10_15 = len(hex_reach_comparison[hex_reach_comparison["car_pct_diff_10_15"] == 0])
+lts_1_d5_10 = len(
+    hex_reach_comparison[hex_reach_comparison["lts_1_pct_diff_5_10"] == 0]
+)
+lts_1_d10_15 = len(
+    hex_reach_comparison[hex_reach_comparison["lts_1_pct_diff_10_15"] == 0]
+)
+lts_1_2_d5_10 = len(
+    hex_reach_comparison[hex_reach_comparison["lts_1_2_pct_diff_5_10"] == 0]
+)
+lts_1_2_d10_15 = len(
+    hex_reach_comparison[hex_reach_comparison["lts_1_2_pct_diff_10_15"] == 0]
+)
+lts_1_3_d5_10 = len(
+    hex_reach_comparison[hex_reach_comparison["lts_1_3_pct_diff_5_10"] == 0]
+)
+lts_1_3_d10_15 = len(
+    hex_reach_comparison[hex_reach_comparison["lts_1_3_pct_diff_10_15"] == 0]
+)
+lts_1_4_d5_10 = len(
+    hex_reach_comparison[hex_reach_comparison["lts_1_4_pct_diff_5_10"] == 0]
+)
+lts_1_4_d10_15 = len(
+    hex_reach_comparison[hex_reach_comparison["lts_1_4_pct_diff_10_15"] == 0]
+)
+car_d5_10 = len(hex_reach_comparison[hex_reach_comparison["car_pct_diff_5_10"] == 0])
+car_d10_15 = len(hex_reach_comparison[hex_reach_comparison["car_pct_diff_10_15"] == 0])
 
 values = [
-    (lts1_5_10, lts1_10_15),
-    (lts2_10_15, lts2_10_15),
-    (lts3_5_10, lts3_10_15),
-    (lts4_5_10, lts4_10_15),
-    (car_5_10, car_10_15),
+    (lts_1_d5_10, lts_1_d10_15),
+    (lts_1_2_d10_15, lts_1_2_d10_15),
+    (lts_1_3_d5_10, lts_1_3_d10_15),
+    (lts_1_4_d5_10, lts_1_4_d10_15),
+    (car_d5_10, car_d10_15),
 ]
 
 for l, n, v in zip(labels_step, network_levels, values):

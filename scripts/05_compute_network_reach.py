@@ -59,9 +59,9 @@ for dist in distances:
 
     edge_tables = [
         "lts_1_edges",
-        "lts_2_edges",
-        "lts_3_edges",
-        "lts_4_edges",
+        "lts_1_2_edges",
+        "lts_1_3_edges",
+        "lts_1_4_edges",
         "car_edges",
     ]
 
@@ -259,10 +259,10 @@ for dist in distances:
     SELECT
         h.hex_id,
         h.geometry,
-        l1.edge_length / 1000 AS lts1_reach,
-        l2.edge_length / 1000 AS lts2_reach,
-        l3.edge_length / 1000 AS lts3_reach,
-        l4.edge_length / 1000 AS lts4_reach,
+        l1.edge_length / 1000 AS lts_1_reach,
+        l2.edge_length / 1000 AS lts_1_2_reach,
+        l3.edge_length / 1000 AS lts_1_3_reach,
+        l4.edge_length / 1000 AS lts_1_4_reach,
         ca.edge_length / 1000 AS car_reach
     FROM
         hex_grid h
@@ -313,19 +313,19 @@ for dist in distances:
     ADD
         COLUMN car_lts1_diff DECIMAL,
     ADD
-        COLUMN car_lts2_diff DECIMAL,
+        COLUMN car_lts_1_2_diff DECIMAL,
     ADD
-        COLUMN car_lts3_diff DECIMAL,
+        COLUMN car_lts_1_3_diff DECIMAL,
     ADD
-        COLUMN car_lts4_diff DECIMAL;"""
+        COLUMN car_lts_1_4_diff DECIMAL;"""
 
     q_update = f"""UPDATE
         reach.hex_reach_{dist}
     SET
         car_lts1_diff = car_reach - lts1_reach,
-        car_lts2_diff = car_reach - lts2_reach,
-        car_lts3_diff = car_reach - lts3_reach,
-        car_lts4_diff = car_reach - lts4_reach;
+        car_lts_1_2_diff = car_reach - lts_1_2_reach,
+        car_lts_1_3_diff = car_reach - lts_1_3_reach,
+        car_lts_1_4_diff = car_reach - lts_1_4_reach;
 
     """
 
@@ -356,20 +356,20 @@ for dist in distances:
     ADD
         COLUMN car_lts1_diff_pct DECIMAL,
     ADD
-        COLUMN car_lts2_diff_pct DECIMAL,
+        COLUMN car_lts_1_2_diff_pct DECIMAL,
     ADD
-        COLUMN car_lts3_diff_pct DECIMAL,
+        COLUMN car_lts_1_3_diff_pct DECIMAL,
     ADD
-        COLUMN car_lts4_diff_pct DECIMAL;
+        COLUMN car_lts_1_4_diff_pct DECIMAL;
     """
 
     q_update = f"""UPDATE
         reach.hex_reach_{dist}
     SET
         car_lts1_diff_pct = (lts1_reach / car_reach) * 100,
-        car_lts2_diff_pct = (lts2_reach / car_reach) * 100,
-        car_lts3_diff_pct = (lts3_reach / car_reach) * 100,
-        car_lts4_diff_pct = (lts4_reach / car_reach) * 100
+        car_lts_1_2_diff_pct = (lts_1_2_reach / car_reach) * 100,
+        car_lts_1_3_diff_pct = (lts_1_3_reach / car_reach) * 100,
+        car_lts_1_4_diff_pct = (lts_1_4_reach / car_reach) * 100
     WHERE
         car_reach > 0;"""
 
@@ -417,10 +417,10 @@ for dist in distances:
             comp.component_1_3_count,
             comp.component_1_4_count,
             comp.component_car_count,
-            reach.lts1_reach,
-            reach.lts2_reach,
-            reach.lts3_reach,
-            reach.lts4_reach,
+            reach.lts_1_reach,
+            reach.lts_1_2_reach,
+            reach.lts_1_3_reach,
+            reach.lts_1_4_reach,
             reach.car_reach
         FROM
             density.density_hex dens
@@ -464,7 +464,7 @@ end = ");"
 select_columns = ""
 
 for d in distances:
-    s = f"""r{d}.lts1_reach AS lts1_reach_{d}, r{d}.lts2_reach AS lts2_reach_{d}, r{d}.lts3_reach AS lts3_reach_{d}, r{d}.lts4_reach AS lts4_reach_{d}, r{d}.car_reach AS car_reach_{d},"""
+    s = f"""r{d}.lts1_reach AS lts1_reach_{d}, r{d}.lts_1_2_reach AS lts_1_2_reach_{d}, r{d}.lts_1_3_reach AS lts_1_3_reach_{d}, r{d}.lts_1_4_reach AS lts_1_4_reach_{d}, r{d}.car_reach AS car_reach_{d},"""
     select_columns += s
 
 from_q = f"FROM reach.hex_reach_{distances[0]} r{distances[0]}"
