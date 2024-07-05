@@ -270,10 +270,10 @@ population_rename_dict = {
     "households_income_400_500k_share": "Income 400-500k (share)",
     "households_income_500_750k_share": "Income 500-750k (share)",
     "households_income_750k_share": "Income 750k (share)",
-    "households_with_car_pct": "Households w car (share)",
-    "households_1car_pct": "Households 1 car (share)",
+    "households_with_car_share": "Households w car (share)",
+    "households_1car_share": "Households 1 car (share)",
     "households_2cars_share": "Households 2 cars (share)",
-    "households_nocar_pct": "Households no car (share)",
+    "households_nocar_share": "Households no car (share)",
 }
 
 
