@@ -11,6 +11,7 @@ from sklearn.preprocessing import robust_scale
 import contextily as cx
 from matplotlib.patches import Patch
 from IPython.display import display
+import plotly_express as px
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -41,8 +42,6 @@ socio_cluster_gdf["share_low_income"] = (
 
 
 # %%
-import plotly_express as px
-
 fig = px.scatter(
     socio_cluster_gdf,
     x="share_low_income",
@@ -149,31 +148,82 @@ for c in cols:
     ax[cols.index(c)].set_ylabel(c)
 
 # %%
-# input = [v for v in lts_color_dict.values()]
-input_colors = plot_func.get_hex_colors_from_colormap("viridis", k)
-input_colors.reverse()
-test_colors = plot_func.color_list_to_cmap(input_colors)
+# # input = [v for v in lts_color_dict.values()]
+# input_colors = plot_func.get_hex_colors_from_colormap("viridis", k)
+# input_colors.reverse()
+# test_colors = plot_func.color_list_to_cmap(input_colors)
+
+# plot_func.plot_rank(socio_cluster_gdf, "network_rank", cmap=test_colors)
+
+# plot_func.plot_labels(socio_cluster_gdf, "network_rank", cmap=test_colors)
+# %%
+
+for sc in socio_cluster_gdf["socio_label"].unique():
+    print(sc)
+    display(socio_cluster_gdf[socio_cluster_gdf["socio_label"] == sc].describe())
+
+# %%
+sc_values = socio_cluster_gdf["socio_label"].unique()
+household_counts = []
+people_counts = []
+households_with_car = []
+households_without_car = []
 
 
-def plot_rank(gdf, label_col, cmap="viridis"):
-    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
-    ax.set_axis_off()
-    gdf.plot(
-        column=label_col,
-        legend=True,
-        ax=ax,
-        cmap=cmap,
-        linewidth=0.1,
-        categorical=True,
+for sc in socio_cluster_gdf["socio_label"].unique():
+    household_count = socio_cluster_gdf[socio_cluster_gdf["socio_label"] == sc][
+        "households"
+    ].sum()
+
+    print(f"Socio Cluster '{sc}' has {household_count:,.0f} households.")
+
+    household_counts.append(household_count)
+
+    people_count = socio_cluster_gdf[socio_cluster_gdf["socio_label"] == sc][
+        "population"
+    ].sum()
+
+    print(f"Socio Cluster '{sc}' has {people_count:,.0f} people.")
+
+    people_counts.append(people_count)
+
+    count_households_car = socio_cluster_gdf[socio_cluster_gdf["socio_label"] == sc][
+        "households_with_car"
+    ].sum()
+
+    print(
+        f"Socio Cluster '{sc}' has {count_households_car:,.0f} households with at least one car."
     )
-    plt.tight_layout()
 
+    households_with_car.append(count_households_car)
 
-plot_rank(socio_cluster_gdf, "network_rank", cmap=test_colors)
+    count_households_no_car = socio_cluster_gdf[socio_cluster_gdf["socio_label"] == sc][
+        "households_without_car"
+    ].sum()
+
+    print(
+        f"Socio Cluster '{sc}' has {count_households_no_car:,.0f} households without a car."
+    )
+
+    households_without_car.append(count_households_no_car)
+
+df = pd.DataFrame(
+    {
+        "Socio Cluster": sc_values,
+        "Households": household_counts,
+        "People": people_counts,
+        "Households with car": households_with_car,
+        "Households without car": households_without_car,
+    }
+)
+
+# %%
+display(df.style.pipe(format_style_no_index))
 
 # %%
 
-# - [ ] how many people live in xx areas?
-# - [ ] how many households?
 # - [ ] how many low income, car-free?
 # - [ ] find areas with high car ownership and low income
+# etc
+
+# %%
