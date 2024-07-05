@@ -23,7 +23,7 @@ exec(open("../settings/plotting.py").read())
 
 
 def plot_labels(gdf, label_col, cmap="tab20"):
-    fig, ax = plt.subplots(1, 1, figsize=(15, 15))
+    _, ax = plt.subplots(1, 1, figsize=(15, 15))
     ax.set_axis_off()
     gdf.plot(
         column=label_col,
@@ -37,7 +37,7 @@ def plot_labels(gdf, label_col, cmap="tab20"):
 
 
 def plot_rank(gdf, label_col, cmap="viridis"):
-    fig, ax = plt.subplots(1, 1, figsize=(15, 15))
+    _, ax = plt.subplots(1, 1, figsize=(15, 15))
     ax.set_axis_off()
     gdf.plot(
         column=label_col,
