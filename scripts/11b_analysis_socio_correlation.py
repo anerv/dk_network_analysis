@@ -26,7 +26,7 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 ################################
 
 exec(open("../settings/read_socio_pop.py").read())
-
+# %%
 plot_func.plot_correlation(
     socio,
     socio_corr_variables,
@@ -46,11 +46,12 @@ socio_density = gpd.read_postgis(
 )
 
 socio.dropna(subset=["population_density"], inplace=True)
+socio.drop(columns=["geometry"], inplace=True)
 
 socio_density = socio_density.merge(socio, on="id", how="inner")
 
 assert socio_density.shape[0] == socio.shape[0]
-
+# %%
 all_density_columns = [
     # length_columns,
     # length_steps_columns,
@@ -60,7 +61,7 @@ all_density_columns = [
     length_relative_steps_columns,
 ]
 
-labels = ["density", "density_steps", "length_relative", "length_relative_steps"]
+metric_labels = ["density", "density_steps", "length_relative", "length_relative_steps"]
 # %%
 # Density plot correlation
 for i, columns in enumerate(all_density_columns):
@@ -70,8 +71,8 @@ for i, columns in enumerate(all_density_columns):
     plot_func.plot_correlation(
         socio_density,
         corr_columns,
-        heatmap_fp=fp_socio_heatmap + f"{labels[i]}.png",
-        pairplot_fp=fp_socio_pairplot + f"{labels[i]}.png",
+        heatmap_fp=fp_socio_heatmap + f"{metric_labels[i]}.png",
+        pairplot_fp=fp_socio_pairplot + f"{metric_labels[i]}.png",
     )
 
 # %%
@@ -83,6 +84,34 @@ for i, columns in enumerate(all_density_columns):
         .style.background_gradient(cmap="coolwarm")
     )
     display(socio_density[columns].describe())
+
+
+# %% JUST POP DENSITY AND URB PCT
+
+all_labels = [labels_all, labels_step_all, labels_pct, labels_pct_step]
+
+axis_labels = ["km/sqkm", "km/sqkm", "%", "%"]
+
+for i, columns in enumerate(all_density_columns[:-2]):
+
+    for e, c in enumerate(columns):
+
+        plt.figure(figsize=(8, 6))
+        fig = sns.scatterplot(
+            data=socio_density,
+            x="population_density",
+            y=c,
+            hue="urban_pct",
+        )
+        fig.get_legend().set_title("Pct urban")
+        plt.xscale("log")
+        plt.xlabel("People per sqkm")
+        plt.ylabel(all_labels[i][e] + " " + axis_labels[i])
+        # plt.title()
+        plt.savefig(fp_socio_pop_corr + f"{c}.png")
+        plt.show()
+
+
 # %%
 ###### FRAGMENTATION ######
 ##########################
@@ -111,7 +140,7 @@ all_fragmentation_columns = [
     socio_largest_component_columns_ave,
 ]
 
-labels = [
+metric_labels = [
     "component_count",
     "component_per_km",
     "largest_local_component",
@@ -128,8 +157,8 @@ for i, columns in enumerate(all_fragmentation_columns):
         corr_columns,
         pair_plot_x_log=True,
         pair_plot_y_log=True,
-        heatmap_fp=fp_socio_heatmap + f"{labels[i]}.png",
-        pairplot_fp=fp_socio_pairplot + f"{labels[i]}.png",
+        heatmap_fp=fp_socio_heatmap + f"{metric_labels[i]}.png",
+        pairplot_fp=fp_socio_pairplot + f"{metric_labels[i]}.png",
     )
 
 # %%
@@ -141,6 +170,33 @@ for i, columns in enumerate(all_fragmentation_columns):
         .style.background_gradient(cmap="coolwarm")
     )
     display(socio_components[columns].describe())
+
+# %%
+# %% JUST POP DENSITY AND URB PCT
+
+all_labels = [labels_all, labels_step_all, labels_pct, labels_pct_step]
+
+axis_labels = ["component count", "component per km", "ave size of largest component"]
+
+for i, columns in enumerate(all_fragmentation_columns):
+
+    for e, c in enumerate(columns):
+
+        plt.figure(figsize=(8, 6))
+        figg = sns.scatterplot(
+            data=socio_components,
+            x="population_density",
+            y=c,
+            hue="urban_pct",
+        )
+        figg.get_legend().set_title("Pct urban")
+        plt.xscale("log")
+        plt.xlabel("People per sqkm")
+        plt.ylabel(all_labels[i][e] + " " + axis_labels[i])
+        # plt.title()
+        plt.savefig(fp_socio_pop_corr + f"{c}.png")
+        plt.show()
+
 
 # %%
 ##### REACH ###########
@@ -157,7 +213,7 @@ all_reach_columns = [
     socio_reach_median_columns,
 ]
 
-labels = [
+metric_labels = [
     "average_reach",
     "median_reach",
 ]
@@ -171,8 +227,8 @@ for i, columns in enumerate(all_reach_columns):
     plot_func.plot_correlation(
         socio_reach,
         corr_columns,
-        heatmap_fp=fp_socio_heatmap + f"{labels[i]}.png",
-        pairplot_fp=fp_socio_pairplot + f"{labels[i]}.png",
+        heatmap_fp=fp_socio_heatmap + f"{metric_labels[i]}.png",
+        pairplot_fp=fp_socio_pairplot + f"{metric_labels[i]}.png",
     )
 
 # %%
@@ -186,5 +242,25 @@ for i, columns in enumerate(all_reach_columns):
     display(socio_reach[columns].describe())
 
 # %%
+all_labels = [labels_all, labels_step_all, labels_pct, labels_pct_step]
 
-# TODO: ALL NETWORK VARIABLES**
+axis_labels = ["average reach (km)", "median reach (km)"]
+
+for i, columns in enumerate(all_fragmentation_columns):
+
+    for e, c in enumerate(columns):
+
+        plt.figure(figsize=(8, 6))
+        figg = sns.scatterplot(
+            data=socio_reach,
+            x="population_density",
+            y=c,
+            hue="urban_pct",
+        )
+        figg.get_legend().set_title("Pct urban")
+        plt.xscale("log")
+        plt.xlabel("People per sqkm")
+        plt.ylabel(all_labels[i][e] + " " + axis_labels[i])
+        # plt.title()
+        plt.savefig(fp_socio_pop_corr + f"{c}.png")
+        plt.show()
