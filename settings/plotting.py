@@ -47,7 +47,6 @@ labels_step_all = [
     "Total network",
 ]
 
-
 labels_pct = [
     "LTS 1 (%)",
     "LTS 2 (%)",
