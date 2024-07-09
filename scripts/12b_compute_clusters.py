@@ -212,8 +212,17 @@ socio_cluster_gdf[
 
 # %%
 # EXPORT CLUSTER RESULTS TO POSTGIS
+schema_queries = [
+    "DROP SCHEMA IF EXISTS clustering CASCADE;",
+    "CREATE SCHEMA clustering;",
+]
+for q in schema_queries:
+    result = dbf.run_query_pg(q, connection)
+    if result == "error":
+        print("Please fix error before rerunning and reconnect to the database")
+
 socio_cluster_gdf[["id", "network_rank", "socio_label", "geometry"]].to_postgis(
-    "socio_clusters",
+    "clustering.socio_clusters",
     engine,
     if_exists="replace",
     index=False,
