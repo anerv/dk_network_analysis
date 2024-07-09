@@ -21,6 +21,34 @@ exec(open("../settings/plotting.py").read())
 
 # Clustering functions based on https://geographicdata.science/book/notebooks/10_clustering_and_regionalization.html#
 
+# Gini functions based on https://geographicdata.science/book/notebooks/09_spatial_inequality.html
+
+
+def make_gini_plot(gdf, column):
+
+    n = len(gdf)
+    share_of_areas = np.arange(1, n + 1) / n
+
+    values = gdf[column].sort_values()
+
+    shares = values / values.sum()
+    cumulative_share = shares.cumsum()
+    # Generate figure with one axis
+    f, ax = plt.subplots(figsize=(5, 5))
+    # Plot Lorenz Curve
+    ax.plot(share_of_areas, cumulative_share, label="Lorenz Curve")
+    # Plot line of perfect equality
+    ax.plot((0, 1), (0, 1), color="r", label="Perfect Equality")
+    # Label horizontal axis
+    ax.set_xlabel("Share of areas")
+    # Label vertical axis
+    ax.set_ylabel("Share of value")
+    # Add legend
+    ax.legend()
+    ax.set_title(f"Lorenz Curve for: {column}").set_fontsize(10)
+
+    plt.show()
+
 
 def plot_labels(gdf, label_col, cmap="tab20"):
     _, ax = plt.subplots(1, 1, figsize=(15, 15))

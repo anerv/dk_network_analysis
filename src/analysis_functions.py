@@ -13,8 +13,36 @@ from sklearn.cluster import AgglomerativeClustering
 from sklearn.preprocessing import robust_scale
 from IPython.display import display
 from src import plotting_functions as plot_func
+from pysal.explore import inequality
+from inequality.gini import Gini_Spatial
 
 # Clustering functions based on https://geographicdata.science/book/notebooks/10_clustering_and_regionalization.html#
+
+# Gini functions from  https://geographicdata.science/book/notebooks/09_spatial_inequality.html
+
+
+def gini_by_col(column):
+    return inequality.gini.Gini(column.values).g
+
+
+def theil(column):
+    return inequality.theil.Theil(column.values).T
+
+
+def gini_spatial_by_column(values, weights):
+    gs = Gini_Spatial(values, weights)
+    denom = 2 * values.mean() * weights.n**2
+    near_diffs = gs.wg / denom
+    far_diffs = gs.wcg / denom
+    out = pd.Series(
+        {
+            "gini": gs.g,
+            "near_diffs": near_diffs,
+            "far_diffs": far_diffs,
+            "p_sim": gs.p_sim,
+        }
+    )
+    return out
 
 
 def spatial_weights_combined(gdf, id_column, k=3):
