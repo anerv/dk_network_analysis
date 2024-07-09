@@ -1,6 +1,10 @@
-DROP TABLE IF EXISTS socio_cluster_results;
+DROP TABLE IF EXISTS clustering.socio_cluster_results;
 
-CREATE TABLE socio_cluster_results AS
+DROP SCHEMA IF EXISTS clustering CASCADE;
+
+CREATE SCHEMA clustering;
+
+CREATE TABLE clustering.socio_cluster_results AS
 SELECT
     sc.network_rank,
     sc.socio_label,
