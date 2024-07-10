@@ -15,6 +15,7 @@ SET
         WHEN lts_viz = 'pedestrian' THEN 6
         WHEN lts_viz = 'no_cycling' THEN 7
         WHEN lts_viz = 'no_access' THEN 0
+        WHEN lts_viz = 'dirt_road' THEN 8
         ELSE NULL
     END;
 

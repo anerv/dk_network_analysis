@@ -82,6 +82,17 @@ lts_7 AS (
     GROUP BY
         municipality
 ),
+lts_8 AS (
+    SELECT
+        SUM(infra_length) / 1000 AS lts_8_length,
+        municipality
+    FROM
+        edges
+    WHERE
+        lts_access IN (8)
+    GROUP BY
+        municipality
+),
 total_car AS (
     SELECT
         SUM(infra_length) / 1000 AS total_car_length,
