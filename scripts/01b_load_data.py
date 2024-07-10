@@ -137,7 +137,7 @@ test = dbf.run_query_pg(q, connection)
 
 print(test)
 
-# Preprocess socio data
+# Preprocess hex grid data
 q = "sql/01c_preprocess_hexgrid.sql"
 result = dbf.run_query_pg(q, connection)
 if result == "error":
