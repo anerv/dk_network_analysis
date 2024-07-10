@@ -45,11 +45,17 @@ def gini_spatial_by_column(values, weights):
     return out
 
 
-def spatial_weights_combined(gdf, id_column, k=3):
+def spatial_weights_combined(gdf, id_column, k=3, silence_warnings=True):
 
-    w_queen = compute_spatial_weights(gdf, id_column, "queen")
-    w_knn = compute_spatial_weights(gdf, id_column, w_type="knn", k=3)
-    w = weights.set_operations.w_union(w_queen, w_knn)
+    w_queen = compute_spatial_weights(
+        gdf, id_column, "queen", silence_warnings=silence_warnings
+    )
+    w_knn = compute_spatial_weights(
+        gdf, id_column, w_type="knn", k=3, silence_warnings=silence_warnings
+    )
+    w = weights.set_operations.w_union(
+        w_queen, w_knn, silence_warnings=silence_warnings
+    )
 
     assert len(w.islands) == 0
 
@@ -262,19 +268,20 @@ def compare_spatial_weights_sensitivity(
     k_values,
     all_columns,
     fp,
+    silence_warnings=False,
 ):
 
     print("Starting sensitivity analysis for aggregation level:", aggregation_level)
 
     # Compute spatial weights
     w1 = compute_spatial_weights(
-        gdf, id_column, "knn", k=k_values[0]
+        gdf, id_column, "knn", k=k_values[0], silence_warnings=silence_warnings
     )  # using filler col for subset
     w2 = compute_spatial_weights(
-        gdf, id_column, "knn", k=k_values[1]
+        gdf, id_column, "knn", k=k_values[1], silence_warnings=silence_warnings
     )  # using filler col for subset
     w3 = compute_spatial_weights(
-        gdf, id_column, "knn", k=k_values[2]
+        gdf, id_column, "knn", k=k_values[2], silence_warnings=silence_warnings
     )  # using filler col for subset
 
     all_weigths = {
@@ -387,7 +394,9 @@ def compare_spatial_weights_sensitivity(
             plt.show()
 
 
-def compute_spatial_weights(gdf, na_columns, w_type, dist=1000, k=6):
+def compute_spatial_weights(
+    gdf, na_columns, w_type, dist=1000, k=6, silence_warnings=False
+):
     """
     Wrapper function for computing the spatial weights for the analysis/results grids.
     ...
@@ -411,13 +420,17 @@ def compute_spatial_weights(gdf, na_columns, w_type, dist=1000, k=6):
     pts = pd.DataFrame({"X": cents.x, "Y": cents.y}).values
 
     if w_type == "dist":
-        w = weights.distance.DistanceBand.from_array(pts, dist, binary=False)
+        w = weights.distance.DistanceBand.from_array(
+            pts, dist, binary=False, silence_warnings=silence_warnings
+        )
 
     elif w_type == "knn":
-        w = weights.distance.KNN.from_array(pts, k=k)
+        w = weights.distance.KNN.from_array(pts, k=k, silence_warnings=silence_warnings)
 
     elif w_type == "queen":
-        w = weights.contiguity.Queen.from_dataframe(gdf, use_index=False)
+        w = weights.contiguity.Queen.from_dataframe(
+            gdf, use_index=False, silence_warnings=silence_warnings
+        )
 
     else:
         print("no valid type defined")
