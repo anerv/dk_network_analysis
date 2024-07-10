@@ -41,6 +41,7 @@ results_subfolders = [
     "clustering",
     "spatial_autocorrelation",
     "correlation",
+    "equity",
 ]
 for f in results_subfolders:
     if not os.path.exists("results/" + f):
