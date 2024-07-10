@@ -58,6 +58,7 @@ socio_gdf = socio_cluster_gdf[
         "Low Stress Density",
         "Low Stress Reach (median)",
         "Low Stress Reach (mean)",
+        "urban_pct",
     ]
 ].copy()
 
@@ -84,7 +85,9 @@ inequalities = (
 # %%
 ########## SPATIAL GINI ##########
 
-w = analysis_func.spatial_weights_combined(socio_gdf, id_columns[1], k_socio)
+w = analysis_func.spatial_weights_combined(
+    socio_gdf, id_columns[1], k_socio, silence_warnings=True
+)
 
 # transform to binary
 w.transform = "B"
@@ -93,7 +96,7 @@ for c in columns:
     gini_spatial = Gini_Spatial(socio_gdf[c], w)
 
     gini_spatial.g
-    print(f"Spatial Gini for {c}: {gini_spatial.g:.2f}")
+    print(f"Gini for {c}: {gini_spatial.g:.2f}")
 
     gini_spatial.wcg_share
     print(f"Share of within-cluster inequality for {c}: {gini_spatial.wcg_share:.2f}")
@@ -108,10 +111,12 @@ spatial_gini_results = (
     socio_gdf[columns].apply(analysis_func.gini_spatial_by_column, weights=w).T
 )
 
-"""
-Statistical significance indicates "that inequality between neighboring pairs of counties is different 
-from the inequality between county pairs that are not geographically proximate."
-"""
+display(spatial_gini_results)
+
+# """
+# Statistical significance indicates "that inequality between neighboring pairs of counties is different
+# from the inequality between county pairs that are not geographically proximate."
+# """
 
 # TODO: EXPORT RESULTS
 # %%
@@ -119,13 +124,31 @@ from the inequality between county pairs that are not geographically proximate."
 
 inequalities["theil"] = socio_gdf[columns].apply(analysis_func.theil, axis=0)
 
+display(inequalities)
+
 # TODO: EXPORT RESULTS
 # %%
 ## decomposition
 
 # define groups!
+# based on urban percentage
 
-theil_dr = inequality.theil.TheilD(socio_gdf[years].values, socio_gdf.Region)
+socio_gdf["group"] = None
+
+
+socio_gdf["group"] = np.where(socio_gdf["urban_pct"] < 0.2, 5, socio_gdf.group)
+socio_gdf["group"] = np.where(socio_gdf["urban_pct"] < 0.05, 6, socio_gdf.group)
+socio_gdf["group"] = np.where(socio_gdf["urban_pct"] > 0.2, 4, socio_gdf.group)
+socio_gdf["group"] = np.where(socio_gdf["urban_pct"] > 0.4, 3, socio_gdf.group)
+socio_gdf["group"] = np.where(socio_gdf["urban_pct"] > 0.6, 2, socio_gdf.group)
+socio_gdf["group"] = np.where(socio_gdf["urban_pct"] > 0.8, 1, socio_gdf.group)
+socio_gdf["group"] = np.where(socio_gdf["urban_pct"] > 0.95, 0, socio_gdf.group)
+
+
+# %%
+
+# TODO: INTERPRETATION
+theil_dr = inequality.theil.TheilD(socio_gdf[columns].values, socio_gdf.group)
 
 theil_dr.bg
 
@@ -142,9 +165,11 @@ inequalities[["theil_between", "theil_within", "theil_between_share"]].plot(
     subplots=True, figsize=(10, 8)
 )
 
-
+# TODO: EXPORT RESULTS
 # %%
 ####### BIVARIATE MORAN's I #######
+
+# TODO: CHECK/DEBUG
 
 from esda.moran import Moran_BV, Moran_Local_BV
 from splot.esda import plot_local_autocorrelation, moran_scatterplot
@@ -155,18 +180,15 @@ from esda.moran import Moran
 import matplotlib.pyplot as plt
 from libpysal.weights.contiguity import Queen
 from libpysal import examples
-import np as np
+import numpy as np
 import pandas as pd
 import geopandas as gpd
 import os
 import splot
 from splot.esda import lisa_cluster
 
-y = gdf["Donatns"].values
-w = Queen.from_dataframe(gdf)
-w.transform = "r"
-
-x = gdf["Suicids"].values
+y = socio_gdf["Low Stress Density"].values
+x = socio_gdf["Household income 50th percentile"].values
 
 
 moran = Moran(y, w)
@@ -188,11 +210,11 @@ plt.show()
 
 moran_loc_bv = Moran_Local_BV(x, y, w)
 fig, ax = moran_scatterplot(moran_loc_bv, p=0.05)
-ax.set_xlabel("Donatns")
-ax.set_ylabel("Spatial lag of Suicids")
+ax.set_xlabel("Y")
+ax.set_ylabel("Spatial lag of XXX")
 plt.show()
 
-plot_local_autocorrelation(moran_loc_bv, gdf, "Suicids")
+plot_local_autocorrelation(moran_loc_bv, socio_gdf, "Low Stress Density")
 plt.show()
 
 # %%
