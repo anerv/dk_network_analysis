@@ -291,7 +291,7 @@ compare_bivariate_moransi(all_morans)
 # %%
 ### NEEDS GAP
 
-# Requires higher areas density data set!!
+# TODO: join 
 
 
 # %%
