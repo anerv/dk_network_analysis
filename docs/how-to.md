@@ -30,7 +30,7 @@ Successfully created folder results
 
 ## 3. Provide input data
 
-The analysis makes use of 4 input data sets:
+The analysis makes use of 5 input data sets:
 
 * A road network data set split into an edge and a node table
 * A polygon data set with the Danish municipal boundaries
@@ -54,6 +54,16 @@ A data set with socio-economic variables for all voting areas is provided as `..
 ### Urban areas
 
 A data set with polygons representing areas classified as urban, provided as `../data/input/urban/urban_areas.parquet`. Update with more recent input data as needed, but do not change the filepath or attributes in the input data set.
+
+### Population data
+
+Get the latest population data from GHSL: [https://human-settlement.emergency.copernicus.eu/download.php?ds=pop](https://human-settlement.emergency.copernicus.eu/download.php?ds=pop).
+
+1. Download the two raster data sets covering the entire extent of Denmark.
+2. Place the downloaded zip-files in the folder `data/population/`.
+3. Unzip the zip files.
+4. Update the filepaths `pop_fp_1` and `pop_fp_2` in `config.yml` if needed.
+
 
 ## 4. Run analysis
 
