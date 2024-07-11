@@ -30,13 +30,11 @@ exec(open("../helper_scripts/prepare_socio_cluster_data.py").read())
 
 # generate socio reach comparison columns
 exec(open("../helper_scripts/read_reach_comparison.py").read())
-hex_reach_component_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
-hex_reach_component_cols = [
-    c
-    for c in hex_reach_component_cols
-    if "_15" not in c and "5_15" not in c and "2_" not in c
+hex_reach_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
+hex_reach_cols = [
+    c for c in hex_reach_cols if "_15" not in c and "5_15" not in c and "2_" not in c
 ]
-socio_reach_compare_columns = [c + "_median" for c in hex_reach_component_cols]
+socio_reach_compare_columns = [c + "_median" for c in hex_reach_cols]
 del hex_reach_comparison
 
 
@@ -183,13 +181,7 @@ plot_func.style_cluster_means(cluster_means_soc_soc)
 
 socio_cluster_gdf["socio_label"] = None
 
-# label_dict = {
-#     0: "Medium income - high car - rural",
-#     1: "Low income - low car - urban",
-#     2: "High income - low car - urban",
-#     3: "Very high income - very high car - rural",
-#     4: "Low-medium income - low-medium car - suburban",
-# }
+
 label_dict = {
     0: "Medium income - low car",
     1: "High income - high car",
@@ -211,6 +203,91 @@ socio_cluster_gdf[
 ].to_file(fp_socio_socio_clusters, driver="GPKG")
 
 # %%
+# HEX CLUSTERING: Network variables
+
+exec(open("../helper_scripts/read_hex_results.py").read())
+
+exec(open("../helper_scripts/read_reach_comparison.py").read())
+reach_compare_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
+reach_compare_cols = [
+    c
+    for c in reach_compare_cols
+    if "_15" not in c and "5_15" not in c and "2_" not in c
+]
+
+# Define cluster variables
+hex_network_cluster_variables = (
+    density_columns
+    + length_relative_columns
+    + component_per_km_columns
+    + reach_columns
+    + reach_compare_cols
+)
+
+# Use robust_scale to norm cluster variables
+hex_network_scaled = robust_scale(hex_gdf[hex_network_cluster_variables])
+
+# Find appropriate number of clusters
+m1, m2 = analysis_func.find_k_elbow_method(hex_network_scaled, min_k=1, max_k=20)
+
+for key, val in m1.items():
+    print(f"{key} : {val:.2f}")
+
+# %%
+# Define K!
+k = 6
+##### K-Means #######
+
+kmeans_col_net = f"kmeans_net_{k}"
+
+k_labels = analysis_func.run_kmeans(k, hex_network_scaled)
+
+hex_gdf[kmeans_col_net] = k_labels
+
+fp_map = fp_hex_network_cluster_base + f"_map_{kmeans_col_net}.png"
+fp_size = fp_hex_network_cluster_base + f"_size_{kmeans_col_net}.png"
+fp_kde = fp_hex_network_cluster_base + f"_kde_{kmeans_col_net}.png"
+
+colors = plot_func.get_hex_colors_from_colormap("Set2", k)
+cmap = plot_func.color_list_to_cmap(colors)
+
+cluster_means_hex = analysis_func.examine_cluster_results(
+    hex_gdf,
+    kmeans_col_net,
+    hex_network_cluster_variables,
+    fp_map,
+    fp_size,
+    fp_kde,
+    cmap=cmap,
+    palette=colors,
+)
+
+plot_func.style_cluster_means(cluster_means_hex)
+
+
+# Label clusters after bikeability rank
+hex_gdf["network_rank"] = None
+
+# TODO: UPDATE
+rank = [1, 2, 5, 4, 3, 0]
+assert len(rank) == k
+
+for i, r in enumerate(rank):
+    hex_gdf.loc[
+        hex_gdf[kmeans_col_net] == r,
+        "network_rank",
+    ] = (
+        i + 1
+    )
+
+hex_gdf.network_rank = hex_gdf.network_rank.astype(int)
+hex_gdf[[kmeans_col_net] + ["geometry", id_columns[2], "network_rank"]].to_parquet(
+    fp_hex_network_clusters
+)
+
+plot_func.plot_rank(hex_cluster_gdf, "network_rank")
+
+# %%
 # EXPORT CLUSTER RESULTS TO POSTGIS
 schema_queries = [
     "DROP SCHEMA IF EXISTS clustering CASCADE;",
@@ -226,6 +303,10 @@ socio_cluster_gdf[["id", "network_rank", "socio_label", "geometry"]].to_postgis(
     engine,
     if_exists="replace",
     index=False,
+)
+
+hex_cluster_gdf[["id", "network_rank", "geometry"]].to_postgis(
+    "clustering.hex_clusters", engine, if_exists="replace", index=False
 )
 
 q = "sql/12b_analysis_clustering.sql"
