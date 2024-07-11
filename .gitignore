@@ -5,6 +5,7 @@
 
 results/*
 data/input/archive/*
+data/input/population/*
 data/processed/*
 TODO.md
 network_analysis_exploration.qgz
