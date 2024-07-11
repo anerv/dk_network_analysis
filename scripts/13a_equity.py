@@ -291,11 +291,13 @@ compare_bivariate_moransi(all_morans)
 # %%
 ### NEEDS GAP
 
-# TODO: join 
+# TODO: join hex pop to density, reach?
+# Define threshold for density, reach, etc.
 
-
+# write code for counting areas and people in areas with high and low values
 # %%
 
 # makes sense for density - zero sum game
 
 # what about reach? not a zero sum game, but can still show the inequality - a bit like accessiblity
+# %%
