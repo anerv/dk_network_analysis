@@ -137,20 +137,23 @@ test = dbf.run_query_pg(q, connection)
 
 print(test)
 
+# %%
+exec(open("../helper_scripts/vectorize_raster_population_data.py").read())
+
+# %%
+
+h3_gdf.rename(columns={f"hex_id_{h3_resolution}": "hex_id"}, inplace=True)
+
+h3_gdf.to_postgis("h3_population", engine, if_exists="replace")
+
+# %%
+
 # Preprocess hex grid data
 q = "sql/01c_preprocess_hexgrid.sql"
 result = dbf.run_query_pg(q, connection)
 if result == "error":
     print("Please fix error before rerunning and reconnect to the database")
 
-
-# %%
-exec(open("../helper_scripts/vectorize_raster_population_data.py").read())
-
-# TODO: load to database
-# TODO: join to hex grid
-# drop table
-# %%
 
 connection.close()
 

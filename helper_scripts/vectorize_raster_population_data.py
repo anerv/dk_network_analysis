@@ -103,7 +103,7 @@ dk_gdf.to_crs("EPSG:4326", inplace=True)
 
 pop_gdf = gpd.sjoin(pop_gdf, dk_gdf, predicate="within", how="inner")
 
-hex_id_col = f"hex_id_{h3_resolution}"
+hex_id_col = f"hex_id"
 pop_gdf[hex_id_col] = pop_gdf.apply(
     lambda row: h3.geo_to_h3(lat=row["lat"], lng=row["lng"], resolution=h3_resolution),
     axis=1,
