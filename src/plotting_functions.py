@@ -24,7 +24,7 @@ exec(open("../settings/plotting.py").read())
 # Gini functions based on https://geographicdata.science/book/notebooks/09_spatial_inequality.html
 
 
-def make_gini_plot(gdf, column):
+def make_gini_plot(gdf, column, fp):
 
     n = len(gdf)
     share_of_areas = np.arange(1, n + 1) / n
@@ -47,6 +47,7 @@ def make_gini_plot(gdf, column):
     ax.legend()
     ax.set_title(f"Lorenz Curve for: {column}").set_fontsize(10)
 
+    plt.savefig(fp)
     plt.show()
 
 
