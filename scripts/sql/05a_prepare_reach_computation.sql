@@ -89,17 +89,17 @@ CREATE INDEX lts1_source ON lts_1_edges (source);
 
 CREATE INDEX lts1_target ON lts_1_edges (target);
 
-CREATE INDEX lts2_source ON lts_2_edges (source);
+CREATE INDEX lts2_source ON lts_1_2_edges (source);
 
-CREATE INDEX lts2_target ON lts_2_edges (target);
+CREATE INDEX lts2_target ON lts_1_2_edges (target);
 
-CREATE INDEX lts3_source ON lts_3_edges (source);
+CREATE INDEX lts3_source ON lts_1_3_edges (source);
 
-CREATE INDEX lts3_target ON lts_3_edges (target);
+CREATE INDEX lts3_target ON lts_1_3_edges (target);
 
-CREATE INDEX lts4_source ON lts_4_edges (source);
+CREATE INDEX lts4_source ON lts_1_4_edges (source);
 
-CREATE INDEX lts4_target ON lts_4_edges (target);
+CREATE INDEX lts4_target ON lts_1_4_edges (target);
 
 CREATE INDEX car_source ON car_edges (source);
 
