@@ -15,3 +15,4 @@ scripts/test.gpkg
 scripts/test.gpkg-shm
 scripts/test.gpkg-wal
 scripts/presentation_plots.py
+scripts/sql/test.sql
