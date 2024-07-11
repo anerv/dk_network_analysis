@@ -170,7 +170,7 @@ exec(open("../settings/read_reach_comparison.py").read())
 
 #hex_reach_comparison.replace(np.nan, 0, inplace=True)
 
-distances = [2, 5, 10, 15]
+distances = [1, 2, 5, 10, 15]
 
 plot_columns = []
 filepaths = []

@@ -28,18 +28,31 @@ for i, q in enumerate(queries):
     print(f"Step {i+1} done!")
 
 # %%
-distances = [2, 5, 10, 15]  # max distance in km
+# distances = [2, 5, 10, 15]  # max distance in km
+distances = [
+    1,
+    2,
+    5,
+]
+# distances = [10]  # max distance in km
+# distances = [15]
 # distances = [5, 10]  # max distance in km
 # distances = [15]
 # distances = [2]
 # %%
+chunk_sizes_1 = [1000, 1000, 1000, 1000, 1000]
 chunk_sizes_2 = [1000, 1000, 1000, 1000, 1000]
 chunk_sizes_5 = [1000, 1000, 1000, 1000, 1000]
 chunk_sizes_10 = [1000, 500, 200, 200, 200]
 chunk_sizes_15 = [1000, 200, 100, 100, 100]
 
-all_chunk_sizes = [chunk_sizes_2, chunk_sizes_5, chunk_sizes_10, chunk_sizes_15]
-all_chunk_sizes = [chunk_sizes_2]
+all_chunk_sizes = [
+    chunk_sizes_1,
+    chunk_sizes_2,
+    chunk_sizes_5,
+    chunk_sizes_10,
+    chunk_sizes_15,
+]
 
 # %%
 for dist in distances:
@@ -452,7 +465,7 @@ with open("vacuum_analyze.py") as f:
 
 # %%
 
-distances = [2, 5, 10, 15]  # max distance in km
+distances = [1, 2, 5, 10, 15]  # max distance in km
 
 result = dbf.run_query_pg("DROP TABLE IF EXISTS reach.compare_reach;", connection)
 if result == "error":
