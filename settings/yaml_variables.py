@@ -17,6 +17,9 @@ with open(r"../config.yml") as file:
     socio_fp = parsed_yaml_file["socio_fp"]
     urban_areas_fp = parsed_yaml_file["urban_areas_fp"]
 
+    pop_fp_1 = parsed_yaml_file["pop_fp_1"]
+    pop_fp_2 = parsed_yaml_file["pop_fp_2"]
+
     crs = parsed_yaml_file["CRS"]
 
     h3_resolution = parsed_yaml_file["h3_resolution"]
