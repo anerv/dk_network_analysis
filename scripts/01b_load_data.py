@@ -143,6 +143,15 @@ result = dbf.run_query_pg(q, connection)
 if result == "error":
     print("Please fix error before rerunning and reconnect to the database")
 
+
+# %%
+exec(open("../helper_scripts/vectorize_raster_population_data.py").read())
+
+# TODO: load to database
+# TODO: join to hex grid
+# drop table
+# %%
+
 connection.close()
 
 print("Script 01b complete!")

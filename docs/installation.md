@@ -71,7 +71,7 @@ If this fails, the environment can be created by running:
 
 ```bash
 conda config --prepend channels conda-forge
-conda create -n dk_network_analysis --strict-channel-priority geopandas seaborn psycopg2 contextily sqlalchemy geoalchemy2 pyarrow h3-py pyyaml pysal plotly plotly_express==0.4.0 numba ipykernel
+conda create -n dk_network_analysis --strict-channel-priority geopandas seaborn psycopg2 contextily sqlalchemy geoalchemy2 pyarrow h3-py pyyaml pysal plotly plotly_express==0.4.0 numba rioxarray rasterio ipykernel
 ```
 
 When the environment has been created successfully, run:
