@@ -33,7 +33,7 @@ fp = fp_spatial_weights_sensitivity
 ############################
 
 ### READ DATA ###
-exec(open("../settings/read_density.py").read())
+exec(open("../helper_scripts/read_density.py").read())
 
 gdfs = [density_muni, density_socio, density_hex]
 
@@ -61,7 +61,7 @@ for i, gdf in enumerate(gdfs):
 ####### FRAGMENTATION ######
 ############################
 
-exec(open("../settings/read_component_length_agg.py").read())
+exec(open("../helper_scripts/read_component_length_agg.py").read())
 
 gdfs = [component_length_muni, component_length_socio, component_length_hex]
 
@@ -90,7 +90,7 @@ for i, gdf in enumerate(gdfs):
 ####### REACH ##############
 ############################
 
-exec(open("../settings/read_reach.py").read())
+exec(open("../helper_scripts/read_reach.py").read())
 
 hex_reach.replace(np.nan, 0, inplace=True)
 

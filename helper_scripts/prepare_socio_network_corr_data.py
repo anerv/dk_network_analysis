@@ -15,7 +15,7 @@ socio = gpd.read_postgis(
     "SELECT id, urban_pct, geometry FROM socio;", engine, geom_col="geometry"
 )
 
-exec(open("../settings/read_socio_results.py").read())
+exec(open("../helper_scripts/read_socio_results.py").read())
 
 socio_gdf = socio.merge(socio_density, on="id", how="left")
 socio_gdf = socio_gdf.merge(socio_components, on="id", how="left")

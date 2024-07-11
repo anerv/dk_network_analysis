@@ -11,9 +11,9 @@ exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 
 # Read socio pop
-exec(open("../settings/read_socio_pop.py").read())
+exec(open("../helper_scripts/read_socio_pop.py").read())
 
-exec(open("../settings/read_socio_results.py").read())
+exec(open("../helper_scripts/read_socio_results.py").read())
 
 socio_density = socio_density[socio_density.total_network_length > 0]
 

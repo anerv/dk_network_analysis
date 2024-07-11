@@ -17,7 +17,7 @@ exec(open("../settings/df_styler.py").read())
 # %%
 # Read data
 
-exec(open("../settings/read_reach.py").read())
+exec(open("../helper_scripts/read_reach.py").read())
 
 hex_reach.replace(0, np.nan, inplace=True)
 
@@ -119,7 +119,7 @@ display(df.style.pipe(format_style_index))
 # %%
 # Increases in reach at different distance thresholds
 
-exec(open("../settings/read_reach_comparison.py").read())
+exec(open("../helper_scripts/read_reach_comparison.py").read())
 
 columns = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
 

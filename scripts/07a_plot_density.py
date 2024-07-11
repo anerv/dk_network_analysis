@@ -13,7 +13,7 @@ exec(open("../settings/plotting.py").read())
 exec(open("../settings/filepaths.py").read())
 
 # %%
-exec(open("../settings/read_density.py").read())
+exec(open("../helper_scripts/read_density.py").read())
 
 # %%
 ####### MAPS ##############################

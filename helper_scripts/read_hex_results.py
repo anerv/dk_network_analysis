@@ -52,7 +52,7 @@ hex_reach = gpd.read_postgis(
     f"SELECT * FROM reach.hex_reach_{reach_dist};", engine, geom_col="geometry"
 )
 
-exec(open("../settings/read_reach_comparison.py").read())
+exec(open("../helper_scripts/read_reach_comparison.py").read())
 
 gdfs = [
     hex_density,

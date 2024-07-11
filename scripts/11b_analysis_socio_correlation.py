@@ -25,7 +25,7 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 ###### SOCIO-ECO VARIABLES #####
 ################################
 
-exec(open("../settings/read_socio_pop.py").read())
+exec(open("../helper_scripts/read_socio_pop.py").read())
 # %%
 plot_func.plot_correlation(
     socio,

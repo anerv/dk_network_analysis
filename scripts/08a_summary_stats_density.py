@@ -21,7 +21,7 @@ exec(open("../settings/df_styler.py").read())
 plot_func.set_renderer("png")
 
 # %%
-exec(open("../settings/read_density.py").read())
+exec(open("../helper_scripts/read_density.py").read())
 
 density_data = [density_muni, density_socio, density_hex]
 

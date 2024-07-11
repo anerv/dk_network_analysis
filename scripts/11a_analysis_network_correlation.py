@@ -20,9 +20,9 @@ plot_func.set_renderer("png")
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 # %%
-exec(open("../settings/read_hex_results.py").read())
+exec(open("../helper_scripts/read_hex_results.py").read())
 
-exec(open("../settings/read_reach_comparison.py").read())
+exec(open("../helper_scripts/read_reach_comparison.py").read())
 hex_reach_component_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
 del hex_reach_comparison
 
@@ -55,10 +55,10 @@ plot_func.plot_correlation(
 # %%
 ##### SOCIO #####
 
-exec(open("../settings/prepare_socio_network_corr_data.py").read())
+exec(open("../helper_scripts/prepare_socio_network_corr_data.py").read())
 
 # generate socio reach comparison columns
-exec(open("../settings/read_reach_comparison.py").read())
+exec(open("../helper_scripts/read_reach_comparison.py").read())
 hex_reach_component_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
 socio_reach_compare_columns = [c + "_median" for c in hex_reach_component_cols]
 del hex_reach_comparison

@@ -23,7 +23,7 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 # **** Plot total component size distributions *****
 
-exec(open("../settings/read_component_sizes.py").read())
+exec(open("../helper_scripts/read_component_sizes.py").read())
 
 component_size_dfs = [
     component_size_1,
@@ -132,7 +132,7 @@ for muni in municipalities:
 
 # **** PLOT LOCAL COMPONENT COUNT (MAPS) ****
 
-exec(open("../settings/read_components.py").read())
+exec(open("../helper_scripts/read_components.py").read())
 
 gdfs = [muni_components, socio_components, hex_components]
 
@@ -185,7 +185,7 @@ for e, gdf in enumerate(gdfs):
 # %%
 # **** MAPS: PLOT COMPONENTS PER LENGTH AND DENSITY ****
 
-exec(open("../settings/read_component_length_agg.py").read())
+exec(open("../helper_scripts/read_component_length_agg.py").read())
 
 gdfs = [component_length_muni, component_length_socio, component_length_hex]
 
@@ -284,7 +284,7 @@ for e, gdf in enumerate(gdfs):
 # %%
 # ****** MAPS OF LARGEST COMPONENTS *******
 
-exec(open("../settings/read_largest_components.py").read())
+exec(open("../helper_scripts/read_largest_components.py").read())
 
 # Largest component length
 plot_columns = largest_local_component_len_columns
@@ -409,7 +409,7 @@ for i, p in enumerate(plot_columns):
 
 # *** Correlation between hex largest component length and area ***
 
-exec(open("../settings/read_largest_components.py").read())
+exec(open("../helper_scripts/read_largest_components.py").read())
 
 labels = labels_step
 
@@ -479,7 +479,7 @@ plt.close()
 
 # ***** CORRELATION BETWEEN LOCAL COMPONENT COUNT AND NETWORK DENSITY *****
 
-exec(open("../settings/read_component_length_agg.py").read())
+exec(open("../helper_scripts/read_component_length_agg.py").read())
 
 # %%
 dfs = [component_length_muni, component_length_socio, component_length_hex]

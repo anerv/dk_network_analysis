@@ -25,10 +25,10 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 #### SOCIO CLUSTERING ####
 
-exec(open("../settings/prepare_socio_cluster_data.py").read())
+exec(open("../helper_scripts/prepare_socio_cluster_data.py").read())
 
 # generate socio reach comparison columns
-exec(open("../settings/read_reach_comparison.py").read())
+exec(open("../helper_scripts/read_reach_comparison.py").read())
 hex_reach_component_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
 hex_reach_component_cols = [
     c for c in hex_reach_component_cols if "10_15" not in c and "5_15" not in c
@@ -256,11 +256,11 @@ analysis_func.compare_clustering(
 ##### HEX #######
 
 # Read data
-exec(open("../settings/read_hex_results.py").read())
+exec(open("../helper_scripts/read_hex_results.py").read())
 
 hex_gdf.replace(np.nan, 0, inplace=True)
 
-exec(open("../settings/read_reach_comparison.py").read())
+exec(open("../helper_scripts/read_reach_comparison.py").read())
 hex_reach_component_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
 hex_reach_component_cols = [
     c for c in hex_reach_component_cols if "10_15" not in c and "5_15" not in c

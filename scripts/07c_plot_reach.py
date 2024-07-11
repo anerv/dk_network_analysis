@@ -20,7 +20,7 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 # Read data
-exec(open("../settings/read_reach.py").read())
+exec(open("../helper_scripts/read_reach.py").read())
 
 hex_reach.replace(0, np.nan, inplace=True)
 # %%
@@ -166,7 +166,7 @@ for i, p in enumerate(plot_columns):
 #%%
 #### MAPS - HEX REACH COMPARISON ##########
 
-exec(open("../settings/read_reach_comparison.py").read())
+exec(open("../helper_scripts/read_reach_comparison.py").read())
 
 #hex_reach_comparison.replace(np.nan, 0, inplace=True)
 
@@ -650,7 +650,7 @@ for n in org_labels_rename.keys():
 # %%
 # KDE PLOTS - DIFFERENCES IN REACH PER DISTANCE (%)
 
-exec(open("../settings/read_reach_comparison.py").read())
+exec(open("../helper_scripts/read_reach_comparison.py").read())
 hex_reach_comparison.replace(np.nan, 0, inplace=True)
 
 distances = [2, 5, 10, 15]

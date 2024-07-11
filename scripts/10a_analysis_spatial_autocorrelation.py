@@ -21,7 +21,7 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 # %%
 
 ### READ DATA ###
-exec(open("../settings/read_density.py").read())
+exec(open("../helper_scripts/read_density.py").read())
 
 gdfs = [density_muni, density_socio, density_hex]
 
@@ -102,7 +102,7 @@ for i, gdf in enumerate(gdfs):
 
 # READ DATA
 
-exec(open("../settings/read_component_length_agg.py").read())
+exec(open("../helper_scripts/read_component_length_agg.py").read())
 
 gdfs = [component_length_muni, component_length_socio, component_length_hex]
 
@@ -269,7 +269,7 @@ for i, gdf in enumerate(gdfs):
 # %%
 ### REACH #####
 
-exec(open("../settings/read_reach.py").read())
+exec(open("../helper_scripts/read_reach.py").read())
 
 hex_reach.replace(np.nan, 0, inplace=True)
 
@@ -344,7 +344,7 @@ for i, gdf in enumerate(gdfs):
 # %%
 # Reach distance comparison
 
-exec(open("../settings/read_reach_comparison.py").read())
+exec(open("../helper_scripts/read_reach_comparison.py").read())
 
 hex_reach_comparison.replace(np.nan, 0, inplace=True)
 

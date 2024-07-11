@@ -15,9 +15,9 @@ exec(open("../settings/filepaths.py").read())
 exec(open("../settings/df_styler.py").read())
 
 # %%
-exec(open("../settings/read_component_sizes.py").read())
+exec(open("../helper_scripts/read_component_sizes.py").read())
 
-exec(open("../settings/read_components.py").read())
+exec(open("../helper_scripts/read_components.py").read())
 # %%
 
 component_dfs = [

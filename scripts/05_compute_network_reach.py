@@ -246,7 +246,7 @@ for dist in distances:
     for i, t in enumerate(table_names):
         q1 = f"ALTER TABLE {t} ADD COLUMN IF NOT EXISTS hex_id VARCHAR;"
         q2 = f"UPDATE {t} SET hex_id = h.hex_id FROM {hex_tables[i]} h WHERE {t}.start_node = h.node_id;"
-        q3 = f"CREATE INDEX IF NOT EXISTS {network_levels[i]}_reach_{dist}_ix ON {t} (hex_id);"
+        q3 = f"CREATE INDEX IF NOT EXISTS {network_levels_step[i]}_reach_{dist}_ix ON {t} (hex_id);"
 
         for q in [q1, q2, q3]:
             result = dbf.run_query_pg(q, connection)
@@ -324,7 +324,7 @@ for dist in distances:
     ALTER TABLE
         reach.hex_reach_{dist}
     ADD
-        COLUMN car_lts1_diff DECIMAL,
+        COLUMN car_lts_1_diff DECIMAL,
     ADD
         COLUMN car_lts_1_2_diff DECIMAL,
     ADD
@@ -335,7 +335,7 @@ for dist in distances:
     q_update = f"""UPDATE
         reach.hex_reach_{dist}
     SET
-        car_lts1_diff = car_reach - lts1_reach,
+        car_lts_1_diff = car_reach - lts_1_reach,
         car_lts_1_2_diff = car_reach - lts_1_2_reach,
         car_lts_1_3_diff = car_reach - lts_1_3_reach,
         car_lts_1_4_diff = car_reach - lts_1_4_reach;
@@ -347,7 +347,7 @@ for dist in distances:
         if result == "error":
             print("Please fix error before rerunning and reconnect to the database")
 
-    for n in network_levels:
+    for n in network_levels_step:
         q = f"""
         UPDATE
             reach.hex_reach_{dist}
@@ -367,7 +367,7 @@ for dist in distances:
     ALTER TABLE
         reach.hex_reach_{dist}
     ADD
-        COLUMN car_lts1_diff_pct DECIMAL,
+        COLUMN car_lts_1_diff_pct DECIMAL,
     ADD
         COLUMN car_lts_1_2_diff_pct DECIMAL,
     ADD
@@ -379,7 +379,7 @@ for dist in distances:
     q_update = f"""UPDATE
         reach.hex_reach_{dist}
     SET
-        car_lts1_diff_pct = (lts1_reach / car_reach) * 100,
+        car_lts_1_diff_pct = (lts_1_reach / car_reach) * 100,
         car_lts_1_2_diff_pct = (lts_1_2_reach / car_reach) * 100,
         car_lts_1_3_diff_pct = (lts_1_3_reach / car_reach) * 100,
         car_lts_1_4_diff_pct = (lts_1_4_reach / car_reach) * 100
@@ -392,7 +392,7 @@ for dist in distances:
             print("Please fix error before rerunning and reconnect to the database")
             break
 
-    for n in network_levels[-1]:
+    for n in network_levels_step[:-1]:
         f"""
         UPDATE
             reach.hex_reach_{dist}
@@ -477,7 +477,7 @@ end = ");"
 select_columns = ""
 
 for d in distances:
-    s = f"""r{d}.lts1_reach AS lts1_reach_{d}, r{d}.lts_1_2_reach AS lts_1_2_reach_{d}, r{d}.lts_1_3_reach AS lts_1_3_reach_{d}, r{d}.lts_1_4_reach AS lts_1_4_reach_{d}, r{d}.car_reach AS car_reach_{d},"""
+    s = f"""r{d}.lts_1_reach AS lts_1_reach_{d}, r{d}.lts_1_2_reach AS lts_1_2_reach_{d}, r{d}.lts_1_3_reach AS lts_1_3_reach_{d}, r{d}.lts_1_4_reach AS lts_1_4_reach_{d}, r{d}.car_reach AS car_reach_{d},"""
     select_columns += s
 
 from_q = f"FROM reach.hex_reach_{distances[0]} r{distances[0]}"
@@ -505,7 +505,7 @@ for q in [q_geo, q_update]:
 # %%
 # Compute percentage difference between reach values
 
-for n in network_levels:
+for n in network_levels_step:
 
     for comb in itertools.combinations(distances, 2):
 
@@ -520,7 +520,7 @@ for n in network_levels:
 
 
 # %%
-for n in network_levels:
+for n in network_levels_step:
 
     for comb in itertools.combinations(distances, 2):
 
