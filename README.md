@@ -45,3 +45,9 @@ Downloaded winter 2024.
 License: [Statistics Denmark](https://www.dst.dk/en/Statistik/brug-statistikken/kildeangivelse)
 
 Downloaded winter 2024.
+
+### Global Human Settlement Layer
+
+[GHS-POP R2023A - GHS population grid multitemporal (1975-2030)](https://human-settlement.emergency.copernicus.eu/download.php?ds=pop) by Schiavina et al. (2023), European Commission, Joint Research Centre (JRC).
+
+Downloaded summer 2024.
