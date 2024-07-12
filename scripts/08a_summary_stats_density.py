@@ -1,14 +1,8 @@
-#
-
 # **** SUMMARY STATS: DENSITY ****
 
 # %%
-from src import db_functions as dbf
 from src import plotting_functions as plot_func
-import geopandas as gpd
 import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
 import plotly_express as px
 import pandas as pd
 from IPython.display import display
@@ -25,11 +19,10 @@ exec(open("../helper_scripts/read_density.py").read())
 
 density_data = [density_muni, density_socio, density_hex]
 
-
 # %%
 for i, df in enumerate(density_data):
     print(f"For {aggregation_levels[i]}:")
-    display(df.describe())
+    display(df.describe().style.pipe(format_style_index))
 # %%
 ## ** TOTAL NETWORK LEVELS ****
 
@@ -110,8 +103,10 @@ fig = px.bar(
 )
 fig.update_layout(template="simple_white")
 fig.update_traces(texttemplate="%{y:.1f}%", textposition="outside")
+# fig.to_image(format="jpg", engine="kaleido", scale=6)
 fig.show()
-#
+fig.write_image(filepath_summary_network_length, format="jpg", scale=6)
+
 # %%
 ### VALUE RANGES FOR EACH LTS LEVEL FOR EACH AGGREGATION LEVEL
 

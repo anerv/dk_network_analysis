@@ -1,11 +1,4 @@
 # %%
-from src import db_functions as dbf
-from src import plotting_functions as plot_func
-import geopandas as gpd
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-import plotly_express as px
 import pandas as pd
 from IPython.display import display
 
@@ -103,4 +96,4 @@ for a, df in zip(aggregation_levels, component_dfs):
 
     display(df.style.pipe(format_style_index))
 
-# %%
+    # %%

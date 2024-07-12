@@ -16,12 +16,11 @@ exec(open("../settings/df_styler.py").read())
 
 # %%
 # Read data
-
 exec(open("../helper_scripts/read_reach.py").read())
 
 hex_reach.replace(0, np.nan, inplace=True)
 
-hex_reach.describe()
+hex_reach.describe().style.pipe(format_style_index)
 # %%
 labels = labels_step
 
