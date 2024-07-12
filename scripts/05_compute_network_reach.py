@@ -3,6 +3,7 @@
 from src import db_functions as dbf
 import pandas as pd
 import geopandas as gpd
+
 import itertools
 
 with open("vacuum_analyze.py") as f:
@@ -16,21 +17,25 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 # %%
-queries = [
-    "sql/05a_prepare_reach_segments.sql",
-    "sql/05b_compute_segment_topology.sql",
-    "sql/05c_prepare_reach_edges_nodes.sql",
-    "sql/05d_create_hexagon_centroids.sql",
-]
+run_pre = False
 
-for i, q in enumerate(queries):
-    print(f"Running step {i+1}...")
-    result = dbf.run_query_pg(q, connection)
-    if result == "error":
-        print("Please fix error before rerunning and reconnect to the database")
-        break
+# %%
+if run_pre:
+    queries = [
+        "sql/05a_prepare_reach_segments.sql",
+        "sql/05b_compute_segment_topology.sql",
+        "sql/05c_prepare_reach_edges_nodes.sql",
+        "sql/05d_create_hexagon_centroids.sql",
+    ]
 
-    print(f"Step {i+1} done!")
+    for i, q in enumerate(queries):
+        print(f"Running step {i+1}...")
+        result = dbf.run_query_pg(q, connection)
+        if result == "error":
+            print("Please fix error before rerunning and reconnect to the database")
+            break
+
+        print(f"Step {i+1} done!")
 
 # %%
 distances = [
@@ -83,7 +88,7 @@ for dist in distances:
         "reach.lts_1_segments",
         "reach.lts_1_2_segments",
         "reach.lts_1_3_segments",
-        "reach.lts_1_4_segmentss",
+        "reach.lts_1_4_segments",
         "reach.car_segments",
     ]
 
