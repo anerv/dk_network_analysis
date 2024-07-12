@@ -129,6 +129,8 @@ SELECT
     e.cycling_allowed,
     e.source,
     e.target,
+    e.bicycle,
+    e.highway,
     e.geometry
 FROM
     edges AS e
@@ -138,7 +140,7 @@ FROM
     LEFT JOIN components_1 AS co2 ON e.target = co2.node
 WHERE
     e.lts <> 1
-    AND e.km <= 0.020
+    AND e.km <= 0.030
     AND e.all_access = TRUE
     AND co1.component <> co2.component;
 
@@ -154,6 +156,8 @@ SELECT
     e.cycling_allowed,
     e.source,
     e.target,
+    e.bicycle,
+    e.highway,
     e.geometry
 FROM
     edges AS e
@@ -163,7 +167,7 @@ FROM
     LEFT JOIN components_2 AS co2 ON e.target = co2.node
 WHERE
     e.lts <> 2
-    AND e.km <= 0.020
+    AND e.km <= 0.030
     AND e.all_access = TRUE
     AND co1.component <> co2.component;
 
@@ -179,6 +183,8 @@ SELECT
     e.cycling_allowed,
     e.source,
     e.target,
+    e.bicycle,
+    e.highway,
     e.geometry
 FROM
     edges AS e
@@ -188,7 +194,7 @@ FROM
     LEFT JOIN components_3 AS co2 ON e.target = co2.node
 WHERE
     e.lts <> 3
-    AND e.km <= 0.020
+    AND e.km <= 0.030
     AND e.all_access = TRUE
     AND co1.component <> co2.component;
 
@@ -204,6 +210,8 @@ SELECT
     e.cycling_allowed,
     e.source,
     e.target,
+    e.bicycle,
+    e.highway,
     e.geometry
 FROM
     edges AS e
@@ -213,7 +221,7 @@ FROM
     LEFT JOIN components_4 AS co2 ON e.target = co2.node
 WHERE
     e.lts <> 4
-    AND e.km <= 0.020
+    AND e.km <= 0.030
     AND e.all_access = TRUE
     AND co1.component <> co2.component;
 
@@ -338,22 +346,74 @@ WHERE
 DELETE FROM
     lts_1_gaps
 WHERE
-    lts_access IN (0, 7);
+    lts_access IN (0, 7)
+    AND bicycle <> 'use_sidepath';
+
+DELETE FROM
+    lts_1_gaps
+WHERE
+    lts_access IN (0, 7)
+    AND bicycle = 'use_sidepath'
+    AND highway IN (
+        'motorway',
+        'motorway_link',
+        'trunk',
+        'trunk_link'
+    );
 
 DELETE FROM
     lts_2_gaps
 WHERE
-    lts_access IN (0, 7);
+    lts_access IN (0, 7)
+    AND bicycle <> 'use_sidepath';
+
+DELETE FROM
+    lts_2_gaps
+WHERE
+    lts_access IN (0, 7)
+    AND bicycle = 'use_sidepath'
+    AND highway IN (
+        'motorway',
+        'motorway_link',
+        'trunk',
+        'trunk_link'
+    );
 
 DELETE FROM
     lts_3_gaps
 WHERE
-    lts_access IN (0, 7);
+    lts_access IN (0, 7)
+    AND bicycle <> 'use_sidepath';
+
+DELETE FROM
+    lts_3_gaps
+WHERE
+    lts_access IN (0, 7)
+    AND bicycle = 'use_sidepath'
+    AND highway IN (
+        'motorway',
+        'motorway_link',
+        'trunk',
+        'trunk_link'
+    );
 
 DELETE FROM
     lts_4_gaps
 WHERE
-    lts_access IN (0, 7);
+    lts_access IN (0, 7)
+    AND bicycle <> 'use_sidepath';
+
+DELETE FROM
+    lts_4_gaps
+WHERE
+    lts_access IN (0, 7)
+    AND bicycle = 'use_sidepath'
+    AND highway IN (
+        'motorway',
+        'motorway_link',
+        'trunk',
+        'trunk_link'
+    );
 
 UPDATE
     edges
