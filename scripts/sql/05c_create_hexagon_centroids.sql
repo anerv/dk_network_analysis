@@ -45,18 +45,18 @@ FROM
 CREATE INDEX IF NOT EXISTS centroid_geom_ix ON reach.centroids USING GIST (geometry);
 
 ALTER TABLE
-    nodes
+    reach.segment_nodes
 ADD
     COLUMN IF NOT EXISTS hex_id VARCHAR;
 
 UPDATE
-    nodes
+    reach.segment_nodes
 SET
     hex_id = hex_grid.hex_id
 FROM
     hex_grid
 WHERE
-    ST_Intersects(nodes.geometry, hex_grid.geometry);
+    ST_Intersects(reach.segment_nodes.geometry, hex_grid.geometry);
 
 CREATE VIEW reach.nodes_all_view AS
 SELECT
@@ -66,7 +66,7 @@ FROM
         SELECT
             source AS node
         FROM
-            edges
+            reach.edge_segments
         WHERE
             lts_access IN (1, 2, 3, 4, 7)
             OR lts_1_gap IS TRUE
@@ -78,7 +78,7 @@ FROM
         SELECT
             target AS node
         FROM
-            edges
+            reach.edge_segments
         WHERE
             lts_access IN (1, 2, 3, 4, 7)
             OR lts_1_gap IS TRUE
@@ -95,7 +95,7 @@ FROM
         SELECT
             source AS node
         FROM
-            edges
+            reach.edge_segments
         WHERE
             lts_access IN (1)
             OR lts_1_gap IS TRUE
@@ -104,7 +104,7 @@ FROM
         SELECT
             target AS node
         FROM
-            edges
+            reach.edge_segments
         WHERE
             lts_access IN (1)
             OR lts_1_gap IS TRUE
@@ -118,7 +118,7 @@ FROM
         SELECT
             source AS node
         FROM
-            edges
+            reach.edge_segments
         WHERE
             lts_access IN (1, 2)
             OR lts_1_gap IS TRUE
@@ -128,7 +128,7 @@ FROM
         SELECT
             target AS node
         FROM
-            edges
+            reach.edge_segments
         WHERE
             lts_access IN (1, 2)
             OR lts_1_gap IS TRUE
@@ -143,7 +143,7 @@ FROM
         SELECT
             source AS node
         FROM
-            edges
+            reach.edge_segments
         WHERE
             lts_access IN (1, 2, 3)
             OR lts_1_gap IS TRUE
@@ -154,7 +154,7 @@ FROM
         SELECT
             target AS node
         FROM
-            edges
+            reach.edge_segments
         WHERE
             lts_access IN (1, 2, 3)
             OR lts_1_gap IS TRUE
@@ -170,7 +170,7 @@ FROM
         SELECT
             source AS node
         FROM
-            edges
+            reach.edge_segments
         WHERE
             lts_access IN (1, 2, 3, 4)
             OR lts_1_gap IS TRUE
@@ -182,7 +182,7 @@ FROM
         SELECT
             target AS node
         FROM
-            edges
+            reach.edge_segments
         WHERE
             lts_access IN (1, 2, 3, 4)
             OR lts_1_gap IS TRUE
@@ -199,7 +199,7 @@ FROM
         SELECT
             source AS node
         FROM
-            edges
+            reach.edge_segments
         WHERE
             (
                 lts_access IN (1, 2, 3, 4, 7)
@@ -214,7 +214,7 @@ FROM
         SELECT
             target AS node
         FROM
-            edges
+            reach.edge_segments
         WHERE
             (
                 lts_access IN (1, 2, 3, 4, 7)
@@ -232,7 +232,7 @@ SELECT
     geometry,
     hex_id
 FROM
-    nodes
+    reach.segment_nodes
 WHERE
     id IN (
         SELECT
@@ -247,7 +247,7 @@ SELECT
     geometry,
     hex_id
 FROM
-    nodes
+    reach.segment_nodes
 WHERE
     id IN (
         SELECT
@@ -262,7 +262,7 @@ SELECT
     geometry,
     hex_id
 FROM
-    nodes
+    reach.segment_nodes
 WHERE
     id IN (
         SELECT
@@ -277,7 +277,7 @@ SELECT
     geometry,
     hex_id
 FROM
-    nodes
+    reach.segment_nodes
 WHERE
     id IN (
         SELECT
@@ -292,7 +292,7 @@ SELECT
     geometry,
     hex_id
 FROM
-    nodes
+    reach.segment_nodes
 WHERE
     id IN (
         SELECT
@@ -307,7 +307,7 @@ SELECT
     geometry,
     hex_id
 FROM
-    nodes
+    reach.segment_nodes
 WHERE
     id IN (
         SELECT
@@ -358,7 +358,7 @@ WITH component_edges AS (
         target,
         component_size_1
     FROM
-        fragmentation.component_edges
+        reach.edge_segments
     WHERE
         component_size_1 IS NOT NULL
 )
@@ -378,7 +378,7 @@ WITH component_edges AS (
         target,
         component_size_1_2
     FROM
-        fragmentation.component_edges
+        reach.edge_segments
     WHERE
         component_size_1_2 IS NOT NULL
 )
@@ -398,7 +398,7 @@ WITH component_edges AS (
         target,
         component_size_1_3
     FROM
-        fragmentation.component_edges
+        reach.edge_segments
     WHERE
         component_size_1_3 IS NOT NULL
 )
@@ -418,7 +418,7 @@ WITH component_edges AS (
         target,
         component_size_1_4
     FROM
-        fragmentation.component_edges
+        reach.edge_segments
     WHERE
         component_size_1_4 IS NOT NULL
 )
@@ -438,7 +438,7 @@ WITH component_edges AS (
         target,
         component_size_car
     FROM
-        fragmentation.component_edges
+        reach.edge_segments
     WHERE
         component_size_car IS NOT NULL
 )

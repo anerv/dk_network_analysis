@@ -14,8 +14,9 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 # %%
 queries = [
-    "sql/05a_prepare_reach_computation.sql",
-    "sql/05b_create_hexagon_centroids.sql",
+    "sql/05a_prepare_reach_segments.sql",
+    "sql/05a_prepare_reach_edges.sql",
+    "sql/05c_create_hexagon_centroids.sql",
 ]
 
 for i, q in enumerate(queries):
@@ -28,17 +29,14 @@ for i, q in enumerate(queries):
     print(f"Step {i+1} done!")
 
 # %%
-# distances = [2, 5, 10, 15]  # max distance in km
 distances = [
     1,
-    2,
-    5,
-]
-# distances = [10]  # max distance in km
-# distances = [15]
-# distances = [5, 10]  # max distance in km
-# distances = [15]
-# distances = [2]
+    # 2,
+    # 5,
+    # 10,
+    # 15,
+]  # max distance in km
+
 # %%
 chunk_sizes_1 = [1000, 1000, 1000, 1000, 1000]
 chunk_sizes_2 = [1000, 1000, 1000, 1000, 1000]
@@ -69,13 +67,20 @@ for dist in distances:
         f"reach.lts_4_reach_{dist}",
         f"reach.car_reach_{dist}",
     ]
-
+    # TODO
+    # edge_tables = [
+    #     "lts_1_edges",
+    #     "lts_1_2_edges",
+    #     "lts_1_3_edges",
+    #     "lts_1_4_edges",
+    #     "car_edges",
+    # ]
     edge_tables = [
-        "lts_1_edges",
-        "lts_1_2_edges",
-        "lts_1_3_edges",
-        "lts_1_4_edges",
-        "car_edges",
+        "reach.lts_1_segments",
+        "reach.lts_1_2_segments",
+        "reach.lts_1_3_segments",
+        "reach.lts_1_4_segmentss",
+        "reach.car_segments",
     ]
 
     hex_tables = [
@@ -449,13 +454,13 @@ for dist in distances:
             print("Please fix error before rerunning and reconnect to the database")
             break
 
-    # drop tables
-    for t in table_names:
-        q = f"DROP TABLE IF EXISTS {t};"
-        result = dbf.run_query_pg(q, connection)
-        if result == "error":
-            print("Please fix error before rerunning and reconnect to the database")
-            break
+    # # drop tables
+    # for t in table_names:
+    #     q = f"DROP TABLE IF EXISTS {t};"
+    #     result = dbf.run_query_pg(q, connection)
+    #     if result == "error":
+    #         print("Please fix error before rerunning and reconnect to the database")
+    #         break
 
 connection.close()
 
@@ -464,6 +469,10 @@ with open("vacuum_analyze.py") as f:
     exec(f.read())
 
 # %%
+
+engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
+
+connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 distances = [1, 2, 5, 10, 15]  # max distance in km
 
@@ -491,7 +500,7 @@ result = dbf.run_query_pg(final_query, connection)
 if result == "error":
     print("Please fix error before rerunning and reconnect to the database")
 
-# %%
+
 # ADD geometry column
 q_geo = "ALTER TABLE reach.compare_reach ADD COLUMN geometry geometry;"
 q_update = "UPDATE reach.compare_reach SET geometry = h.geometry FROM hex_grid h WHERE reach.compare_reach.hex_id = h.hex_id;"
@@ -502,7 +511,7 @@ for q in [q_geo, q_update]:
         print("Please fix error before rerunning and reconnect to the database")
         break
 
-# %%
+
 # Compute percentage difference between reach values
 
 for n in network_levels_step:
@@ -518,15 +527,14 @@ for n in network_levels_step:
                 print("Please fix error before rerunning and reconnect to the database")
                 break
 
-
-# %%
+# compute difference between reach values
 for n in network_levels_step:
 
     for comb in itertools.combinations(distances, 2):
 
         q1 = f"ALTER TABLE reach.compare_reach ADD COLUMN IF NOT EXISTS {n}_diff_{comb[0]}_{comb[1]} DECIMAL;"
 
-        q2 = f"""UPDATE reach.compare_reach SET {n}_diff_{comb[0]}_{comb[1]} = {n}_reach_{comb[1]} - {n}_reach_{comb[0]} WHERE {n}_reach_{distances[0]} > 0;"""
+        q2 = f"UPDATE reach.compare_reach SET {n}_diff_{comb[0]}_{comb[1]} = {n}_reach_{comb[1]} - {n}_reach_{comb[0]} WHERE {n}_reach_{distances[0]} > 0;"
 
         for q in [q1, q2]:
             result = dbf.run_query_pg(q, connection)
@@ -535,29 +543,26 @@ for n in network_levels_step:
                 break
 
 
-# %%
 # Compute average socio reach
 
-q_socio = "sql/05c_compute_socio_reach.sql"
+q_socio = "sql/05d_compute_socio_reach.sql"
 result = dbf.run_query_pg(q_socio, connection)
 if result == "error":
     print("Please fix error before rerunning and reconnect to the database")
 
-# %%
-q_socio_comparison = "sql/05d_compute_socio_reach_comparison.sql"
+# compute socio reach comparison
+q_socio_comparison = "sql/05e_compute_socio_reach_comparison.sql"
 result = dbf.run_query_pg(q_socio_comparison, connection)
 if result == "error":
     print("Please fix error before rerunning and reconnect to the database")
 
-# %%
-
+# get column names
 hex_reach_comparison = gpd.read_postgis(
     "SELECT * FROM reach.compare_reach LIMIT 1;", engine, geom_col="geometry"
 )
 
 compare_columns = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
 
-# %%
 q_start = """CREATE TABLE reach.socio_reach_comparison AS SELECT j.id,"""
 
 q_end = """ FROM reach.joined j GROUP BY j.id;"""
@@ -579,16 +584,15 @@ for c in compare_columns:
 
 final_query = q_start + select_columns[:-2] + q_end
 
-# %%
 result = dbf.run_query_pg(final_query, connection)
 if result == "error":
     print("Please fix error before rerunning and reconnect to the database")
-# %%
-q_socio_comparison_end = "sql/05e_finish_socio_reach_comparison.sql"
+
+q_socio_comparison_end = "sql/05f_finish_socio_reach_comparison.sql"
 result = dbf.run_query_pg(q_socio_comparison_end, connection)
 if result == "error":
     print("Please fix error before rerunning and reconnect to the database")
-# %%
+
 with open("vacuum_analyze.py") as f:
     exec(f.read())
 
