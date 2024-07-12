@@ -165,14 +165,3 @@ FROM
     fragmentation.component_edges ce
 WHERE
     ce.id = edge_id;
-
-SELECT
-    pgr_createTopology(
-        'reach.edge_segments',
-        0.001,
-        'geometry',
-        'id',
-        'source',
-        'target',
-        clean := TRUE
-    );

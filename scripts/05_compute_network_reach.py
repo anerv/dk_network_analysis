@@ -15,8 +15,9 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 # %%
 queries = [
     "sql/05a_prepare_reach_segments.sql",
-    "sql/05a_prepare_reach_edges.sql",
-    "sql/05c_create_hexagon_centroids.sql",
+    "sql/05b_compote_segment_topology.sql",
+    "sql/05c_prepare_reach_edges_nodes.sql",
+    "sql/05d_create_hexagon_centroids.sql",
 ]
 
 for i, q in enumerate(queries):
@@ -545,13 +546,13 @@ for n in network_levels_step:
 
 # Compute average socio reach
 
-q_socio = "sql/05d_compute_socio_reach.sql"
+q_socio = "sql/05e_compute_socio_reach.sql"
 result = dbf.run_query_pg(q_socio, connection)
 if result == "error":
     print("Please fix error before rerunning and reconnect to the database")
 
 # compute socio reach comparison
-q_socio_comparison = "sql/05e_compute_socio_reach_comparison.sql"
+q_socio_comparison = "sql/05f_compute_socio_reach_comparison.sql"
 result = dbf.run_query_pg(q_socio_comparison, connection)
 if result == "error":
     print("Please fix error before rerunning and reconnect to the database")
@@ -588,7 +589,7 @@ result = dbf.run_query_pg(final_query, connection)
 if result == "error":
     print("Please fix error before rerunning and reconnect to the database")
 
-q_socio_comparison_end = "sql/05f_finish_socio_reach_comparison.sql"
+q_socio_comparison_end = "sql/05g_finish_socio_reach_comparison.sql"
 result = dbf.run_query_pg(q_socio_comparison_end, connection)
 if result == "error":
     print("Please fix error before rerunning and reconnect to the database")
