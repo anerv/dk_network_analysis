@@ -1,5 +1,9 @@
 # Density plots
 
+filepath_summary_network_length = (
+    "../results/density_distributions/density_network_length_bar.jpg"
+)
+
 filepaths_kde_length = [
     "../results/density_distributions/administrative/lts_kde_length.jpg",
     "../results/density_distributions/socio/lts_kde_length.jpg",
