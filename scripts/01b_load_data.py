@@ -45,6 +45,7 @@ q_ix = "CREATE INDEX IF NOT EXISTS nodes_geom_ix ON nodes USING GIST (geometry);
 
 dbf.run_query_pg(q_ix, connection)
 
+# %%
 # LOAD URBAN AREAS DATA
 urban = gpd.read_parquet(urban_areas_fp)
 
@@ -139,8 +140,6 @@ print(test)
 
 # %%
 exec(open("../helper_scripts/vectorize_raster_population_data.py").read())
-
-# %%
 
 h3_gdf.rename(columns={f"hex_id_{h3_resolution}": "hex_id"}, inplace=True)
 
