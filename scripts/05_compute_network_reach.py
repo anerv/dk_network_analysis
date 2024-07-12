@@ -1,9 +1,12 @@
 # %%
 
 from src import db_functions as dbf
-import pandas as pd
+import pandas as pdx
 import geopandas as gpd
 import itertools
+
+with open("vacuum_analyze.py") as f:
+    exec(f.read())
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -15,7 +18,7 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 # %%
 queries = [
     "sql/05a_prepare_reach_segments.sql",
-    "sql/05b_compote_segment_topology.sql",
+    "sql/05b_compute_segment_topology.sql",
     "sql/05c_prepare_reach_edges_nodes.sql",
     "sql/05d_create_hexagon_centroids.sql",
 ]
