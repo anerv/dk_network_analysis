@@ -1,7 +1,7 @@
 # %%
 
 from src import db_functions as dbf
-import pandas as pdx
+import pandas as pd
 import geopandas as gpd
 import itertools
 
