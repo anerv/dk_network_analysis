@@ -3,7 +3,6 @@
 from src import db_functions as dbf
 import pandas as pd
 import geopandas as gpd
-
 import itertools
 
 with open("vacuum_analyze.py") as f:
@@ -19,7 +18,6 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 # %%
 run_pre = False
 
-# %%
 if run_pre:
     queries = [
         "sql/05a_prepare_reach_segments.sql",
@@ -39,11 +37,11 @@ if run_pre:
 
 # %%
 distances = [
-    1,
+    # 1,
     # 2,
     # 5,
-    # 10,
-    # 15,
+    10,
+    15,
 ]  # max distance in km
 
 # %%
@@ -54,9 +52,9 @@ chunk_sizes_10 = [1000, 500, 200, 200, 200]
 chunk_sizes_15 = [1000, 200, 100, 100, 100]
 
 all_chunk_sizes = [
-    chunk_sizes_1,
-    chunk_sizes_2,
-    chunk_sizes_5,
+    # chunk_sizes_1,
+    # chunk_sizes_2,
+    # chunk_sizes_5,
     chunk_sizes_10,
     chunk_sizes_15,
 ]
