@@ -389,59 +389,6 @@ vmin, vmax = plot_func.get_min_max_vals(hex_largest_components, plot_columns)
 
 for i, p in enumerate(plot_columns):
 
-    k_check = plot_func.get_unique_bins(hex_largest_components, p, scheme, k)
-
-    try:
-        plot_func.plot_classified_poly(
-            gdf=hex_largest_components,
-            plot_col=p,
-            scheme=scheme,
-            k=k_check,
-            cx_tile=cx_tile_2,
-            plot_na=True,
-            # cmap=pdict["pos"],
-            edgecolor="none",
-            title=plot_titles[i],
-            fp=filepaths[i],
-            background_color=pdict["background_color"],
-        )
-    except ValueError:
-
-        k_check -= 1
-
-        try:
-
-            plot_func.plot_classified_poly(
-                gdf=hex_largest_components,
-                plot_col=p,
-                scheme=scheme,
-                k=k_check,
-                cx_tile=cx_tile_2,
-                plot_na=True,
-                # cmap=pdict["pos"],
-                edgecolor="none",
-                title=plot_titles[i],
-                fp=filepaths[i],
-                background_color=pdict["background_color"],
-            )
-
-        except ValueError:
-            k_check -= 1
-
-            plot_func.plot_classified_poly(
-                gdf=hex_largest_components,
-                plot_col=p,
-                scheme=scheme,
-                k=k_check,
-                cx_tile=cx_tile_2,
-                plot_na=True,
-                # cmap=pdict["pos"],
-                edgecolor="none",
-                title=plot_titles[i],
-                fp=filepaths[i],
-                background_color=pdict["background_color"],
-            )
-
     plot_func.plot_unclassified_poly(
         poly_gdf=hex_largest_components,
         plot_col=p,
@@ -533,7 +480,6 @@ plt.close()
 
 exec(open("../helper_scripts/read_component_length_agg.py").read())
 
-# %%
 dfs = [component_length_muni, component_length_socio, component_length_hex]
 
 titles = [a.capitalize() for a in aggregation_levels]
