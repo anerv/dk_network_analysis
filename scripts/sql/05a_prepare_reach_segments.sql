@@ -26,7 +26,7 @@ FROM
             id,
             geom,
             ST_Length(geom) len,
-            9999 sublen
+            999 sublen
         FROM
             DATA
     ) AS d
