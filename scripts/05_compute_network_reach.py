@@ -41,7 +41,7 @@ distances = [
     # 2,
     # 5,
     10,
-    15,
+    # 15,
 ]  # max distance in km
 
 # %%
@@ -74,14 +74,7 @@ for dist in distances:
         f"reach.lts_4_reach_{dist}",
         f"reach.car_reach_{dist}",
     ]
-    # TODO
-    # edge_tables = [
-    #     "lts_1_edges",
-    #     "lts_1_2_edges",
-    #     "lts_1_3_edges",
-    #     "lts_1_4_edges",
-    #     "car_edges",
-    # ]
+
     edge_tables = [
         "reach.lts_1_segments",
         "reach.lts_1_2_segments",
@@ -461,6 +454,12 @@ for dist in distances:
             print("Please fix error before rerunning and reconnect to the database")
             break
 
+    for t in table_names:
+        q = f"SELECT COUNT(*) FROM {t} WHERE cardinality(reachable_nodes::integer[]) = 1;"
+        df = pd.read_sql_query(q, con=engine)
+        print(f"{len(df)} hexagons with only one reachable node in table {t}")
+
+    # todo
     # # drop tables
     # for t in table_names:
     #     q = f"DROP TABLE IF EXISTS {t};"
