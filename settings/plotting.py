@@ -350,7 +350,7 @@ pdict = {
     "compare_base": "black",  # "dimgray",
     # colormaps for grid cell plots
     "pos": "PuRd",  # "Blues",  # Positive values
-    "neg": "YlOrdRd",  # "Reds",  # Negative/Missing/Unmatched values
+    "neg": "YlOrRd",  # "Reds",  # Negative/Missing/Unmatched values
     "diff": "RdBu",  # for osm-ref difference plots (alternatives: "PiYG", "PRGn", "PuOr")
     "seq": "YlGnBu",  # for sequential plots where low should not be white (usually percentages)
     # alpha (transparency) values (alternatives: PuRd, RdPu, PbBuGn)
