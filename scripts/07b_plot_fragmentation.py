@@ -4,7 +4,6 @@ from src import plotting_functions as plot_func
 import geopandas as gpd
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
 import plotly_express as px
 import pandas as pd
 import seaborn as sns
@@ -156,19 +155,19 @@ for e, gdf in enumerate(gdfs):
     vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
     for i, p in enumerate(plot_columns):
-        plot_func.plot_classified_poly(
-            gdf=gdf,
-            plot_col=p,
-            scheme=scheme,
-            k=k,
-            # cx_tile=cx_tile_2,
-            plot_na=True,
-            cmap=pdict["neg"],
-            edgecolor="none",
-            title=plot_titles[i],
-            fp=filepaths[i],
-            background_color=pdict["background_color"],
-        )
+        # plot_func.plot_classified_poly(
+        #     gdf=gdf,
+        #     plot_col=p,
+        #     scheme=scheme,
+        #     k=k,
+        #     # cx_tile=cx_tile_2,
+        #     plot_na=True,
+        #     cmap=pdict["neg"],
+        #     edgecolor="none",
+        #     title=plot_titles[i],
+        #     fp=filepaths[i],
+        #     background_color=pdict["background_color"],
+        # )
 
         plot_func.plot_unclassified_poly(
             poly_gdf=gdf,
@@ -211,19 +210,19 @@ for e, gdf in enumerate(gdfs):
     vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
     for i, p in enumerate(plot_columns):
-        plot_func.plot_classified_poly(
-            gdf=gdf,
-            plot_col=p,
-            scheme=scheme,
-            k=k,
-            # cx_tile=cx_tile_2,
-            plot_na=True,
-            cmap=pdict["neg"],
-            edgecolor="none",
-            title=plot_titles[i],
-            fp=filepaths[i],
-            background_color=pdict["background_color"],
-        )
+        # plot_func.plot_classified_poly(
+        #     gdf=gdf,
+        #     plot_col=p,
+        #     scheme=scheme,
+        #     k=k,
+        #     # cx_tile=cx_tile_2,
+        #     plot_na=True,
+        #     cmap=pdict["neg"],
+        #     edgecolor="none",
+        #     title=plot_titles[i],
+        #     fp=filepaths[i],
+        #     background_color=pdict["background_color"],
+        # )
 
         plot_func.plot_unclassified_poly(
             poly_gdf=gdf,
@@ -255,19 +254,19 @@ for e, gdf in enumerate(gdfs):
     vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
     for i, p in enumerate(plot_columns):
-        plot_func.plot_classified_poly(
-            gdf=gdf,
-            plot_col=p,
-            scheme=scheme,
-            k=k,
-            # cx_tile=cx_tile_2,
-            plot_na=True,
-            cmap=pdict["neg"],
-            edgecolor="none",
-            title=plot_titles[i],
-            fp=filepaths[i],
-            background_color=pdict["background_color"],
-        )
+        # plot_func.plot_classified_poly(
+        #     gdf=gdf,
+        #     plot_col=p,
+        #     scheme=scheme,
+        #     k=k,
+        #     # cx_tile=cx_tile_2,
+        #     plot_na=True,
+        #     cmap=pdict["neg"],
+        #     edgecolor="none",
+        #     title=plot_titles[i],
+        #     fp=filepaths[i],
+        #     background_color=pdict["background_color"],
+        # )
 
         plot_func.plot_unclassified_poly(
             poly_gdf=gdf,
@@ -325,19 +324,38 @@ for i, p in enumerate(plot_columns):
 
         k_check -= 1
 
-        plot_func.plot_classified_poly(
-            gdf=hex_largest_components,
-            plot_col=p,
-            scheme=scheme,
-            k=k_check,
-            # cx_tile=cx_tile_2,
-            plot_na=True,
-            cmap=pdict["pos"],
-            edgecolor="none",
-            title=plot_titles[i],
-            fp=filepaths[i],
-            background_color=pdict["background_color"],
-        )
+        try:
+
+            plot_func.plot_classified_poly(
+                gdf=hex_largest_components,
+                plot_col=p,
+                scheme=scheme,
+                k=k_check,
+                # cx_tile=cx_tile_2,
+                plot_na=True,
+                cmap=pdict["pos"],
+                edgecolor="none",
+                title=plot_titles[i],
+                fp=filepaths[i],
+                background_color=pdict["background_color"],
+            )
+
+        except ValueError:
+            k_check -= 1
+
+            plot_func.plot_classified_poly(
+                gdf=hex_largest_components,
+                plot_col=p,
+                scheme=scheme,
+                k=k_check,
+                # cx_tile=cx_tile_2,
+                plot_na=True,
+                cmap=pdict["pos"],
+                edgecolor="none",
+                title=plot_titles[i],
+                fp=filepaths[i],
+                background_color=pdict["background_color"],
+            )
 
     plot_func.plot_unclassified_poly(
         poly_gdf=hex_largest_components,
@@ -390,6 +408,39 @@ for i, p in enumerate(plot_columns):
     except ValueError:
 
         k_check -= 1
+
+        try:
+
+            plot_func.plot_classified_poly(
+                gdf=hex_largest_components,
+                plot_col=p,
+                scheme=scheme,
+                k=k_check,
+                cx_tile=cx_tile_2,
+                plot_na=True,
+                # cmap=pdict["pos"],
+                edgecolor="none",
+                title=plot_titles[i],
+                fp=filepaths[i],
+                background_color=pdict["background_color"],
+            )
+
+        except ValueError:
+            k_check -= 1
+
+            plot_func.plot_classified_poly(
+                gdf=hex_largest_components,
+                plot_col=p,
+                scheme=scheme,
+                k=k_check,
+                cx_tile=cx_tile_2,
+                plot_na=True,
+                # cmap=pdict["pos"],
+                edgecolor="none",
+                title=plot_titles[i],
+                fp=filepaths[i],
+                background_color=pdict["background_color"],
+            )
 
     plot_func.plot_unclassified_poly(
         poly_gdf=hex_largest_components,
