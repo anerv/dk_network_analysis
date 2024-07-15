@@ -48,6 +48,7 @@ for i, df in enumerate(component_size_dfs):
         fp_zipf_lts + labels[i] + ".png",
     )
 
+# %%
 # Combined zipf plot
 plot_func.combined_zipf_plot(
     component_size_all=component_size_all,
@@ -95,12 +96,12 @@ for muni in municipalities:
             .groupby("component_1_2")
             .sum("infra_length")
         )
-        (component_size_1_3,) = (
+        (component_size_1_3) = (
             muni_edges[muni_edges["component_1_3"].notna()]
             .groupby("component_1_3")
             .sum("infra_length")
         )
-        (component_size_1_4,) = (
+        (component_size_1_4) = (
             muni_edges[muni_edges["component_1_4"].notna()]
             .groupby("component_1_4")
             .sum("infra_length")
