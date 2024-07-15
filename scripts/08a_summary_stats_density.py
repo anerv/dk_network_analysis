@@ -65,6 +65,7 @@ for i, color in enumerate(lts_color_dict.values()):
     new_color_dict[k] = color
 
 
+plotly_labels["network_type"] = "Network type"
 fig = px.bar(
     df,
     x="network_type",
@@ -88,24 +89,22 @@ config = {
     }
 }
 
-
 fig.show(config=config)
+fig.write_image(filepath_summary_network_length, format="jpg", scale=6)
 # %%
 
-plotly_labels["network_type"] = "Network Type"
-fig = px.bar(
-    df,
-    x="network_type",
-    y="share (%)",
-    color="network_type",
-    labels=plotly_labels,
-    color_discrete_map=new_color_dict,
-)
-fig.update_layout(template="simple_white")
-fig.update_traces(texttemplate="%{y:.1f}%", textposition="outside")
-# fig.to_image(format="jpg", engine="kaleido", scale=6)
-fig.show()
-fig.write_image(filepath_summary_network_length, format="jpg", scale=6)
+# fig = px.bar(
+#     df,
+#     x="network_type",
+#     y="share (%)",
+#     color="network_type",
+#     labels=plotly_labels,
+#     color_discrete_map=new_color_dict,
+# )
+# fig.update_layout(template="simple_white")
+# fig.update_traces(texttemplate="%{y:.1f}%", textposition="outside")
+# fig.show()
+# fig.write_image(filepath_summary_network_length, format="jpg", scale=6)
 
 # %%
 ### VALUE RANGES FOR EACH LTS LEVEL FOR EACH AGGREGATION LEVEL
