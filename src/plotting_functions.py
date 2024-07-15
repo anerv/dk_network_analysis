@@ -821,6 +821,7 @@ def combined_zipf_plot(
     axes.set_title(title)
 
     fig.savefig(fp)
+    plt.show()
     plt.close()
 
 
