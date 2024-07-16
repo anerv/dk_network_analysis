@@ -41,7 +41,7 @@ distances = [
     # 2,
     # 5,
     10,
-    # 15,
+    15,
 ]  # max distance in km
 
 # %%
@@ -457,7 +457,7 @@ for dist in distances:
     for t in table_names:
         q = f"SELECT COUNT(*) FROM {t} WHERE cardinality(reachable_nodes::integer[]) = 1;"
         df = pd.read_sql_query(q, con=engine)
-        print(f"{len(df)} hexagons with only one reachable node in table {t}")
+        print(f"{len(df)} hexagon(s) with only one reachable node in table {t}")
 
     # todo
     # # drop tables
