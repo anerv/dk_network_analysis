@@ -71,7 +71,7 @@ SELECT
     PERCENTILE_CONT(0.5) WITHIN GROUP (
         ORDER BY
             j.component_length_1
-    ) AS lts1_largest_component_median,
+    ) AS lts_1_largest_component_median,
     PERCENTILE_CONT(0.5) WITHIN GROUP (
         ORDER BY
             j.component_length_1_2
