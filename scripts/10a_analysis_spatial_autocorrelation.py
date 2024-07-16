@@ -8,6 +8,7 @@ import json
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
+exec(open("../settings/filepaths.py").read())
 plot_func.set_renderer("png")
 
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
@@ -35,6 +36,8 @@ spatial_weights = []
 for i, gdf in enumerate(gdfs):
 
     w = analysis_func.spatial_weights_combined(gdf, id_columns[i], k_values[i])
+
+    spatial_weights.append(w)
 
 # %%
 all_density_columns = [
@@ -361,7 +364,17 @@ for i, gdf in enumerate(gdfs):
     spatial_weights.append(w)
 
 compare_reach_columns = hex_reach_comparison.columns.to_list()
-compare_reach_columns = [c for c in columns if "pct_diff" in c]
+# %%
+compare_reach_columns = [
+    c
+    for c in compare_reach_columns
+    if "pct_diff" in c
+    and "diff_2" not in c
+    and "10_15" not in c
+    and "diff_1_2" not in c
+    and "1_10" not in c
+    and "1_15" not in c
+]
 # %%
 all_reach_columns = [compare_reach_columns]
 
@@ -411,7 +424,7 @@ for i, gdf in enumerate(gdfs):
         json.dump(global_morans_results, outfile)
 
     q_columns = [c for c in gdf.columns if c.endswith("_q")]
-    q_columns.extend(["geometry", id_columns[i]])
+    q_columns.extend(["geometry", id_columns[2]])
 
     gdf[q_columns].to_parquet(
         fp_spatial_auto_reach + f"{aggregation_level[i]}/lisas_compare_reach.parquet"
@@ -420,33 +433,21 @@ for i, gdf in enumerate(gdfs):
 # %%
 ## Confirm spatial clustering of population density and socio-economic variables
 
-socio_gdf = gpd.read_postgis("SELECT * FROM socio;", engine, geom_col="geometry")
+# socio_gdf = gpd.read_postgis("SELECT * FROM socio;", engine, geom_col="geometry")
 
-org_len = len(socio_gdf)
+exec(open("../helper_scripts/read_socio_pop.py").read())
 
-socio_gdf.dropna(subset=["population_density"], inplace=True)
+# org_len = len(socio_gdf)
 
-print("Dropped rows with missing population density:", org_len - len(socio_gdf))
+socio.dropna(subset=["population_density"], inplace=True)
 
-socio_gdf.replace(np.nan, 0, inplace=True)
+# print("Dropped rows with missing population density:", org_len - len(socio_gdf))
 
-w = analysis_func.spatial_weights_combined(socio_gdf, id_columns[1], k_socio)
+socio.replace(np.nan, 0, inplace=True)
 
-columns = [
-    "population_density",
-    "households_1car_pct",
-    "households_2cars_share",
-    "households_nocar_pct",
-    "households_with_car_pct",
-    "households_income_under_100k_share",
-    "households_income_100_150k_share",
-    "households_income_150_200k_share",
-    "households_income_200_300k_share",
-    "households_income_200_300k_share",
-    "households_income_300_400k_share",
-    "households_income_400_500k_share",
-    "households_income_500_750k_share",
-]
+w = analysis_func.spatial_weights_combined(socio, id_columns[1], k_socio)
+
+columns = socio_corr_variables
 
 global_morans_results = {}
 
@@ -460,13 +461,13 @@ filepaths_lisa = [
 ]
 
 morans_results = analysis_func.compute_spatial_autocorrelation(
-    columns, columns, socio_gdf, w, filepaths_morans, show_plot=False
+    columns, columns, socio, w, filepaths_morans, show_plot=False
 )
 
 lisa_results = analysis_func.compute_lisa(
     columns,
     columns,
-    socio_gdf,
+    socio,
     w,
     filepaths_lisa,
     show_plot=False,
@@ -481,9 +482,9 @@ with open(
 ) as outfile:
     json.dump(global_morans_results, outfile)
 
-q_columns = [c for c in socio_gdf.columns if c.endswith("_q")]
+q_columns = [c for c in socio.columns if c.endswith("_q")]
 q_columns.extend(["geometry", "id"])
 
-socio_gdf[q_columns].to_parquet(fp_spatial_auto_socio + f"lisas.parquet")
+socio[q_columns].to_parquet(fp_spatial_auto_socio + f"lisas.parquet")
 
 # %%
