@@ -3,6 +3,7 @@ from src import db_functions as dbf
 from src import plotting_functions as plot_func
 from src import analysis_functions as analysis_func
 from sklearn.preprocessing import robust_scale
+import numpy as np
 
 
 exec(open("../settings/yaml_variables.py").read())
@@ -197,17 +198,21 @@ reach_compare_columns = [c for c in hex_reach_comparison.columns if "pct_diff" i
 reach_compare_columns = [
     c for c in reach_compare_columns if any(r in c for r in reach_comparisons)
 ]
+
+hex_gdf.replace(np.nan, 0, inplace=True)
 # %%
 
 # Define cluster variables
 hex_network_cluster_variables = (
     density_columns
     + length_relative_columns
-    + component_per_km_columns
+    # + component_per_km_columns
+    + largest_local_component_len_columns
     + reach_columns
     + reach_compare_columns
 )
 
+# %%
 # Use robust_scale to norm cluster variables
 hex_network_scaled = robust_scale(hex_gdf[hex_network_cluster_variables])
 
@@ -249,6 +254,7 @@ cluster_means_hex = analysis_func.examine_cluster_results(
 plot_func.style_cluster_means(cluster_means_hex)
 
 
+# %%
 # Label clusters after bikeability rank
 hex_gdf["network_rank"] = None
 
@@ -269,7 +275,7 @@ hex_gdf[[kmeans_col_net] + ["geometry", id_columns[2], "network_rank"]].to_parqu
     fp_hex_network_clusters
 )
 
-plot_func.plot_rank(hex_cluster_gdf, "network_rank")
+plot_func.plot_rank(hex_gdf, "network_rank")
 
 # %%
 # EXPORT CLUSTER RESULTS TO POSTGIS
