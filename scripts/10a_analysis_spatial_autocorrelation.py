@@ -3,11 +3,8 @@ from src import db_functions as dbf
 from src import plotting_functions as plot_func
 from src import analysis_functions as analysis_func
 import geopandas as gpd
-import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
 import json
-from pysal.lib import weights
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
