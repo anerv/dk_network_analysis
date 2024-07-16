@@ -30,3 +30,4 @@ with open(r"../config.yml") as file:
     p_lisa = parsed_yaml_file["p_lisa"]
 
     reach_dist = parsed_yaml_file["reach_dist"]
+    all_reach_distances = parsed_yaml_file["all_reach_distances"]
