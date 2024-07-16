@@ -2,13 +2,6 @@
 
 from src import db_functions as dbf
 from src import plotting_functions as plot_func
-import geopandas as gpd
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-import plotly_express as px
-import pandas as pd
-import seaborn as sns
 from IPython.display import display
 
 exec(open("../settings/yaml_variables.py").read())
@@ -23,9 +16,11 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 exec(open("../helper_scripts/read_hex_results.py").read())
 
 exec(open("../helper_scripts/read_reach_comparison.py").read())
-hex_reach_component_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
-del hex_reach_comparison
+reach_compare_columns = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
 
+reach_compare_columns = [
+    c for c in reach_compare_columns if any(r in c for r in reach_comparisons)
+]
 hex_corr_variables = (
     density_columns
     + density_steps_columns[1:4]
@@ -34,7 +29,7 @@ hex_corr_variables = (
     + component_per_km_columns
     + largest_local_component_len_columns
     + reach_columns
-    + hex_reach_component_cols
+    + reach_compare_columns
     + ["urban_pct"]
 )
 
@@ -46,6 +41,9 @@ display(
 display(hex_gdf[hex_corr_variables].describe().style.pipe(format_style_index))
 
 # %%
+
+# HEX PLOT
+
 plot_func.plot_correlation(
     hex_gdf,
     hex_corr_variables,
@@ -82,7 +80,7 @@ display(socio_gdf[socio_corr_variables].describe().style.pipe(format_style_index
 
 # %%
 
-# SOCIO
+# SOCIO PLOT
 plot_func.plot_correlation(
     socio_gdf,
     socio_corr_variables,
