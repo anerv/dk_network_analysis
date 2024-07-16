@@ -170,23 +170,31 @@ exec(open("../helper_scripts/read_reach_comparison.py").read())
 
 #hex_reach_comparison.replace(np.nan, 0, inplace=True)
 
-distances = [1, 2, 5, 10, 15]
 
 plot_columns = []
 filepaths = []
 plot_titles = []
 
-for i, n in enumerate(network_levels):
+for i, n in enumerate(network_levels_step):
 
-    for comb in itertools.combinations(distances, 2):
+    for comb in itertools.combinations(all_reach_distances, 2):
 
         plot_columns.append(f"{n}_pct_diff_{comb[0]}_{comb[1]}")
 
         plot_titles.append(f"% difference in network reach for {labels_step[i]} ({comb[0]} - {comb[1]})")
 
-        filepaths.append(fp_reach_diff_pct + f"{network_levels_step[i]}_{comb[0]}_{comb[1]}")
+        filepaths.append(fp_reach_diff_pct + f"{network_levels_step[i]}_{comb[0]}-{comb[1]}")
 
 vmin, vmax = plot_func.get_min_max_vals(hex_reach_comparison, plot_columns)
+#%%
+# Get subset
+plot_columns = [c for c in plot_columns if "diff_1_5" in c or "diff_1_10" in c or "diff_1_15" in c]
+
+plot_titles = [t for t in plot_titles if "1 - 5" in t or "1 - 10" in t or "1 - 15" in t]
+
+filepaths = [f for f in filepaths if "1-5" in f or "1-10" in f or "1-15" in f]
+
+assert len(plot_columns) == len(plot_titles) == len(filepaths)
 #%%
 for i, c in enumerate(plot_columns):
         
@@ -540,9 +548,8 @@ reach_columns = reach_df.columns.to_list()
 reach_columns.remove("hex_id")
 reach_columns.remove("geometry")
 
-distances = list(set([c.split("_")[2] for c in reach_columns if "pct_diff" not in c]))
-
-keep_columns = [c for c in reach_columns if "pct_diff" not in c]
+#%%
+keep_columns = [c for c in reach_columns if "diff" not in c ]
 
 reach_df = reach_df[keep_columns]
 
@@ -552,9 +559,15 @@ for i, e in enumerate([np.median, np.mean, np.max, np.std]):
 
     reach_melt = reach_df.melt()
 
-    reach_melt["distance"] = reach_melt["variable"].str.split("_").str[2]
+    #reach_melt["distance"] = reach_melt["variable"].str.split("_").str[2]
 
-    reach_melt["network"] = reach_melt["variable"].str.split("_").str[0]
+    reach_melt["distance"] = reach_melt["variable"].str[-2:]
+
+    reach_melt["distance"] = reach_melt["distance"].str.replace(r'_', '', regex=True)
+
+    reach_melt["network"] = reach_melt["variable"].str.split("reach").str[0]
+
+    reach_melt["network"] = reach_melt["network"].str[:-1]
 
     reach_melt["distance"] = reach_melt["distance"].astype(int)
 
@@ -577,7 +590,7 @@ for i, e in enumerate([np.median, np.mean, np.max, np.std]):
         hue="distance",
         errorbar=None,
         order=network_levels,
-        palette=sns.color_palette("pastel")[: len(distances)],
+        palette=sns.color_palette("pastel")[: len(all_reach_distances)],
         estimator=e,
     )
 
@@ -619,14 +632,14 @@ plt.close()
 
 reach_df = pd.read_sql(f"SELECT * FROM reach.compare_reach;", engine)
 
-for n in org_labels_rename.keys():
-    cols = [c for c in reach_df.columns if n in c and "pct_diff" not in c]
+for n in list(org_labels_rename.keys()):
+    n_reach = n+"_reach"
+    cols = [c for c in reach_df.columns if n_reach in c and "diff" not in c]
 
     df = reach_df[cols]
     values = df.values.flatten()
-    distances = [c.split("_")[2] for c in cols]
     labels_dist = []
-    for d in distances:
+    for d in all_reach_distances:
         labels_dist.extend([d] * len(df))
 
     df_flat = pd.DataFrame({"reach_length": values, "reach_distance": labels_dist})
@@ -635,9 +648,10 @@ for n in org_labels_rename.keys():
         data=df_flat,
         x="reach_length",
         hue="reach_distance",
-        # multiple="stack",
+        palette="Set2",
+        #multiple="stack",
         # fill=True,
-        # log_scale=True,
+        #log_scale=True,
     )
 
     fig.set_xlabel("Network reach (km)")
@@ -653,25 +667,19 @@ for n in org_labels_rename.keys():
 exec(open("../helper_scripts/read_reach_comparison.py").read())
 hex_reach_comparison.replace(np.nan, 0, inplace=True)
 
-distances = [2, 5, 10, 15]
-#%%
+comparison_types = ['1_5', '1_10', '1_15']
+
 plot_cols = []
-comparison_types = []
 
-for n in network_levels:
+for n in network_levels_step:
 
-    for comb in itertools.combinations(distances, 2):
+    for c in comparison_types:
+        plot_cols.append(f"{n}_pct_diff_{c}")
 
-        plot_cols.append(f"{n}_pct_diff_{comb[0]}_{comb[1]}")
-        
-        comparison_types.append(f"{comb[0]}_{comb[1]}")
 
-comparison_types = list(set(comparison_types))
-
-#%%
 rename_dict = {}
 
-for n, l in zip(network_levels, labels):
+for n, l in zip(network_levels_step, labels):
     rename_dict[n] = l
 
 for c in comparison_types:
@@ -681,15 +689,15 @@ for c in comparison_types:
     df = hex_reach_comparison[cols]
 
     df_flat = df.melt()
-    df_flat["network"] = df_flat["variable"].str.split("_").str[0]
-
+    df_flat["network"] = df_flat["variable"].str.split("pct").str[0]
+    df_flat["network"] = df_flat["network"].str[:-1]
     df_flat.replace(rename_dict, inplace=True)
 
     fig = sns.kdeplot(
         data=df_flat,
         x="value",
         hue="network",
-        multiple="stack",
+        #multiple="stack",
         # fill=True,
         palette=lts_color_dict.values(),
     )
