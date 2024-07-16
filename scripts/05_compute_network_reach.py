@@ -60,6 +60,22 @@ all_chunk_sizes = [
 ]
 
 # %%
+edge_tables = [
+    "reach.lts_1_segments",
+    "reach.lts_1_2_segments",
+    "reach.lts_1_3_segments",
+    "reach.lts_1_4_segments",
+    "reach.car_segments",
+]
+
+hex_tables = [
+    "reach.hex_lts_1",
+    "reach.hex_lts_2",
+    "reach.hex_lts_3",
+    "reach.hex_lts_4",
+    "reach.hex_car",
+]
+
 for dist in distances:
 
     chunk_sizes = all_chunk_sizes[distances.index(dist)]
@@ -73,22 +89,6 @@ for dist in distances:
         f"reach.lts_3_reach_{dist}",
         f"reach.lts_4_reach_{dist}",
         f"reach.car_reach_{dist}",
-    ]
-
-    edge_tables = [
-        "reach.lts_1_segments",
-        "reach.lts_1_2_segments",
-        "reach.lts_1_3_segments",
-        "reach.lts_1_4_segments",
-        "reach.car_segments",
-    ]
-
-    hex_tables = [
-        "reach.hex_lts_1",
-        "reach.hex_lts_2",
-        "reach.hex_lts_3",
-        "reach.hex_lts_4",
-        "reach.hex_car",
     ]
 
     # **** COMPUT REACHABLE NODES ****
@@ -459,15 +459,6 @@ for dist in distances:
         df = pd.read_sql_query(q, con=engine)
         print(f"{len(df)} hexagon(s) with only one reachable node in table {t}")
 
-    # todo
-    # # drop tables
-    # for t in table_names:
-    #     q = f"DROP TABLE IF EXISTS {t};"
-    #     result = dbf.run_query_pg(q, connection)
-    #     if result == "error":
-    #         print("Please fix error before rerunning and reconnect to the database")
-    #         break
-
 connection.close()
 
 # %%
@@ -598,6 +589,43 @@ q_socio_comparison_end = "sql/05g_finish_socio_reach_comparison.sql"
 result = dbf.run_query_pg(q_socio_comparison_end, connection)
 if result == "error":
     print("Please fix error before rerunning and reconnect to the database")
+
+# %%
+
+# drop preliminary tables
+for d in distances:
+    table_names = [
+        f"reach.lts_1_reach_{dist}",
+        f"reach.lts_2_reach_{dist}",
+        f"reach.lts_3_reach_{dist}",
+        f"reach.lts_4_reach_{dist}",
+        f"reach.car_reach_{dist}",
+    ]
+
+    for t in table_names:
+        q = f"DROP TABLE IF EXISTS {t};"
+        result = dbf.run_query_pg(q, connection)
+        if result == "error":
+            print("Please fix error before rerunning and reconnect to the database")
+            break
+
+for e in edge_tables:
+    q = f"DROP TABLE IF EXISTS {e};"
+    result = dbf.run_query_pg(q, connection)
+    if result == "error":
+        print("Please fix error before rerunning and reconnect to the database")
+        break
+
+drop_tables = [
+    "DROP TABLE IF EXISTS segment_nodes;",
+    "DROP TABLE IF EXISTS edges_segments;",
+]
+
+for d in drop_tables:
+    result = dbf.run_query_pg(d, connection)
+    if result == "error":
+        print("Please fix error before rerunning and reconnect to the database")
+        break
 
 with open("vacuum_analyze.py") as f:
     exec(f.read())
