@@ -2,15 +2,8 @@
 from src import db_functions as dbf
 from src import plotting_functions as plot_func
 from src import analysis_functions as analysis_func
-import geopandas as gpd
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
 from sklearn.preprocessing import robust_scale
-import contextily as cx
-from matplotlib.patches import Patch
-from IPython.display import display
+
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -28,16 +21,7 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 exec(open("../helper_scripts/prepare_socio_cluster_data.py").read())
 
-# generate socio reach comparison columns
-exec(open("../helper_scripts/read_reach_comparison.py").read())
-hex_reach_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
-hex_reach_cols = [
-    c for c in hex_reach_cols if "_15" not in c and "5_15" not in c and "2_" not in c
-]
-socio_reach_compare_columns = [c + "_median" for c in hex_reach_cols]
-del hex_reach_comparison
-
-
+exec(open("../helper_scripts/generate_socio_reach_columns.py").read())
 # %%
 # SOCIO CLUSTERING: Network variables
 
@@ -62,7 +46,7 @@ for key, val in m1.items():
 
 # %%
 # Define K!
-k = 6
+k = 8
 ##### K-Means #######
 
 kmeans_col_net = f"kmeans_net_{k}"
@@ -181,7 +165,7 @@ plot_func.style_cluster_means(cluster_means_soc_soc)
 
 socio_cluster_gdf["socio_label"] = None
 
-
+# TODO: UPDATE
 label_dict = {
     0: "Medium income - low car",
     1: "High income - high car",
@@ -208,12 +192,12 @@ socio_cluster_gdf[
 exec(open("../helper_scripts/read_hex_results.py").read())
 
 exec(open("../helper_scripts/read_reach_comparison.py").read())
-reach_compare_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
-reach_compare_cols = [
-    c
-    for c in reach_compare_cols
-    if "_15" not in c and "5_15" not in c and "2_" not in c
+reach_compare_columns = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
+
+reach_compare_columns = [
+    c for c in reach_compare_columns if any(r in c for r in reach_comparisons)
 ]
+# %%
 
 # Define cluster variables
 hex_network_cluster_variables = (
@@ -221,7 +205,7 @@ hex_network_cluster_variables = (
     + length_relative_columns
     + component_per_km_columns
     + reach_columns
-    + reach_compare_cols
+    + reach_compare_columns
 )
 
 # Use robust_scale to norm cluster variables

@@ -27,15 +27,7 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 exec(open("../helper_scripts/prepare_socio_cluster_data.py").read())
 
 # generate socio reach comparison columns
-exec(open("../helper_scripts/read_reach_comparison.py").read())
-hex_reach_component_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
-hex_reach_component_cols = [
-    c
-    for c in hex_reach_component_cols
-    if "_15" not in c and "5_15" not in c and "2_" not in c
-]
-socio_reach_compare_columns = [c + "_median" for c in hex_reach_component_cols]
-del hex_reach_comparison
+exec(open("../helper_scripts/generate_socio_reach_columns.py").read())
 
 socio_cluster_gdf = socio_cluster_gdf[
     socio_cluster_gdf["population_density"] > 0

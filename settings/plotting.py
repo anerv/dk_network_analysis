@@ -462,3 +462,5 @@ rename_index_dict_largest_comp = {
     # "component_coverage_1_4": "LTS 4 largest component coverage",
     # "component_coverage_car": "Car largest component coverage",
 }
+
+reach_comparisons = ["1_5", "5_10", "10_15"]

@@ -58,10 +58,7 @@ plot_func.plot_correlation(
 exec(open("../helper_scripts/prepare_socio_network_corr_data.py").read())
 
 # generate socio reach comparison columns
-exec(open("../helper_scripts/read_reach_comparison.py").read())
-hex_reach_component_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
-socio_reach_compare_columns = [c + "_median" for c in hex_reach_component_cols]
-del hex_reach_comparison
+exec(open("../helper_scripts/generate_socio_reach_columns.py").read())
 
 socio_corr_variables = (
     density_columns
