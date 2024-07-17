@@ -312,6 +312,7 @@ def plot_correlation(
     pair_plot_type="reg",
     diag_kind="kde",
     corner=True,
+    pairplot=True,
     pair_plot_x_log=False,
     pair_plot_y_log=False,
     heatmap_fp=None,
@@ -360,28 +361,29 @@ def plot_correlation(
     if heatmap_fp is not None:
         # Save heatmap
         hm.get_figure().savefig(heatmap_fp)
+    
+    if pairplot is True:
+        if pair_plot_x_log is False and pair_plot_y_log is False:
 
-    if pair_plot_x_log is False and pair_plot_y_log is False:
+            pp = sns.pairplot(
+                df[corr_columns], kind=pair_plot_type, diag_kind=diag_kind, corner=corner
+            )
+        else:
+            pp = sns.pairplot(
+                df[corr_columns], kind=pair_plot_type, diag_kind=diag_kind, corner=False
+            )
 
-        pp = sns.pairplot(
-            df[corr_columns], kind=pair_plot_type, diag_kind=diag_kind, corner=corner
-        )
-    else:
-        pp = sns.pairplot(
-            df[corr_columns], kind=pair_plot_type, diag_kind=diag_kind, corner=False
-        )
+        if pair_plot_x_log is True:
+            for ax in pp.axes.flat:
+                ax.set(xscale="log")
 
-    if pair_plot_x_log is True:
-        for ax in pp.axes.flat:
-            ax.set(xscale="log")
+        if pair_plot_y_log is True:
+            for ax in pp.axes.flat:
+                ax.set(yscale="log")
 
-    if pair_plot_y_log is True:
-        for ax in pp.axes.flat:
-            ax.set(yscale="log")
-
-    if pairplot_fp is not None:
-        # Save pairplot
-        pp.savefig(pairplot_fp)
+        if pairplot_fp is not None:
+            # Save pairplot
+            pp.savefig(pairplot_fp)
 
 
 def get_unique_bins(
