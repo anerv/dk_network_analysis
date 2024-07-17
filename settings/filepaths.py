@@ -4,6 +4,10 @@ filepath_summary_network_length = (
     "../results/density_distributions/density_network_length_bar.jpg"
 )
 
+filepath_summary_network_length_steps = (
+    "../results/density_distributions/density_network_length_steps_bar.jpg"
+)
+
 filepaths_kde_length = [
     "../results/density_distributions/administrative/lts_kde_length.jpg",
     "../results/density_distributions/socio/lts_kde_length.jpg",
@@ -155,6 +159,10 @@ filepaths_components_scatter_lts = [
 
 filepath_summmary_stats_network_length = (
     "../results/summary_stats/density_network_length.csv"
+)
+
+filepath_summmary_stats_network_length_steps = (
+    "../results/summary_stats/density_network_length_steps.csv"
 )
 
 filepath_sum_density_relative_steps = (
