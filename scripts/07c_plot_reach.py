@@ -614,7 +614,7 @@ sns.violinplot(
     y="value",
     hue="distance",
     order=network_levels,
-    palette=sns.color_palette("pastel")[: len(distances)],
+    palette=sns.color_palette("pastel")[: len(all_reach_distances)],
     fill=False,
 )
 
@@ -657,6 +657,7 @@ for n in list(org_labels_rename.keys()):
     fig.set_xlabel("Network reach (km)")
     fig.set_title(f"Network reach KDE for {n} network")
 
+    plt.savefig(fp_reach_diff_dist_kde + n + ".png")
     plt.show()
 
     plt.close()
@@ -702,7 +703,7 @@ for c in comparison_types:
         palette=lts_color_dict.values(),
     )
 
-    fig.set_xlabel(f"% difference between in network reach")
+    fig.set_xlabel(f"% difference in network reach")
     fig.set_title(f"Comparison of network reach between distance {c.split('_')[0]} and {c.split('_')[1]} km")
 
     plt.savefig(fp_reach_diff_pct_kde + c + ".png")
