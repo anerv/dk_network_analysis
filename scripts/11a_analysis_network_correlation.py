@@ -49,6 +49,8 @@ plot_func.plot_correlation(
     hex_corr_variables,
     heatmap_fp=fp_hex_network_heatmap,
     pairplot_fp=fp_hex_network_pairplot,
+    corner=False,
+    pairplot=True,
 )
 # %%
 ##### SOCIO #####
@@ -86,6 +88,8 @@ plot_func.plot_correlation(
     socio_corr_variables,
     heatmap_fp=fp_socio_network_heatmap,
     pairplot_fp=fp_socio_network_pairplot,
+    corner=False,
+    pairplot=True,
 )
 
 # %%
