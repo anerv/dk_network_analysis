@@ -232,6 +232,7 @@ fp_socio_network_heatmap = "../results/correlation/heatmap_socio_network.png"
 fp_socio_network_pairplot = "../results/correlation/pairplot_socio_network.png"
 
 fp_socio_pop_corr = "../results/correlation/socio_pop_corr_"
+fp_hex_pop_corr = "../results/correlation/hex_pop_corr_"
 
 # Spatial autocorrelation
 fp_spatial_auto_base = "../results/spatial_autocorrelation/"
