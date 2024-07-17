@@ -74,6 +74,8 @@ analysis_func.examine_cluster_results(
     fp_map,
     fp_size,
     fp_kde,
+    cmap="viridis",
+    palette="viridis",
 )
 
 #####  Hierarchical clustering #######
@@ -94,6 +96,8 @@ analysis_func.examine_cluster_results(
     fp_map,
     fp_size,
     fp_kde,
+    cmap="viridis",
+    palette="viridis",
 )
 
 ##### Regionalization #######
@@ -117,6 +121,8 @@ analysis_func.examine_cluster_results(
     fp_map,
     fp_size,
     fp_kde,
+    cmap="viridis",
+    palette="viridis",
 )
 
 # Compare clustering results
@@ -179,6 +185,8 @@ analysis_func.examine_cluster_results(
     fp_map,
     fp_size,
     fp_kde,
+    cmap="viridis",
+    palette="viridis",
 )
 
 #####  Hierarchical clustering #######
@@ -199,6 +207,8 @@ analysis_func.examine_cluster_results(
     fp_map,
     fp_size,
     fp_kde,
+    cmap="viridis",
+    palette="viridis",
 )
 
 ##### Regionalization #######
@@ -222,6 +232,8 @@ analysis_func.examine_cluster_results(
     fp_map,
     fp_size,
     fp_kde,
+    cmap="viridis",
+    palette="viridis",
 )
 
 # Compare clustering results
@@ -254,16 +266,16 @@ exec(open("../helper_scripts/read_hex_results.py").read())
 
 hex_gdf.replace(np.nan, 0, inplace=True)
 
-exec(open("../helper_scripts/read_reach_comparison.py").read())
-hex_reach_component_cols = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
-hex_reach_component_cols = [
-    c for c in hex_reach_component_cols if "10_15" not in c and "5_15" not in c
-]
-del hex_reach_comparison
+# exec(open("../helper_scripts/generate_socio_reach_columns.py").read())
 
+reach_compare_columns = [c for c in hex_gdf.columns if "pct_diff" in c]
+
+reach_compare_columns = [
+    c for c in reach_compare_columns if any(r in c for r in reach_comparisons)
+]
 
 # define cluster variables
-
+# %%
 hex_cluster_variables = (
     density_columns
     + density_steps_columns[1:4]
@@ -272,7 +284,7 @@ hex_cluster_variables = (
     + component_per_km_columns
     + largest_local_component_len_columns
     + reach_columns
-    + hex_reach_component_cols
+    + reach_compare_columns
     # + ["urban_pct"]
 )
 
@@ -302,7 +314,14 @@ fp_size = fp_hex_network_cluster_base + f"_size_{kmeans_col}.png"
 fp_kde = fp_hex_network_cluster_base + f"_kde_{kmeans_col}.png"
 
 analysis_func.examine_cluster_results(
-    hex_gdf, kmeans_col, hex_cluster_variables, fp_map, fp_size, fp_kde
+    hex_gdf,
+    kmeans_col,
+    hex_cluster_variables,
+    fp_map,
+    fp_size,
+    fp_kde,
+    cmap="viridis",
+    palette="viridis",
 )
 
 
@@ -338,7 +357,14 @@ fp_kde = fp_hex_network_cluster_base + f"_kde_{reg_col}.png"
 hex_gdf[reg_col] = reg_labels
 
 analysis_func.examine_cluster_results(
-    hex_gdf, reg_col, hex_cluster_variables, fp_map, fp_size, fp_kde
+    hex_gdf,
+    reg_col,
+    hex_cluster_variables,
+    fp_map,
+    fp_size,
+    fp_kde,
+    cmap="viridis",
+    palette="viridis",
 )
 
 # Compare clustering results
