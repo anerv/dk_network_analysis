@@ -3,11 +3,7 @@
 from src import db_functions as dbf
 from src import plotting_functions as plot_func
 import geopandas as gpd
-import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
-import plotly_express as px
-import pandas as pd
 import seaborn as sns
 from IPython.display import display
 

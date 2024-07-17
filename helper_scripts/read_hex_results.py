@@ -12,7 +12,9 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 #### HEX #####
 hex_geoms = gpd.read_postgis(
-    "SELECT hex_id, urban_pct, geometry FROM hex_grid;", engine, geom_col="geometry"
+    "SELECT hex_id, urban_pct, pop_density, geometry FROM hex_grid;",
+    engine,
+    geom_col="geometry",
 )
 
 hex_density = gpd.read_postgis(
@@ -74,4 +76,13 @@ assert hex_gdf.shape[0] == hex_density.shape[0]
 
 duplicates = [c for c in hex_gdf.columns if c.endswith("_x") or c.endswith("_y")]
 assert len(duplicates) == 0
+
+del (
+    hex_geoms,
+    hex_density,
+    hex_components,
+    hex_largest_components,
+    hex_reach,
+    hex_reach_comparison,
+)
 # %%
