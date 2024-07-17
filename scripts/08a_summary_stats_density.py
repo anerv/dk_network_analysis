@@ -46,7 +46,7 @@ network_lengths = [
 
 network_shares = [l / total_network_length * 100 for l in network_lengths]
 
-df = pd.DataFrame(
+df_single = pd.DataFrame(
     data={
         "network_type": network_levels,
         "length (km)": network_lengths,
@@ -54,43 +54,79 @@ df = pd.DataFrame(
     }
 )
 
-df.to_csv(filepath_summmary_stats_network_length, index=False)
+df_single.to_csv(filepath_summmary_stats_network_length, index=False)
+
+display(df_single.style.pipe(format_style_no_index))
+
+# %%
+
+network_levels = labels_step_all
+
+lts_1_2_length = lts_1_length + lts_2_length
+lts_1_3_length = lts_1_length + lts_2_length + lts_3_length
+lts_1_4_length = lts_1_length + lts_2_length + lts_3_length + lts_4_length
+
+network_lengths = [
+    lts_1_length,
+    lts_1_2_length,
+    lts_1_3_length,
+    lts_1_4_length,
+    lts_car_length,
+    total_network_length,
+]
+
+network_shares = [l / total_network_length * 100 for l in network_lengths]
+
+df_steps = pd.DataFrame(
+    data={
+        "network_type": network_levels,
+        "length (km)": network_lengths,
+        "share (%)": network_shares,
+    }
+)
+
+df.to_csv(filepath_summmary_stats_network_length_steps, index=False)
 
 display(df.style.pipe(format_style_no_index))
 
 # %%
-new_color_dict = {}
-for i, color in enumerate(lts_color_dict.values()):
-    k = df.network_type[i]
-    new_color_dict[k] = color
-
 
 plotly_labels["network_type"] = "Network type"
-fig = px.bar(
-    df,
-    x="network_type",
-    y="share (%)",
-    color="network_type",
-    labels=plotly_labels,
-    color_discrete_map=new_color_dict,
-)
-fig.update_layout(template="simple_white")
-fig.update_traces(texttemplate="%{y:.1f}%", textposition="outside")
-fig.update_layout(showlegend=False)
-fig.update_yaxes(visible=False)
 
-config = {
-    "toImageButtonOptions": {
-        "format": "svg",  # one of png, svg, jpeg, webp
-        "filename": "custom_image",
-        "height": 500,
-        "width": 700,
-        "scale": 6,  # Multiply title/legend/axis/canvas sizes by this factor
+filepaths = [filepath_summary_network_length, filepath_summary_network_length_steps]
+
+for i, df in enumerate([df_single, df_steps]):
+
+    new_color_dict = {}
+    for e, color in enumerate(lts_color_dict.values()):
+        k = df.network_type[e]
+        new_color_dict[k] = color
+
+    fig = px.bar(
+        df,
+        x="network_type",
+        y="share (%)",
+        color="network_type",
+        labels=plotly_labels,
+        color_discrete_map=new_color_dict,
+    )
+    fig.update_layout(template="simple_white")
+    fig.update_traces(texttemplate="%{y:.1f}%", textposition="outside")
+    fig.update_layout(showlegend=False)
+    fig.update_yaxes(visible=False)
+
+    config = {
+        "toImageButtonOptions": {
+            "format": "svg",  # one of png, svg, jpeg, webp
+            "filename": "custom_image",
+            "height": 500,
+            "width": 700,
+            "scale": 6,  # Multiply title/legend/axis/canvas sizes by this factor
+        }
     }
-}
 
-fig.show(config=config)
-fig.write_image(filepath_summary_network_length, format="jpg", scale=6)
+    fig.show(config=config)
+    fig.write_image(filepaths[i], format="jpg", scale=6)
 # %%
 
 # fig = px.bar(
