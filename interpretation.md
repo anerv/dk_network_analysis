@@ -2,7 +2,7 @@
 
 ## DENSITY
 
-* Based on stack bar charts, most municipalities have comparable ratios of different levels of LTS? (of course with some variations - value ranges of LTS 1 13.6 - 43.6%, median and average around 30%, LTS 2 25-65%, mean and median around 40%.)
+* Based on stack bar charts, most municipalities have comparable ratios of different levels of LTS?
 
 ![alt text](results/density_distributions/administrative/lts_stacked_bar_len.jpg)
 
@@ -10,23 +10,35 @@
 
 At the local and grid level, obviously much larger variations.
 
-At the global, adm and socio level, the median levels ordered after share:
+At the global level:
 
 * 2
-* 1
 * 3
 * 4
+* 1
+
+At the adm and socio level, the median levels ordered after share:
+
+* 2
+* 3
+* 1
+* 4
+
+1 and 4 *very* close for global, adm, socio.
 
 (ofc total car highest)
 
 At grid level:
 
-* Same, but *much* closer values.
-* Important to remember that LTS 3 and 4 etc. are for network used by cyclists! Not for roads with separate bike tracks.
+* 3
+* 4
+* 2
+* 1
 
 Highly uneven distribution of both network length AND density.
 
-Density distributions are different at various aggregation levels - but at socio and hex grid LTS 1+2 and LTS 3+4 follow roughly same distribution.
+Density distributions are different at various aggregation levels.
+Very different distributions, also across space.
 
 ![alt text](results/density_distributions/socio/lts_kde_length.jpg)
 
@@ -34,10 +46,10 @@ Density distributions are different at various aggregation levels - but at socio
 
 ### Spatial distributions
 
-* At socio level - *share* of LTS 1 is not an urban phenomenon - but absolute quantity is.
+* At socio level - *share* of LTS 1 is not only an urban phenomenon - but absolute quantity is.
 * Same for LTS 2
 * Absolute values for LTS 3 a bit 'random' - but low in CPH. *Share* of LTS 3 low in larger cities.
-* LTS 4 - not urban - neither based on share or absolute values.
+* LTS 4 - not urban - neither based on share or absolute values - but a bit random - generally low values
 
 Results for spatial autocorrelation:
 
@@ -271,138 +283,3 @@ Not sensitive to changing weights.
 
 # Clustering
 
-## Socio network
-
-**Ranked:**
-1
-2
-5
-4
-3
-0
-
-kmeans_7
-
-Far more areas and area in cluster 0
-
-**0:**
-
-*Well-connected, but sparse - for cars.*
-*Fragmentented and sparse for cyclists.*
-
-* Non-urban (viz)
-* By far the biggest
-* High LTS 3 and 4 (compared to the amount of those)
-* Almost only car
-* High fragmentation for low LTS
-* Low fragmentation for car and high lts but also low reach
-* High difference between reach distances for car and LTS 4 - almost 0 for LTS 1 and 2
-
-* OBS! KDE plots - large spread for some values and some clusters - e.g. also areas in cluster 0 with higher rel length of LTS 2
-
-**1:**
-
-*Well-connected, high density, high reach.*
-
-* Urban
-* LTS 2 network almost on par with car network.
-* Very little LTS 4
-* Low fragmentation
-
-**2:**
-
-*Bike-friendly urban periphery?*
-
-* Very similar to cluster 1, but:
-* slightly lower LTS 1 and 2 density
-* slightly higher LTS 3 and 4 dens
-* Also dominated by LTS 2
-* a bit lower car and network density
-* Much lower networ reach, both abs and pct diff when increasing distance
-
-**3:**
-
-*The urban version of cluster 0 - for the adult cyclist.*
-
-* Similiar-ish to cluster 0
-* Low 1-2 density
-* High 3 (for 3)
-* Medium/medium low 4
-* Low car and total network density (but higher than in 0)
-* High LTS 2 relative density
-* High car relative density
-* Low fragmentation
-* Low reach
-* Low reach increase
-* Often in coastal areas
-
-**4:**
-
-* Ignore, only one cluster.
-
-**5:**
-
-*Second best for bikes?*
-*High lts 1 density, but poor connectivity.*
-
-* High LTS 1-2
-* High 3 (for 3 value range)
-* Low LTS 4
-* Very high LTS 1 relative length, high lts 2 rel length
-* But also high fragmentation for LTS 1! - and thus low LTS 1 reach and little increase in reach
-* Much better LTS 2 reach
-* Even though comparable LTS 1 and 2 density - fragmentation of LTS 1 means LTS 2 performs much better in terms of reach.
-
-## Socio socioeconomic
-
-**Labels:**
-0: Medium income - high car - rural
-1: Low income - low car - urban
-2: High income - low car - urban
-3: Very high income - very high car - suburban/rural
-4: Low-medium income - low-medium car - suburban
-
-**0:**
-
-* Rural
-* Big cluster
-* Low share of very low income and very high income
-* High share of 200 - 400k income
-* High car ownership (low no car)
-* Most have 2 cars - but relative high share of households with 1 car
-* Low pop density, low urban
-
-**1:**
-
-* Small cluster
-* Completely urban
-* High (relative) shares of low income people
-* Low very high income - otherwise a mix
-* High share of no car households
-* Medium/high pop density
-
-**2:**
-
-* Small custer, competely urban
-* High (relative) share of low income
-* Low share of lower/medium income
-* Higher share of upper-medium income
-* Low share of very high
-* Low car ownership (lowest)
-* Highest pop density and urban
-
-**3:**
-
-* High share of high income
-* Low share of low and medium income
-* High car ownership and high share of 2 car households
-* Low population density and low urban
-
-**4:**
-
-* High low income and low/medium
-* Low higher income
-* Medium-low car ownership
-* Low 2 cars
-* Medium-low pop density
-* High urban
