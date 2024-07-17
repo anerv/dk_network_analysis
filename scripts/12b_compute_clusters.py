@@ -5,7 +5,6 @@ from src import analysis_functions as analysis_func
 from sklearn.preprocessing import robust_scale
 import numpy as np
 
-
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 exec(open("../settings/df_styler.py").read())
