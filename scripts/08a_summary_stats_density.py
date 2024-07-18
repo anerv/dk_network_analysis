@@ -110,9 +110,8 @@ for i, df in enumerate([df_single, df_steps]):
         labels=plotly_labels,
         color_discrete_map=new_color_dict,
     )
-    fig.update_layout(template="simple_white")
+    fig.update_layout(template="simple_white", showlegend=False, xaxis_title=None)
     fig.update_traces(texttemplate="%{y:.1f}%", textposition="outside")
-    fig.update_layout(showlegend=False)
     fig.update_yaxes(visible=False)
 
     config = {
