@@ -93,6 +93,23 @@ def compare_clustering(
     fp_similarity,
     fp_map,
 ):
+    """
+    Compare clustering results based on geographical coherence, feature coherence, and solution similarity.
+
+    Parameters:
+    - gdf (GeoDataFrame): The input GeoDataFrame containing the data.
+    - cluster_columns (list): The list of column names representing the clustering results.
+    - cluster_variables (list): The list of column names representing the variables used for clustering.
+    - plot_titles (list): The list of titles for the cluster result plots.
+    - df_styler (Styler): The Styler object used to style the output DataFrame.
+    - fp_geo (str): The file path to save the geographical coherence results.
+    - fp_feature (str): The file path to save the feature coherence results.
+    - fp_similarity (str): The file path to save the solution similarity results.
+    - fp_map (str): The file path to save the cluster result plots.
+
+    Returns:
+    None
+    """
 
     geo = evaluate_geographical_coherence(gdf, cluster_columns)
 
@@ -270,6 +287,21 @@ def compare_spatial_weights_sensitivity(
     fp,
     silence_warnings=False,
 ):
+    """
+    Compare the sensitivity of spatial weights in a sensitivity analysis.
+
+    Parameters:
+    gdf (GeoDataFrame): The input GeoDataFrame containing the spatial data.
+    id_column (str): The name of the column in the GeoDataFrame that contains the unique identifiers.
+    aggregation_level (str): The level of aggregation for the analysis.
+    k_values (list): A list of three integers representing the k values for computing spatial weights.
+    all_columns (list): A list of lists, where each inner list contains the column names to analyze.
+    fp (str): The file path for saving the output files.
+    silence_warnings (bool, optional): Whether to silence the warnings during spatial weights computation. Defaults to False.
+
+    Returns:
+    None
+    """
 
     print("Starting sensitivity analysis for aggregation level:", aggregation_level)
 
