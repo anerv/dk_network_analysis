@@ -63,7 +63,19 @@ def make_gini_plot(gdf, column, fp):
 
 
 def plot_labels(gdf, label_col, cmap=pdict["cat"]):
-    _, ax = plt.subplots(1, 1, figsize=(15, 15))
+    """
+    Plot labels on a GeoDataFrame.
+
+    Parameters:
+    gdf (GeoDataFrame): The GeoDataFrame containing the data to be plotted.
+    label_col (str): The column name in the GeoDataFrame that contains the labels.
+    cmap (str or Colormap, optional): The colormap to be used for plotting. Defaults to pdict["cat"].
+
+    Returns:
+    None
+    """
+
+    _, ax = plt.subplots(1, 1, figsize=pdict["fsmap"])
     ax.set_axis_off()
     gdf.plot(
         column=label_col,
@@ -77,7 +89,19 @@ def plot_labels(gdf, label_col, cmap=pdict["cat"]):
 
 
 def plot_rank(gdf, label_col, cmap="viridis"):
-    _, ax = plt.subplots(1, 1, figsize=(15, 15))
+    """
+    Plot the rank of a GeoDataFrame.
+
+    Parameters:
+    gdf (GeoDataFrame): The GeoDataFrame containing the data to be plotted.
+    label_col (str): The column name in the GeoDataFrame to be used for labeling.
+    cmap (str, optional): The colormap to be used for the plot. Defaults to "viridis".
+
+    Returns:
+    None
+    """
+
+    _, ax = plt.subplots(1, 1, figsize=pdict["fsmap"])
     ax.set_axis_off()
     gdf.plot(
         column=label_col,
@@ -108,6 +132,19 @@ def get_hex_colors_from_colormap(colormap_name, n_colors):
 
 
 def style_cluster_means(cluster_means, cmap="coolwarm"):
+    """
+    Apply background gradient styling to a DataFrame representing cluster means.
+
+    Parameters:
+    - cluster_means (pd.DataFrame): The DataFrame containing the cluster means.
+    - cmap (str, optional): The colormap to use for the background gradient. Default is "coolwarm".
+
+    Returns:
+    - None
+
+    Example:
+    >>> style_cluster_means(cluster_means, cmap="viridis")
+    """
 
     styler = cluster_means.style
     styler_dict = {}
@@ -126,7 +163,20 @@ def style_cluster_means(cluster_means, cmap="coolwarm"):
     display(cluster_means_styled)
 
 
-def plot_clustering(gdf, cluster_col, fp, figsize=(15, 10), cmap=pdict["cat"]):
+def plot_clustering(gdf, cluster_col, fp, figsize=pdict["fsmap"], cmap=pdict["cat"]):
+    """
+    Plot clustering results on a GeoDataFrame.
+
+    Parameters:
+    gdf (GeoDataFrame): The GeoDataFrame containing the data to be plotted.
+    cluster_col (str): The name of the column in the GeoDataFrame that represents the clustering results.
+    fp (str): The file path where the plot will be saved.
+    figsize (tuple, optional): The size of the figure.
+    cmap (str or Colormap, optional): The colormap to be used for the plot. Defaults to pdict["cat"].
+
+    Returns:
+    None
+    """
 
     _, ax = plt.subplots(1, figsize=figsize)
 
@@ -147,7 +197,17 @@ def plot_clustering(gdf, cluster_col, fp, figsize=(15, 10), cmap=pdict["cat"]):
 
 
 def plot_cluster_sizes(cluster_sizes, cluster_areas, fp):
+    """
+    Plots the cluster sizes and areas as a bar chart.
 
+    Args:
+        cluster_sizes (list): A list of integers representing the sizes of each cluster.
+        cluster_areas (list): A list of floats representing the areas of each cluster.
+        fp (str): The file path to save the plot.
+
+    Returns:
+        None
+    """
     __, ax = plt.subplots(1, figsize=(15, 10))
     area_tracts = pd.DataFrame({"No. Tracts": cluster_sizes, "Area": cluster_areas})
     area_tracts = area_tracts * 100 / area_tracts.sum()
@@ -251,6 +311,19 @@ def get_min_max_vals(gdf, columns):
 
 
 def compare_lisa_results(fp, metric, aggregation_level, rename_dict, format_style):
+    """
+    Compare LISA (Local Indicators of Spatial Association) results.
+
+    Parameters:
+    - fp (str): Filepath of the data file.
+    - metric (str): The metric to compare.
+    - aggregation_level (str): The level of aggregation.
+    - rename_dict (dict): A dictionary to rename the columns.
+    - format_style (function): A function to format the output style.
+
+    Returns:
+    None
+    """
 
     summary = {}
 
@@ -310,7 +383,19 @@ def compare_lisa_results(fp, metric, aggregation_level, rename_dict, format_styl
 
 
 def process_plot_moransi(fp, metric, aggregation_level, rename_dict):
+    """
+    Process and plot Moran's I for a given metric at a specified aggregation level.
 
+    Args:
+        fp (str): The file path of the JSON file containing the data.
+        metric (str): The name of the metric.
+        aggregation_level (str): The aggregation level.
+        rename_dict (dict): A dictionary to rename the index of the DataFrame.
+
+    Returns:
+        pandas.DataFrame: The processed DataFrame.
+
+    """
     df = pd.read_json(
         fp,
         orient="index",
@@ -757,6 +842,25 @@ def combined_zipf_plot(
     title="Component length distribution",
     figsize=pdict["fsbar"],
 ):
+    """
+    Plot a combined Zipf plot for component length distribution.
+
+    Args:
+        component_size_all (dict): A dictionary containing component size information for all components.
+        component_size_1 (dict): A dictionary containing component size information for LTS 1 components.
+        component_size_1_2 (dict): A dictionary containing component size information for LTS 1-2 components.
+        component_size_1_3 (dict): A dictionary containing component size information for LTS 1-3 components.
+        component_size_1_4 (dict): A dictionary containing component size information for LTS 1-4 components.
+        component_size_car (dict): A dictionary containing component size information for car components.
+        lts_color_dict (dict): A dictionary mapping LTS numbers to color codes.
+        fp (str): The file path to save the plot.
+        title (str, optional): The title of the plot. Defaults to "Component length distribution".
+        figsize (tuple, optional): The figure size of the plot. Defaults to pdict["fsbar"].
+
+    Returns:
+        None
+    """
+
     fig = plt.figure(figsize=figsize)
     axes = fig.add_axes([0, 0, 1, 1])
 
@@ -897,6 +1001,19 @@ def combined_zipf_plot(
 
 
 def make_zipf_component_plot(df, col, label, fp=None, show=True):
+    """
+    Create a Zipf component plot.
+
+    Parameters:
+    - df (DataFrame): The DataFrame containing the data.
+    - col (str): The column name in the DataFrame to use for the y-values.
+    - label (str): The label to include in the plot title.
+    - fp (str, optional): The file path to save the plot image. Default is None.
+    - show (bool, optional): Whether to display the plot. Default is True.
+
+    Returns:
+    None
+    """
 
     fig = plt.figure(figsize=pdict["fsbar"])
     axes = fig.add_axes([0, 0, 1, 1])
