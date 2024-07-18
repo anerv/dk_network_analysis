@@ -607,6 +607,7 @@ for e, df in enumerate(dfs):
         yaxis_title="Component count",
         title=scatter_titles[e],
         plot_bgcolor="rgba(0, 0, 0, 0)",
+        legend_title=None,
     )
 
     fig.update_xaxes(
@@ -645,6 +646,7 @@ for e, df in enumerate(dfs):
         height=600,
         yaxis_title="Count",
         plot_bgcolor="rgba(0, 0, 0, 0)",
+        legend_title=None,
     )
     fig.write_image(
         rug_filepaths[e],
