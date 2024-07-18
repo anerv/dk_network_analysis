@@ -685,7 +685,7 @@ rename_dict = {}
 for n, l in zip(network_levels_step, labels):
     rename_dict[n] = l
 
-for c in comparison_types[:1]:
+for c in comparison_types:
     # Get columns which ends with c
     cols = [col for col in plot_cols if c in col]
 
@@ -696,7 +696,6 @@ for c in comparison_types[:1]:
     df_flat["network"] = df_flat["network"].str[:-1]
     df_flat.replace(rename_dict, inplace=True)
 
-    #fig, ax = plt.subplots(figsize=pdict["fsbar"])
     fig, ax = plt.subplots(figsize=pdict["fsbar"])
     g = sns.kdeplot(
         data=df_flat,
@@ -709,7 +708,7 @@ for c in comparison_types[:1]:
     )
 
     # Set the labels and title
-    plt.xlabel(f"% difference in network reach", fontdict={"size": 12})
+    plt.xlabel(f"% difference in network reach between distance {c.split("_")[0]} and {c.split("_")[1]} km", fontdict={"size": 12})
     plt.ylabel("Reach (km)",fontdict={"size": 12})
     #plt.title(f"Network reach per network type")
 
