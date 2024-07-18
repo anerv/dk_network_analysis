@@ -25,6 +25,17 @@ exec(open("../settings/plotting.py").read())
 
 
 def make_gini_plot(gdf, column, fp):
+    """
+    Generate a Gini plot to visualize the Lorenz curve for a given column in a GeoDataFrame.
+
+    Parameters:
+    gdf (GeoDataFrame): The GeoDataFrame containing the data.
+    column (str): The column name to plot.
+    fp (str): The file path to save the plot.
+
+    Returns:
+    None
+    """
 
     n = len(gdf)
     share_of_areas = np.arange(1, n + 1) / n
@@ -156,7 +167,19 @@ def plot_cluster_variable_distributions(
     fp,
     palette="Set2",
 ):
+    """
+    Plot the distributions of cluster variables using kernel density estimation (KDE).
 
+    Parameters:
+    gdf (GeoDataFrame): The GeoDataFrame containing the data.
+    cluster_col (str): The name of the column representing the clusters.
+    cluster_variables (list): The list of variables to plot.
+    fp (str): The file path to save the plot.
+    palette (str, optional): The color palette to use for the plot. Defaults to "Set2".
+
+    Returns:
+    None
+    """
     tidy_df = gdf.set_index(cluster_col)
     tidy_df = tidy_df[cluster_variables]
     tidy_df = tidy_df.stack()
@@ -189,6 +212,17 @@ def plot_cluster_variable_distributions(
 def map_all_cluster_results(
     gdf, cluster_columns, titles, fp, figsize=(30, 25), cmap="Set2"
 ):
+    """
+    Plot all cluster results on a map.
+
+    Args:
+        gdf (GeoDataFrame): The GeoDataFrame containing the spatial data.
+        cluster_columns (list): List of column names representing the cluster results.
+        titles (list): List of titles for each cluster result plot.
+        fp (str): Filepath to save the plot.
+        figsize (tuple, optional): Figure size. Defaults to (30, 25).
+        cmap (str, optional): Colormap name. Defaults to "Set2".
+    """
 
     _, axs = plt.subplots(1, len(cluster_columns), figsize=figsize)
 
@@ -361,12 +395,15 @@ def plot_correlation(
     if heatmap_fp is not None:
         # Save heatmap
         hm.get_figure().savefig(heatmap_fp)
-    
+
     if pairplot is True:
         if pair_plot_x_log is False and pair_plot_y_log is False:
 
             pp = sns.pairplot(
-                df[corr_columns], kind=pair_plot_type, diag_kind=diag_kind, corner=corner
+                df[corr_columns],
+                kind=pair_plot_type,
+                diag_kind=diag_kind,
+                corner=corner,
             )
         else:
             pp = sns.pairplot(
@@ -709,7 +746,7 @@ def combined_zipf_plot(
     from matplotlib.patches import Patch
 
     axes.set_axisbelow(True)
-    axes.grid(True, which="major", ls="dotted")
+    # axes.grid(True, which="major", ls="dotted")
 
     all_yvals = sorted(list(component_size_all["infra_length"]), reverse=True)
     lts1_yvals = sorted(list(component_size_1["infra_length"]), reverse=True)
