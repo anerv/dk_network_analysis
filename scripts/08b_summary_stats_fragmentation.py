@@ -70,73 +70,72 @@ merged_df = pd.merge(
 
 merged_df.drop(columns=["index"], inplace=True)
 
-
-sns.scatterplot(
-    data=merged_df,
-    x="length (km)",
-    y="component count",
-    hue="network_type",
-    palette=lts_color_dict.values(),
-)
+# sns.scatterplot(
+#     data=merged_df,
+#     x="length (km)",
+#     y="component count",
+#     hue="network_type",
+#     palette=lts_color_dict.values(),
+# )
 
 # %%
 
-# Create a figure and primary axis
-fig, ax1 = plt.subplots(figsize=(8, 8))
+# # Create a figure and primary axis
+# fig, ax1 = plt.subplots(figsize=(8, 8))
 
-colors = {}
-for e, color in enumerate(lts_color_dict.values()):
-    k = merged_df.network_type[e]
-    colors[k] = color
+# colors = {}
+# for e, color in enumerate(lts_color_dict.values()):
+#     k = merged_df.network_type[e]
+#     colors[k] = color
 
-# Define network types and colors
-network_types = merged_df["network_type"].unique()
+# # Define network types and colors
+# network_types = merged_df["network_type"].unique()
 
-# Create a secondary y-axis
-ax2 = ax1.twinx()
+# # Create a secondary y-axis
+# ax2 = ax1.twinx()
 
-# Plot 'length' values on the primary y-axis
-for network_type in network_types:
-    subset = merged_df[merged_df["network_type"] == network_type]
-    ax1.scatter(
-        [0] * len(subset),
-        subset["length (km)"],
-        color=colors[network_type],
-        label=f"{network_type}",
-    )
+# # Plot 'length' values on the primary y-axis
+# for network_type in network_types:
+#     subset = merged_df[merged_df["network_type"] == network_type]
+#     ax1.scatter(
+#         [0] * len(subset),
+#         subset["length (km)"],
+#         color=colors[network_type],
+#         label=f"{network_type}",
+#     )
 
-ax1.set_xlabel("Network Type")
-# ax1.set_ylabel("Length")
-ax1.tick_params(
-    axis="y",
-)
+# ax1.set_xlabel("Network Type")
+# # ax1.set_ylabel("Length")
+# ax1.tick_params(
+#     axis="y",
+# )
 
-# Plot 'component count' values on the secondary y-axis
-for network_type in network_types:
-    subset = merged_df[merged_df["network_type"] == network_type]
-    ax2.scatter(
-        [1] * len(subset),
-        subset["component count"],
-        color=colors[network_type],
-    )
+# # Plot 'component count' values on the secondary y-axis
+# for network_type in network_types:
+#     subset = merged_df[merged_df["network_type"] == network_type]
+#     ax2.scatter(
+#         [1] * len(subset),
+#         subset["component count"],
+#         color=colors[network_type],
+#     )
 
-# ax2.set_ylabel("Component Count")
-ax2.tick_params(
-    axis="y",
-)
+# # ax2.set_ylabel("Component Count")
+# ax2.tick_params(
+#     axis="y",
+# )
 
-# Combine legends from both axes
-handles1, labels1 = ax1.get_legend_handles_labels()
-ax1.legend(handles1, labels1, bbox_to_anchor=(1.2, 1), loc="upper left")
+# # Combine legends from both axes
+# handles1, labels1 = ax1.get_legend_handles_labels()
+# ax1.legend(handles1, labels1, bbox_to_anchor=(1.2, 1), loc="upper left")
 
-# Set x-ticks to be the network types
-ax1.set_xticks([0, 1])
-ax1.set_xticklabels(["Length (km)", "Component Count"])
+# # Set x-ticks to be the network types
+# ax1.set_xticks([0, 1])
+# ax1.set_xticklabels(["Length (km)", "Component Count"])
 
-# Title and show plot
-plt.title("Network Type vs Length and Component Count")
-fig.tight_layout()
-plt.show()
+# # Title and show plot
+# plt.title("Network Type vs Length and Component Count")
+# fig.tight_layout()
+# plt.show()
 
 # %%
 
@@ -164,7 +163,6 @@ for network_type in network_types:
         label=f"{network_type}",
     )
 
-ax1.set_xlabel("Network Type")
 # ax1.set_ylabel("Length")
 ax1.tick_params(
     axis="y",
@@ -186,11 +184,17 @@ ax2.tick_params(
 
 # Combine legends from both axes
 handles1, labels1 = ax1.get_legend_handles_labels()
-ax1.legend(handles1, labels1, bbox_to_anchor=(1.2, 1), loc="upper left")
+ax1.legend(handles1, labels1, bbox_to_anchor=(1.1, 1), loc="upper left")
+
+legend = ax1.get_legend()
+if legend:
+    legend.set_frame_on(False)
 
 # Set x-ticks to be the network types
 ax1.set_xticks([0, 1])
-ax1.set_xticklabels(["Length (km)", "Component Count"])
+ax1.set_xticklabels(
+    ["Length (km)", "Component Count"],
+)
 
 # Manually draw dotted lines between marks of the same color
 for network_type in network_types:
@@ -213,8 +217,9 @@ for network_type in network_types:
 # ax2.set_ylim(0, max_component_count)
 
 # Title and show plot
-plt.title("Network Type vs Length and Component Count")
-fig.tight_layout()
+plt.title("Network Length and Component Count")
+plt.tight_layout()
+sns.despine(left=False, right=False, bottom=True)
 plt.savefig(filepath_summary_compare_length_components)
 plt.show()
 
