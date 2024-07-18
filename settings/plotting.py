@@ -6,7 +6,6 @@ sns.set_theme(style="white")
 
 import matplotlib_inline.backend_inline
 
-
 # Plot parameters
 mpl.rcParams["savefig.bbox"] = "tight"
 mpl.rcParams["xtick.minor.visible"] = False
