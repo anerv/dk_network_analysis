@@ -58,6 +58,7 @@ plot_func.combined_zipf_plot(
     component_size_car=component_size_car,
     lts_color_dict=lts_color_dict,
     fp=fp_zipf_combined,
+    figsize=pdict["fsbar"],
 )
 
 # %%
@@ -511,7 +512,12 @@ for i, df in enumerate(dfs):
             height=600,
             yaxis_title="Component count",
             title=titles[i],
+            plot_bgcolor="rgba(0, 0, 0, 0)",
+            # paper_bgcolor="rgba(0, 0, 0, 0)",
         )
+
+        fig.update_xaxes({"gridcolor": "lightgrey", "linewidth": 0.5})
+        fig.update_yaxes({"gridcolor": "lightgrey", "linewidth": 0.5})
 
         fig.write_image(
             all_filepaths[i] + "_".join([c, d]) + ".jpeg",
@@ -600,6 +606,16 @@ for e, df in enumerate(dfs):
         height=600,
         yaxis_title="Component count",
         title=scatter_titles[e],
+        plot_bgcolor="rgba(0, 0, 0, 0)",
+    )
+
+    fig.update_xaxes(
+        {"gridcolor": "lightgrey", "linewidth": 0.5},
+        title_font={"size": 12},
+    )
+    fig.update_yaxes(
+        {"gridcolor": "lightgrey", "linewidth": 0.5},
+        title_font={"size": 12},
     )
 
     fig.write_image(
@@ -607,7 +623,7 @@ for e, df in enumerate(dfs):
         width=1000,
         height=750,
     )
-    # fig.show()
+    fig.show()
 
     fig = px.histogram(
         new_df,
@@ -623,19 +639,28 @@ for e, df in enumerate(dfs):
         title=rug_titles[e],
     )
     fig.update_layout(
-        font=dict(size=12, color="black"),
+        font=dict(size=10, color="black"),
         autosize=False,
         width=800,
         height=600,
         yaxis_title="Count",
+        plot_bgcolor="rgba(0, 0, 0, 0)",
     )
     fig.write_image(
         rug_filepaths[e],
         width=1000,
         height=750,
     )
+    fig.update_xaxes(
+        {"gridcolor": "lightgrey", "linewidth": 0.5},
+        title_font={"size": 12},
+    )
+    fig.update_yaxes(
+        {"gridcolor": "lightgrey", "linewidth": 0.5},
+        title_font={"size": 12},
+    )
 
-    # fig.show()
+    fig.show()
 
 # %%
 

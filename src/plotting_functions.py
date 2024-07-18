@@ -739,14 +739,15 @@ def combined_zipf_plot(
     lts_color_dict,
     fp,
     title="Component length distribution",
+    figsize=pdict["fsbar"],
 ):
-    fig = plt.figure(figsize=pdict["fsbar"])
+    fig = plt.figure(figsize=figsize)
     axes = fig.add_axes([0, 0, 1, 1])
 
     from matplotlib.patches import Patch
 
     axes.set_axisbelow(True)
-    # axes.grid(True, which="major", ls="dotted")
+    axes.grid(True, which="major", ls="dotted")
 
     all_yvals = sorted(list(component_size_all["infra_length"]), reverse=True)
     lts1_yvals = sorted(list(component_size_1["infra_length"]), reverse=True)
@@ -754,13 +755,6 @@ def combined_zipf_plot(
     lts3_yvals = sorted(list(component_size_1_3["infra_length"]), reverse=True)
     lts4_yvals = sorted(list(component_size_1_4["infra_length"]), reverse=True)
     ltscar_yvals = sorted(list(component_size_car["infra_length"]), reverse=True)
-
-    axes.scatter(
-        x=[i + 1 for i in range(len(component_size_all))],
-        y=all_yvals,
-        s=18,
-        color=lts_color_dict["total"],
-    )
 
     axes.scatter(
         x=[i + 1 for i in range(len(component_size_1))],
@@ -797,6 +791,13 @@ def combined_zipf_plot(
         color=lts_color_dict["car"],
     )
 
+    axes.scatter(
+        x=[i + 1 for i in range(len(component_size_all))],
+        y=all_yvals,
+        s=18,
+        color=lts_color_dict["total"],
+    )
+
     y_min = min(
         min(all_yvals),
         min(lts1_yvals),
@@ -825,11 +826,6 @@ def combined_zipf_plot(
 
     legend_patches = [
         Patch(
-            facecolor=lts_color_dict["total"],
-            edgecolor=lts_color_dict["total"],
-            label="Color Patch",
-        ),
-        Patch(
             facecolor=lts_color_dict["1"],
             edgecolor=lts_color_dict["1"],
             label="Color Patch",
@@ -854,10 +850,30 @@ def combined_zipf_plot(
             edgecolor=lts_color_dict["car"],
             label="Color Patch",
         ),
+        Patch(
+            facecolor=lts_color_dict["total"],
+            edgecolor=lts_color_dict["total"],
+            label="Color Patch",
+        ),
     ]
 
-    axes.legend(legend_patches, ["All", "LTS 1", "LTS 2", "LTS 3", "LTS 4", "Car"])
+    axes.legend(
+        legend_patches,
+        [
+            "LTS 1",
+            "LTS 2",
+            "LTS 3",
+            "LTS 4",
+            "Total car",
+            "Total network",
+        ],
+    )
     axes.set_title(title)
+
+    legend = axes.get_legend()
+    if legend:
+
+        legend.set_frame_on(False)
 
     fig.savefig(fp)
     plt.show()

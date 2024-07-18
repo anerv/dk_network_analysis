@@ -504,9 +504,8 @@ for i, r in enumerate(reach_diff_pct_columns):
 
 df = pd.read_sql(f"SELECT * FROM reach.reach_{reach_dist}_component_length_hex;", engine)
 
-labels = labels_step
 for c, d, r, l in zip(
-    component_count_columns[:-1], density_steps_columns[:-1], reach_columns, labels
+    component_count_columns[:-1], density_steps_columns[:-1], reach_columns, labels_step
 ):
 
     fig = px.scatter(
@@ -542,13 +541,12 @@ for c, d, r, l in zip(
 
 reach_df = pd.read_sql(f"SELECT * FROM reach.compare_reach;", engine)
 
-network_levels = labels
+network_levels = labels_step
 
 reach_columns = reach_df.columns.to_list()
 reach_columns.remove("hex_id")
 reach_columns.remove("geometry")
 
-#%%
 keep_columns = [c for c in reach_columns if "diff" not in c ]
 
 reach_df = reach_df[keep_columns]
@@ -574,11 +572,11 @@ for i, e in enumerate([np.median, np.mean, np.max, np.std]):
     reach_melt = reach_melt.sort_values("distance")
 
     org_labels_rename = {
-        "lts_1": labels[0],
-        "lts_1_2": labels[1],
-        "lts_1_3": labels[2],
-        "lts_1_4": labels[3],
-        "car": labels[4],
+        "lts_1": labels_step[0],
+        "lts_1_2": labels_step[1],
+        "lts_1_3": labels_step[2],
+        "lts_1_4": labels_step[3],
+        "car": labels_step[4],
     }
     reach_melt.replace(org_labels_rename, inplace=True)
 
@@ -590,7 +588,7 @@ for i, e in enumerate([np.median, np.mean, np.max, np.std]):
         hue="distance",
         errorbar=None,
         order=network_levels,
-        palette=sns.color_palette("pastel")[: len(all_reach_distances)],
+        palette=sns.color_palette("colorblind")[: len(all_reach_distances)],
         estimator=e,
     )
 
@@ -607,21 +605,25 @@ for i, e in enumerate([np.median, np.mean, np.max, np.std]):
 
 # Violin plots - showing distribution of reach per distance
 
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=pdict["fsbar"])
 sns.violinplot(
     data=reach_melt,
     x="network",
     y="value",
     hue="distance",
     order=network_levels,
-    palette=sns.color_palette("pastel")[: len(all_reach_distances)],
+    palette=sns.color_palette("colorblind")[: len(all_reach_distances)],
     fill=False,
+    linewidth=2,
 )
 
+sns.despine()
+
 # Set the labels and title
-plt.xlabel("Network type")
+plt.xlabel("")
 plt.ylabel("Reach (km)")
 plt.title(f"Network reach per network type")
+plt.legend(title="Distance (km)", loc="upper left", fontsize=10, title_fontsize=12)
 
 plt.savefig(fp_reach_compare_dist_violin)
 plt.show()
@@ -648,7 +650,7 @@ for n in list(org_labels_rename.keys()):
         data=df_flat,
         x="reach_length",
         hue="reach_distance",
-        palette="Set2",
+        palette="colorblind",
         #multiple="stack",
         # fill=True,
         #log_scale=True,
@@ -667,7 +669,7 @@ for n in list(org_labels_rename.keys()):
 
 exec(open("../helper_scripts/read_reach_comparison.py").read())
 hex_reach_comparison.replace(np.nan, 0, inplace=True)
-
+#%%
 comparison_types = ['1_5', '1_10', '1_15']
 
 plot_cols = []
@@ -683,7 +685,7 @@ rename_dict = {}
 for n, l in zip(network_levels_step, labels):
     rename_dict[n] = l
 
-for c in comparison_types:
+for c in comparison_types[:1]:
     # Get columns which ends with c
     cols = [col for col in plot_cols if c in col]
 
@@ -694,18 +696,30 @@ for c in comparison_types:
     df_flat["network"] = df_flat["network"].str[:-1]
     df_flat.replace(rename_dict, inplace=True)
 
-    fig = sns.kdeplot(
+    #fig, ax = plt.subplots(figsize=pdict["fsbar"])
+    fig, ax = plt.subplots(figsize=pdict["fsbar"])
+    g = sns.kdeplot(
         data=df_flat,
         x="value",
         hue="network",
         #multiple="stack",
         # fill=True,
         palette=lts_color_dict.values(),
+        ax=ax
     )
 
-    fig.set_xlabel(f"% difference in network reach")
-    fig.set_title(f"Comparison of network reach between distance {c.split('_')[0]} and {c.split('_')[1]} km")
+    # Set the labels and title
+    plt.xlabel(f"% difference in network reach", fontdict={"size": 12})
+    plt.ylabel("Reach (km)",fontdict={"size": 12})
+    #plt.title(f"Network reach per network type")
 
+    legend = ax.get_legend()
+    if legend:
+        legend.set_title(None)
+        legend.set_frame_on(False)
+        plt.setp(legend.get_texts(), fontsize=10)
+
+    sns.despine()   
     plt.savefig(fp_reach_diff_pct_kde + c + ".png")
     plt.show()
 

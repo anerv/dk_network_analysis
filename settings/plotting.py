@@ -12,15 +12,17 @@ mpl.rcParams["xtick.minor.visible"] = False
 mpl.rcParams["xtick.major.size"] = 0
 mpl.rcParams["xtick.labelbottom"] = True
 mpl.rcParams["ytick.major.size"] = 3
+mpl.rcParams["ytick.minor.visible"] = False
 mpl.rcParams["font.size"] = 10
-mpl.rcParams["figure.titlesize"] = 10
-mpl.rcParams["legend.title_fontsize"] = 10
-mpl.rcParams["legend.fontsize"] = 9
+mpl.rcParams["figure.titlesize"] = 12
+mpl.rcParams["legend.title_fontsize"] = 12
+mpl.rcParams["legend.fontsize"] = 10
 # mpl.rcParams["figure.labelsize"] = 10 # use if figure.titlesize does not work?
-mpl.rcParams["axes.labelsize"] = 10
+mpl.rcParams["axes.labelsize"] = 12
 mpl.rcParams["xtick.labelsize"] = 9
 mpl.rcParams["ytick.labelsize"] = 9
 mpl.rcParams["hatch.linewidth"] = 0.5
+mpl.style.use("tableau-colorblind10")
 
 # Classification scheme for visualizations of results
 scheme = "fisherjenks"
@@ -380,6 +382,7 @@ pdict = {
     "fsmap": (13, 7.3125),
     # size for bar plots
     "fsbar": (8, 8),
+    "fsbar_medium": (6, 6),
     "fsbar_small": (4, 3.5),
     "fsbar_short": (6, 3),
     "fsbar_sub": (4, 3),  # size per subplot
