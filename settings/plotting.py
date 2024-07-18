@@ -104,11 +104,11 @@ id_columns = ["municipality", "id", "hex_id"]
 aggregation_levels = ["administrative", "socio", "hexgrid"]
 
 lts_color_dict = {
-    "1": "#0B7512",
-    "2": "#7ABA78",
-    "3": "#FFC100",
-    "4": "#F97300",
-    "car": "#5c5c5c",
+    "1": "#117733",  # "#0B7512",
+    "2": "#44AA99",  # "#7ABA78",
+    "3": "#DDCC77",  # "#FFC100",
+    "4": "#CC6677",  # "#F97300",
+    "car": "#882255",  # "#5c5c5c",
     "total": "#151515",
 }
 
