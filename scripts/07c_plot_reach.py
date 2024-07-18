@@ -588,7 +588,7 @@ for i, e in enumerate([np.median, np.mean, np.max, np.std]):
         hue="distance",
         errorbar=None,
         order=network_levels,
-        palette=sns.color_palette("colorblind")[: len(all_reach_distances)],
+        palette=sns.color_palette(pdict["cat"])[: len(all_reach_distances)],
         estimator=e,
     )
 
@@ -612,7 +612,7 @@ sns.violinplot(
     y="value",
     hue="distance",
     order=network_levels,
-    palette=sns.color_palette("colorblind")[: len(all_reach_distances)],
+    palette=sns.color_palette(pdict["cat"])[: len(all_reach_distances)],
     fill=False,
     linewidth=2,
 )
@@ -650,7 +650,7 @@ for n in list(org_labels_rename.keys()):
         data=df_flat,
         x="reach_length",
         hue="reach_distance",
-        palette="colorblind",
+        palette=pdict["cat"],
         #multiple="stack",
         # fill=True,
         #log_scale=True,

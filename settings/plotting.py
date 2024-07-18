@@ -24,6 +24,39 @@ mpl.rcParams["ytick.labelsize"] = 9
 mpl.rcParams["hatch.linewidth"] = 0.5
 mpl.style.use("tableau-colorblind10")
 
+import contextily as cx
+
+cx_tile_1 = cx.providers.CartoDB.Voyager
+cx_tile_2 = cx.providers.CartoDB.PositronNoLabels  # CartoDB.DarkMatterNoLabels
+
+
+pdict = {
+    # colormaps for grid cell plots
+    "pos": "PuRd",  # "Blues",  # Positive values
+    "neg": "YlOrRd",  # "Reds",  # Negative/Missing/Unmatched values
+    # "diff": "RdBu",  # for osm-ref difference plots (alternatives: "PiYG", "PRGn", "PuOr")
+    "seq": "YlGnBu",  # for sequential plots where low should not be white (usually percentages)
+    "cat": "colorblind",  # for categorical plots
+    # alpha (transparency) values (alternatives: PuRd, RdPu, PbBuGn)
+    "alpha": 0.7,
+    "alpha_nodata": 0.3,  # for no data patches
+    # Colors of no-data
+    "nodata": "lightgrey",
+    # GLOBAL SETTINGS FOR PLOTS
+    "dpi": 300,  # resolution
+    "plot_res": "low",  # "high" for exporting to svg, "low" for png
+    # matplotlib figure size for map plots of study area
+    "fsmap": (13, 7.3125),
+    # size for bar plots
+    "fsbar": (8, 8),
+    # "fsbar_small": (4, 3.5),
+    # "fsbar_short": (6, 3),
+    # "fsbar_sub": (4, 3),  # size per subplot
+    "map_attr": "OSM Contributors, GeoDanmark",
+    "background_color": "#e0ecf4",
+}
+
+
 # Classification scheme for visualizations of results
 scheme = "fisherjenks"
 # number of classes in classification scheme
@@ -344,56 +377,6 @@ plotly_labels = {
     "car_lts_1_4_diff_pct": "Difference in network reach (%)",
 }
 
-pdict = {
-    # grid; polygon; base barplots
-    "base": "black",
-    "base2": "grey",
-    "compare_base": "black",  # "dimgray",
-    # colormaps for grid cell plots
-    "pos": "PuRd",  # "Blues",  # Positive values
-    "neg": "YlOrRd",  # "Reds",  # Negative/Missing/Unmatched values
-    "diff": "RdBu",  # for osm-ref difference plots (alternatives: "PiYG", "PRGn", "PuOr")
-    "seq": "YlGnBu",  # for sequential plots where low should not be white (usually percentages)
-    # alpha (transparency) values (alternatives: PuRd, RdPu, PbBuGn)
-    "alpha_back": 0.5,  # for unicolor plots with relevant background
-    "alpha_bar": 0.7,  # for partially overlapping stats barplots
-    "alpha_grid": 0.9,  # for multicolor/divcolor gridplots
-    "alpha_nodata": 0.3,  # for no data patches
-    # linewidths (base, emphasis, emphasis2)
-    # "line_base": 1,
-    # "line_emp": 3,
-    # "line_emp2": 5,
-    "line_nodata": 0.3,
-    # widths for bar plots; single: for 1 value, double: for 2 values comparison
-    "bar_single": 0.4,
-    "bar_double": 0.75,
-    # marker sizes (base, emphasis)
-    # "mark_base": 2,
-    # "mark_emp": 6,
-    # Colors of no-data grid cell patches
-    "nodata": "lightgrey",
-    # "nodata_face": "none",
-    # "nodata_edge": "grey",
-    # "nodata_hatch": "//",
-    # GLOBAL SETTINGS FOR PLOTS
-    "dpi": 300,  # resolution
-    "plot_res": "low",  # "high" for exporting to svg, "low" for png
-    # matplotlib figure size for map plots of study area
-    "fsmap": (13, 7.3125),
-    # size for bar plots
-    "fsbar": (8, 8),
-    "fsbar_medium": (6, 6),
-    "fsbar_small": (4, 3.5),
-    "fsbar_short": (6, 3),
-    "fsbar_sub": (4, 3),  # size per subplot
-    "map_attr": "OSM Contributors, GeoDanmark",
-    "background_color": "#e0ecf4",
-}
-
-import contextily as cx
-
-cx_tile_1 = cx.providers.CartoDB.Voyager
-cx_tile_2 = cx.providers.CartoDB.PositronNoLabels  # CartoDB.DarkMatterNoLabels
 
 rename_index_dict_density = {
     "lts_1_dens": "LTS 1 density",

@@ -59,7 +59,7 @@ fp_map = fp_socio_network_cluster_base + f"_map_{kmeans_col_net}.png"
 fp_size = fp_socio_network_cluster_base + f"_size_{kmeans_col_net}.png"
 fp_kde = fp_socio_network_cluster_base + f"_kde_{kmeans_col_net}.png"
 
-colors = plot_func.get_hex_colors_from_colormap("Set2", k)
+colors = plot_func.get_hex_colors_from_colormap(pdict["cat"], k)
 cmap = plot_func.color_list_to_cmap(colors)
 
 cluster_means_soc_net = analysis_func.examine_cluster_results(
@@ -145,7 +145,7 @@ fp_map = fp_socio_socio_cluster_base + f"__map_{kmeans_col_soc}.png"
 fp_size = fp_socio_socio_cluster_base + f"_size_{kmeans_col_soc}.png"
 fp_kde = fp_socio_socio_cluster_base + f"_kde_{kmeans_col_soc}.png"
 
-colors = plot_func.get_hex_colors_from_colormap("Set2", k)
+colors = plot_func.get_hex_colors_from_colormap(pdict["cat"], k)
 cmap = plot_func.color_list_to_cmap(colors)
 
 cluster_means_soc_soc = analysis_func.examine_cluster_results(
@@ -236,7 +236,7 @@ fp_map = fp_hex_network_cluster_base + f"_map_{kmeans_col_net}.png"
 fp_size = fp_hex_network_cluster_base + f"_size_{kmeans_col_net}.png"
 fp_kde = fp_hex_network_cluster_base + f"_kde_{kmeans_col_net}.png"
 
-colors = plot_func.get_hex_colors_from_colormap("Set2", k)
+colors = plot_func.get_hex_colors_from_colormap(pdict["cat"], k)
 cmap = plot_func.color_list_to_cmap(colors)
 
 cluster_means_hex = analysis_func.examine_cluster_results(

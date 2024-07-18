@@ -62,7 +62,7 @@ def make_gini_plot(gdf, column, fp):
     plt.show()
 
 
-def plot_labels(gdf, label_col, cmap="tab20"):
+def plot_labels(gdf, label_col, cmap=pdict["cat"]):
     _, ax = plt.subplots(1, 1, figsize=(15, 15))
     ax.set_axis_off()
     gdf.plot(
@@ -126,7 +126,7 @@ def style_cluster_means(cluster_means, cmap="coolwarm"):
     display(cluster_means_styled)
 
 
-def plot_clustering(gdf, cluster_col, fp, figsize=(15, 10), cmap="Set2"):
+def plot_clustering(gdf, cluster_col, fp, figsize=(15, 10), cmap=pdict["cat"]):
 
     _, ax = plt.subplots(1, figsize=figsize)
 
@@ -165,7 +165,7 @@ def plot_cluster_variable_distributions(
     cluster_col,
     cluster_variables,
     fp,
-    palette="Set2",
+    palette=pdict["cat"],
 ):
     """
     Plot the distributions of cluster variables using kernel density estimation (KDE).
@@ -175,7 +175,7 @@ def plot_cluster_variable_distributions(
     cluster_col (str): The name of the column representing the clusters.
     cluster_variables (list): The list of variables to plot.
     fp (str): The file path to save the plot.
-    palette (str, optional): The color palette to use for the plot. Defaults to "Set2".
+    palette (str, optional): The color palette to use for the plot.".
 
     Returns:
     None
@@ -210,7 +210,7 @@ def plot_cluster_variable_distributions(
 
 
 def map_all_cluster_results(
-    gdf, cluster_columns, titles, fp, figsize=(30, 25), cmap="Set2"
+    gdf, cluster_columns, titles, fp, figsize=(30, 25), cmap=pdict["cat"]
 ):
     """
     Plot all cluster results on a map.
@@ -221,7 +221,7 @@ def map_all_cluster_results(
         titles (list): List of titles for each cluster result plot.
         fp (str): Filepath to save the plot.
         figsize (tuple, optional): Figure size. Defaults to (30, 25).
-        cmap (str, optional): Colormap name. Defaults to "Set2".
+        cmap (str, optional): Colormap name.
     """
 
     _, axs = plt.subplots(1, len(cluster_columns), figsize=figsize)
@@ -458,7 +458,7 @@ def plot_classified_poly(
     fp=None,
     legend=True,
     alpha=1,
-    figsize=(10, 10),
+    figsize=pdict["fsmap"],
     attr=pdict["map_attr"],
     set_axis_off=True,
     plot_res=pdict["plot_res"],
@@ -512,7 +512,11 @@ def plot_classified_poly(
                 linewidth=linewidth,
                 legend=legend,
                 legend_kwds=legend_kwds,
-                missing_kwds={"color": pdict["nodata"], "label": "No data"},
+                missing_kwds={
+                    "color": pdict["nodata"],
+                    "label": "No data",
+                    "alpha": pdict["alpha_nodata"],
+                },
                 classification_kwds=classification_kwds,
             )
     else:
@@ -529,7 +533,11 @@ def plot_classified_poly(
                 linewidth=linewidth,
                 legend=legend,
                 legend_kwds=legend_kwds,
-                missing_kwds={"color": pdict["nodata"], "label": "No data"},
+                missing_kwds={
+                    "color": pdict["nodata"],
+                    "label": "No data",
+                    "alpha": pdict["alpha_nodata"],
+                },
             )
         else:
             gdf.plot(
@@ -648,7 +656,11 @@ def plot_unclassified_poly(
                 alpha=alpha,
                 norm=cbnorm,
                 cmap=cmap,
-                missing_kwds={"color": pdict["nodata"], "label": "No data"},
+                missing_kwds={
+                    "color": pdict["nodata"],
+                    "label": "No data",
+                    "alpha": pdict["alpha_nodata"],
+                },
             )
 
         else:
@@ -679,7 +691,11 @@ def plot_unclassified_poly(
                 legend_kwds=legend_kwds,
                 alpha=alpha,
                 cmap=cmap,
-                missing_kwds={"color": pdict["nodata"], "label": "No data"},
+                missing_kwds={
+                    "color": pdict["nodata"],
+                    "label": "No data",
+                    "alpha": pdict["alpha_nodata"],
+                },
             )
 
         else:
