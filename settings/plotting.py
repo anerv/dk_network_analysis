@@ -36,7 +36,7 @@ pdict = {
     "neg": "pink",  # "Reds",  # Negative/Missing/Unmatched values
     # "diff": "RdBu",  # for osm-ref difference plots (alternatives: "PiYG", "PRGn", "PuOr")
     "seq": "YlGnBu",  # for sequential plots where low should not be white (usually percentages)
-    "cat": "colorblind",  # for categorical plots
+    "cat": "Set2",  # "colorblind",  # for categorical plots
     # alpha (transparency) values (alternatives: PuRd, RdPu, PbBuGn)
     "alpha": 0.7,
     "alpha_nodata": 0.3,  # for no data patches
