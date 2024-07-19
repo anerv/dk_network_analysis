@@ -283,3 +283,132 @@ Not sensitive to changing weights.
 
 # Clustering
 
+## 0 fourth most bikeable
+
+* Low density
+* low high stress
+
+* low-ish car pct
+
+* rel high share of 1
+* highest share of 2
+
+* low fragmentation
+
+* low reach
+
+* high local reach increase (1-5)
+
+* *Both medium towns, outside of larger cities, and in some rural areas?*
+* *Second largest cluster*
+
+## 1 MOST BIKEABLE
+
+* highest low stress dens
+* low high stress dens
+
+* highest car dens
+* highest total dens
+
+* low share of 3 and 4
+
+* low fragmentation
+
+* highest reach
+
+* higest reach increases for almost all metrics - except for car
+
+* *In urban centers*
+* *fourth largest cluster (area wise)*
+
+## 2 LEAST BIKEABLE
+
+* Small cluster!
+
+* no/very low lts 1
+* high lts 4
+
+* almost only car
+
+* highly fragmented for lower stress
+
+* very low reach for lower stress
+
+* high increase for car and lts 4 at longer distances
+
+## 3 THIRD LEAST BIKEABLE
+
+* low density
+* low low stress AND low 4
+* mostly lts 3
+* medium fragmentation for lts 2
+* very low reach
+
+* *Only smaller islands?*
+
+## 4 SECOND LEAST BIKEABLE
+
+* Very low low stress
+* high high stress density
+* low total density
+* very high car pct
+
+* high fragmentation for 1 (a little) and 2 (medium)
+
+* low reach
+
+* low reach increases for low stress - but high for high stress and car
+
+* *Rural areas?*
+* *Third biggest area-wise*
+
+## 5 fifth most bikeable
+
+* low low stress
+* medium/high high stress density
+* low total density
+* medium lts 4 share
+* evenly split share between 2 and 3 (around 30)
+* medium/high car share
+* low fragmentation
+* low reach
+* medium/low reach increase for lower stress - some connectivity
+* higher increases for higher stress 
+
+* *by far the biggest cluster*
+* *rural*
+
+## 6 Second most bikeable
+
+* high low stress
+* low high stress density
+
+* high density
+
+* high share of low stress
+* low share of car
+
+* low fragmentation
+* high reach (second best)
+
+* high reach increases for all
+
+* *Small cluster*
+* *Urban/suburban*
+
+## 7 Third most bikeable
+
+* medium low stress density
+* very low high stress dens
+* very high share of lts 1 and 2
+
+* very low share of lts 3 and esp 4
+* medium-low network density
+
+* high fragmentation for lts 3,4, car and all??
+
+* medium-high reach - but lower for car than lts 3 and 4!
+
+* high reach increases
+
+* *Very small cluster*
