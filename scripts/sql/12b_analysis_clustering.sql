@@ -1,10 +1,9 @@
 CREATE TABLE clustering.socio_cluster_results AS
 SELECT
-    sc.network_rank,
-    sc.socio_label,
+    sn.network_rank,
+    ss.socio_label,
     socio. *
 FROM
-    clustering.socio_clusters sc
-    INNER JOIN socio ON sc.id = socio.id;
-
-DROP TABLE IF EXISTS clustering.socio_clusters;
+    clustering.socio_network_clusters sn
+    INNER JOIN socio ON sn.id = socio.id
+    INNER JOIN clustering.socio_socio_clusters ss ON sn.id = ss.id;

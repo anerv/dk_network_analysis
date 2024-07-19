@@ -35,26 +35,15 @@ hex_corr_variables = (
 
 hex_gdf = hex_gdf[hex_corr_variables]
 
-rename_reach_urban_dict = {
-    "lts_1_pct_diff_1_5": "LTS 1 % difference 1-5 km reach",
-    "lts_1_pct_diff_5_10": "LTS 1 % difference 5-10 km reach",
-    "lts_1_2_pct_diff_1_5": "LTS 1-2 % difference 1-5 km reach",
-    "lts_1_2_pct_diff_5_10": "LTS 1-2 % difference 5-10 km reach",
-    "lts_1_3_pct_diff_1_5": "LTS 1-3 % difference 1-5 km reach",
-    "lts_1_3_pct_diff_5_10": "LTS 1-3 % difference 5-10 km reach",
-    "lts_1_4_pct_diff_1_5": "LTS 1-4 % difference 1-5 km reach",
-    "lts_1_4_pct_diff_5_10": "LTS 1-4 % difference 5-10 km reach",
-    "car_pct_diff_1_5": "Car % difference 1-5 km reach",
-    "car_pct_diff_5_10": "Car % difference 5-10 km reach",
-    "urban_pct": "Urban %",
-}
-
-hex_gdf.rename(rename_index_dict_density, inplace=True, axis=1)
-hex_gdf.rename(rename_index_dict_fragmentation, inplace=True, axis=1)
-hex_gdf.rename(rename_index_dict_largest_comp, inplace=True, axis=1)
-hex_gdf.rename(rename_index_dict_reach, inplace=True, axis=1)
-hex_gdf.rename(rename_reach_urban_dict, inplace=True, axis=1)
-
+rename_hex_dict = (
+    rename_index_dict_density
+    | rename_index_dict_fragmentation
+    | rename_index_dict_largest_comp
+    | rename_index_dict_reach
+    | rename_hex_reach_dict
+)
+rename_hex_dict["urban_pct"] = "Urban %"
+hex_gdf.rename(rename_hex_dict, inplace=True, axis=1)
 
 display(hex_gdf.corr(method="spearman").style.background_gradient(cmap="coolwarm"))
 display(hex_gdf.describe().style.pipe(format_style_index))
@@ -94,35 +83,14 @@ socio_corr_variables = (
 
 socio_gdf = socio_gdf[socio_corr_variables]
 
-socio_gdf.rename(rename_index_dict_density, inplace=True, axis=1)
-socio_gdf.rename(rename_index_dict_fragmentation, inplace=True, axis=1)
-socio_gdf.rename(rename_index_dict_largest_comp, inplace=True, axis=1)
-socio_gdf.rename(rename_index_dict_reach, inplace=True, axis=1)
-
-rename_socio_dict = {
-    "lts_1_pct_diff_1_5_median": "LTS 1 % difference 1-5 km reach (median)",
-    "lts_1_pct_diff_5_10_median": "LTS 1 % difference 5-10 km reach (median)",
-    "lts_1_2_pct_diff_1_5_median": "LTS 1-2 % difference 1-5 km reach (median)",
-    "lts_1_2_pct_diff_5_10_median": "LTS 1-2 % difference 5-10 km reach (median)",
-    "lts_1_3_pct_diff_1_5_median": "LTS 1-3 % difference 1-5 km reach (median)",
-    "lts_1_3_pct_diff_5_10_median": "LTS 1-3 % difference 5-10 km reach (median)",
-    "lts_1_4_pct_diff_1_5_median": "LTS 1-4 % difference 1-5 km reach (median)",
-    "lts_1_4_pct_diff_5_10_median": "LTS 1-4 % difference 5-10 km reach (median)",
-    "car_pct_diff_1_5_median": "Car % difference 1-5 km reach (median)",
-    "car_pct_diff_5_10_median": "Car % difference 5-10 km reach (median)",
-    "urban_pct": "Urban %",
-    "lts_1_largest_component_median": "LTS 1 largest component (median)",
-    "lts_1_2_largest_component_median": "LTS 1-2 largest component (median)",
-    "lts_1_3_largest_component_median": "LTS 1-3 largest component (median)",
-    "lts_1_4_largest_component_median": "LTS 1-4 largest component (median)",
-    "car_largest_component_median": "Car largest component (median)",
-    "lts_1_reach_median": "LTS 1 reach (median)",
-    "lts_1_2_reach_median": "LTS 1-2 reach (median)",
-    "lts_1_3_reach_median": "LTS 1-3 reach (median)",
-    "lts_1_4_reach_median": "LTS 1-4 reach (median)",
-    "car_reach_median": "Car reach (median)",
-}
-
+rename_socio_dict = (
+    rename_index_dict_density
+    | rename_index_dict_fragmentation
+    | rename_index_dict_largest_comp
+    | rename_index_dict_reach
+    | rename_socio_reach_dict
+)
+rename_socio_dict["urban_pct"] = "Urban %"
 socio_gdf.rename(rename_socio_dict, inplace=True, axis=1)
 
 display(socio_gdf.corr(method="spearman").style.background_gradient(cmap="coolwarm"))
