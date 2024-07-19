@@ -433,6 +433,7 @@ def plot_correlation(
     diag_kind="kde",
     corner=True,
     pairplot=True,
+    mask=True,
     pair_plot_x_log=False,
     pair_plot_y_log=False,
     heatmap_fp=None,
@@ -458,24 +459,34 @@ def plot_correlation(
 
     df_corr = df[corr_columns].corr(method=method)
 
-    # Generate a mask for the upper triangle
-    mask = np.triu(np.ones_like(df_corr, dtype=bool))
-
     # Set up the matplotlib figure
     f, ax = plt.subplots(figsize=(11, 9))
 
     # Generate a custom diverging colormap
     cmap = sns.diverging_palette(230, 20, as_cmap=True)
 
-    hm = sns.heatmap(
-        df_corr,
-        mask=mask,
-        cmap=cmap,
-        center=0,
-        square=True,
-        linewidths=0.5,
-        cbar_kws={"shrink": 0.5},
-    )
+    if mask:
+        # Generate a mask for the upper triangle
+        mask = np.triu(np.ones_like(df_corr, dtype=bool))
+        hm = sns.heatmap(
+            df_corr,
+            mask=mask,
+            cmap=cmap,
+            center=0,
+            square=True,
+            linewidths=0.5,
+            cbar_kws={"shrink": 0.5},
+        )
+
+    else:
+        hm = sns.heatmap(
+            df_corr,
+            cmap=cmap,
+            center=0,
+            square=True,
+            linewidths=0.5,
+            cbar_kws={"shrink": 0.5},
+        )
 
     if heatmap_fp is not None:
         # Save heatmap
