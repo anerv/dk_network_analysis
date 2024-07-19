@@ -81,10 +81,12 @@ def plot_labels(gdf, label_col, cmap=pdict["cat"]):
         column=label_col,
         categorical=True,
         legend=True,
+        legend_kwds={"bbox_to_anchor": (1.3, 1)},
         ax=ax,
         cmap=cmap,
         linewidth=0.1,
     )
+
     plt.tight_layout()
 
 
