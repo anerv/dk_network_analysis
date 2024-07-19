@@ -448,6 +448,44 @@ rename_index_dict_largest_comp = {
     # "component_coverage_car": "Car largest component coverage",
 }
 
+rename_hex_reach_dict = {
+    "lts_1_pct_diff_1_5": "LTS 1 % difference 1-5 km reach",
+    "lts_1_pct_diff_5_10": "LTS 1 % difference 5-10 km reach",
+    "lts_1_2_pct_diff_1_5": "LTS 1-2 % difference 1-5 km reach",
+    "lts_1_2_pct_diff_5_10": "LTS 1-2 % difference 5-10 km reach",
+    "lts_1_3_pct_diff_1_5": "LTS 1-3 % difference 1-5 km reach",
+    "lts_1_3_pct_diff_5_10": "LTS 1-3 % difference 5-10 km reach",
+    "lts_1_4_pct_diff_1_5": "LTS 1-4 % difference 1-5 km reach",
+    "lts_1_4_pct_diff_5_10": "LTS 1-4 % difference 5-10 km reach",
+    "car_pct_diff_1_5": "Car % difference 1-5 km reach",
+    "car_pct_diff_5_10": "Car % difference 5-10 km reach",
+}
+
+rename_socio_reach_dict = {
+    "lts_1_pct_diff_1_5_median": "LTS 1 % difference 1-5 km reach (median)",
+    "lts_1_pct_diff_5_10_median": "LTS 1 % difference 5-10 km reach (median)",
+    "lts_1_2_pct_diff_1_5_median": "LTS 1-2 % difference 1-5 km reach (median)",
+    "lts_1_2_pct_diff_5_10_median": "LTS 1-2 % difference 5-10 km reach (median)",
+    "lts_1_3_pct_diff_1_5_median": "LTS 1-3 % difference 1-5 km reach (median)",
+    "lts_1_3_pct_diff_5_10_median": "LTS 1-3 % difference 5-10 km reach (median)",
+    "lts_1_4_pct_diff_1_5_median": "LTS 1-4 % difference 1-5 km reach (median)",
+    "lts_1_4_pct_diff_5_10_median": "LTS 1-4 % difference 5-10 km reach (median)",
+    "car_pct_diff_1_5_median": "Car % difference 1-5 km reach (median)",
+    "car_pct_diff_5_10_median": "Car % difference 5-10 km reach (median)",
+    "urban_pct": "Urban %",
+    "lts_1_largest_component_median": "LTS 1 largest component (median)",
+    "lts_1_2_largest_component_median": "LTS 1-2 largest component (median)",
+    "lts_1_3_largest_component_median": "LTS 1-3 largest component (median)",
+    "lts_1_4_largest_component_median": "LTS 1-4 largest component (median)",
+    "car_largest_component_median": "Car largest component (median)",
+    "lts_1_reach_median": "LTS 1 reach (median)",
+    "lts_1_2_reach_median": "LTS 1-2 reach (median)",
+    "lts_1_3_reach_median": "LTS 1-3 reach (median)",
+    "lts_1_4_reach_median": "LTS 1-4 reach (median)",
+    "car_reach_median": "Car reach (median)",
+}
+
+
 reach_comparisons = [
     "1_5",
     "5_10",
