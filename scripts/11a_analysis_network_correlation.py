@@ -33,22 +33,41 @@ hex_corr_variables = (
     + ["urban_pct"]
 )
 
-display(
-    hex_gdf[hex_corr_variables]
-    .corr(method="spearman")
-    .style.background_gradient(cmap="coolwarm")
-)
-display(hex_gdf[hex_corr_variables].describe().style.pipe(format_style_index))
+hex_gdf = hex_gdf[hex_corr_variables]
+
+rename_reach_urban_dict = {
+    "lts_1_pct_diff_1_5": "LTS 1 % difference 1-5 km reach",
+    "lts_1_pct_diff_5_10": "LTS 1 % difference 5-10 km reach",
+    "lts_1_2_pct_diff_1_5": "LTS 1-2 % difference 1-5 km reach",
+    "lts_1_2_pct_diff_5_10": "LTS 1-2 % difference 5-10 km reach",
+    "lts_1_3_pct_diff_1_5": "LTS 1-3 % difference 1-5 km reach",
+    "lts_1_3_pct_diff_5_10": "LTS 1-3 % difference 5-10 km reach",
+    "lts_1_4_pct_diff_1_5": "LTS 1-4 % difference 1-5 km reach",
+    "lts_1_4_pct_diff_5_10": "LTS 1-4 % difference 5-10 km reach",
+    "car_pct_diff_1_5": "Car % difference 1-5 km reach",
+    "car_pct_diff_5_10": "Car % difference 5-10 km reach",
+    "urban_pct": "Urban %",
+}
+
+hex_gdf.rename(rename_index_dict_density, inplace=True, axis=1)
+hex_gdf.rename(rename_index_dict_fragmentation, inplace=True, axis=1)
+hex_gdf.rename(rename_index_dict_largest_comp, inplace=True, axis=1)
+hex_gdf.rename(rename_index_dict_reach, inplace=True, axis=1)
+hex_gdf.rename(rename_reach_urban_dict, inplace=True, axis=1)
+
+
+display(hex_gdf.corr(method="spearman").style.background_gradient(cmap="coolwarm"))
+display(hex_gdf.describe().style.pipe(format_style_index))
 
 # %%
-
 # HEX PLOT
 
 plot_func.plot_correlation(
     hex_gdf,
-    hex_corr_variables,
+    hex_gdf.columns,
     heatmap_fp=fp_hex_network_heatmap,
     pairplot_fp=fp_hex_network_pairplot,
+    mask=False,
     corner=False,
     pairplot=False,
 )
@@ -59,7 +78,7 @@ exec(open("../helper_scripts/prepare_socio_network_corr_data.py").read())
 
 # generate socio reach comparison columns
 exec(open("../helper_scripts/generate_socio_reach_columns.py").read())
-# %%
+
 socio_corr_variables = (
     density_columns
     + density_steps_columns[1:4]
@@ -80,17 +99,7 @@ socio_gdf.rename(rename_index_dict_fragmentation, inplace=True, axis=1)
 socio_gdf.rename(rename_index_dict_largest_comp, inplace=True, axis=1)
 socio_gdf.rename(rename_index_dict_reach, inplace=True, axis=1)
 
-rename_dict = {
-    "lts_1_largest_component_median": "LTS 1 largest component (median)",
-    "lts_1_2_largest_component_median": "LTS 1-2 largest component (median)",
-    "lts_1_3_largest_component_median": "LTS 1-3 largest component (median)",
-    "lts_1_4_largest_component_median": "LTS 1-4 largest component (median)",
-    "car_largest_component_median": "Car largest component (median)",
-    "lts_1_reach_median": "LTS 1 reach (median)",
-    "lts_1_2_reach_median": "LTS 1-2 reach (median)",
-    "lts_1_3_reach_median": "LTS 1-3 reach (median)",
-    "lts_1_4_reach_median": "LTS 1-4 reach (median)",
-    "car_reach_median": "Car reach (median)",
+rename_socio_dict = {
     "lts_1_pct_diff_1_5_median": "LTS 1 % difference 1-5 km reach (median)",
     "lts_1_pct_diff_5_10_median": "LTS 1 % difference 5-10 km reach (median)",
     "lts_1_2_pct_diff_1_5_median": "LTS 1-2 % difference 1-5 km reach (median)",
@@ -102,10 +111,20 @@ rename_dict = {
     "car_pct_diff_1_5_median": "Car % difference 1-5 km reach (median)",
     "car_pct_diff_5_10_median": "Car % difference 5-10 km reach (median)",
     "urban_pct": "Urban %",
+    "lts_1_largest_component_median": "LTS 1 largest component (median)",
+    "lts_1_2_largest_component_median": "LTS 1-2 largest component (median)",
+    "lts_1_3_largest_component_median": "LTS 1-3 largest component (median)",
+    "lts_1_4_largest_component_median": "LTS 1-4 largest component (median)",
+    "car_largest_component_median": "Car largest component (median)",
+    "lts_1_reach_median": "LTS 1 reach (median)",
+    "lts_1_2_reach_median": "LTS 1-2 reach (median)",
+    "lts_1_3_reach_median": "LTS 1-3 reach (median)",
+    "lts_1_4_reach_median": "LTS 1-4 reach (median)",
+    "car_reach_median": "Car reach (median)",
 }
 
-socio_gdf.rename(rename_dict, inplace=True, axis=1)
-# %%
+socio_gdf.rename(rename_socio_dict, inplace=True, axis=1)
+
 display(socio_gdf.corr(method="spearman").style.background_gradient(cmap="coolwarm"))
 display(socio_gdf.describe().style.pipe(format_style_index))
 
@@ -117,6 +136,7 @@ plot_func.plot_correlation(
     socio_gdf.columns,
     heatmap_fp=fp_socio_network_heatmap,
     pairplot_fp=fp_socio_network_pairplot,
+    mask=False,
     corner=False,
     pairplot=False,
 )
