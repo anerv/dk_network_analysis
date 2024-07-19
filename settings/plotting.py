@@ -32,8 +32,8 @@ cx_tile_2 = cx.providers.CartoDB.PositronNoLabels  # CartoDB.DarkMatterNoLabels
 
 pdict = {
     # colormaps for grid cell plots
-    "pos": "PuRd",  # "Blues",  # Positive values
-    "neg": "YlOrRd",  # "Reds",  # Negative/Missing/Unmatched values
+    "pos": "pink",  # "cividis",  # "PuRd",  # "Blues",  # Positive values
+    "neg": "pink",  # "Reds",  # Negative/Missing/Unmatched values
     # "diff": "RdBu",  # for osm-ref difference plots (alternatives: "PiYG", "PRGn", "PuOr")
     "seq": "YlGnBu",  # for sequential plots where low should not be white (usually percentages)
     "cat": "colorblind",  # for categorical plots
@@ -448,4 +448,7 @@ rename_index_dict_largest_comp = {
     # "component_coverage_car": "Car largest component coverage",
 }
 
-reach_comparisons = ["1_5", "5_10", "10_15"]
+reach_comparisons = [
+    "1_5",
+    "5_10",
+]  # "10_15"
