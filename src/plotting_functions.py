@@ -428,6 +428,7 @@ def process_plot_moransi(fp, metric, aggregation_level, rename_dict):
 def plot_correlation(
     df,
     corr_columns,
+    method="spearman",
     pair_plot_type="reg",
     diag_kind="kde",
     corner=True,
@@ -455,7 +456,7 @@ def plot_correlation(
         None
     """
 
-    df_corr = df[corr_columns].corr()
+    df_corr = df[corr_columns].corr(method=method)
 
     # Generate a mask for the upper triangle
     mask = np.triu(np.ones_like(df_corr, dtype=bool))
@@ -470,7 +471,6 @@ def plot_correlation(
         df_corr,
         mask=mask,
         cmap=cmap,
-        vmax=0.3,
         center=0,
         square=True,
         linewidths=0.5,
