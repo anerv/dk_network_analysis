@@ -520,8 +520,9 @@ for t in thresholds:
 assert len(lts_list) == len(component_counts) == len(threshold_values)
 
 threshold_df = pd.DataFrame(data={"lts": lts_list, "threshold": threshold_values, "component_count": component_counts})
+
+connection.close()
 # %%
-# 
 
 # Group the data by threshold and lts
 grouped_data = threshold_df.groupby(['threshold', 'lts']).sum().reset_index()
