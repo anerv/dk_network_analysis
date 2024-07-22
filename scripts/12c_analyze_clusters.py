@@ -7,11 +7,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import robust_scale
 import contextily as cx
 from matplotlib.patches import Patch
 from IPython.display import display
 import plotly_express as px
+
+with open("vacuum_analyze.py") as f:
+    exec(f.read())
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -19,211 +21,366 @@ exec(open("../settings/df_styler.py").read())
 
 plot_func.set_renderer("png")
 
+# %%
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 # %%
 
-socio_cluster_gdf = gpd.read_postgis(
-    "SELECT * FROM socio_cluster_results", engine, geom_col="geometry"
-)
+q = "sql/12b_analysis_clustering.sql"
 
-socio_cluster_gdf.rename(columns=population_rename_dict, inplace=True)
-
-# %%
-
-socio_cluster_gdf["share_low_income"] = (
-    socio_cluster_gdf["Income under 100k (share)"]
-    + socio_cluster_gdf["Income 100-150k (share)"]
-    + socio_cluster_gdf["Income 150-200k (share)"]
-    + socio_cluster_gdf["Income 200-300k (share)"]
-)
-
+result = dbf.run_query_pg(q, connection)
+if result == "error":
+    print("Please fix error before rerunning and reconnect to the database")
 
 # %%
-fig = px.scatter(
-    socio_cluster_gdf,
-    x="share_low_income",
-    y="Households w car (share)",
-    hover_data=["socio_label", "id"],
-    color="socio_label",
-)
-fig.show()
+# # count number of hex clusters in each socio cluster
+
+# hex_cluster_gdf = gpd.read_postgis(
+#     "SELECT * FROM clustering.hex_clusters", engine, geom_col="geometry"
+# )
+
+# cluster_col = [c for c in hex_cluster_gdf.columns if "kmeans_net" in c][0]
+
+# cluster_values = hex_cluster_gdf[cluster_col].unique()
+# # %%
+
+# insert = f"""INSERT INTO
+#     clustering.joined_hexes (
+#         id,
+#         hex_id,
+#         cluster_label,
+#         {cluster_col},
+#         geometry
+#     )
+# SELECT
+#     *
+# FROM
+#     clustering.joined_hexes_2;"""
+
+# create = f"""CREATE VIEW clustering.hex_cluster_counts AS
+# SELECT
+#     id,
+#     COUNT(*),
+#     {cluster_col}
+# FROM
+#     clustering.joined_hexes
+# GROUP BY
+#     id,
+#     {cluster_col};"""
+
+# for q in [insert, create]:
+#     result = dbf.run_query_pg(q, connection)
+#     if result == "error":
+#         print("Please fix error before rerunning and reconnect to the database")
+#         break
+
+# # %%
+# for c in cluster_values:
+
+#     add = f"ALTER TABLE clustering.socio_cluster_results ADD COLUMN IF NOT EXISTS hex_cluster_{c} INTEGER;"
+#     result = dbf.run_query_pg(add, connection)
+#     if result == "error":
+#         print("Please fix error before rerunning and reconnect to the database")
+
+#     update = f"""UPDATE
+#     clustering.socio_cluster_results
+#     SET
+#         hex_cluster_{c} = hcc.count
+#     FROM
+#         clustering.hex_cluster_counts hcc
+#     WHERE
+#         hcc.id = clustering.socio_cluster_results.id
+#         AND hcc.{cluster_col} = {c};"""
+
+#     result = dbf.run_query_pg(update, connection)
+#     if result == "error":
+#         print("Please fix error before rerunning and reconnect to the database")
+
+#     alter = f"ALTER TABLE clustering.socio_cluster_results ADD COLUMN IF NOT EXISTS share_{c} FLOAT;"
+
+#     result = dbf.run_query_pg(alter, connection)
+#     if result == "error":
+#         print("Please fix error before rerunning and reconnect to the database")
+
+
+# alter = "ALTER TABLE clustering.socio_cluster_results ADD COLUMN IF NOT EXISTS hex_cluster_total INTEGER;"
+# result = dbf.run_query_pg(alter, connection)
+# if result == "error":
+#     print("Please fix error before rerunning and reconnect to the database")
+
+# # %%
+# columns = [f"hex_cluster_{c}" for c in cluster_values]
+# columns_str = ":: INT + ".join(columns)
+
+# for c in columns:
+#     fill_na = f"UPDATE clustering.socio_cluster_results SET {c} = 0 WHERE {c} IS NULL;"
+#     result = dbf.run_query_pg(fill_na, connection)
+#     if result == "error":
+#         print("Please fix error before rerunning and reconnect to the database")
+#         break
+
+# # %%
+# update = f"""UPDATE clustering.socio_cluster_results SET hex_cluster_total = {columns_str};"""
+
+# result = dbf.run_query_pg(update, connection)
+# if result == "error":
+#     print("Please fix error before rerunning and reconnect to the database")
+# # %%
+# for c in cluster_values:
+#     update = f"""UPDATE clustering.socio_cluster_results SET share_{c} = hex_cluster_{c} ::INT / hex_cluster_total;"""
+
+#     result = dbf.run_query_pg(update, connection)
+#     if result == "error":
+#         print("Please fix error before rerunning and reconnect to the database")
+
+
+# # %%
+
+# for q in [
+#     "DROP VIEW IF EXISTS clustering.hex_cluster_counts;",
+#     "DROP TABLE IF EXISTS clustering.joined_hexes;",
+#     "DROP TABLE IF EXISTS clustering.joined_hexes_2;",
+# ]:
+#     result = dbf.run_query_pg(q, connection)
+#     if result == "error":
+#         print("Please fix error before rerunning and reconnect to the database")
+#         break
+
+# # %%
+# share_cols = [f"share_{c}" for c in cluster_values]
+# share_cols.sort()
+# share_cols_str = ", ".join(share_cols)
+
+# hex_cols = [f"hex_cluster_{c}" for c in cluster_values]
+# hex_cols.sort()
+# hex_cols_str = ", ".join(hex_cols)
 
 # %%
-# Plot socio clusters and pop/urban density
-plt.figure(figsize=(15, 10))
-plt.scatter(
-    socio_cluster_gdf["socio_label"], socio_cluster_gdf["population_density"], alpha=0.5
+socio_hex_cluster = gpd.read_postgis(
+    f"SELECT id, {share_cols_str}, {hex_cols_str}, hex_cluster_total, geometry FROM clustering.socio_cluster_results",
+    engine,
+    geom_col="geometry",
 )
-plt.xlabel("Socio Label")
-plt.ylabel("Population Density")
-plt.title("Population Density by Socio Label")
-plt.xticks(rotation=45)
+
+# %%
+plt.figure(figsize=(10, 6))
+plt.bar(socio_hex_cluster.index, socio_hex_cluster["hex_cluster_total"])
+plt.xlabel("Row")
+plt.ylabel("Hex Cluster Total")
+plt.title("Hex Cluster Total for Each Row in Socio Hex Cluster")
 plt.show()
 
+# %%
 
-plt.figure(figsize=(15, 10))
-plt.scatter(socio_cluster_gdf["socio_label"], socio_cluster_gdf["urban_pct"], alpha=0.5)
-plt.xlabel("Socio Label")
-plt.ylabel("Urban pct")
-plt.title("Urban pct by Socio Label")
-plt.xticks(rotation=45)
-plt.show()
+# TODO: Make bar chart showing count of hexes in each cluster
+
+# TODO: Make stacked bar chart of hex cluster shares in each socio cluster
 
 
 # %%
-# Plot distribution of network rank in each socio cluster
-grouped = (
-    socio_cluster_gdf.groupby("socio_label")["network_rank"]
-    .value_counts()
-    .unstack(fill_value=0)
-)
-fig, axes = plt.subplots(len(grouped), 1, figsize=(15, 20))
-axes = axes.flatten()
-for i, (label, data) in enumerate(grouped.iterrows()):
-    axes[i].bar(data.index, data.values)
-    axes[i].set_title(f"Socio Label: {label}")
-    axes[i].set_xlabel("Network Rank")
-    axes[i].set_ylabel("Count")
-    axes[i].tick_params(labelsize=10)
-plt.tight_layout()
-plt.show()
+# ### ************************************************
+# socio_cluster_gdf = gpd.read_postgis(
+#     "SELECT * FROM socio_cluster_results", engine, geom_col="geometry"
+# )
 
-# %%
+# socio_cluster_gdf.rename(columns=population_rename_dict, inplace=True)
 
-input_colors = plot_func.get_hex_colors_from_colormap("viridis", 6)
-input_colors.reverse()
+# # %%
+
+# socio_cluster_gdf["share_low_income"] = (
+#     socio_cluster_gdf["Income under 100k (share)"]
+#     + socio_cluster_gdf["Income 100-150k (share)"]
+#     + socio_cluster_gdf["Income 150-200k (share)"]
+#     + socio_cluster_gdf["Income 200-300k (share)"]
+# )
 
 
-# Plot proporiton of network rank in each socio cluster
-correlation = (
-    socio_cluster_gdf.groupby(["socio_label", "network_rank"])
-    .size()
-    .unstack(fill_value=0)
-)
-correlation = correlation.div(correlation.sum(axis=1), axis=0)
-plt.figure(figsize=(15, 15))
-correlation.plot(
-    kind="bar", stacked=True, color=input_colors
-)  # lts_color_dict.values()
-plt.ylabel("Proportion", fontsize=12)
-plt.title("Correlation between Socio Label and Network Rank", fontsize=14)
-plt.legend(bbox_to_anchor=(1, 1), fontsize=12, title="Network Rank", title_fontsize=10)
-plt.tick_params(
-    labelsize=10,
-)
-plt.xlabel("", fontsize=12)
-plt.show()
+# # %%
+# fig = px.scatter(
+#     socio_cluster_gdf,
+#     x="share_low_income",
+#     y="Households w car (share)",
+#     hover_data=["socio_label", "id"],
+#     color="socio_label",
+# )
+# fig.show()
+
+# # %%
+# # Plot socio clusters and pop/urban density
+# plt.figure(figsize=(15, 10))
+# plt.scatter(
+#     socio_cluster_gdf["socio_label"], socio_cluster_gdf["population_density"], alpha=0.5
+# )
+# plt.xlabel("Socio Label")
+# plt.ylabel("Population Density")
+# plt.title("Population Density by Socio Label")
+# plt.xticks(rotation=45)
+# plt.show()
 
 
-# %%
-x_col = "network_rank"
-cols = [
-    "Income under 100k (share)",
-    "Income 100-150k (share)",
-    "Income 150-200k (share)",
-    "Income 200-300k (share)",
-    "Income 300-400k (share)",
-    "Income 400-500k (share)",
-    "Income 500-750k (share)",
-    "Income 750k (share)",
-    "share_low_income",
-    "Households w car (share)",
-    "Households 1 car (share)",
-    "Households 2 cars (share)",
-    "Households no car (share)",
-    "urban_pct",
-    "population_density",
-]
+# plt.figure(figsize=(15, 10))
+# plt.scatter(socio_cluster_gdf["socio_label"], socio_cluster_gdf["urban_pct"], alpha=0.5)
+# plt.xlabel("Socio Label")
+# plt.ylabel("Urban pct")
+# plt.title("Urban pct by Socio Label")
+# plt.xticks(rotation=45)
+# plt.show()
 
-fig, ax = plt.subplots(4, 4, figsize=(20, 20))
-ax = ax.flatten()
-ax[-1].set_visible(False)
-for c in cols:
-    ax[cols.index(c)].scatter(socio_cluster_gdf[x_col], socio_cluster_gdf[c], alpha=0.5)
-    ax[cols.index(c)].set_title(c)
-    ax[cols.index(c)].set_xlabel(x_col)
-    ax[cols.index(c)].set_ylabel(c)
 
-# %%
-# # input = [v for v in lts_color_dict.values()]
-# input_colors = plot_func.get_hex_colors_from_colormap("viridis", k)
+# # %%
+# # Plot distribution of network rank in each socio cluster
+# grouped = (
+#     socio_cluster_gdf.groupby("socio_label")["network_rank"]
+#     .value_counts()
+#     .unstack(fill_value=0)
+# )
+# fig, axes = plt.subplots(len(grouped), 1, figsize=(15, 20))
+# axes = axes.flatten()
+# for i, (label, data) in enumerate(grouped.iterrows()):
+#     axes[i].bar(data.index, data.values)
+#     axes[i].set_title(f"Socio Label: {label}")
+#     axes[i].set_xlabel("Network Rank")
+#     axes[i].set_ylabel("Count")
+#     axes[i].tick_params(labelsize=10)
+# plt.tight_layout()
+# plt.show()
+
+# # %%
+
+# input_colors = plot_func.get_hex_colors_from_colormap("viridis", 6)
 # input_colors.reverse()
-# test_colors = plot_func.color_list_to_cmap(input_colors)
-
-# plot_func.plot_rank(socio_cluster_gdf, "network_rank", cmap=test_colors)
-
-# plot_func.plot_labels(socio_cluster_gdf, "network_rank", cmap=test_colors)
-# %%
-
-for sc in socio_cluster_gdf["socio_label"].unique():
-    print(sc)
-    display(socio_cluster_gdf[socio_cluster_gdf["socio_label"] == sc].describe())
-
-# %%
-sc_values = socio_cluster_gdf["socio_label"].unique()
-household_counts = []
-people_counts = []
-households_with_car = []
-households_without_car = []
 
 
-for sc in socio_cluster_gdf["socio_label"].unique():
-    household_count = socio_cluster_gdf[socio_cluster_gdf["socio_label"] == sc][
-        "households"
-    ].sum()
+# # Plot proporiton of network rank in each socio cluster
+# correlation = (
+#     socio_cluster_gdf.groupby(["socio_label", "network_rank"])
+#     .size()
+#     .unstack(fill_value=0)
+# )
+# correlation = correlation.div(correlation.sum(axis=1), axis=0)
+# plt.figure(figsize=(15, 15))
+# correlation.plot(
+#     kind="bar", stacked=True, color=input_colors
+# )  # lts_color_dict.values()
+# plt.ylabel("Proportion", fontsize=12)
+# plt.title("Correlation between Socio Label and Network Rank", fontsize=14)
+# plt.legend(bbox_to_anchor=(1, 1), fontsize=12, title="Network Rank", title_fontsize=10)
+# plt.tick_params(
+#     labelsize=10,
+# )
+# plt.xlabel("", fontsize=12)
+# plt.show()
 
-    print(f"Socio Cluster '{sc}' has {household_count:,.0f} households.")
 
-    household_counts.append(household_count)
+# # %%
+# x_col = "network_rank"
+# cols = [
+#     "Income under 100k (share)",
+#     "Income 100-150k (share)",
+#     "Income 150-200k (share)",
+#     "Income 200-300k (share)",
+#     "Income 300-400k (share)",
+#     "Income 400-500k (share)",
+#     "Income 500-750k (share)",
+#     "Income 750k (share)",
+#     "share_low_income",
+#     "Households w car (share)",
+#     "Households 1 car (share)",
+#     "Households 2 cars (share)",
+#     "Households no car (share)",
+#     "urban_pct",
+#     "population_density",
+# ]
 
-    people_count = socio_cluster_gdf[socio_cluster_gdf["socio_label"] == sc][
-        "population"
-    ].sum()
+# fig, ax = plt.subplots(4, 4, figsize=(20, 20))
+# ax = ax.flatten()
+# ax[-1].set_visible(False)
+# for c in cols:
+#     ax[cols.index(c)].scatter(socio_cluster_gdf[x_col], socio_cluster_gdf[c], alpha=0.5)
+#     ax[cols.index(c)].set_title(c)
+#     ax[cols.index(c)].set_xlabel(x_col)
+#     ax[cols.index(c)].set_ylabel(c)
 
-    print(f"Socio Cluster '{sc}' has {people_count:,.0f} people.")
+# # %%
+# # # input = [v for v in lts_color_dict.values()]
+# # input_colors = plot_func.get_hex_colors_from_colormap("viridis", k)
+# # input_colors.reverse()
+# # test_colors = plot_func.color_list_to_cmap(input_colors)
 
-    people_counts.append(people_count)
+# # plot_func.plot_rank(socio_cluster_gdf, "network_rank", cmap=test_colors)
 
-    count_households_car = socio_cluster_gdf[socio_cluster_gdf["socio_label"] == sc][
-        "households_with_car"
-    ].sum()
+# # plot_func.plot_labels(socio_cluster_gdf, "network_rank", cmap=test_colors)
+# # %%
 
-    print(
-        f"Socio Cluster '{sc}' has {count_households_car:,.0f} households with at least one car."
-    )
+# for sc in socio_cluster_gdf["socio_label"].unique():
+#     print(sc)
+#     display(socio_cluster_gdf[socio_cluster_gdf["socio_label"] == sc].describe())
 
-    households_with_car.append(count_households_car)
+# # %%
+# sc_values = socio_cluster_gdf["socio_label"].unique()
+# household_counts = []
+# people_counts = []
+# households_with_car = []
+# households_without_car = []
 
-    count_households_no_car = socio_cluster_gdf[socio_cluster_gdf["socio_label"] == sc][
-        "households_without_car"
-    ].sum()
 
-    print(
-        f"Socio Cluster '{sc}' has {count_households_no_car:,.0f} households without a car."
-    )
+# for sc in socio_cluster_gdf["socio_label"].unique():
+#     household_count = socio_cluster_gdf[socio_cluster_gdf["socio_label"] == sc][
+#         "households"
+#     ].sum()
 
-    households_without_car.append(count_households_no_car)
+#     print(f"Socio Cluster '{sc}' has {household_count:,.0f} households.")
 
-df = pd.DataFrame(
-    {
-        "Socio Cluster": sc_values,
-        "Households": household_counts,
-        "People": people_counts,
-        "Households with car": households_with_car,
-        "Households without car": households_without_car,
-    }
-)
+#     household_counts.append(household_count)
 
-# %%
-display(df.style.pipe(format_style_no_index))
+#     people_count = socio_cluster_gdf[socio_cluster_gdf["socio_label"] == sc][
+#         "population"
+#     ].sum()
 
-# %%
+#     print(f"Socio Cluster '{sc}' has {people_count:,.0f} people.")
 
-# - [ ] how many low income, car-free?
-# - [ ] find areas with high car ownership and low income
-# etc
+#     people_counts.append(people_count)
 
-# %%
+#     count_households_car = socio_cluster_gdf[socio_cluster_gdf["socio_label"] == sc][
+#         "households_with_car"
+#     ].sum()
+
+#     print(
+#         f"Socio Cluster '{sc}' has {count_households_car:,.0f} households with at least one car."
+#     )
+
+#     households_with_car.append(count_households_car)
+
+#     count_households_no_car = socio_cluster_gdf[socio_cluster_gdf["socio_label"] == sc][
+#         "households_without_car"
+#     ].sum()
+
+#     print(
+#         f"Socio Cluster '{sc}' has {count_households_no_car:,.0f} households without a car."
+#     )
+
+#     households_without_car.append(count_households_no_car)
+
+# df = pd.DataFrame(
+#     {
+#         "Socio Cluster": sc_values,
+#         "Households": household_counts,
+#         "People": people_counts,
+#         "Households with car": households_with_car,
+#         "Households without car": households_without_car,
+#     }
+# )
+
+# # %%
+# display(df.style.pipe(format_style_no_index))
+
+# # %%
+
+# # - [ ] how many low income, car-free?
+# # - [ ] find areas with high car ownership and low income
+# # etc
+
+# # %%
+# connection.close()
