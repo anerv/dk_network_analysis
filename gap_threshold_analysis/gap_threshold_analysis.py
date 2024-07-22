@@ -15,12 +15,14 @@ exec(open("../settings/filepaths.py").read())
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
+
+
 # %%
 
 queries = [
     "DROP SCHEMA IF EXISTS gap_threshold_analysis CASCADE;",
     "CREATE SCHEMA gap_threshold_analysis;",
-    "CREATE TABLE gap_threshold_analysis.edges AS SELECT * FROM edges;",
+    "CREATE TABLE gap_threshold_analysis.edges AS SELECT * FROM gap_threshold_analysis.edges;",
 ]
 
 for i, q in enumerate(queries):
@@ -33,7 +35,6 @@ for i, q in enumerate(queries):
     print(f"Step {i+1} done!")
 print("Created schema!")
 
-# %%
 
 result = dbf.run_query_pg("gap_initial_components.sql", connection)
 if result == "error":
@@ -41,7 +42,6 @@ if result == "error":
 
 print("Created initial components!")
 
-# %%
 result = dbf.run_query_pg("prepare_gap_data.sql", connection)
 if result == "error":
     print("Please fix error before rerunning and reconnect to the database")
@@ -81,7 +81,10 @@ for i, t in enumerate(thresholds):
             print("Please fix error before rerunning and reconnect to the database")
             break
 
-    print("Added new columns and dropped tables")
+    print("Added new columns and dropped tables for threshold", t)
+
+# %%
+for i, t in enumerate(thresholds):
 
     # -- LTS GAPS 1
     create_gaps_1 = f"""CREATE TABLE gap_threshold_analysis.lts_1_gaps_{t} AS
@@ -192,25 +195,30 @@ for i, t in enumerate(thresholds):
         AND co1.component <> co2.component;"""
 
     create_gaps = [create_gaps_1, create_gaps_2, create_gaps_3, create_gaps_4]
+
     for c in create_gaps:
         result = dbf.run_query_pg(c, connection)
         if result == "error":
             print("Please fix error before rerunning and reconnect to the database")
             break
 
-    print("Created gaps tables")
+    print("Created gaps tables for threshold", t)
 
+# %%
+for i, t in enumerate(thresholds):
     for lts in lts_values:
 
-        create_index = f"CREATE INDEX IF NOT EXISTS lts{lts}_gap_geom_ix ON gap_threshold_analysis.lts_{lts}_gaps USING GIST (geometry);"
+        create_index = f"CREATE INDEX IF NOT EXISTS lts{lts}_gap_{t}_geom_ix ON gap_threshold_analysis.lts_{lts}_gaps_{t} USING GIST (geometry);"
 
-        result = dbf.run_query_pg(create_gaps_1, connection)
+        result = dbf.run_query_pg(create_index, connection)
         if result == "error":
             print("Please fix error before rerunning and reconnect to the database")
             break
 
-    print("Created indexes")
+    print(f"Created indexes for {t}")
 
+# %%
+for i, t in enumerate(thresholds):
     for lts in lts_values:
         # --DROP gaps that form too long stretches
         drop = f"""WITH merged AS (
@@ -226,7 +234,7 @@ for i, t in enumerate(thresholds):
                 --m.geometry
             FROM
                 merged m
-                INNER JOIN lts_1_gaps l ON ST_Intersects(l.geometry, m.geometry)
+                INNER JOIN gap_threshold_analysis.lts_{lts}_gaps_{t} l ON ST_Intersects(l.geometry, m.geometry)
             WHERE
                 ST_Length(m.geometry) > 30
         )
@@ -265,7 +273,7 @@ for i, t in enumerate(thresholds):
             print("Please fix error before rerunning and reconnect to the database")
             break
 
-    print("Deleted unnecessary gaps")
+    print("Deleted unnecessary gaps for threshold", t)
 
     ###-----
     for lts in lts_values:
@@ -287,4 +295,214 @@ for i, t in enumerate(thresholds):
             print("Please fix error before rerunning and reconnect to the database")
             break
 
-    print("Updated edges table")
+    print("Updated gap_threshold_analysis.edges table for threshold", t)
+
+# %%
+
+lts_values_str = ["all", "1", "1_2", "1_3", "1_4"]
+
+for t in thresholds:
+
+    drop_cols = f"""ALTER TABLE
+        gap_threshold_analysis.edges DROP COLUMN IF EXISTS component_all_{t},
+        DROP COLUMN IF EXISTS component_1_{t},
+        DROP COLUMN IF EXISTS component_1_2_{t},
+        DROP COLUMN IF EXISTS component_1_3_{t},
+        DROP COLUMN IF EXISTS component_1_4_{t},
+        DROP COLUMN IF EXISTS component_car_{t};"""
+
+    add_cols = f"""ALTER TABLE
+        gap_threshold_analysis.edges
+    ADD
+        COLUMN IF NOT EXISTS component_all_{t} BIGINT DEFAULT NULL,
+    ADD
+        COLUMN IF NOT EXISTS component_1_{t} BIGINT DEFAULT NULL,
+    ADD
+        COLUMN IF NOT EXISTS component_1_2_{t} BIGINT DEFAULT NULL,
+    ADD
+        COLUMN IF NOT EXISTS component_1_3_{t} BIGINT DEFAULT NULL,
+    ADD
+        COLUMN IF NOT EXISTS component_1_4_{t} BIGINT DEFAULT NULL;"""
+
+    for q in [drop_cols, add_cols]:
+        result = dbf.run_query_pg(q, connection)
+        if result == "error":
+            print("Please fix error before rerunning and reconnect to the database")
+            break
+
+    for lts_str in lts_values_str:
+        drop = f"DROP TABLE IF EXISTS gap_threshold_analysis.components_{lts_str}_{t};"
+
+        result = dbf.run_query_pg(drop, connection)
+        if result == "error":
+            print("Please fix error before rerunning and reconnect to the database")
+            break
+
+    create_all = f"""CREATE TABLE gap_threshold_analysis.components_all_{t} AS
+    SELECT
+        *
+    FROM
+        pgr_connectedComponents(
+            'SELECT id, source, target, cost, reverse_cost FROM gap_threshold_analysis.edges 
+            WHERE lts_access IN (1,2,3,4,7) 
+            OR lts_1_gap_{t} IS TRUE 
+            OR lts_2_gap_{t} IS TRUE 
+            OR lts_3_gap_{t} IS TRUE 
+            OR lts_4_gap_{t} IS TRUE'
+        );"""
+
+    create_1 = f"""CREATE TABLE gap_threshold_analysis.components_1_{t} AS
+    SELECT
+        *
+    FROM
+        pgr_connectedComponents(
+            'SELECT id, source, target, cost, reverse_cost FROM gap_threshold_analysis.edges 
+            WHERE lts_access = 1 OR lts_1_gap_{t} IS TRUE'
+        );"""
+
+    create_2 = f"""CREATE TABLE gap_threshold_analysis.components_2_{t} AS
+    SELECT
+        *
+    FROM
+        pgr_connectedComponents(
+            'SELECT id, source, target, cost, reverse_cost FROM gap_threshold_analysis.edges
+            WHERE lts_access IN (1,2) OR lts_1_gap_{t} IS TRUE or lts_2_gap_{t} IS TRUE'
+        );"""
+
+    create_3 = f"""CREATE TABLE gap_threshold_analysis.components_3_{t} AS
+    SELECT
+        *
+    FROM
+        pgr_connectedComponents(
+            'SELECT id, source, target, cost, reverse_cost FROM gap_threshold_analysis.edges
+          WHERE lts_access IN (1,2,3) OR lts_1_gap_{t} IS TRUE OR lts_2_gap_{t} IS TRUE 
+          OR lts_3_gap_{t} IS TRUE'
+        );"""
+
+    create_4 = f"""CREATE TABLE gap_threshold_analysis.components_4_{t} AS
+    SELECT
+        *
+    FROM
+        pgr_connectedComponents(
+            'SELECT id, source, target, cost, reverse_cost FROM gap_threshold_analysis.edges
+          WHERE lts_access IN (1,2,3,4) OR lts_1_gap_{t} IS TRUE or lts_2_gap_{t} IS TRUE 
+          OR lts_3_gap_{t} IS TRUE OR lts_4_gap_{t} IS TRUE'
+        );"""
+
+    for c in [create_all, create_1, create_2, create_3, create_4]:
+        result = dbf.run_query_pg(c, connection)
+        if result == "error":
+            print("Please fix error before rerunning and reconnect to the database")
+            break
+
+    print("Created components tables for threshold", t)
+
+# %%
+
+for t in thresholds:
+
+    update_all = f"""UPDATE
+        gap_threshold_analysis.edges e
+    SET
+        component_all_{t} = component
+    FROM
+        gap_threshold_analysis.components_all_{t} co
+    WHERE
+        e.source = co.node
+        AND (
+            lts_access IN (1, 2, 3, 4, 7)
+            OR lts_1_gap_{t} IS TRUE
+            OR lts_2_gap_{t} IS TRUE
+            OR lts_3_gap_{t} IS TRUE
+            OR lts_4_gap_{t} IS TRUE
+        );"""
+
+    update_1 = """UPDATE
+        gap_threshold_analysis.edges e
+    SET
+        component_1_{t} = component
+    FROM
+        gap_threshold_analysis.components_1_{t} co
+    WHERE
+        e.source = co.node
+        AND (
+            lts_access = 1
+            OR lts_1_gap_{t} IS TRUE
+        );"""
+
+    update_2 = """UPDATE
+        gap_threshold_analysis.edges e
+    SET
+        component_1_2 = component
+    FROM
+        gap_threshold_analysis.components_2_{t} co
+    WHERE
+        e.source = co.node
+        AND (
+            lts_access IN (1, 2)
+            OR lts_1_gap_{t} IS TRUE
+            OR lts_2_gap_{t} IS TRUE
+        );"""
+
+    update_3 = """UPDATE
+        gap_threshold_analysis.edges e
+    SET
+        component_1_3 = component
+    FROM
+        gap_threshold_analysis.components_3_{t} co
+    WHERE
+        e.source = co.node
+        AND (
+            lts_access IN (1, 2, 3)
+            OR lts_1_gap_{t} IS TRUE
+            OR lts_2_gap_{t} IS TRUE
+            OR lts_3_gap_{t} IS TRUE
+        );"""
+
+    update_4 = """UPDATE
+        gap_threshold_analysis.edges e
+    SET
+        component_1_4 = component
+    FROM
+        gap_threshold_analysis.components_4_{t} co
+    WHERE
+        e.source = co.node
+        AND (
+            lts_access IN (1, 2, 3, 4)
+            OR lts_1_gap_{t} IS TRUE
+            OR lts_2_gap_{t} IS TRUE
+            OR lts_3_gap_{t} IS TRUE
+            OR lts_4_gap_{t} IS TRUE
+        );"""
+
+    for u in [update_all, update_1, update_2, update_3, update_4]:
+        result = dbf.run_query_pg(u, connection)
+        if result == "error":
+            print("Please fix error before rerunning and reconnect to the database")
+            break
+
+    print("Updated edge components for threshold", t)
+
+# %%
+
+for t in thresholds:
+    for lts in lts_values:
+        gaps = gpd.from_postgis(
+            f"SELECT * FROM gap_threshold_analysis.edges WHERE lts_{lts}_{t} IS TRUE",
+            connection,
+        )
+
+        print(f"Number of gaps for lts {lts} and threshold {t}: {len(gaps)}")
+
+
+for t in thresholds:
+    for lts in lts_values:
+        components = gpd.from_postgis(
+            f"SELECT * FROM gap_threshold_analysis.components_{lts}_{t}", connection
+        )
+
+        print(
+            f"Number of components for lts {lts} and threshold {t}: {len(components)}"
+        )
+
+# %%
