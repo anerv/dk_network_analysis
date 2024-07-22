@@ -347,10 +347,6 @@ socio_soc_gdf[["id", "socio_label", kmeans_col_soc_soc, "geometry"]].to_postgis(
 hex_gdf[["hex_id", "cluster_label", kmeans_col_net_hex, "geometry"]].to_postgis(
     "hex_clusters", engine, schema="clustering", if_exists="replace", index=False
 )
-# %%
-q = "sql/12b_analysis_clustering.sql"
 
-result = dbf.run_query_pg(q, connection)
-if result == "error":
-    print("Please fix error before rerunning and reconnect to the database")
+connection.close()
 # %%
