@@ -12,8 +12,8 @@ from matplotlib.patches import Patch
 from IPython.display import display
 import plotly_express as px
 
-with open("vacuum_analyze.py") as f:
-    exec(f.read())
+# with open("vacuum_analyze.py") as f:
+#     exec(f.read())
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -35,148 +35,23 @@ if result == "error":
     print("Please fix error before rerunning and reconnect to the database")
 
 # %%
-# # count number of hex clusters in each socio cluster
-
-# hex_cluster_gdf = gpd.read_postgis(
-#     "SELECT * FROM clustering.hex_clusters", engine, geom_col="geometry"
-# )
-
-# cluster_col = [c for c in hex_cluster_gdf.columns if "kmeans_net" in c][0]
-
-# cluster_values = hex_cluster_gdf[cluster_col].unique()
-# # %%
-
-# insert = f"""INSERT INTO
-#     clustering.joined_hexes (
-#         id,
-#         hex_id,
-#         cluster_label,
-#         {cluster_col},
-#         geometry
-#     )
-# SELECT
-#     *
-# FROM
-#     clustering.joined_hexes_2;"""
-
-# create = f"""CREATE VIEW clustering.hex_cluster_counts AS
-# SELECT
-#     id,
-#     COUNT(*),
-#     {cluster_col}
-# FROM
-#     clustering.joined_hexes
-# GROUP BY
-#     id,
-#     {cluster_col};"""
-
-# for q in [insert, create]:
-#     result = dbf.run_query_pg(q, connection)
-#     if result == "error":
-#         print("Please fix error before rerunning and reconnect to the database")
-#         break
-
-# # %%
-# for c in cluster_values:
-
-#     add = f"ALTER TABLE clustering.socio_cluster_results ADD COLUMN IF NOT EXISTS hex_cluster_{c} INTEGER;"
-#     result = dbf.run_query_pg(add, connection)
-#     if result == "error":
-#         print("Please fix error before rerunning and reconnect to the database")
-
-#     update = f"""UPDATE
-#     clustering.socio_cluster_results
-#     SET
-#         hex_cluster_{c} = hcc.count
-#     FROM
-#         clustering.hex_cluster_counts hcc
-#     WHERE
-#         hcc.id = clustering.socio_cluster_results.id
-#         AND hcc.{cluster_col} = {c};"""
-
-#     result = dbf.run_query_pg(update, connection)
-#     if result == "error":
-#         print("Please fix error before rerunning and reconnect to the database")
-
-#     alter = f"ALTER TABLE clustering.socio_cluster_results ADD COLUMN IF NOT EXISTS share_{c} FLOAT;"
-
-#     result = dbf.run_query_pg(alter, connection)
-#     if result == "error":
-#         print("Please fix error before rerunning and reconnect to the database")
-
-
-# alter = "ALTER TABLE clustering.socio_cluster_results ADD COLUMN IF NOT EXISTS hex_cluster_total INTEGER;"
-# result = dbf.run_query_pg(alter, connection)
-# if result == "error":
-#     print("Please fix error before rerunning and reconnect to the database")
-
-# # %%
-# columns = [f"hex_cluster_{c}" for c in cluster_values]
-# columns_str = ":: INT + ".join(columns)
-
-# for c in columns:
-#     fill_na = f"UPDATE clustering.socio_cluster_results SET {c} = 0 WHERE {c} IS NULL;"
-#     result = dbf.run_query_pg(fill_na, connection)
-#     if result == "error":
-#         print("Please fix error before rerunning and reconnect to the database")
-#         break
-
-# # %%
-# update = f"""UPDATE clustering.socio_cluster_results SET hex_cluster_total = {columns_str};"""
-
-# result = dbf.run_query_pg(update, connection)
-# if result == "error":
-#     print("Please fix error before rerunning and reconnect to the database")
-# # %%
-# for c in cluster_values:
-#     update = f"""UPDATE clustering.socio_cluster_results SET share_{c} = hex_cluster_{c} ::INT / hex_cluster_total;"""
-
-#     result = dbf.run_query_pg(update, connection)
-#     if result == "error":
-#         print("Please fix error before rerunning and reconnect to the database")
-
-
-# # %%
-
-# for q in [
-#     "DROP VIEW IF EXISTS clustering.hex_cluster_counts;",
-#     "DROP TABLE IF EXISTS clustering.joined_hexes;",
-#     "DROP TABLE IF EXISTS clustering.joined_hexes_2;",
-# ]:
-#     result = dbf.run_query_pg(q, connection)
-#     if result == "error":
-#         print("Please fix error before rerunning and reconnect to the database")
-#         break
-
-# # %%
-# share_cols = [f"share_{c}" for c in cluster_values]
-# share_cols.sort()
-# share_cols_str = ", ".join(share_cols)
-
-# hex_cols = [f"hex_cluster_{c}" for c in cluster_values]
-# hex_cols.sort()
-# hex_cols_str = ", ".join(hex_cols)
-
-# %%
 socio_hex_cluster = gpd.read_postgis(
-    f"SELECT id, {share_cols_str}, {hex_cols_str}, hex_cluster_total, geometry FROM clustering.socio_cluster_results",
+    f"SELECT * FROM clustering.socio_cluster_results",
     engine,
     geom_col="geometry",
 )
 
 # %%
-plt.figure(figsize=(10, 6))
-plt.bar(socio_hex_cluster.index, socio_hex_cluster["hex_cluster_total"])
-plt.xlabel("Row")
-plt.ylabel("Hex Cluster Total")
-plt.title("Hex Cluster Total for Each Row in Socio Hex Cluster")
-plt.show()
 
 # %%
 
-# TODO: Make bar chart showing count of hexes in each cluster
+# cols = [c for c in socio_hex_cluster.columns.to_list() if "area_hex" in c]
+# cols.append("id")
+# cluster_gdf = socio_hex_cluster[cols].copy()
 
-# TODO: Make stacked bar chart of hex cluster shares in each socio cluster
+# cluster_gdf.replace(pd.NA, 0, inplace=True)
+
+# # TODO: Make stacked bar chart of hex cluster shares in each socio cluster
 
 
 # %%
