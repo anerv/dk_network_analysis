@@ -58,7 +58,7 @@ SELECT
     *
 FROM
     pgr_connectedComponents(
-        'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access IN (1,2) OR lts_1_gap IS TRUE or lts_2_gap IS TRUE'
+        'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access IN (1,2) OR lts_1_gap IS TRUE OR lts_2_gap IS TRUE'
     );
 
 CREATE TABLE fragmentation.components_3 AS
@@ -66,7 +66,7 @@ SELECT
     *
 FROM
     pgr_connectedComponents(
-        'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access IN (1,2,3) OR lts_1_gap IS TRUE or lts_2_gap IS TRUE or lts_3_gap IS TRUE'
+        'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access IN (1,2,3) OR lts_1_gap IS TRUE OR lts_2_gap IS TRUE OR lts_3_gap IS TRUE'
     );
 
 CREATE TABLE fragmentation.components_4 AS
@@ -74,7 +74,7 @@ SELECT
     *
 FROM
     pgr_connectedComponents(
-        'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access IN (1,2,3,4) OR lts_1_gap IS TRUE or lts_2_gap IS TRUE or lts_3_gap IS TRUE or lts_4_gap IS TRUE'
+        'SELECT id, source, target, cost, reverse_cost FROM edges WHERE lts_access IN (1,2,3,4) OR lts_1_gap IS TRUE OR lts_2_gap IS TRUE OR lts_3_gap IS TRUE OR lts_4_gap IS TRUE'
     );
 
 CREATE TABLE fragmentation.components_car AS
