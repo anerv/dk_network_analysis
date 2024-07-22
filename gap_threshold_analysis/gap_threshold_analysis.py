@@ -417,7 +417,7 @@ for t in thresholds:
             OR lts_4_gap_{t} IS TRUE
         );"""
 
-    update_1 = """UPDATE
+    update_1 = f"""UPDATE
         gap_threshold_analysis.edges e
     SET
         component_1_{t} = component
@@ -430,7 +430,7 @@ for t in thresholds:
             OR lts_1_gap_{t} IS TRUE
         );"""
 
-    update_2 = """UPDATE
+    update_2 = f"""UPDATE
         gap_threshold_analysis.edges e
     SET
         component_1_2 = component
@@ -444,7 +444,7 @@ for t in thresholds:
             OR lts_2_gap_{t} IS TRUE
         );"""
 
-    update_3 = """UPDATE
+    update_3 = f"""UPDATE
         gap_threshold_analysis.edges e
     SET
         component_1_3 = component
@@ -459,7 +459,7 @@ for t in thresholds:
             OR lts_3_gap_{t} IS TRUE
         );"""
 
-    update_4 = """UPDATE
+    update_4 = f"""UPDATE
         gap_threshold_analysis.edges e
     SET
         component_1_4 = component
@@ -487,22 +487,60 @@ for t in thresholds:
 
 for t in thresholds:
     for lts in lts_values:
-        gaps = gpd.from_postgis(
-            f"SELECT * FROM gap_threshold_analysis.edges WHERE lts_{lts}_{t} IS TRUE",
+        gaps = gpd.read_postgis(
+            f"SELECT * FROM gap_threshold_analysis.edges WHERE lts_{lts}_gap_{t} IS TRUE",
             connection,
+            geom_col="geometry",
         )
-
         print(f"Number of gaps for lts {lts} and threshold {t}: {len(gaps)}")
 
+# %%
+
+lts_list = []
+threshold_values = []
+component_counts = []
 
 for t in thresholds:
+
+    threshold_values.extend([t]*(len(lts_values)))
+    lts_list.extend(lts_values)
+
     for lts in lts_values:
-        components = gpd.from_postgis(
-            f"SELECT * FROM gap_threshold_analysis.components_{lts}_{t}", connection
+
+        components = pd.read_sql(
+            f"SELECT COUNT(DISTINCT component) FROM gap_threshold_analysis.components_{lts}_{t}",
+            engine,
         )
 
-        print(
-            f"Number of components for lts {lts} and threshold {t}: {len(components)}"
-        )
+        component_counts.append(components.loc[0,"count"])
 
+        print(f"Number of components for lts {lts} and threshold {t}: {components.loc[0,"count"]:,}")
+
+
+assert len(lts_list) == len(component_counts) == len(threshold_values)
+
+threshold_df = pd.DataFrame(data={"lts": lts_list, "threshold": threshold_values, "component_count": component_counts})
+# %%
+# 
+
+# Group the data by threshold and lts
+grouped_data = threshold_df.groupby(['threshold', 'lts']).sum().reset_index()
+
+# Pivot the data to create a matrix for stacked bar chart
+pivot_data = grouped_data.pivot(index='threshold', columns='lts', values='component_count')
+
+
+# Plot the stacked bar chart
+pivot_data.plot(kind='bar', stacked=True, color=['#117733', '#44AA99', '#DDCC77', '#CC6677', '#882255', '#151515'])
+
+# Set the labels and title
+plt.xlabel('Threshold (m)')
+plt.ylabel('Number of components')
+plt.title('Number of components by threshold and LTS')
+
+# Move the legend to the right of the plot
+plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+# Show the plot
+plt.show()
 # %%
