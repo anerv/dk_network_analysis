@@ -38,8 +38,8 @@ pdict = {
     "seq": "YlGnBu",  # for sequential plots where low should not be white (usually percentages)
     "cat": "Set2",  # "colorblind",  # for categorical plots
     # alpha (transparency) values (alternatives: PuRd, RdPu, PbBuGn)
-    "alpha": 0.7,
-    "alpha_nodata": 0.3,  # for no data patches
+    "alpha": 0.8,
+    "alpha_nodata": 0.7,  # for no data patches
     # Colors of no-data
     "nodata": "lightgrey",
     # GLOBAL SETTINGS FOR PLOTS
