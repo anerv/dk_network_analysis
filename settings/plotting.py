@@ -35,7 +35,7 @@ pdict = {
     "pos": "pink",  # "cividis",  # "PuRd",  # "Blues",  # Positive values
     "neg": "pink",  # "Reds",  # Negative/Missing/Unmatched values
     # "diff": "RdBu",  # for osm-ref difference plots (alternatives: "PiYG", "PRGn", "PuOr")
-    "seq": "YlGnBu",  # for sequential plots where low should not be white (usually percentages)
+    "seq": "PuBuGn",  # "YlGnBu",  # for sequential plots where low should not be white (usually percentages)
     "cat": "Set2",  # "colorblind",  # for categorical plots
     # alpha (transparency) values (alternatives: PuRd, RdPu, PbBuGn)
     "alpha": 0.8,
