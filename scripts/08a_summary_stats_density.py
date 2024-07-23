@@ -142,6 +142,52 @@ for i, df in enumerate([df_single, df_steps]):
 # fig.write_image(filepath_summary_network_length, format="jpg", scale=6)
 
 # %%
+
+# DENSITY SUMMARY
+for a, df in zip(aggregation_levels, density_data):
+
+    min_density = []
+    max_density = []
+    mean_density = []
+    median_density = []
+    std_devs = []
+
+    for i, l in enumerate(network_levels):
+
+        min_dens = df[density_columns[i]].min()
+        max_dens = df[density_columns[i]].max()
+        mean_dens = df[density_columns[i]].mean()
+        median_dens = df[density_columns[i]].median()
+        std_dev = df[density_columns[i]].std()
+
+        min_density.append(min_dens)
+        max_density.append(max_dens)
+        mean_density.append(mean_dens)
+        median_density.append(median_dens)
+        std_devs.append(std_dev)
+
+    df_summary = pd.DataFrame(
+        index=network_levels,
+        data={
+            "min_dens": min_density,
+            "mean_dens": mean_density,
+            "median_dens": median_density,
+            "max_dens": max_density,
+            "std_dev (dens)": std_devs,
+        },
+    )
+
+    # df.to_csv(
+    #     filepath_sum_density_relative + a + ".csv",
+    #     index=True,
+    # )
+
+    print(f"At the {a} level:")
+
+    display(df_summary.style.pipe(format_style_index))
+
+
+# %%
 ### VALUE RANGES FOR EACH LTS LEVEL FOR EACH AGGREGATION LEVEL
 
 network_levels = labels_all
