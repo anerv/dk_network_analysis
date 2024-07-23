@@ -217,7 +217,7 @@ for network_type in network_types:
 # ax2.set_ylim(0, max_component_count)
 
 # Title and show plot
-plt.title("Network Length and Component Count")
+plt.title("Network length and component count", fontdict={"size": 12})
 plt.tight_layout()
 sns.despine(left=False, right=False, bottom=True)
 plt.savefig(filepath_summary_compare_length_components)
