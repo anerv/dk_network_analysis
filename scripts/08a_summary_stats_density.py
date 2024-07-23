@@ -85,9 +85,9 @@ df_steps = pd.DataFrame(
     }
 )
 
-df.to_csv(filepath_summmary_stats_network_length_steps, index=False)
+df_steps.to_csv(filepath_summmary_stats_network_length_steps, index=False)
 
-display(df.style.pipe(format_style_no_index))
+display(df_steps.style.pipe(format_style_no_index))
 
 # %%
 
