@@ -142,6 +142,7 @@ for i, df in enumerate([df_single, df_steps]):
 # fig.write_image(filepath_summary_network_length, format="jpg", scale=6)
 
 # %%
+network_levels = labels_all
 
 # DENSITY SUMMARY
 for a, df in zip(aggregation_levels, density_data):
