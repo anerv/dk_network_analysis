@@ -139,7 +139,7 @@ filepaths_component_density_correlation = [
 filepaths_components_rug = [
     "../results/component_size_distribution/administrative/component_distribution_muni.jpeg",
     "../results/component_size_distribution/socio/component_distribution_socio.jpeg",
-    "../results/component_size_distribution/hexgrid/component_distribution_h3.jpeg",
+    "../results/component_size_distribution/hexgrid/component_distribution_hex.jpeg",
 ]
 
 filepaths_components_scatter = [
