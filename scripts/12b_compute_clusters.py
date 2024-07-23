@@ -75,9 +75,9 @@ k_labels = analysis_func.run_kmeans(k, socio_network_scaled)
 
 socio_cluster_gdf[kmeans_col_net_socio] = k_labels
 
-fp_map = fp_socio_network_cluster_base + f"_map_{kmeans_col_net_socio}.png"
-fp_size = fp_socio_network_cluster_base + f"_size_{kmeans_col_net_socio}.png"
-fp_kde = fp_socio_network_cluster_base + f"_kde_{kmeans_col_net_socio}.png"
+fp_map = fp_socio_network_cluster_base + f"map_{kmeans_col_net_socio}.png"
+fp_size = fp_socio_network_cluster_base + f"size_{kmeans_col_net_socio}.png"
+fp_kde = fp_socio_network_cluster_base + f"kde_{kmeans_col_net_socio}.png"
 
 colors = plot_func.get_hex_colors_from_colormap(pdict["cat"], k)
 cmap = plot_func.color_list_to_cmap(colors)
