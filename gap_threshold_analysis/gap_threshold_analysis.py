@@ -55,6 +55,8 @@ thresholds_km = [0.01, 0.02, 0.03, 0.04, 0.05]
 
 lts_values = [1, 2, 3, 4]
 
+#%%
+
 for i, t in enumerate(thresholds):
 
     add_cols = f"""ALTER TABLE
@@ -485,15 +487,52 @@ for t in thresholds:
 
 # %%
 
+lts_list = []
+threshold_values = []
+gap_count = []
+
 for t in thresholds:
+
+    threshold_values.extend([t]*(len(lts_values)))
+    lts_list.extend(lts_values)
+
     for lts in lts_values:
         gaps = gpd.read_postgis(
             f"SELECT * FROM gap_threshold_analysis.edges WHERE lts_{lts}_gap_{t} IS TRUE",
-            connection,
+            engine,
             geom_col="geometry",
         )
+
+        gap_count.append(len(gaps))
         print(f"Number of gaps for lts {lts} and threshold {t}: {len(gaps)}")
 
+
+assert len(lts_list) == len(gap_count) == len(threshold_values)
+
+gap_df = pd.DataFrame(data={"lts": lts_list, "threshold": threshold_values, "gap_count": gap_count})
+
+
+# Group the data by threshold and lts
+grouped_data = gap_df.groupby(['threshold', 'lts']).sum().reset_index()
+
+# Pivot the data to create a matrix for stacked bar chart
+pivot_data = grouped_data.pivot(index='threshold', columns='lts', values='gap_count')
+
+colors = list(lts_color_dict.values())
+
+# Plot the stacked bar chart
+pivot_data.plot(kind='bar', stacked=True, color=colors)
+
+# Set the labels and title
+plt.xlabel('Threshold (m)')
+plt.ylabel('Number of identified gaps')
+plt.title('Number of gaps by threshold and LTS')
+
+# Move the legend to the right of the plot
+plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+# Show the plot
+plt.show()
 # %%
 
 lts_list = []
@@ -521,8 +560,6 @@ assert len(lts_list) == len(component_counts) == len(threshold_values)
 
 threshold_df = pd.DataFrame(data={"lts": lts_list, "threshold": threshold_values, "component_count": component_counts})
 
-connection.close()
-# %%
 
 # Group the data by threshold and lts
 grouped_data = threshold_df.groupby(['threshold', 'lts']).sum().reset_index()
@@ -532,7 +569,8 @@ pivot_data = grouped_data.pivot(index='threshold', columns='lts', values='compon
 
 
 # Plot the stacked bar chart
-pivot_data.plot(kind='bar', stacked=True, color=['#117733', '#44AA99', '#DDCC77', '#CC6677', '#882255', '#151515'])
+colors = list(lts_color_dict.values())
+pivot_data.plot(kind='bar', stacked=True, color=colors)
 
 # Set the labels and title
 plt.xlabel('Threshold (m)')
@@ -544,4 +582,6 @@ plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
 # Show the plot
 plt.show()
+
+connection.close()
 # %%
