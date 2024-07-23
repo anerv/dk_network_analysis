@@ -41,9 +41,11 @@ for e, gdf in enumerate(gdfs):
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l for l in labels]
 
-    vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
+    # vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
     for i, p in enumerate(plot_columns):
+
+        vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
 
         plot_func.plot_classified_poly(
             gdf=gdf,
@@ -54,6 +56,7 @@ for e, gdf in enumerate(gdfs):
             plot_na=True,
             cmap=pdict["pos"],
             edgecolor="none",
+            linewidth=0,
             title=plot_titles[i],
             fp=filepaths[i],
             background_color=pdict["background_color"],
@@ -65,6 +68,8 @@ for e, gdf in enumerate(gdfs):
             plot_title=plot_titles[i],
             filepath=filepaths[i] + "_unclassified",
             cmap=pdict["pos"],
+            edgecolor="none",
+            linewidth=0,
             use_norm=True,
             norm_min=vmin,
             norm_max=vmax,
@@ -79,9 +84,11 @@ for e, gdf in enumerate(gdfs):
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l for l in labels]
 
-    vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
+    # vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
     for i, p in enumerate(plot_columns):
+
+        vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
 
         plot_func.plot_classified_poly(
             gdf=gdf,
@@ -92,6 +99,7 @@ for e, gdf in enumerate(gdfs):
             plot_na=True,
             cmap=pdict["pos"],
             edgecolor="none",
+            linewidth=0,
             title=plot_titles[i],
             fp=filepaths[i],
             background_color=pdict["background_color"],
@@ -103,6 +111,8 @@ for e, gdf in enumerate(gdfs):
             plot_title=plot_titles[i],
             filepath=filepaths[i] + "_unclassified",
             cmap=pdict["pos"],
+            edgecolor="none",
+            linewidth=0,
             use_norm=True,
             norm_min=vmin,
             norm_max=vmax,
@@ -117,9 +127,11 @@ for e, gdf in enumerate(gdfs):
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l for l in labels]
 
-    vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
+    # vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
     for i, p in enumerate(plot_columns):
+
+        vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
 
         plot_func.plot_classified_poly(
             gdf=gdf,
@@ -130,6 +142,7 @@ for e, gdf in enumerate(gdfs):
             plot_na=True,
             cmap=pdict["pos"],
             edgecolor="none",
+            linewidth=0,
             title=plot_titles[i],
             fp=filepaths[i],
             background_color=pdict["background_color"],
@@ -141,6 +154,8 @@ for e, gdf in enumerate(gdfs):
             plot_title=plot_titles[i],
             filepath=filepaths[i] + "_unclassified",
             cmap=pdict["pos"],
+            edgecolor="none",
+            linewidth=0,
             use_norm=True,
             norm_min=vmin,
             norm_max=vmax,
@@ -159,9 +174,11 @@ for e, gdf in enumerate(gdfs):
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l for l in labels]
 
-    vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
+    # vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
     for i, p in enumerate(plot_columns):
+
+        vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
 
         plot_func.plot_classified_poly(
             gdf=gdf,
@@ -172,6 +189,7 @@ for e, gdf in enumerate(gdfs):
             plot_na=True,
             cmap=pdict["pos"],
             edgecolor="none",
+            linewidth=0,
             title=plot_titles[i],
             fp=filepaths[i],
             background_color=pdict["background_color"],
@@ -183,6 +201,8 @@ for e, gdf in enumerate(gdfs):
             plot_title=plot_titles[i],
             filepath=filepaths[i] + "_unclassified",
             cmap=pdict["pos"],
+            edgecolor="none",
+            linewidth=0,
             use_norm=True,
             norm_min=vmin,
             norm_max=vmax,
