@@ -153,9 +153,11 @@ for e, gdf in enumerate(gdfs):
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l for l in labels]
 
-    vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
+    # vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
     for i, p in enumerate(plot_columns):
+
+        vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
         # plot_func.plot_classified_poly(
         #     gdf=gdf,
         #     plot_col=p,
@@ -208,9 +210,12 @@ for e, gdf in enumerate(gdfs):
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l + "_per_km" for l in labels]
 
-    vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
+    # vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
     for i, p in enumerate(plot_columns):
+
+        vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
+
         # plot_func.plot_classified_poly(
         #     gdf=gdf,
         #     plot_col=p,
@@ -252,9 +257,12 @@ for e, gdf in enumerate(gdfs):
     plot_titles = [all_plot_titles[e] + l for l in labels]
     filepaths = [all_filepaths[e] + l + "_per_km_sqkm" for l in labels]
 
-    vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
+    # vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
     for i, p in enumerate(plot_columns):
+
+        vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
+
         # plot_func.plot_classified_poly(
         #     gdf=gdf,
         #     plot_col=p,
@@ -301,9 +309,11 @@ plot_titles = [
 labels = labels_step
 filepaths = [filepath_largest_component_length + l for l in labels]
 
-vmin, vmax = plot_func.get_min_max_vals(hex_largest_components, plot_columns)
+# vmin, vmax = plot_func.get_min_max_vals(hex_largest_components, plot_columns)
 
 for i, p in enumerate(plot_columns):
+
+    vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
 
     k_check = plot_func.get_unique_bins(hex_largest_components, p, scheme, k)
 
@@ -315,7 +325,7 @@ for i, p in enumerate(plot_columns):
             k=k_check,
             # cx_tile=cx_tile_2,
             plot_na=True,
-            cmap=pdict["pos"],
+            cmap=pdict["seq"],
             edgecolor="none",
             title=plot_titles[i],
             fp=filepaths[i],
@@ -334,7 +344,7 @@ for i, p in enumerate(plot_columns):
                 k=k_check,
                 # cx_tile=cx_tile_2,
                 plot_na=True,
-                cmap=pdict["pos"],
+                cmap=pdict["seq"],
                 edgecolor="none",
                 title=plot_titles[i],
                 fp=filepaths[i],
@@ -351,7 +361,7 @@ for i, p in enumerate(plot_columns):
                 k=k_check,
                 # cx_tile=cx_tile_2,
                 plot_na=True,
-                cmap=pdict["pos"],
+                cmap=pdict["seq"],
                 edgecolor="none",
                 title=plot_titles[i],
                 fp=filepaths[i],
@@ -363,7 +373,7 @@ for i, p in enumerate(plot_columns):
         plot_col=p,
         plot_title=plot_titles[i],
         filepath=filepaths[i] + "_unclassified",
-        cmap=pdict["pos"],
+        cmap=pdict["seq"],
         use_norm=True,
         norm_min=vmin,
         norm_max=vmax,
@@ -384,18 +394,19 @@ plot_titles = [
 
 labels = labels_step
 filepaths = [filepath_largest_component_area + l for l in labels]
-
-vmin, vmax = plot_func.get_min_max_vals(hex_largest_components, plot_columns)
-
+gdf = hex_largest_components
+# vmin, vmax = plot_func.get_min_max_vals(hex_largest_components, plot_columns)
 
 for i, p in enumerate(plot_columns):
 
+    vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
+
     plot_func.plot_unclassified_poly(
-        poly_gdf=hex_largest_components,
+        poly_gdf=gdf,
         plot_col=p,
         plot_title=plot_titles[i],
         filepath=filepaths[i] + "_unclassified",
-        cmap=pdict["pos"],
+        cmap=pdict["seq"],
         use_norm=True,
         norm_min=vmin,
         norm_max=vmax,
@@ -648,11 +659,9 @@ for e, df in enumerate(dfs):
         plot_bgcolor="rgba(0, 0, 0, 0)",
         legend_title=None,
     )
-    fig.write_image(
-        rug_filepaths[e],
-        width=1000,
-        height=750,
-    )
+
+    fig.update_layout(legend=dict(yanchor="bottom", y=0.99, xanchor="right", x=0.01))
+
     fig.update_xaxes(
         {"gridcolor": "lightgrey", "linewidth": 0.5},
         title_font={"size": 12},
@@ -660,6 +669,12 @@ for e, df in enumerate(dfs):
     fig.update_yaxes(
         {"gridcolor": "lightgrey", "linewidth": 0.5},
         title_font={"size": 12},
+    )
+
+    fig.write_image(
+        rug_filepaths[e],
+        width=1000,
+        height=750,
     )
 
     fig.show()
