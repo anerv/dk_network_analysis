@@ -16,7 +16,6 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
-
 # %%
 #### SOCIO CLUSTERING ####
 
@@ -94,6 +93,8 @@ cluster_means_soc_net = analysis_func.examine_cluster_results(
 )
 
 plot_func.style_cluster_means(cluster_means_soc_net)
+
+cluster_means_soc_net.to_csv(fp_soc_net_cluster_means, index=True)
 
 # %%
 # Label clusters after bikeability rank
@@ -177,6 +178,8 @@ cluster_means_soc_soc = analysis_func.examine_cluster_results(
 )
 
 plot_func.style_cluster_means(cluster_means_soc_soc)
+
+cluster_means_soc_soc.to_csv(fp_soc_soc_cluster_means, index=True)
 # %%
 # Label clusters after type
 
@@ -286,6 +289,8 @@ cluster_means_hex = analysis_func.examine_cluster_results(
 )
 
 plot_func.style_cluster_means(cluster_means_hex)
+
+cluster_means_hex.to_csv(fp_hex_network_cluster_means, index=True)
 
 # %%
 # Label clusters after bikeability rank

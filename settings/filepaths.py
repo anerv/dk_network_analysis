@@ -259,5 +259,10 @@ fp_socio_network_cluster_base = "../results/clustering/socio_network_clusters_"
 
 fp_cluster_intersections = "../results/clustering/cluster_intersections.gpkg"
 
+fp_hex_network_cluster_means = "../results/clustering/hex_network_cluster_means.csv"
+
+fp_soc_soc_cluster_means = "../results/clustering/socio_socio_cluster_means.csv"
+
+fp_soc_net_cluster_means = "../results/clustering/socio_network_cluster_means.csv"
 
 fp_equity = "../results/equity/"
