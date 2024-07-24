@@ -159,7 +159,7 @@ def plot_labels(gdf, label_col, cmap=pdict["cat"]):
     None
     """
 
-    _, ax = plt.subplots(1, 1, figsize=pdict["fsmap"])
+    fig, ax = plt.subplots(1, 1, figsize=pdict["fsmap"])
     ax.set_axis_off()
     gdf.plot(
         column=label_col,
@@ -172,6 +172,8 @@ def plot_labels(gdf, label_col, cmap=pdict["cat"]):
     )
 
     plt.tight_layout()
+
+    return fig
 
 
 def plot_rank(gdf, label_col, cmap="viridis"):
