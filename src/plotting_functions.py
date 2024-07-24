@@ -24,6 +24,90 @@ exec(open("../settings/plotting.py").read())
 # Gini functions based on https://geographicdata.science/book/notebooks/09_spatial_inequality.html
 
 
+def plot_significant_lisa_clusters_all(
+    gdf,
+    plot_columns,
+    titles,
+    figsize=pdict["fsmap"],
+    colors=["#d7191c", "#fdae61", "#abd9e9", "#2c7bb6", "lightgrey"],
+    fp=None,
+    dpi=pdict["dpi"],
+):
+    custom_cmap = color_list_to_cmap(colors)
+
+    row_num = math.ceil(len(plot_columns) / 2)
+
+    fig, axes = plt.subplots(nrows=row_num, ncols=2, figsize=figsize)
+
+    axes = axes.flatten()
+
+    if len(plot_columns) % 2 != 0:
+        fig.delaxes(axes[-1])
+
+    for i, p in enumerate(plot_columns):
+
+        ax = axes[i]
+
+        gdf.plot(
+            column=p,
+            categorical=True,
+            legend=True,
+            linewidth=0.0,
+            ax=ax,
+            edgecolor="none",
+            legend_kwds={
+                "frameon": False,
+                # "bbox_to_anchor": (0.95, 0.95),
+                # "fontsize": pdict["legend_fs"],
+            },
+            cmap=custom_cmap,
+        )
+
+        ax.set_axis_off()
+        ax.set_title(titles[i], fontsize=pdict["title_fs"])
+
+    fig.tight_layout()
+
+    if fp:
+        fig.savefig(fp, bbox_inches="tight", dpi=dpi)
+
+
+# def plot_significant_lisa_clusters(
+#     gdf,
+#     plot_column,
+#     figsize=pdict["fsmap"],
+#     colors=["#d7191c", "#fdae61", "#abd9e9", "#2c7bb6", "lightgrey"],
+#     fp=None,
+#     dpi=pdict["dpi"],
+# ):
+
+#     fig, ax = plt.subplots(figsize=figsize)
+
+#     custom_cmap = color_list_to_cmap(colors)
+
+#     gdf.plot(
+#         column=plot_column,
+#         categorical=True,
+#         legend=True,
+#         linewidth=0.0,
+#         ax=ax,
+#         edgecolor="none",
+#         legend_kwds={
+#             "frameon": False,
+#             "bbox_to_anchor": (0.95, 0.95),
+#             # "fontsize": pdict["legend_fs"],
+#         },
+#         cmap=custom_cmap,
+#     )
+
+#     ax.set_axis_off()
+
+#     fig.tight_layout()
+
+#     if fp:
+#         fig.savefig(fp, bbox_inches="tight", dpi=dpi)
+
+
 def make_gini_plot(gdf, column, fp):
     """
     Generate a Gini plot to visualize the Lorenz curve for a given column in a GeoDataFrame.
