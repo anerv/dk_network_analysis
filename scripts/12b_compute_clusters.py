@@ -318,7 +318,10 @@ hex_gdf[[kmeans_col_net_hex] + ["geometry", id_columns[2], "cluster_label"]].to_
     fp_hex_network_clusters
 )
 
-plot_func.plot_labels(hex_gdf, "cluster_label", cmap=cmap)
+# TODO: update colors
+cluster_map = plot_func.plot_labels(hex_gdf, "cluster_label", cmap=cmap)
+
+cluster_map.savefig(fp_hex_network_cluster_base + "_cluster_label_map.png", dpi=300)
 
 # %%
 # ANALYSE CLUSTERS
