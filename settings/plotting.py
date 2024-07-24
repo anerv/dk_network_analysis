@@ -6,30 +6,6 @@ sns.set_theme(style="white")
 
 import matplotlib_inline.backend_inline
 
-# Plot parameters
-mpl.rcParams["savefig.bbox"] = "tight"
-mpl.rcParams["xtick.minor.visible"] = False
-mpl.rcParams["xtick.major.size"] = 0
-mpl.rcParams["xtick.labelbottom"] = True
-mpl.rcParams["ytick.major.size"] = 3
-mpl.rcParams["ytick.minor.visible"] = False
-mpl.rcParams["font.size"] = 10
-mpl.rcParams["figure.titlesize"] = 12
-mpl.rcParams["legend.title_fontsize"] = 12
-mpl.rcParams["legend.fontsize"] = 10
-# mpl.rcParams["figure.labelsize"] = 10 # use if figure.titlesize does not work?
-mpl.rcParams["axes.labelsize"] = 12
-mpl.rcParams["xtick.labelsize"] = 9
-mpl.rcParams["ytick.labelsize"] = 9
-mpl.rcParams["hatch.linewidth"] = 0.5
-mpl.style.use("tableau-colorblind10")
-
-import contextily as cx
-
-cx_tile_1 = cx.providers.CartoDB.Voyager
-cx_tile_2 = cx.providers.CartoDB.PositronNoLabels  # CartoDB.DarkMatterNoLabels
-
-
 pdict = {
     # colormaps for grid cell plots
     "pos": "pink",  # "cividis",  # "PuRd",  # "Blues",  # Positive values
@@ -54,7 +30,34 @@ pdict = {
     # "fsbar_sub": (4, 3),  # size per subplot
     "map_attr": "OSM Contributors, GeoDanmark",
     "background_color": "#e0ecf4",
+    "legend_fs": 10,
+    "title_fs": 12,
+    "legend_title_fs": 12,
+    "fontsize": 10,
 }
+
+# Plot parameters
+mpl.rcParams["savefig.bbox"] = "tight"
+mpl.rcParams["xtick.minor.visible"] = False
+mpl.rcParams["xtick.major.size"] = 0
+mpl.rcParams["xtick.labelbottom"] = True
+mpl.rcParams["ytick.major.size"] = 3
+mpl.rcParams["ytick.minor.visible"] = False
+mpl.rcParams["font.size"] = pdict["fontsize"]
+mpl.rcParams["figure.titlesize"] = pdict["title_fs"]
+mpl.rcParams["legend.title_fontsize"] = pdict["legend_title_fs"]
+mpl.rcParams["legend.fontsize"] = pdict["legend_fs"]
+# mpl.rcParams["figure.labelsize"] = 10 # use if figure.titlesize does not work?
+mpl.rcParams["axes.labelsize"] = 12
+mpl.rcParams["xtick.labelsize"] = 9
+mpl.rcParams["ytick.labelsize"] = 9
+mpl.rcParams["hatch.linewidth"] = 0.5
+mpl.style.use("tableau-colorblind10")
+
+import contextily as cx
+
+cx_tile_1 = cx.providers.CartoDB.Voyager
+cx_tile_2 = cx.providers.CartoDB.PositronNoLabels  # CartoDB.DarkMatterNoLabels
 
 
 # Classification scheme for visualizations of results
@@ -472,7 +475,7 @@ rename_socio_reach_dict = {
     "lts_1_4_pct_diff_5_10_median": "Diff. 5-10 km reach - LTS 1-4 (%) (median)",
     "car_pct_diff_1_5_median": "Diff. 1-5 km reach - car (%) (median)",
     "car_pct_diff_5_10_median": "Diff. 5-10 km reach - car (%) (median)",
-    "urban_pct": "Urban %",
+    "urban_pct": "Urban area (%)",
     "lts_1_largest_component_median": "Largest component LTS 1 (median)",
     "lts_1_2_largest_component_median": "Largest component - LTS 1-2 (median)",
     "lts_1_3_largest_component_median": "Largest component - LTS 1-3 (median)",
