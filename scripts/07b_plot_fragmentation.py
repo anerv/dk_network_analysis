@@ -658,9 +658,8 @@ for e, df in enumerate(dfs):
         yaxis_title="Count",
         plot_bgcolor="rgba(0, 0, 0, 0)",
         legend_title=None,
+        legend=dict(yanchor="bottom", xanchor="left", y=0.01, x=1.01),
     )
-
-    fig.update_layout(legend=dict(yanchor="bottom", y=0.99, xanchor="right", x=0.01))
 
     fig.update_xaxes(
         {"gridcolor": "lightgrey", "linewidth": 0.5},
