@@ -30,27 +30,28 @@ all_density_columns = [
 
 all_labels = [labels_all, labels_step_all, labels_pct, labels_pct_step]
 
-axis_labels = ["km/sqkm", "km/sqkm", "%", "%"]
+axis_labels = ["density (km/sqkm)", "density (km/sqkm)", "%", "%"]
 
 for i, columns in enumerate(all_density_columns[:-2]):
 
     for e, c in enumerate(columns):
 
-        plt.figure(figsize=(8, 6))
+        plt.figure(figsize=pdict["fsbar"])
         fig = sns.scatterplot(
             data=hex_gdf,
             x="pop_density",
             y=c,
             hue="urban_pct",
             alpha=0.5,
+            # palette="pink",
         )
-        fig.get_legend().set_title("Pct urban")
+        fig.get_legend().set_title("Urban area (%)", prop={"size": pdict["legend_fs"]})
         plt.xscale("log")
         # plt.yscale("log")
         plt.xlabel("People per sqkm")
         plt.ylabel(all_labels[i][e] + " " + axis_labels[i])
         # plt.title()
-        # plt.savefig(fp_hex_pop_corr + f"{c}.png")
+        plt.savefig(fp_hex_pop_corr + f"{c}.png")
         plt.show()
 
 # %%
