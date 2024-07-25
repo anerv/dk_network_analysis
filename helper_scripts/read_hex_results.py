@@ -12,7 +12,7 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 #### HEX #####
 hex_geoms = gpd.read_postgis(
-    "SELECT hex_id, urban_pct, pop_density, geometry FROM hex_grid;",
+    "SELECT hex_id, urban_pct, population_density, geometry FROM hex_grid;",
     engine,
     geom_col="geometry",
 )

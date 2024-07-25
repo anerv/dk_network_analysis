@@ -44,7 +44,7 @@ ALTER TABLE
 ADD
     COLUMN IF NOT EXISTS population DECIMAL,
 ADD
-    COLUMN IF NOT EXISTS pop_density DECIMAL;
+    COLUMN IF NOT EXISTS population_density DECIMAL;
 
 UPDATE
     hex_grid
@@ -58,6 +58,6 @@ WHERE
 UPDATE
     hex_grid
 SET
-    pop_density = population / ST_Area(geometry) * 1000000;
+    population_density = population / ST_Area(geometry) * 1000000;
 
 DROP TABLE IF EXISTS h3_population;

@@ -39,7 +39,7 @@ for i, columns in enumerate(all_density_columns[:-2]):
         plt.figure(figsize=pdict["fsbar"])
         fig = sns.scatterplot(
             data=hex_gdf,
-            x="pop_density",
+            x="population_density",
             y=c,
             hue="urban_pct",
             alpha=0.5,
