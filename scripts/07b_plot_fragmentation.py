@@ -300,9 +300,9 @@ plot_columns = largest_local_component_len_columns
 
 plot_titles = [
     "Largest component length for network LTS 1",
-    "Largest component length for network LTS 2",
-    "Largest component length for network LTS 3",
-    "Largest component length for network LTS 4",
+    "Largest component length for network LTS 1-2",
+    "Largest component length for network LTS 1-3",
+    "Largest component length for network LTS 1-4",
     "Largest component length for car network",
 ]
 
