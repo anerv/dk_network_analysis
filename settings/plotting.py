@@ -8,8 +8,8 @@ import matplotlib_inline.backend_inline
 
 pdict = {
     # colormaps for grid cell plots
-    "pos": "pink",  # "cividis",  # "PuRd",  # "Blues",  # Positive values
-    "neg": "pink",  # "Reds",  # Negative/Missing/Unmatched values
+    "pos": "RdPu",  # "pink",  # "cividis",  # "PuRd",  # "Blues",  # Positive values
+    "neg": "RdPu",  # "pink",  # "Reds",  # Negative/Missing/Unmatched values
     # "diff": "RdBu",  # for osm-ref difference plots (alternatives: "PiYG", "PRGn", "PuOr")
     "seq": "PuBuGn",  # "YlGnBu",  # for sequential plots where low should not be white (usually percentages)
     "cat": "Set2",  # "colorblind",  # for categorical plots
@@ -17,7 +17,7 @@ pdict = {
     "alpha": 0.8,
     "alpha_nodata": 0.7,  # for no data patches
     # Colors of no-data
-    "nodata": "lightgrey",
+    "nodata": "silver",
     # GLOBAL SETTINGS FOR PLOTS
     "dpi": 300,  # resolution
     "plot_res": "low",  # "high" for exporting to svg, "low" for png
