@@ -1080,9 +1080,9 @@ def combined_zipf_plot(
         legend_patches,
         [
             "LTS 1",
-            "LTS 2",
-            "LTS 3",
-            "LTS 4",
+            "LTS 1-2",
+            "LTS 1-3",
+            "LTS 1-4",
             "Total car",
             "Total network",
         ],
