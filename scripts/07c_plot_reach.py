@@ -300,7 +300,6 @@ for i, plot_columns in enumerate(
             background_color=pdict["background_color"],
         )
 # %%
-###########################################
 ####### Histograms ########################
 ###########################################
 
@@ -328,8 +327,7 @@ for i, p in enumerate(reach_columns):
     plt.show()
     plt.close()
 
-# %%
-###########################################
+
 ####### KDE PLOTS #########################
 ###########################################
 
@@ -337,7 +335,7 @@ for i, p in enumerate(reach_columns):
 reach_len = []
 lts_all = []
 
-lts = labels
+lts = labels_step
 
 for i, l in enumerate(lts):
 
@@ -375,7 +373,7 @@ plt.close()
 reach_len_diff = []
 lts_all = []
 
-lts = labels[:-1]
+lts = labels_step[:-1]
 
 for i, l in enumerate(lts):
 
@@ -604,6 +602,8 @@ for i, e in enumerate([np.median, np.mean, np.max, np.std]):
         estimator=e,
     )
 
+    plt.legend(title="Distance (km)", loc="upper left", fontsize=10, title_fontsize=12)
+
     # Set the labels and title
     plt.xlabel("Network type")
     plt.ylabel("Reach (km)")
@@ -681,7 +681,7 @@ for n in list(org_labels_rename.keys()):
 
 exec(open("../helper_scripts/read_reach_comparison.py").read())
 hex_reach_comparison.replace(np.nan, 0, inplace=True)
-#%%
+
 comparison_types = ['1_5', '1_10', '1_15']
 
 plot_cols = []
@@ -694,8 +694,9 @@ for n in network_levels_step:
 
 rename_dict = {}
 
-for n, l in zip(network_levels_step, labels):
+for n, l in zip(network_levels_step, labels_step):
     rename_dict[n] = l
+
 
 for c in comparison_types:
     # Get columns which ends with c
