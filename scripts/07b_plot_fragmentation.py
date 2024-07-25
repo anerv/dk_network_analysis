@@ -493,7 +493,7 @@ plt.close()
 exec(open("../helper_scripts/read_component_length_agg.py").read())
 
 dfs = [component_length_muni, component_length_socio, component_length_hex]
-
+# %%
 titles = [a.capitalize() for a in aggregation_levels]
 
 all_filepaths = filepaths_component_density_correlation
@@ -637,12 +637,14 @@ for e, df in enumerate(dfs):
     )
     fig.show()
 
+    new_df_subset = new_df.loc[new_df["component_count"] > 0]
+
     fig = px.histogram(
-        new_df,
+        new_df_subset,
         x="component_count",
         color="lts",
         labels=plotly_labels,
-        nbins=18,
+        nbins=40,
         opacity=[0.8],
         hover_data="id",
         # text_auto=True,
@@ -680,6 +682,55 @@ for e, df in enumerate(dfs):
 
 # %%
 
+binsizes = [10, 20, 30, 40, 50, 70, 100]
+
+new_df_subset = new_df.loc[new_df["component_count"] > 0]
+
+for b in binsizes:
+    fp = f"../results/component_size_distribution/hexgrid/component_distribution_hex_{b}.jpeg"
+    fig = px.histogram(
+        new_df_subset,
+        x="component_count",
+        color="lts",
+        labels=plotly_labels,
+        nbins=b,
+        opacity=[0.8],
+        hover_data="id",
+        # text_auto=True,
+        marginal="rug",
+        color_discrete_sequence=[v for v in lts_color_dict.values()],
+        title=rug_titles[e],
+    )
+    fig.update_layout(
+        font=dict(size=10, color="black"),
+        autosize=False,
+        width=800,
+        height=600,
+        yaxis_title="Count",
+        plot_bgcolor="rgba(0, 0, 0, 0)",
+        legend_title=None,
+        legend=dict(yanchor="bottom", xanchor="left", y=0.01, x=1.01),
+    )
+
+    fig.update_xaxes(
+        {"gridcolor": "lightgrey", "linewidth": 0.5},
+        title_font={"size": 12},
+    )
+    fig.update_yaxes(
+        {"gridcolor": "lightgrey", "linewidth": 0.5},
+        title_font={"size": 12},
+    )
+
+    fig.write_image(
+        fp,
+        width=1000,
+        height=750,
+    )
+
+    # fig.show()
+
+
+# %%
 # Corr between component count and density for each step of LTS
 
 # Only for hex grid
