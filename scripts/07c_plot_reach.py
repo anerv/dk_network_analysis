@@ -563,35 +563,36 @@ reach_df = reach_df[keep_columns]
 
 labels_stat = ["Median", "Mean", "Max", "Std"]
 #%%
+
+reach_melt = reach_df.melt()
+
+reach_melt["distance"] = reach_melt["variable"].str[-2:]
+
+reach_melt["distance"] = reach_melt["distance"].str.replace(r'_', '', regex=True)
+
+reach_melt["network"] = reach_melt["variable"].str.split("reach").str[0]
+
+reach_melt["network"] = reach_melt["network"].str[:-1]
+
+reach_melt["distance"] = reach_melt["distance"].astype(int)
+
+reach_melt = reach_melt.sort_values("distance")
+
+org_labels_rename = {
+    "lts_1": labels_step[0],
+    "lts_1_2": labels_step[1],
+    "lts_1_3": labels_step[2],
+    "lts_1_4": labels_step[3],
+    "car": labels_step[4],
+}
+reach_melt.replace(org_labels_rename, inplace=True)
+
+#%%
 for i, e in enumerate([np.median, np.mean, np.max, np.std]):
 
-    reach_melt = reach_df.melt()
-
-    #reach_melt["distance"] = reach_melt["variable"].str.split("_").str[2]
-
-    reach_melt["distance"] = reach_melt["variable"].str[-2:]
-
-    reach_melt["distance"] = reach_melt["distance"].str.replace(r'_', '', regex=True)
-
-    reach_melt["network"] = reach_melt["variable"].str.split("reach").str[0]
-
-    reach_melt["network"] = reach_melt["network"].str[:-1]
-
-    reach_melt["distance"] = reach_melt["distance"].astype(int)
-
-    reach_melt = reach_melt.sort_values("distance")
-
-    org_labels_rename = {
-        "lts_1": labels_step[0],
-        "lts_1_2": labels_step[1],
-        "lts_1_3": labels_step[2],
-        "lts_1_4": labels_step[3],
-        "car": labels_step[4],
-    }
-    reach_melt.replace(org_labels_rename, inplace=True)
-
-    plt.figure(figsize=(10, 6))
-    sns.barplot(
+    #plt.figure(figsize=(15,8))
+    plt.figure(figsize=pdict["fsbar"])
+    ax = sns.barplot(
         data=reach_melt,
         x="network",
         y="value",
@@ -600,15 +601,19 @@ for i, e in enumerate([np.median, np.mean, np.max, np.std]):
         order=network_levels,
         palette=sns.color_palette(pdict["cat"])[: len(all_reach_distances)],
         estimator=e,
+        #width=0.8
     )
 
-    plt.legend(title="Distance (km)", loc="upper left", fontsize=10, title_fontsize=12)
+    for e in ax.containers:
+        ax.bar_label(e,fmt="{:,.0f}", label_type='edge', fontsize=10)
+
+    sns.despine()
 
     # Set the labels and title
-    plt.xlabel("Network type")
+    plt.xlabel("")
     plt.ylabel("Reach (km)")
     plt.title(f"{labels_stat[i]} network reach per network type")
-
+    plt.legend(title="Distance (km)", loc="upper left", fontsize=10, title_fontsize=12, frameon=False)
     plt.savefig(fp_reach_compare_dist_bars + labels_stat[i].lower() + ".png")
     plt.show()
     plt.close()
@@ -626,8 +631,13 @@ sns.violinplot(
     order=network_levels,
     palette=sns.color_palette(pdict["cat"])[: len(all_reach_distances)],
     fill=False,
-    linewidth=2,
-)
+    saturation=0.8,
+    linewidth=1,
+    inner="box",
+    density_norm="count",
+    native_scale=True,
+
+    )
 
 sns.despine()
 
@@ -641,7 +651,7 @@ plt.savefig(fp_reach_compare_dist_violin)
 plt.show()
 plt.close()
 
-# %%
+ # %%
 # KDE plots - differences in reach per distance
 
 reach_df = pd.read_sql(f"SELECT * FROM reach.compare_reach;", engine)
