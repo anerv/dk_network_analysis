@@ -15,6 +15,7 @@ from IPython.display import display
 import plotly.express as px
 from matplotlib.colors import to_hex
 from matplotlib.colors import ListedColormap
+from matplotlib_scalebar.scalebar import ScaleBar
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -758,6 +759,17 @@ def plot_classified_poly(
         txt.set_ha("right")
         txt.set_va("bottom")
 
+    ax.add_artist(
+        ScaleBar(
+            dx=1,
+            units="m",
+            dimension="si-length",
+            length_fraction=0.15,
+            width_fraction=0.002,
+            location="lower left",
+            box_alpha=0,
+        )
+    )
     ax.set_title(title)
 
     if fp:
@@ -915,6 +927,17 @@ def plot_unclassified_poly(
         txt.set_ha("right")
         txt.set_va("bottom")
 
+    ax.add_artist(
+        ScaleBar(
+            dx=1,
+            units="m",
+            dimension="si-length",
+            length_fraction=0.15,
+            width_fraction=0.002,
+            location="lower left",
+            box_alpha=0,
+        )
+    )
     ax.set_title(plot_title)
 
     if plot_res == "high":
@@ -922,7 +945,8 @@ def plot_unclassified_poly(
     else:
         fig.savefig(filepath + ".png", dpi=dpi)
 
-    # fig.close()
+    plt.show()
+    plt.close()
 
 
 def set_renderer(f="svg"):
