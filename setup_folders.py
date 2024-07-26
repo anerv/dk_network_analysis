@@ -49,6 +49,15 @@ for f in results_subfolders:
 
         print("Successfully created folder: results/" + f)
 
+# make subfolders for clustering results
+
+clustering_subfolders = ["plots", "maps", "data"]
+
+for f in clustering_subfolders:
+    if not os.path.exists("results/clustering/" + f):
+        os.mkdir("results/clustering/" + f)
+
+        print("Successfully created folder: results/clustering/" + f)
 
 area_folders = ["administrative", "socio", "hexgrid"]
 
