@@ -35,6 +35,7 @@ pdict = {
     "title_fs": 12,
     "legend_title_fs": 12,
     "fontsize": 10,
+    "ax_fs": 12,
     "fsmap_subs": (10, 15),
 }
 
@@ -50,7 +51,7 @@ mpl.rcParams["figure.titlesize"] = pdict["title_fs"]
 mpl.rcParams["legend.title_fontsize"] = pdict["legend_title_fs"]
 mpl.rcParams["legend.fontsize"] = pdict["legend_fs"]
 # mpl.rcParams["figure.labelsize"] = 10 # use if figure.titlesize does not work?
-mpl.rcParams["axes.labelsize"] = 12
+mpl.rcParams["axes.labelsize"] = pdict["ax_fs"]
 mpl.rcParams["xtick.labelsize"] = 9
 mpl.rcParams["ytick.labelsize"] = 9
 mpl.rcParams["hatch.linewidth"] = 0.5
