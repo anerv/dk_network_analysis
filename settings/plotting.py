@@ -8,8 +8,8 @@ import matplotlib_inline.backend_inline
 
 pdict = {
     # colormaps for grid cell plots
-    "pos": "RdPu",  # "pink",  # "cividis",  # "PuRd",  # "Blues",  # Positive values
-    "neg": "RdPu",  # "pink",  # "Reds",  # Negative/Missing/Unmatched values
+    "pos": "PuRd",  # "pink",  # "cividis",  # "PuRd",  # "Blues",  # Positive values
+    "neg": "PuRd",  # "pink",  # "Reds",  # Negative/Missing/Unmatched values
     # "diff": "RdBu",  # for osm-ref difference plots (alternatives: "PiYG", "PRGn", "PuOr")
     "seq": "PuBuGn",  # "YlGnBu",  # for sequential plots where low should not be white (usually percentages)
     "cat": "Set2",  # "colorblind",  # for categorical plots
@@ -17,7 +17,7 @@ pdict = {
     "alpha": 0.8,
     "alpha_nodata": 0.7,  # for no data patches
     # Colors of no-data
-    "nodata": "silver",
+    "nodata": "tan",  # "silver",
     # GLOBAL SETTINGS FOR PLOTS
     "dpi": 300,  # resolution
     "plot_res": "low",  # "high" for exporting to svg, "low" for png
@@ -30,7 +30,7 @@ pdict = {
     # "fsbar_short": (6, 3),
     # "fsbar_sub": (4, 3),  # size per subplot
     "map_attr": "OSM Contributors, GeoDanmark",
-    "background_color": "#e0ecf4",
+    "background_color": None,  # "#e0ecf4",
     "legend_fs": 10,
     "title_fs": 12,
     "legend_title_fs": 12,
