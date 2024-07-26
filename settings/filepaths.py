@@ -243,26 +243,35 @@ fp_spatial_auto_socio = "../results/spatial_autocorrelation/socio_pop/"
 
 
 # clustering
-fp_cluster_map_overlay = "../results/clustering/cluster_map_overlay.png"
+fp_cluster_map_overlay = "../results/clustering/maps/cluster_map_overlay.png"
 
-fp_hex_network_clusters = "../results/clustering/hex_network_clusters.parquet"
+fp_hex_network_clusters = "../results/clustering/data/hex_network_clusters.parquet"
 
 fp_hex_network_cluster_base = "../results/clustering/hex_network_clusters_"
 
-fp_socio_socio_clusters = "../results/clustering/socio_socioeconomic_clusters.gpkg"
+fp_socio_socio_clusters = "../results/clustering/data/socio_socioeconomic_clusters.gpkg"
 
 fp_socio_socio_cluster_base = "../results/clustering/socio_socioeconomic_clusters_"
 
-fp_socio_network_clusters = "../results/clustering/socio_network_clusters.gpkg"
+fp_socio_network_clusters = "../results/clustering/data/socio_network_clusters.gpkg"
 
 fp_socio_network_cluster_base = "../results/clustering/socio_network_clusters_"
 
-fp_cluster_intersections = "../results/clustering/cluster_intersections.gpkg"
+fp_cluster_intersections = "../results/clustering/data/cluster_intersections.gpkg"
 
-fp_hex_network_cluster_means = "../results/clustering/hex_network_cluster_means.csv"
+fp_hex_network_cluster_means = (
+    "../results/clustering/data/hex_network_cluster_means.csv"
+)
 
-fp_soc_soc_cluster_means = "../results/clustering/socio_socio_cluster_means.csv"
+fp_soc_soc_cluster_means = "../results/clustering/data/socio_socio_cluster_means.csv"
 
-fp_soc_net_cluster_means = "../results/clustering/socio_network_cluster_means.csv"
+fp_soc_net_cluster_means = "../results/clustering/data/socio_network_cluster_means.csv"
+
+
+fp_cluster_means_bar = "../results/clustering/plots/cluster_means_bar.png"
+fp_cluster_violin = "../results/clustering/plots/cluster_violin.png"
+fp_cluster_plots_base = "../results/clustering/plots/"
+fp_cluster_maps_base = "../results/clustering/maps/"
+fp_cluster_data_base = "../results/clustering/data/"
 
 fp_equity = "../results/equity/"

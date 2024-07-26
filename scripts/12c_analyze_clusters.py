@@ -11,9 +11,7 @@ import contextily as cx
 from matplotlib.patches import Patch
 from IPython.display import display
 import plotly_express as px
-
-# with open("vacuum_analyze.py") as f:
-#     exec(f.read())
+import seaborn as sns
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -21,27 +19,112 @@ exec(open("../settings/df_styler.py").read())
 
 plot_func.set_renderer("png")
 
-# %%
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 # %%
+preprocess = False
+if preprocess:
 
-q = "sql/12b_analysis_clustering.sql"
+    q = "sql/12b_analysis_clustering.sql"
 
-result = dbf.run_query_pg(q, connection)
-if result == "error":
-    print("Please fix error before rerunning and reconnect to the database")
+    result = dbf.run_query_pg(q, connection)
+    if result == "error":
+        print("Please fix error before rerunning and reconnect to the database")
 
 # %%
+hex_cluster = gpd.read_postgis(
+    "SELECT * FROM clustering.hex_clusters", engine, geom_col="geometry"
+)
+
+count_clusters = hex_cluster.groupby("cluster_label").size().reset_index(name="count")
+
+cluster_pop = (
+    hex_cluster[["cluster_label", "population"]]
+    .groupby("cluster_label")
+    .sum("population")
+    .reset_index()
+)
+
+cluster_pop["population"] = cluster_pop["population"].astype(int)
+cluster_pop.rename(columns={"population": "total_population"}, inplace=True)
+
+cluster_ave = (
+    hex_cluster.groupby("cluster_label")
+    .mean(["population_density", "population", "urban_pct"])
+    .reset_index()
+)
+
+cluster_ave.rename(
+    columns={
+        "population_density": "average_population_density",
+        "population": "average_population_count",
+        "urban_pct": "average_urban_pct",
+    },
+    inplace=True,
+)
+
+cluster_stats = pd.merge(count_clusters, cluster_pop, on="cluster_label")
+cluster_stats = pd.merge(cluster_stats, cluster_ave, on="cluster_label")
+
+cluster_stats.set_index("cluster_label", inplace=True)
+display(cluster_stats.style.pipe(format_style_index))
+
+y_labels = [
+    "Count",
+    "Total population",
+    "Average population count",
+    "Average population density",
+    "Average urban area (%)",
+]
+plot_cols = [c for c in cluster_stats.columns if "kmeans" not in c]
+
+for i, c in enumerate(plot_cols):
+
+    plt.figure(figsize=pdict["fsbar"])
+    sns.barplot(
+        x=cluster_stats.index,
+        y=cluster_stats[c],
+        hue=cluster_stats.index,
+        palette=cluster_color_dict.values(),
+    )
+    plt.xticks(rotation=90)
+    plt.xlabel("")
+    plt.ylabel(y_labels[i])
+
+    plt.savefig(fp_cluster_plots + f"bar_{c}.png")
+
+    plt.show()
+
+cluster_stats.to_csv(fp_cluster_data + "cluster_stats.csv", index=True)
+# %%
+grouped_clusters = hex_cluster.groupby("cluster_label")
+# %%
+# Box plot of population by cluster label
+plt.figure(figsize=pdict["fsbar"])
+sns.violinplot(
+    x=hex_cluster["cluster_label"],
+    y=hex_cluster["population"],
+    hue=hex_cluster["cluster_label"],
+    palette=cluster_color_dict.values(),
+)
+plt.xlabel("")
+plt.xticks(rotation=90)
+plt.ylabel("Population")
+sns.despine()
+plt.show()
+
+# export
+# %%
+
+
 socio_hex_cluster = gpd.read_postgis(
     f"SELECT * FROM clustering.socio_cluster_results",
     engine,
     geom_col="geometry",
 )
 
-# %%
 
 # %%
 

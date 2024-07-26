@@ -74,9 +74,9 @@ k_labels = analysis_func.run_kmeans(k, socio_network_scaled)
 
 socio_cluster_gdf[kmeans_col_net_socio] = k_labels
 
-fp_map = fp_socio_network_cluster_base + f"map_{kmeans_col_net_socio}.png"
-fp_size = fp_socio_network_cluster_base + f"size_{kmeans_col_net_socio}.png"
-fp_kde = fp_socio_network_cluster_base + f"kde_{kmeans_col_net_socio}.png"
+fp_map = fp_cluster_maps_base + f"socio_net_map_{kmeans_col_net_socio}.png"
+fp_size = fp_cluster_plots_base + f"socio_net_size_{kmeans_col_net_socio}.png"
+fp_kde = fp_cluster_plots_base + f"socio_net_kde_{kmeans_col_net_socio}.png"
 
 colors = plot_func.get_hex_colors_from_colormap(pdict["cat"], k)
 cmap = plot_func.color_list_to_cmap(colors)
@@ -159,9 +159,9 @@ k_labels = analysis_func.run_kmeans(k, socio_soc_scaled)
 
 socio_soc_gdf[kmeans_col_soc_soc] = k_labels
 
-fp_map = fp_socio_socio_cluster_base + f"__map_{kmeans_col_soc_soc}.png"
-fp_size = fp_socio_socio_cluster_base + f"_size_{kmeans_col_soc_soc}.png"
-fp_kde = fp_socio_socio_cluster_base + f"_kde_{kmeans_col_soc_soc}.png"
+fp_map = fp_cluster_maps_base + f"socio_soc_map_{kmeans_col_soc_soc}.png"
+fp_size = fp_cluster_plots_base + f"socio_soc_size_{kmeans_col_soc_soc}.png"
+fp_kde = fp_cluster_plots_base + f"socio_soc_kde_{kmeans_col_soc_soc}.png"
 
 colors = plot_func.get_hex_colors_from_colormap(pdict["cat"], k)
 cmap = plot_func.color_list_to_cmap(colors)
@@ -270,9 +270,9 @@ k_labels = analysis_func.run_kmeans(k, hex_network_scaled)
 
 hex_gdf[kmeans_col_net_hex] = k_labels
 
-fp_map = fp_hex_network_cluster_base + f"_map_{kmeans_col_net_hex}.png"
-fp_size = fp_hex_network_cluster_base + f"_size_{kmeans_col_net_hex}.png"
-fp_kde = fp_hex_network_cluster_base + f"_kde_{kmeans_col_net_hex}.png"
+fp_map = fp_cluster_maps_base + f"hex_net_map_{kmeans_col_net_hex}.png"
+fp_size = fp_cluster_plots_base + f"hex_net_size_{kmeans_col_net_hex}.png"
+fp_kde = fp_cluster_plots_base + f"hex_net_kde_{kmeans_col_net_hex}.png"
 
 colors = plot_func.get_hex_colors_from_colormap(pdict["cat"], k)
 cmap = plot_func.color_list_to_cmap(colors)
@@ -321,7 +321,7 @@ hex_gdf[[kmeans_col_net_hex] + ["geometry", id_columns[2], "cluster_label"]].to_
 # TODO: update colors
 cluster_map = plot_func.plot_labels(hex_gdf, "cluster_label", cmap=cmap)
 
-cluster_map.savefig(fp_hex_network_cluster_base + "_cluster_label_map.png", dpi=300)
+cluster_map.savefig(fp_cluster_maps_base + "_hex_cluster_label.png", dpi=300)
 
 # %%
 # ANALYSE CLUSTERS
@@ -355,6 +355,8 @@ socio_soc_gdf[["id", "socio_label", kmeans_col_soc_soc, "geometry"]].to_postgis(
 hex_gdf[["hex_id", "cluster_label", kmeans_col_net_hex, "geometry"]].to_postgis(
     "hex_clusters", engine, schema="clustering", if_exists="replace", index=False
 )
+
+print("Clusters exported!")
 
 connection.close()
 # %%
