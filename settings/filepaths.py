@@ -267,9 +267,6 @@ fp_soc_soc_cluster_means = "../results/clustering/data/socio_socio_cluster_means
 
 fp_soc_net_cluster_means = "../results/clustering/data/socio_network_cluster_means.csv"
 
-
-fp_cluster_means_bar = "../results/clustering/plots/cluster_means_bar.png"
-fp_cluster_violin = "../results/clustering/plots/cluster_violin.png"
 fp_cluster_plots_base = "../results/clustering/plots/"
 fp_cluster_maps_base = "../results/clustering/maps/"
 fp_cluster_data_base = "../results/clustering/data/"
