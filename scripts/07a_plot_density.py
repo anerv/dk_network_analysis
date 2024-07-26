@@ -15,7 +15,28 @@ exec(open("../settings/filepaths.py").read())
 # %%
 exec(open("../helper_scripts/read_density.py").read())
 
+
 # %%
+p = "lts_1_dens"
+gdf = density_muni
+
+vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
+plot_unclassified_poly(
+    poly_gdf=gdf,
+    plot_col=p,
+    plot_title="test",
+    filepath="test",
+    cmap=pdict["pos"],
+    edgecolor="none",
+    linewidth=0,
+    use_norm=True,
+    norm_min=vmin,
+    norm_max=vmax,
+    # cx_tile=cx_tile_2,
+    background_color=pdict["background_color"],
+)
+# %%
+
 ####### MAPS ##############################
 ###########################################
 
@@ -31,7 +52,7 @@ all_plot_titles = [
 
 all_filepaths = all_filepaths_map_density
 
-for e, gdf in enumerate(gdfs):
+for e, gdf in enumerate(gdfs[:1]):
 
     ###### Plot individual LTS densities #####
 
@@ -47,20 +68,20 @@ for e, gdf in enumerate(gdfs):
 
         vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
 
-        plot_func.plot_classified_poly(
-            gdf=gdf,
-            plot_col=p,
-            scheme=scheme,
-            k=k,
-            # cx_tile=cx_tile_2,
-            plot_na=True,
-            cmap=pdict["pos"],
-            edgecolor="none",
-            linewidth=0,
-            title=plot_titles[i],
-            fp=filepaths[i],
-            background_color=pdict["background_color"],
-        )
+        # plot_func.plot_classified_poly(
+        #     gdf=gdf,
+        #     plot_col=p,
+        #     scheme=scheme,
+        #     k=k,
+        #     # cx_tile=cx_tile_2,
+        #     plot_na=True,
+        #     cmap=pdict["pos"],
+        #     edgecolor="none",
+        #     linewidth=0,
+        #     title=plot_titles[i],
+        #     fp=filepaths[i],
+        #     background_color=pdict["background_color"],
+        # )
 
         plot_func.plot_unclassified_poly(
             poly_gdf=gdf,
@@ -90,20 +111,20 @@ for e, gdf in enumerate(gdfs):
 
         vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
 
-        plot_func.plot_classified_poly(
-            gdf=gdf,
-            plot_col=p,
-            scheme=scheme,
-            k=k,
-            # cx_tile=cx_tile_2,
-            plot_na=True,
-            cmap=pdict["pos"],
-            edgecolor="none",
-            linewidth=0,
-            title=plot_titles[i],
-            fp=filepaths[i],
-            background_color=pdict["background_color"],
-        )
+        # plot_func.plot_classified_poly(
+        #     gdf=gdf,
+        #     plot_col=p,
+        #     scheme=scheme,
+        #     k=k,
+        #     # cx_tile=cx_tile_2,
+        #     plot_na=True,
+        #     cmap=pdict["pos"],
+        #     edgecolor="none",
+        #     linewidth=0,
+        #     title=plot_titles[i],
+        #     fp=filepaths[i],
+        #     background_color=pdict["background_color"],
+        # )
 
         plot_func.plot_unclassified_poly(
             poly_gdf=gdf,
@@ -133,20 +154,20 @@ for e, gdf in enumerate(gdfs):
 
         vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
 
-        plot_func.plot_classified_poly(
-            gdf=gdf,
-            plot_col=p,
-            scheme=scheme,
-            k=k,
-            # cx_tile=cx_tile_2,
-            plot_na=True,
-            cmap=pdict["pos"],
-            edgecolor="none",
-            linewidth=0,
-            title=plot_titles[i],
-            fp=filepaths[i],
-            background_color=pdict["background_color"],
-        )
+        # plot_func.plot_classified_poly(
+        #     gdf=gdf,
+        #     plot_col=p,
+        #     scheme=scheme,
+        #     k=k,
+        #     # cx_tile=cx_tile_2,
+        #     plot_na=True,
+        #     cmap=pdict["pos"],
+        #     edgecolor="none",
+        #     linewidth=0,
+        #     title=plot_titles[i],
+        #     fp=filepaths[i],
+        #     background_color=pdict["background_color"],
+        # )
 
         plot_func.plot_unclassified_poly(
             poly_gdf=gdf,
@@ -180,20 +201,20 @@ for e, gdf in enumerate(gdfs):
 
         vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
 
-        plot_func.plot_classified_poly(
-            gdf=gdf,
-            plot_col=p,
-            scheme=scheme,
-            k=k,
-            # cx_tile=cx_tile_2,
-            plot_na=True,
-            cmap=pdict["pos"],
-            edgecolor="none",
-            linewidth=0,
-            title=plot_titles[i],
-            fp=filepaths[i],
-            background_color=pdict["background_color"],
-        )
+        # plot_func.plot_classified_poly(
+        #     gdf=gdf,
+        #     plot_col=p,
+        #     scheme=scheme,
+        #     k=k,
+        #     # cx_tile=cx_tile_2,
+        #     plot_na=True,
+        #     cmap=pdict["pos"],
+        #     edgecolor="none",
+        #     linewidth=0,
+        #     title=plot_titles[i],
+        #     fp=filepaths[i],
+        #     background_color=pdict["background_color"],
+        # )
 
         plot_func.plot_unclassified_poly(
             poly_gdf=gdf,
