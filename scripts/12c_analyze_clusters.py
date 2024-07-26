@@ -16,6 +16,7 @@ import seaborn as sns
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 exec(open("../settings/df_styler.py").read())
+exec(open("../settings/filepaths.py").read())
 
 plot_func.set_renderer("png")
 
@@ -93,29 +94,49 @@ for i, c in enumerate(plot_cols):
     plt.xlabel("")
     plt.ylabel(y_labels[i])
 
-    plt.savefig(fp_cluster_plots + f"bar_{c}.png")
+    plt.savefig(fp_cluster_plots_base + f"hex_cluster_bar_{c}.png")
 
     plt.show()
 
-cluster_stats.to_csv(fp_cluster_data + "cluster_stats.csv", index=True)
+cluster_stats.to_csv(fp_cluster_data_base + "hex_cluster_stats.csv", index=True)
 # %%
 grouped_clusters = hex_cluster.groupby("cluster_label")
-# %%
-# Box plot of population by cluster label
-plt.figure(figsize=pdict["fsbar"])
-sns.violinplot(
-    x=hex_cluster["cluster_label"],
-    y=hex_cluster["population"],
-    hue=hex_cluster["cluster_label"],
-    palette=cluster_color_dict.values(),
-)
-plt.xlabel("")
-plt.xticks(rotation=90)
-plt.ylabel("Population")
-sns.despine()
-plt.show()
 
-# export
+plot_labels = ["Population density", "Urban area (%)"]
+
+fig, axes = plt.subplots(1, 2, figsize=pdict["fsbar_sub"])
+
+axes = axes.flatten()
+
+for i, c in enumerate(["population_density", "urban_pct"]):
+    # Box plot of population by cluster label
+    plt.figure(figsize=pdict["fsbar"])
+    sns.violinplot(
+        x=hex_cluster["cluster_label"],
+        y=hex_cluster[c],
+        hue=hex_cluster["cluster_label"],
+        palette=cluster_color_dict.values(),
+        fill=False,
+        cut=0,
+        ax=axes[i],
+    )
+    axes[i].set_xlabel("")
+    axes[i].set_ylabel(plot_labels[i])
+    axes[i].xaxis.set_tick_params(rotation=90)
+
+    axes[i].spines["right"].set_visible(False)
+    axes[i].spines["top"].set_visible(False)
+
+# set_xticklabels(axes[i].get_xticklabels(), rotation=90)
+# sns.despine()
+# plt.xlabel("")
+# plt.xticks(rotation=90)
+# plt.ylabel(plot_labels[i])
+# sns.despine()
+# plt.savefig(fp_cluster_plots_base + f"cluster_violin_{c}.png")
+
+fig.savefig(f"{fp_cluster_plots_base}hex_cluster_pop_urban_violin.png")
+
 # %%
 
 
