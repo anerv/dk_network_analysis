@@ -25,6 +25,7 @@ pdict = {
     "fsmap": (13, 7.3125),
     # size for bar plots
     "fsbar": (8, 8),
+    "fsbar_sub": (16, 8),
     # "fsbar_small": (4, 3.5),
     # "fsbar_short": (6, 3),
     # "fsbar_sub": (4, 3),  # size per subplot
