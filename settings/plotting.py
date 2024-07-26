@@ -116,6 +116,14 @@ lts_color_dict = {
     "total": "#151515",
 }
 
+cluster_color_dict = {
+    "0": "#F97300",
+    "1": "#0B7512",
+    "2": "#7ABA78",
+    "3": "#FFC100",
+    "4": "#F97300",
+}
+
 
 component_columns = [
     "component_all",
