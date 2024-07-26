@@ -26,7 +26,7 @@ network = gpd.read_postgis(
     geom_col="geometry",
 )
 # %%
-plot_res = "high"
+plot_res = "low"
 
 filepath = "../illustrations/overview_map"
 
