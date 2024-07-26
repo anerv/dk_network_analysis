@@ -28,7 +28,7 @@ network = gpd.read_postgis(
 # %%
 plot_res = "high"
 
-filepath = "../results/overview_map"
+filepath = "../illustrations/overview_map"
 
 fig, ax = plt.subplots(figsize=pdict["fsmap"])
 

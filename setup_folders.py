@@ -109,3 +109,10 @@ if not os.path.exists(fp):
     os.mkdir(fp)
 
     print("Successfully created folder: " + fp)
+
+
+# make illustration folder
+if not os.path.exists("illustrations"):
+    os.mkdir("illustrations")
+
+    print("Successfully created folder: illustrations")
