@@ -965,6 +965,7 @@ def plot_unclassified_poly(
             box_alpha=0,
         )
     )
+    
     ax.set_title(plot_title)
 
     if plot_res == "high":
