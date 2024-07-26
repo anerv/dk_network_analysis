@@ -16,6 +16,7 @@ import plotly.express as px
 from matplotlib.colors import to_hex
 from matplotlib.colors import ListedColormap
 from matplotlib_scalebar.scalebar import ScaleBar
+import matplotlib.patches as patches
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -906,6 +907,32 @@ def plot_unclassified_poly(
                 alpha=alpha,
                 cmap=cmap,
             )
+
+    if plot_na and len(poly_gdf.loc[poly_gdf[plot_col].isna()]) > 0:
+        # Creates a rectangular patch for each contaminant, using the colors above
+        patch_list = []
+        label = "No data"
+        color = pdict["nodata"]
+        patch_list.append(
+            patches.Patch(
+                facecolor=color,
+                label=label,
+                alpha=pdict["alpha_nodata"],
+                linewidth=0,
+                edgecolor="none",
+            )
+        )
+
+        # Creates a legend with the list of patches above.
+        ax.legend(
+            handles=patch_list,
+            fontsize=pdict["legend_fs"],
+            loc="lower left",
+            bbox_to_anchor=(0.1, -0.015),
+            # title="Litologia",
+            title_fontsize=pdict["legend_title_fs"],
+            frameon=False,
+        )
 
     if cx_tile is not None:
         cx.add_basemap(ax=ax, crs=poly_gdf.crs, source=cx_tile)
