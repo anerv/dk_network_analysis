@@ -8,6 +8,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 import plotly.express as px
 
+
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 exec(open("../settings/filepaths.py").read())
@@ -15,32 +16,12 @@ exec(open("../settings/filepaths.py").read())
 # %%
 exec(open("../helper_scripts/read_density.py").read())
 
-
-# %%
-p = "lts_1_dens"
-gdf = density_muni
-
-vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
-plot_unclassified_poly(
-    poly_gdf=gdf,
-    plot_col=p,
-    plot_title="test",
-    filepath="test",
-    cmap=pdict["pos"],
-    edgecolor="none",
-    linewidth=0,
-    use_norm=True,
-    norm_min=vmin,
-    norm_max=vmax,
-    # cx_tile=cx_tile_2,
-    background_color=pdict["background_color"],
-)
 # %%
 
 ####### MAPS ##############################
 ###########################################
 
-density_hex.replace(np.nan, 0, inplace=True)
+# density_hex.replace(np.nan, 0, inplace=True)
 
 gdfs = [density_muni, density_socio, density_hex]
 
@@ -52,7 +33,7 @@ all_plot_titles = [
 
 all_filepaths = all_filepaths_map_density
 
-for e, gdf in enumerate(gdfs[:1]):
+for e, gdf in enumerate(gdfs):
 
     ###### Plot individual LTS densities #####
 

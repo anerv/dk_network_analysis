@@ -40,24 +40,26 @@ plot_titles = [
 plot_columns = reach_columns
 filepaths = filepaths_reach
 
-vmin, vmax = plot_func.get_min_max_vals(hex_reach, plot_columns)
+# vmin, vmax = plot_func.get_min_max_vals(hex_reach, plot_columns)
 
 for i, p in enumerate(plot_columns):
 
-    plot_func.plot_classified_poly(
-        gdf=hex_reach,
-        plot_col=p,
-        scheme=scheme,
-        k=k,
-        #cx_tile=cx_tile_2,
-        plot_na=True,
-        cmap=pdict["pos"],
-        edgecolor="none",
-        linewidth=0.0,
-        title=plot_titles[i],
-        fp=filepaths[i],
-        background_color=pdict["background_color"],
-    )
+    vmin, vmax = plot_func.get_min_max_vals(hex_reach, [p])
+
+    # plot_func.plot_classified_poly(
+    #     gdf=hex_reach,
+    #     plot_col=p,
+    #     scheme=scheme,
+    #     k=k,
+    #     #cx_tile=cx_tile_2,
+    #     plot_na=True,
+    #     cmap=pdict["pos"],
+    #     edgecolor="none",
+    #     linewidth=0.0,
+    #     title=plot_titles[i],
+    #     fp=filepaths[i],
+    #     background_color=pdict["background_color"],
+    # )
 
     plot_func.plot_unclassified_poly(
         poly_gdf=hex_reach,
