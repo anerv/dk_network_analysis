@@ -347,7 +347,7 @@ def plot_cluster_variable_distributions(
         col_wrap=3,
         palette=palette,
     )
-    _ = (
+    fig = (
         facets.map(
             sns.kdeplot,
             "Values",
@@ -355,9 +355,11 @@ def plot_cluster_variable_distributions(
             warn_singular=False,
             multiple="stack",
         )
-        .add_legend()
-        .savefig(fp)
+        
+        
     )
+    fig.add_legend(title="Cluster")
+    fig.savefig(fp)
 
 
 def map_all_cluster_results(
