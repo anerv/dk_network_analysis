@@ -66,7 +66,7 @@ for i, p in enumerate(plot_columns):
         plot_col=p,
         plot_title=plot_titles[i],
         filepath=filepaths[i] + "_unclassified",
-        cmap=pdict["pos"],
+        cmap=pdict["pos_reach"],
         edgecolor="none",
         linewidth=0.0,
         use_norm=True,
@@ -601,7 +601,7 @@ for i, e in enumerate([np.median, np.mean, np.max, np.std]):
         hue="distance",
         errorbar=None,
         order=network_levels,
-        palette=sns.color_palette(pdict["cat"])[: len(all_reach_distances)],
+        palette=list(distance_color_dict.values()),# sns.color_palette(pdict["cat"])[: len(all_reach_distances)],
         estimator=e,
         #width=0.8
     )
@@ -631,7 +631,7 @@ sns.violinplot(
     y="value",
     hue="distance",
     order=network_levels,
-    palette=sns.color_palette(pdict["cat"])[: len(all_reach_distances)],
+    palette=list(distance_color_dict.values()),#sns.color_palette(pdict["cat"])[: len(all_reach_distances)],
     fill=False,
     saturation=0.8,
     linewidth=1,
