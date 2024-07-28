@@ -274,7 +274,8 @@ fp_map = fp_cluster_maps_base + f"hex_net_map_{kmeans_col_net_hex}.png"
 fp_size = fp_cluster_plots_base + f"hex_net_size_{kmeans_col_net_hex}.png"
 fp_kde = fp_cluster_plots_base + f"hex_net_kde_{kmeans_col_net_hex}.png"
 
-colors = plot_func.get_hex_colors_from_colormap(pdict["cat"], k)
+# colors = plot_func.get_hex_colors_from_colormap(pdict["cat"], k)
+colors = list(cluster_color_dict_labels.values())
 cmap = plot_func.color_list_to_cmap(colors)
 
 cluster_means_hex = analysis_func.examine_cluster_results(
@@ -304,6 +305,7 @@ label_dict = {
     3: "High stress - medium density - low reach - regional connectivity",
     4: "Lowest Stress - highest density - highest reach",
 }
+
 assert len(label_dict) == k
 
 for key, val in label_dict.items():
@@ -313,13 +315,15 @@ for key, val in label_dict.items():
     ] = val
 
 
-# hex_gdf.network_rank = hex_gdf.network_rank.astype(int)
 hex_gdf[[kmeans_col_net_hex] + ["geometry", id_columns[2], "cluster_label"]].to_parquet(
     fp_hex_network_clusters
 )
 
-# TODO: update colors
-cluster_map = plot_func.plot_labels(hex_gdf, "cluster_label", cmap=cmap)
+color_keys = list(cluster_color_dict_labels.keys())
+color_keys.sort()
+cat_colors = [cluster_color_dict_labels[k] for k in color_keys]
+cat_cmap = plot_func.color_list_to_cmap(cat_colors)
+cluster_map = plot_func.plot_labels(hex_gdf, "cluster_label", cmap=cat_cmap)
 
 cluster_map.savefig(fp_cluster_maps_base + "_hex_cluster_label.png", dpi=300)
 
