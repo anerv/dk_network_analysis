@@ -325,7 +325,7 @@ cat_colors = [cluster_color_dict_labels[k] for k in color_keys]
 cat_cmap = plot_func.color_list_to_cmap(cat_colors)
 cluster_map = plot_func.plot_labels(hex_gdf, "cluster_label", cmap=cat_cmap)
 
-cluster_map.savefig(fp_cluster_maps_base + "_hex_cluster_label.png", dpi=300)
+cluster_map.savefig(fp_cluster_maps_base + "hex_cluster_label.png", dpi=pdict["dpi"])
 
 # %%
 # ANALYSE CLUSTERS
