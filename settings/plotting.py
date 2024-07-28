@@ -8,6 +8,8 @@ import matplotlib_inline.backend_inline
 
 pdict = {
     # colormaps for grid cell plots
+    "pos_low": "viridis",  # "PuBu",
+    "pos_reach": "YlGnBu",  # "PuBu", "PuBuGn",
     "pos": "PuRd",  # "pink",  # "cividis",  # "PuRd",  # "Blues",  # Positive values
     "neg": "PuRd",  # "pink",  # "Reds",  # Negative/Missing/Unmatched values
     # "diff": "RdBu",  # for osm-ref difference plots (alternatives: "PiYG", "PRGn", "PuOr")
@@ -118,12 +120,33 @@ lts_color_dict = {
     "total": "#151515",
 }
 
-cluster_color_dict = {
-    "0": "#F97300",
-    "1": "#0B7512",
-    "2": "#7ABA78",
-    "3": "#FFC100",
-    "4": "#F97300",
+# cluster_color_dict = {
+#     "0": lts_color_dict["car"],  # "#F97300",
+#     "1": "#0B7512",
+#     "2": "#7ABA78",
+#     "3": "#FFC100",
+#     "4": "#F97300",
+# }
+
+cluster_color_dict_labels = {
+    "Highest stress - lowest density - lowest reach": lts_color_dict["car"],
+    "Low stress - medium density - medium reach": lts_color_dict["2"],
+    "High stress - medium density - low reach - local connectivity": lts_color_dict[
+        "4"
+    ],
+    "High stress - medium density - low reach - regional connectivity": lts_color_dict[
+        "3"
+    ],
+    "Lowest Stress - highest density - highest reach": lts_color_dict["1"],
+}
+
+
+distance_color_dict = {
+    "1": "#DDCC77",  # "#94CBEC",
+    "2": "#999933",  # 44AA99",
+    "5": "#88CCEE",  # "#DDCC77",
+    "10": "#44AA99",  # "#CC6677",
+    "15": "#117733",  # "#882255",
 }
 
 
