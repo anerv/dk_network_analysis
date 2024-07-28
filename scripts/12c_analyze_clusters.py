@@ -80,6 +80,27 @@ y_labels = [
     "Average urban area (%)",
 ]
 plot_cols = [c for c in cluster_stats.columns if "kmeans" not in c]
+# %%
+cluster_stats["sort_column"] = None
+cluster_stats["cluster_label"] = cluster_stats.index
+
+label_dict = {
+    "Highest stress - lowest density - lowest reach": 1,
+    "Low stress - medium density - medium reach": 4,
+    "High stress - medium density - low reach - local connectivity": 2,
+    "High stress - medium density - low reach - regional connectivity": 3,
+    "Lowest Stress - highest density - highest reach": 5,
+}
+
+for key, val in label_dict.items():
+    cluster_stats.loc[
+        cluster_stats.cluster_label == key,
+        "sort_column",
+    ] = val
+
+# %%
+cluster_stats.sort_values("sort_column", inplace=True)
+colors = [cluster_color_dict_labels[k] for k in cluster_stats.index]
 
 for i, c in enumerate(plot_cols):
 
@@ -88,7 +109,7 @@ for i, c in enumerate(plot_cols):
         x=cluster_stats.index,
         y=cluster_stats[c],
         hue=cluster_stats.index,
-        palette=cluster_color_dict.values(),
+        palette=colors,  # cluster_color_dict.values(),
     )
     plt.xticks(rotation=90)
     plt.xlabel("")
@@ -100,7 +121,7 @@ for i, c in enumerate(plot_cols):
 
 cluster_stats.to_csv(fp_cluster_data_base + "hex_cluster_stats.csv", index=True)
 # %%
-grouped_clusters = hex_cluster.groupby("cluster_label")
+# grouped_clusters = hex_cluster.groupby("cluster_label")
 
 plot_labels = ["Population density", "Urban area (%)"]
 
