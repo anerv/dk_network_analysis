@@ -1,13 +1,6 @@
-from src import db_functions as dbf
-
-
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 exec(open("../settings/filepaths.py").read())
-
-engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
-
-connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 # generate socio reach comparison columns
 exec(open("../helper_scripts/read_reach_comparison.py").read())

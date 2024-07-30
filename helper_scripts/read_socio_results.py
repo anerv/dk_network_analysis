@@ -1,9 +1,6 @@
 # %%
 from src import db_functions as dbf
 import geopandas as gpd
-import pandas as pd
-import numpy as np
-import pandas as pd
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())

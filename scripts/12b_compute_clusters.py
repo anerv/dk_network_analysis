@@ -21,38 +21,9 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 exec(open("../helper_scripts/prepare_socio_cluster_data.py").read())
 
-exec(open("../helper_scripts/generate_socio_reach_columns.py").read())
 # %%
 # SOCIO CLUSTERING: Network variables
 
-# Define cluster variables
-socio_network_cluster_variables_org = (
-    density_columns
-    + length_relative_columns
-    + component_per_km_columns
-    + socio_reach_median_columns
-    + socio_reach_compare_columns
-    # + ["urban_pct", "population_density"]
-)
-
-rename_socio_dict = (
-    rename_index_dict_density
-    | rename_index_dict_fragmentation
-    | rename_index_dict_largest_comp
-    | rename_index_dict_reach
-    | rename_socio_reach_dict
-)
-rename_socio_dict["urban_pct"] = "Urban %"
-
-socio_cluster_gdf.rename(rename_socio_dict, inplace=True, axis=1)
-
-socio_network_cluster_variables = []
-for key, value in rename_socio_dict.items():
-    if key in socio_network_cluster_variables_org:
-        socio_network_cluster_variables.append(value)
-
-assert len(socio_network_cluster_variables) == len(socio_network_cluster_variables_org)
-# %%
 # Use robust_scale to norm cluster variables
 socio_network_scaled = robust_scale(socio_cluster_gdf[socio_network_cluster_variables])
 
@@ -122,21 +93,6 @@ plot_func.plot_rank(socio_cluster_gdf, "network_rank")
 
 # %%
 # SOCIO CLUSTERING: Socio-economic variables
-
-socio_soc_gdf = socio_cluster_gdf[socio_cluster_gdf["population_density"] > 0].copy()
-
-socio_soc_gdf["Income -150k (share)"] = (
-    socio_soc_gdf["Income 100-150k (share)"]
-    + socio_soc_gdf["Income under 100k (share)"]
-)
-
-# Define cluster variables
-socio_soc_cluster_variables = [c for c in socio_corr_variables if "w car" not in c]
-socio_soc_cluster_variables = ["Income -150k (share)"] + socio_soc_cluster_variables
-socio_soc_cluster_variables.remove("Income 100-150k (share)")
-socio_soc_cluster_variables.remove("Income under 100k (share)")
-socio_soc_cluster_variables.remove("urban_pct")
-socio_soc_cluster_variables.remove("population_density")
 
 # Use robust_scale to norm cluster variables
 socio_soc_scaled = robust_scale(socio_soc_gdf[socio_soc_cluster_variables])
@@ -208,47 +164,50 @@ socio_soc_gdf[
 # %%
 # HEX CLUSTERING: Network variables
 
-exec(open("../helper_scripts/read_hex_results.py").read())
+exec(open("../helper_scripts/prepare_hex_cluster_data.py").read())
 
-exec(open("../helper_scripts/read_reach_comparison.py").read())
-reach_compare_columns = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
+# exec(open("../helper_scripts/read_hex_results.py").read())
 
-reach_compare_columns = [
-    c for c in reach_compare_columns if any(r in c for r in reach_comparisons)
-]
+# exec(open("../helper_scripts/read_reach_comparison.py").read())
+# reach_compare_columns = [c for c in hex_reach_comparison.columns if "pct_diff" in c]
 
-hex_gdf.replace(np.nan, 0, inplace=True)
-# %%
+# reach_compare_columns = [
+#     c for c in reach_compare_columns if any(r in c for r in reach_comparisons)
+# ]
 
-selected_reach_comp_columns = [r for r in reach_compare_columns if "5_10" not in r]
+# hex_gdf.replace(np.nan, 0, inplace=True)
 
-# Define cluster variables
-hex_network_cluster_variables_org = (
-    density_columns
-    # + length_relative_columns
-    + ["total_car_pct"]
-    # + component_per_km_columns
-    # + largest_local_component_len_columns
-    + reach_columns
-    + reach_compare_columns
-)
+# selected_reach_comp_columns = [r for r in reach_compare_columns if "5_10" not in r]
 
-rename_hex_dict = (
-    rename_index_dict_density
-    | rename_index_dict_fragmentation
-    | rename_index_dict_largest_comp
-    | rename_index_dict_reach
-    | rename_hex_reach_dict
-)
-rename_hex_dict["urban_pct"] = "Urban %"
-hex_gdf.rename(rename_hex_dict, inplace=True, axis=1)
+# # Define cluster variables
+# hex_network_cluster_variables_org = (
+#     density_columns
+#     # + density_steps_columns[1:4]
+#     + length_relative_columns
+#     # + component_count_columns
+#     # component_per_km_columns
+#     + largest_local_component_len_columns
+#     + reach_columns
+#     + reach_compare_columns
+#     # + ["urban_pct"]
+# )
 
-hex_network_cluster_variables = []
-for key, value in rename_hex_dict.items():
-    if key in hex_network_cluster_variables_org:
-        hex_network_cluster_variables.append(value)
+# rename_hex_dict = (
+#     rename_index_dict_density
+#     | rename_index_dict_fragmentation
+#     | rename_index_dict_largest_comp
+#     | rename_index_dict_reach
+#     | rename_hex_reach_dict
+# )
+# rename_hex_dict["urban_pct"] = "Urban %"
+# hex_gdf.rename(rename_hex_dict, inplace=True, axis=1)
 
-assert len(hex_network_cluster_variables) == len(hex_network_cluster_variables_org)
+# hex_network_cluster_variables = []
+# for key, value in rename_hex_dict.items():
+#     if key in hex_network_cluster_variables_org:
+#         hex_network_cluster_variables.append(value)
+
+# assert len(hex_network_cluster_variables) == len(hex_network_cluster_variables_org)
 # %%
 # Use robust_scale to norm cluster variables
 hex_network_scaled = robust_scale(hex_gdf[hex_network_cluster_variables])

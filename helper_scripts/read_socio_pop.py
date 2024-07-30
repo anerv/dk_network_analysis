@@ -1,3 +1,5 @@
+# %%
+
 from src import db_functions as dbf
 import geopandas as gpd
 
@@ -14,3 +16,4 @@ socio.rename(columns=population_rename_dict, inplace=True)
 keep_columns = socio_corr_variables + ["id", "area_name", "geometry"]
 
 socio = socio[keep_columns]
+# %%
