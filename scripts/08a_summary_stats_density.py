@@ -111,7 +111,7 @@ for i, df in enumerate(
     lts_colors = list(lts_color_dict.values())
 
     if i == 1:
-        bike_column_color = "#004488"
+        bike_column_color = "#999933"  # "#997700"  #   # "#004488"
         lts_colors[4:4] = [bike_column_color]
 
     new_color_dict = {}
@@ -128,7 +128,7 @@ for i, df in enumerate(
         color_discrete_map=new_color_dict,
     )
     fig.update_layout(template="simple_white", showlegend=False, xaxis_title=None)
-    fig.update_traces(texttemplate="%{y:.1f}%", textposition="outside")
+    fig.update_traces(texttemplate="%{y:.2f}%", textposition="outside")
     fig.update_yaxes(visible=False)
     fig.update_layout(margin=dict(l=20, r=20, t=20, b=20))
     fig.update_layout(
@@ -137,7 +137,7 @@ for i, df in enumerate(
         height=500,
     )
 
-    fig.show(config=config)
+    fig.show()
     fig.write_image(
         filepaths[i],
         format="jpg",
