@@ -614,9 +614,9 @@ for i, e in enumerate([np.median, np.mean, np.max, np.std]):
     # Set the labels and title
     plt.xlabel("")
     plt.ylabel("Reach (km)")
-    plt.title(f"{labels_stat[i]} network reach per network type")
+    #plt.title(f"{labels_stat[i]} network reach per network type")
     plt.legend(title="Distance (km)", loc="upper left", fontsize=10, title_fontsize=12, frameon=False)
-    plt.savefig(fp_reach_compare_dist_bars + labels_stat[i].lower() + ".png")
+    plt.savefig(fp_reach_compare_dist_bars + labels_stat[i].lower() + ".png", dpi=pdict["dpi"])
     plt.show()
     plt.close()
 
@@ -649,7 +649,7 @@ plt.ylabel("Reach (km)")
 plt.title(f"Network reach per network type")
 plt.legend(title="Distance (km)", loc="upper left", fontsize=10, title_fontsize=12)
 
-plt.savefig(fp_reach_compare_dist_violin)
+plt.savefig(fp_reach_compare_dist_violin, dpi=pdict["dpi"])
 plt.show()
 plt.close()
 
@@ -681,9 +681,9 @@ for n in list(org_labels_rename.keys()):
     )
 
     fig.set_xlabel("Network reach (km)")
-    fig.set_title(f"Network reach KDE for {n} network")
+    #fig.set_title(f"Network reach KDE for {n} network")
 
-    plt.savefig(fp_reach_diff_dist_kde + n + ".png")
+    plt.savefig(fp_reach_diff_dist_kde + n + ".png", dpi=pdict["dpi"])
     plt.show()
 
     plt.close()
@@ -744,7 +744,7 @@ for c in comparison_types:
         plt.setp(legend.get_texts(), fontsize=10)
 
     sns.despine()   
-    plt.savefig(fp_reach_diff_pct_kde + c + ".png")
+    plt.savefig(fp_reach_diff_pct_kde + c + ".png", dpi=pdict["dpi"])
     plt.show()
 
     plt.close()
