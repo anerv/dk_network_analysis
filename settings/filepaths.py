@@ -186,7 +186,7 @@ filepath_sum_fragmentation_component_count = (
 )
 
 filepath_summary_compare_length_components = (
-    "../results/summary_stats/components_vs_length.jpg"
+    "../results/component_size_distribution/components_vs_length.jpg"
 )
 
 filepath_summary_stats_reach = "../results/summary_stats/reach_summary_stats.csv"
