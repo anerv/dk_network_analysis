@@ -87,7 +87,7 @@ sns.scatterplot(
 # %%
 
 # Create a figure and primary axis
-fig, ax1 = plt.subplots(figsize=(8, 8))
+fig, ax1 = plt.subplots(figsize=pdict["fsbar"])
 
 colors = {}
 for e, color in enumerate(lts_color_dict.values()):
