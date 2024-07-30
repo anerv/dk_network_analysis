@@ -600,7 +600,7 @@ for e, df in enumerate(dfs):
 # scatter and rug plots
 for e, df in enumerate(new_dfs):
 
-    plt.figsize = pdict["fsbar"]
+    # TODO: FIX SIZE
 
     fig = px.scatter(
         new_df,
@@ -665,6 +665,9 @@ for e, df in enumerate(new_dfs):
         plot_bgcolor="rgba(0, 0, 0, 0)",
         legend_title=None,
         legend=dict(yanchor="bottom", xanchor="left", y=0.1, x=0.82),
+        autosize=False,
+        width=400,
+        height=400,
     )
 
     fig.update_xaxes(
@@ -678,6 +681,8 @@ for e, df in enumerate(new_dfs):
 
     fig.write_image(
         rug_filepaths[e],
+        format="jpg",
+        scale=15,
     )
 
     fig.show()

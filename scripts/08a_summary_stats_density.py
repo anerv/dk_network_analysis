@@ -6,6 +6,7 @@ import pandas as pd
 import plotly_express as px
 import pandas as pd
 from IPython.display import display
+import matplotlib.pyplot as plt
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -30,7 +31,8 @@ lts_1_length = density_muni.lts_1_length.sum()
 lts_2_length = density_muni.lts_2_length.sum()
 lts_3_length = density_muni.lts_3_length.sum()
 lts_4_length = density_muni.lts_4_length.sum()
-lts_car_length = density_muni.total_car_length.sum()
+total_bike_length = lts_1_length + lts_2_length + lts_3_length + lts_4_length
+total_car_length = density_muni.total_car_length.sum()
 total_network_length = density_muni.total_network_length.sum()
 
 network_levels = labels_all
@@ -40,11 +42,14 @@ network_lengths = [
     lts_2_length,
     lts_3_length,
     lts_4_length,
-    lts_car_length,
+    total_bike_length,
+    total_car_length,
     total_network_length,
 ]
 
 network_shares = [l / total_network_length * 100 for l in network_lengths]
+
+network_levels[4:4] = ["Total bike"]
 
 df_single = pd.DataFrame(
     data={
@@ -71,7 +76,7 @@ network_lengths = [
     lts_1_2_length,
     lts_1_3_length,
     lts_1_4_length,
-    lts_car_length,
+    total_car_length,
     total_network_length,
 ]
 
@@ -90,15 +95,27 @@ df_steps.to_csv(filepath_summmary_stats_network_length_steps, index=False)
 display(df_steps.style.pipe(format_style_no_index))
 
 # %%
-
 plotly_labels["network_type"] = "Network type"
 
-filepaths = [filepath_summary_network_length, filepath_summary_network_length_steps]
+filepaths = [
+    filepath_summary_network_length_steps,
+    filepath_summary_network_length,
+]
 
-for i, df in enumerate([df_single, df_steps]):
+for i, df in enumerate(
+    [
+        df_steps[0:-1],
+        df_single[0:-1],
+    ]
+):
+    lts_colors = list(lts_color_dict.values())
+
+    if i == 1:
+        bike_column_color = "#004488"
+        lts_colors[4:4] = [bike_column_color]
 
     new_color_dict = {}
-    for e, color in enumerate(lts_color_dict.values()):
+    for e, color in enumerate(lts_colors[0:-1]):
         k = df.network_type[e]
         new_color_dict[k] = color
 
@@ -113,19 +130,19 @@ for i, df in enumerate([df_single, df_steps]):
     fig.update_layout(template="simple_white", showlegend=False, xaxis_title=None)
     fig.update_traces(texttemplate="%{y:.1f}%", textposition="outside")
     fig.update_yaxes(visible=False)
-
-    config = {
-        "toImageButtonOptions": {
-            "format": "svg",  # one of png, svg, jpeg, webp
-            "filename": "custom_image",
-            "height": 500,
-            "width": 700,
-            "scale": 6,  # Multiply title/legend/axis/canvas sizes by this factor
-        }
-    }
+    fig.update_layout(margin=dict(l=20, r=20, t=20, b=20))
+    fig.update_layout(
+        autosize=False,
+        width=400,
+        height=400,
+    )
 
     fig.show(config=config)
-    fig.write_image(filepaths[i], format="jpg", scale=6)
+    fig.write_image(
+        filepaths[i],
+        format="jpg",
+        scale=15,
+    )
 # %%
 
 # fig = px.bar(
