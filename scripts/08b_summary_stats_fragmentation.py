@@ -87,7 +87,7 @@ sns.scatterplot(
 # %%
 
 # Create a figure and primary axis
-fig, ax1 = plt.subplots(figsize=(8, 5))
+fig, ax1 = plt.subplots(figsize=(8, 8))
 
 colors = {}
 for e, color in enumerate(lts_color_dict.values()):
@@ -131,7 +131,7 @@ ax2.tick_params(
 
 # Combine legends from both axes
 handles1, labels1 = ax1.get_legend_handles_labels()
-ax1.legend(handles1, labels1, bbox_to_anchor=(1.1, 1), loc="upper left")
+ax1.legend(handles1, labels1, bbox_to_anchor=(0.99, 1), loc="upper right")
 
 legend = ax1.get_legend()
 if legend:
@@ -164,7 +164,7 @@ for network_type in network_types:
 # ax2.set_ylim(0, max_component_count)
 
 # Title and show plot
-plt.title("Network length and component count", fontdict={"size": 12})
+# plt.title("Network length and component count", fontdict={"size": 12})
 plt.tight_layout()
 sns.despine(left=False, right=False, bottom=True)
 plt.savefig(
