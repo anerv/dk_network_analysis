@@ -167,7 +167,9 @@ for network_type in network_types:
 plt.title("Network length and component count", fontdict={"size": 12})
 plt.tight_layout()
 sns.despine(left=False, right=False, bottom=True)
-plt.savefig(filepath_summary_compare_length_components)
+plt.savefig(
+    filepath_summary_compare_length_components, bbox_inches="tight", dpi=pdict["dpi"]
+)
 plt.show()
 
 # %%
