@@ -133,8 +133,8 @@ for i, df in enumerate(
     fig.update_layout(margin=dict(l=20, r=20, t=20, b=20))
     fig.update_layout(
         autosize=False,
-        width=400,
-        height=400,
+        width=500,
+        height=500,
     )
 
     fig.show(config=config)

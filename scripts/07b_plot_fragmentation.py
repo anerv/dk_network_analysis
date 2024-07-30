@@ -666,8 +666,8 @@ for e, df in enumerate(new_dfs):
         legend_title=None,
         legend=dict(yanchor="bottom", xanchor="left", y=0.1, x=0.82),
         autosize=False,
-        width=400,
-        height=400,
+        width=500,
+        height=500,
     )
 
     fig.update_xaxes(
