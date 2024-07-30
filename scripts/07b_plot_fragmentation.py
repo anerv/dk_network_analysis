@@ -597,10 +597,8 @@ for e, df in enumerate(dfs):
     new_dfs.append(new_df)
 
 # %%
-# scatter and rug plots
+# scatter
 for e, df in enumerate(new_dfs):
-
-    # TODO: FIX SIZE
 
     fig = px.scatter(
         new_df,
@@ -623,6 +621,8 @@ for e, df in enumerate(new_dfs):
         title=scatter_titles[e],
         plot_bgcolor="rgba(0, 0, 0, 0)",
         legend_title=None,
+        width=500,
+        height=500,
     )
 
     fig.update_xaxes(
@@ -639,9 +639,10 @@ for e, df in enumerate(new_dfs):
     )
     fig.show()
 
-    new_df_subset = new_df.loc[new_df["component_count"] > 0]
+# rug plots
+for e, df in enumerate(new_dfs):
 
-    plt.figsize = pdict["fsbar"]
+    new_df_subset = new_df.loc[new_df["component_count"] > 0]
 
     fig = px.histogram(
         new_df_subset,
@@ -655,19 +656,20 @@ for e, df in enumerate(new_dfs):
         # text_auto=True,
         marginal="rug",
         color_discrete_sequence=[v for v in lts_color_dict.values()],
-        title=rug_titles[e],
+        # title=rug_titles[e],
     )
 
     fig.update_layout(
         font=dict(size=pdict["fontsize"], color="black"),
-        autosize=False,
         yaxis_title="Count",
         plot_bgcolor="rgba(0, 0, 0, 0)",
         legend_title=None,
         legend=dict(yanchor="bottom", xanchor="left", y=0.1, x=0.82),
+        # showlegend=False,
         autosize=False,
-        width=500,
+        width=700,
         height=500,
+        margin=dict(l=50, r=50, t=20, b=50),
     )
 
     fig.update_xaxes(
