@@ -164,7 +164,7 @@ for e, gdf in enumerate(gdfs):
             plot_col=p,
             plot_title=plot_titles[i],
             filepath=filepaths[i] + "_unclassified",
-            cmap=pdict["neg"],
+            cmap=pdict["frag"],
             use_norm=True,
             norm_min=vmin,
             norm_max=vmax,
@@ -208,14 +208,14 @@ for e, gdf in enumerate(gdfs):
             plot_col=p,
             plot_title=plot_titles[i],
             filepath=filepaths[i] + "_unclassified",
-            cmap=pdict["neg"],
+            cmap=pdict["frag"],
             use_norm=True,
             norm_min=vmin,
             norm_max=vmax,
             # cx_tile=cx_tile_2,
             background_color=pdict["background_color"],
         )
-# %%
+
 # comp per km sqkm
 all_plot_titles = [
     "Municipal component count per km/sqkm for: ",
@@ -241,7 +241,7 @@ for e, gdf in enumerate(gdfs):
             plot_col=p,
             plot_title=plot_titles[i],
             filepath=filepaths[i] + "_unclassified",
-            cmap=pdict["neg"],
+            cmap=pdict["frag"],
             use_norm=True,
             norm_min=vmin,
             norm_max=vmax,

@@ -8,12 +8,12 @@ import matplotlib_inline.backend_inline
 
 pdict = {
     # colormaps for grid cell plots
-    "pos_low": "viridis",  # "PuBu",
-    "pos_reach": "YlGnBu",  # "PuBu", "PuBuGn",
-    "pos": "PuRd",  # "pink",  # "cividis",  # "PuRd",  # "Blues",  # Positive values
-    "neg": "PuRd",  # "pink",  # "Reds",  # Negative/Missing/Unmatched values
+    "dens": "viridis",  # "PuBu",
+    "reach": "YlGnBu",  # "PuBu", "PuBuGn",
+    "dens_rel": "PuRd",  # "pink",  # "cividis",  # "PuRd",  # "Blues",  # Positive values
+    "frag": "viridis",  # "PuRd",  # "pink",  # "Reds",  # Negative/Missing/Unmatched values
     # "diff": "RdBu",  # for osm-ref difference plots (alternatives: "PiYG", "PRGn", "PuOr")
-    "seq": "PuBuGn",  # "YlGnBu",  # for sequential plots where low should not be white (usually percentages)
+    "seq": "YlGnBu",  # "PuBuGn",  # "YlGnBu",  # for sequential plots where low should not be white (usually percentages)
     "cat": "Set2",  # "colorblind",  # for categorical plots
     # alpha (transparency) values (alternatives: PuRd, RdPu, PbBuGn)
     "alpha": 0.8,
