@@ -258,13 +258,14 @@ gdf = hex_largest_components
 # Largest component length
 plot_columns = largest_local_component_len_columns
 
-plot_titles = [
-    "Largest component length - LTS 1",
-    "Largest component length - LTS 1-2",
-    "Largest component length - LTS 1-3",
-    "Largest component length - LTS 1-4",
-    "Largest component length - car network",
-]
+# plot_titles = [
+#     "Largest component length - LTS 1",
+#     "Largest component length - LTS 1-2",
+#     "Largest component length - LTS 1-3",
+#     "Largest component length - LTS 1-4",
+#     "Largest component length - car network",
+# ]
+plot_titles = labels_step
 
 labels = labels_step
 filepaths = [filepath_largest_component_length + l for l in labels]

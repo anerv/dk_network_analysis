@@ -1,7 +1,6 @@
 # %%
 from src import db_functions as dbf
 from src import plotting_functions as plot_func
-import geopandas as gpd
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -29,13 +28,15 @@ hex_reach.replace(0, np.nan, inplace=True)
 
 # Absolute reach length
 
-plot_titles = [
-    f"Network reach: LTS 1 ({reach_dist})",
-    f"Network reach: LTS 1-2 ({reach_dist})",
-    f"Network reach: LTS 1-3 ({reach_dist})",
-    f"Network reach: LTS 1-4 ({reach_dist})",
-    f"Network reach: Car network ({reach_dist})",
-]
+# plot_titles = [
+#     f"Network reach: LTS 1 ({reach_dist})",
+#     f"Network reach: LTS 1-2 ({reach_dist})",
+#     f"Network reach: LTS 1-3 ({reach_dist})",
+#     f"Network reach: LTS 1-4 ({reach_dist})",
+#     f"Network reach: Car network ({reach_dist})",
+# ]
+
+plot_titles = labels_step
 
 plot_columns = reach_columns
 filepaths = filepaths_reach
@@ -136,98 +137,56 @@ for i, p in enumerate(plot_columns):
 exec(open("../helper_scripts/read_reach_comparison.py").read())
 
 #hex_reach_comparison.replace(np.nan, 0, inplace=True)
-
-
+#%%
 plot_columns = []
 filepaths = []
-plot_titles = []
+#plot_titles = []
 
 for i, n in enumerate(network_levels_step):
 
     for comb in itertools.combinations(all_reach_distances, 2):
 
         plot_columns.append(f"{n}_pct_diff_{comb[0]}_{comb[1]}")
-
-        plot_titles.append(f"% difference in network reach for {labels_step[i]} ({comb[0]} - {comb[1]})")
+        
+        #plot_titles.append(f"% difference in network reach for {labels_step[i]} ({comb[0]} - {comb[1]})")
 
         filepaths.append(fp_reach_diff_pct + f"{network_levels_step[i]}_{comb[0]}-{comb[1]}")
 
-vmin, vmax = plot_func.get_min_max_vals(hex_reach_comparison, plot_columns)
-#%%
-# Get subset
-plot_columns = [c for c in plot_columns if "diff_1_5" in c or "diff_1_10" in c or "diff_1_15" in c]
+# Get subsets
+plot_columns = [c for c in plot_columns if "diff_1_5" in c or "diff_5_10" in c or "diff_10_15" in c]
 
-plot_titles = [t for t in plot_titles if "1 - 5" in t or "1 - 10" in t or "1 - 15" in t]
+#plot_titles = [t for t in plot_titles if "1 - 5" in t or "1 - 10" in t or "1 - 15" in t]
 
 filepaths = [f for f in filepaths if "1-5" in f or "1-10" in f or "1-15" in f]
 
-assert len(plot_columns) == len(plot_titles) == len(filepaths)
+multiplier = len(plot_columns) / len(labels_step)
+plot_titles = []
+for l in labels_step:
+    plot_titles.extend([l]*3)
+
+assert len(plot_columns) == len(filepaths) # == len(plot_titles)
 #%%
+
+vmin, vmax = plot_func.get_min_max_vals(hex_reach_comparison, plot_columns)
+
 for i, c in enumerate(plot_columns):
 
-        plot_func.plot_unclassified_poly(
-            poly_gdf=hex_reach_comparison,
-            plot_col=c,
-            plot_title=plot_titles[i],
-            filepath=filepaths[i] + "_unclassified",
-            cmap=pdict["reach"],
-            edgecolor="none",
-            linewidth=0.0,
-            use_norm=True,
-            norm_min=vmin,
-            norm_max=vmax,
-            #cx_tile=cx_tile_2,
-            background_color=pdict["background_color"],
-            plot_na=True,
-        )
+    plot_func.plot_unclassified_poly(
+        poly_gdf=hex_reach_comparison,
+        plot_col=c,
+        plot_title=plot_titles[i],
+        filepath=filepaths[i] + "_unclassified",
+        cmap=pdict["reach"],
+        edgecolor="none",
+        linewidth=0.0,
+        use_norm=True,
+        norm_min=vmin,
+        norm_max=vmax,
+        #cx_tile=cx_tile_2,
+        background_color=pdict["background_color"],
+        plot_na=True,
+    )
 
-#%%
-#### MAPS - SOCIO REACH ###################
-
-# Read data
-socio_reach = gpd.read_postgis(
-    f"SELECT * FROM reach.socio_reach_{reach_dist}", engine, geom_col="geometry"
-)
-
-average_columns = [c for c in socio_reach.columns if "average" in c]
-median_columns = [c for c in socio_reach.columns if "median" in c]
-min_columns = [c for c in socio_reach.columns if "min" in c]
-max_columns = [c for c in socio_reach.columns if "max" in c]
-
-metrics = ["Average", "Median", "Min", "Max"]
-
-network_levels = labels
-
-for i, plot_columns in enumerate(
-    [average_columns, median_columns, min_columns, max_columns]
-):
-
-    plot_titles = [
-        f"{metrics[i]} network reach at the socio level using the {n} network"
-        for n in network_levels
-    ]
-
-    filepaths = [
-        fp_socio_reach + f"{metrics[i].lower()}_{n.replace(" ", "_")}" for n in network_levels
-    ]
-
-    vmin, vmax = plot_func.get_min_max_vals(socio_reach, plot_columns)
-
-
-    for i, p in enumerate(plot_columns):
-
-        plot_func.plot_unclassified_poly(
-            poly_gdf=socio_reach,
-            plot_col=p,
-            plot_title=plot_titles[i],
-            filepath=filepaths[i] + "_unclassified",
-            cmap=pdict["reach"],
-            use_norm=True,
-            norm_min=vmin,
-            norm_max=vmax,
-            #cx_tile=cx_tile_2,
-            background_color=pdict["background_color"],
-        )
 # %%
 ####### Histograms ########################
 ###########################################
@@ -318,6 +277,8 @@ df = pd.DataFrame(
 
 df.rename(columns={"lts": "Network level"}, inplace=True)
 
+#%%
+# KDE PLOTS
 fig = sns.kdeplot(
     data=df,
     x="reach_len_diff",
@@ -533,8 +494,11 @@ for i, e in enumerate([np.median, np.mean, np.max, np.std]):
         #width=0.8
     )
 
-    for e in ax.containers:
-        ax.bar_label(e,fmt="{:,.0f}", label_type='edge', fontsize=10)
+    for z, a in enumerate(ax.containers):
+        if z == 0:
+            ax.bar_label(a,fmt="{:,.1f}", label_type='edge', fontsize=8)
+        # else:
+        #     ax.bar_label(a,fmt="{:,.0f}", label_type='edge', fontsize=8)
 
     sns.despine()
 
