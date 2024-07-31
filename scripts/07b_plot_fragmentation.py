@@ -259,11 +259,11 @@ gdf = hex_largest_components
 plot_columns = largest_local_component_len_columns
 
 plot_titles = [
-    "Largest component length for network LTS 1",
-    "Largest component length for network LTS 1-2",
-    "Largest component length for network LTS 1-3",
-    "Largest component length for network LTS 1-4",
-    "Largest component length for car network",
+    "Largest component length - LTS 1",
+    "Largest component length - LTS 1-2",
+    "Largest component length - LTS 1-3",
+    "Largest component length - LTS 1-4",
+    "Largest component length - car network",
 ]
 
 labels = labels_step
@@ -280,7 +280,7 @@ for i, p in enumerate(plot_columns):
         plot_col=p,
         plot_title=plot_titles[i],
         filepath=filepaths[i] + "_unclassified",
-        cmap=pdict["seq"],
+        cmap=pdict["largest_comp"],
         use_norm=True,
         norm_min=vmin,
         norm_max=vmax,
@@ -292,11 +292,11 @@ for i, p in enumerate(plot_columns):
 plot_columns = largest_local_component_area_columns
 
 plot_titles = [
-    "Largest component area for network LTS 1",
-    "Largest component area for network LTS 2",
-    "Largest component area for network LTS 3",
-    "Largest component area for network LTS 4",
-    "Largest component area for car network",
+    "Largest component area - LTS 1",
+    "Largest component area - LTS 2",
+    "Largest component area - LTS 3",
+    "Largest component area - LTS 4",
+    "Largest component area - car network",
 ]
 
 labels = labels_step
@@ -313,7 +313,7 @@ for i, p in enumerate(plot_columns):
         plot_col=p,
         plot_title=plot_titles[i],
         filepath=filepaths[i] + "_unclassified",
-        cmap=pdict["seq"],
+        cmap=pdict["largest_comp"],
         use_norm=True,
         norm_min=vmin,
         norm_max=vmax,

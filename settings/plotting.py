@@ -12,8 +12,8 @@ pdict = {
     "reach": "YlGnBu",  # "PuBu", "PuBuGn",
     "dens_rel": "PuRd",  # "pink",  # "cividis",  # "PuRd",  # "Blues",  # Positive values
     "frag": "viridis",  # "PuRd",  # "pink",  # "Reds",  # Negative/Missing/Unmatched values
+    "largest_comp": "viridis_r",
     # "diff": "RdBu",  # for osm-ref difference plots (alternatives: "PiYG", "PRGn", "PuOr")
-    "seq": "YlGnBu",  # "PuBuGn",  # "YlGnBu",  # for sequential plots where low should not be white (usually percentages)
     "cat": "Set2",  # "colorblind",  # for categorical plots
     # alpha (transparency) values (alternatives: PuRd, RdPu, PbBuGn)
     "alpha": 0.8,
