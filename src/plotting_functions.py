@@ -167,12 +167,11 @@ def plot_labels(gdf, label_col, cmap=pdict["cat"]):
         column=label_col,
         categorical=True,
         legend=True,
-        legend_kwds={"bbox_to_anchor": (1.3, 1),"frameon":False},
+        legend_kwds={"bbox_to_anchor": (1.3, 1), "frameon": False},
         ax=ax,
         cmap=cmap,
         linewidth=0.1,
     )
-
 
     plt.tight_layout()
 
@@ -337,6 +336,7 @@ def plot_cluster_variable_distributions(
     tidy_df = tidy_df.reset_index()
     tidy_df = tidy_df.rename(columns={"level_1": "Attribute", 0: "Values"})
     sns.set(font_scale=1.5)
+
     facets = sns.FacetGrid(
         data=tidy_df,
         col="Attribute",
@@ -347,17 +347,14 @@ def plot_cluster_variable_distributions(
         col_wrap=3,
         palette=palette,
     )
-    fig = (
-        facets.map(
-            sns.kdeplot,
-            "Values",
-            fill=False,
-            warn_singular=False,
-            multiple="stack",
-        )
-        
-        
+    fig = facets.map(
+        sns.kdeplot,
+        "Values",
+        fill=False,
+        warn_singular=False,
+        multiple="stack",
     )
+
     fig.add_legend(title="Cluster")
     fig.savefig(fp)
 
