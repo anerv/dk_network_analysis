@@ -49,21 +49,6 @@ for e, gdf in enumerate(gdfs):
 
         vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
 
-        # plot_func.plot_classified_poly(
-        #     gdf=gdf,
-        #     plot_col=p,
-        #     scheme=scheme,
-        #     k=k,
-        #     # cx_tile=cx_tile_2,
-        #     plot_na=True,
-        #     cmap=pdict["pos"],
-        #     edgecolor="none",
-        #     linewidth=0,
-        #     title=plot_titles[i],
-        #     fp=filepaths[i],
-        #     background_color=pdict["background_color"],
-        # )
-
         plot_func.plot_unclassified_poly(
             poly_gdf=gdf,
             plot_col=p,
@@ -92,21 +77,6 @@ for e, gdf in enumerate(gdfs):
 
         vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
 
-        # plot_func.plot_classified_poly(
-        #     gdf=gdf,
-        #     plot_col=p,
-        #     scheme=scheme,
-        #     k=k,
-        #     # cx_tile=cx_tile_2,
-        #     plot_na=True,
-        #     cmap=pdict["pos"],
-        #     edgecolor="none",
-        #     linewidth=0,
-        #     title=plot_titles[i],
-        #     fp=filepaths[i],
-        #     background_color=pdict["background_color"],
-        # )
-
         plot_func.plot_unclassified_poly(
             poly_gdf=gdf,
             plot_col=p,
@@ -134,21 +104,6 @@ for e, gdf in enumerate(gdfs):
     for i, p in enumerate(plot_columns):
 
         vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
-
-        # plot_func.plot_classified_poly(
-        #     gdf=gdf,
-        #     plot_col=p,
-        #     scheme=scheme,
-        #     k=k,
-        #     # cx_tile=cx_tile_2,
-        #     plot_na=True,
-        #     cmap=pdict["pos"],
-        #     edgecolor="none",
-        #     linewidth=0,
-        #     title=plot_titles[i],
-        #     fp=filepaths[i],
-        #     background_color=pdict["background_color"],
-        # )
 
         plot_func.plot_unclassified_poly(
             poly_gdf=gdf,
@@ -181,21 +136,6 @@ for e, gdf in enumerate(gdfs):
     for i, p in enumerate(plot_columns):
 
         vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
-
-        # plot_func.plot_classified_poly(
-        #     gdf=gdf,
-        #     plot_col=p,
-        #     scheme=scheme,
-        #     k=k,
-        #     # cx_tile=cx_tile_2,
-        #     plot_na=True,
-        #     cmap=pdict["pos"],
-        #     edgecolor="none",
-        #     linewidth=0,
-        #     title=plot_titles[i],
-        #     fp=filepaths[i],
-        #     background_color=pdict["background_color"],
-        # )
 
         plot_func.plot_unclassified_poly(
             poly_gdf=gdf,

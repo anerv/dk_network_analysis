@@ -158,19 +158,6 @@ for e, gdf in enumerate(gdfs):
     for i, p in enumerate(plot_columns):
 
         vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
-        # plot_func.plot_classified_poly(
-        #     gdf=gdf,
-        #     plot_col=p,
-        #     scheme=scheme,
-        #     k=k,
-        #     # cx_tile=cx_tile_2,
-        #     plot_na=True,
-        #     cmap=pdict["neg"],
-        #     edgecolor="none",
-        #     title=plot_titles[i],
-        #     fp=filepaths[i],
-        #     background_color=pdict["background_color"],
-        # )
 
         plot_func.plot_unclassified_poly(
             poly_gdf=gdf,
@@ -216,20 +203,6 @@ for e, gdf in enumerate(gdfs):
 
         vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
 
-        # plot_func.plot_classified_poly(
-        #     gdf=gdf,
-        #     plot_col=p,
-        #     scheme=scheme,
-        #     k=k,
-        #     # cx_tile=cx_tile_2,
-        #     plot_na=True,
-        #     cmap=pdict["neg"],
-        #     edgecolor="none",
-        #     title=plot_titles[i],
-        #     fp=filepaths[i],
-        #     background_color=pdict["background_color"],
-        # )
-
         plot_func.plot_unclassified_poly(
             poly_gdf=gdf,
             plot_col=p,
@@ -263,20 +236,6 @@ for e, gdf in enumerate(gdfs):
 
         vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
 
-        # plot_func.plot_classified_poly(
-        #     gdf=gdf,
-        #     plot_col=p,
-        #     scheme=scheme,
-        #     k=k,
-        #     # cx_tile=cx_tile_2,
-        #     plot_na=True,
-        #     cmap=pdict["neg"],
-        #     edgecolor="none",
-        #     title=plot_titles[i],
-        #     fp=filepaths[i],
-        #     background_color=pdict["background_color"],
-        # )
-
         plot_func.plot_unclassified_poly(
             poly_gdf=gdf,
             plot_col=p,
@@ -294,6 +253,7 @@ for e, gdf in enumerate(gdfs):
 # ****** MAPS OF LARGEST COMPONENTS *******
 
 exec(open("../helper_scripts/read_largest_components.py").read())
+gdf = hex_largest_components
 
 # Largest component length
 plot_columns = largest_local_component_len_columns
@@ -315,61 +275,8 @@ for i, p in enumerate(plot_columns):
 
     vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
 
-    k_check = plot_func.get_unique_bins(hex_largest_components, p, scheme, k)
-
-    try:
-        plot_func.plot_classified_poly(
-            gdf=hex_largest_components,
-            plot_col=p,
-            scheme=scheme,
-            k=k_check,
-            # cx_tile=cx_tile_2,
-            plot_na=True,
-            cmap=pdict["seq"],
-            edgecolor="none",
-            title=plot_titles[i],
-            fp=filepaths[i],
-            background_color=pdict["background_color"],
-        )
-    except ValueError:
-
-        k_check -= 1
-
-        try:
-
-            plot_func.plot_classified_poly(
-                gdf=hex_largest_components,
-                plot_col=p,
-                scheme=scheme,
-                k=k_check,
-                # cx_tile=cx_tile_2,
-                plot_na=True,
-                cmap=pdict["seq"],
-                edgecolor="none",
-                title=plot_titles[i],
-                fp=filepaths[i],
-                background_color=pdict["background_color"],
-            )
-
-        except ValueError:
-            k_check -= 1
-
-            plot_func.plot_classified_poly(
-                gdf=hex_largest_components,
-                plot_col=p,
-                scheme=scheme,
-                k=k_check,
-                # cx_tile=cx_tile_2,
-                plot_na=True,
-                cmap=pdict["seq"],
-                edgecolor="none",
-                title=plot_titles[i],
-                fp=filepaths[i],
-                background_color=pdict["background_color"],
-            )
-
     plot_func.plot_unclassified_poly(
-        poly_gdf=hex_largest_components,
+        poly_gdf=gdf,
         plot_col=p,
         plot_title=plot_titles[i],
         filepath=filepaths[i] + "_unclassified",
@@ -394,7 +301,7 @@ plot_titles = [
 
 labels = labels_step
 filepaths = [filepath_largest_component_area + l for l in labels]
-gdf = hex_largest_components
+
 # vmin, vmax = plot_func.get_min_max_vals(hex_largest_components, plot_columns)
 
 for i, p in enumerate(plot_columns):
