@@ -335,7 +335,8 @@ def plot_cluster_variable_distributions(
     tidy_df = tidy_df.stack()
     tidy_df = tidy_df.reset_index()
     tidy_df = tidy_df.rename(columns={"level_1": "Attribute", 0: "Values"})
-    sns.set(font_scale=1.5)
+
+    sns.set_theme(font_scale=1.5, style="white")
 
     facets = sns.FacetGrid(
         data=tidy_df,
