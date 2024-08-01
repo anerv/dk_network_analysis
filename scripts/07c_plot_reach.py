@@ -624,7 +624,7 @@ for c in comparison_types:
     )
 
     # Set the labels and title
-    plt.xlabel(f"% difference in network reach between distance {c.split("_")[0]} and {c.split("_")[1]} km", fontdict={"size": 12})
+    plt.xlabel(f"% difference in network reach: {c.split("_")[0]} vs. {c.split("_")[1]} km", fontdict={"size": 12})
     plt.ylabel("Reach (km)",fontdict={"size": 12})
     #plt.title(f"Network reach per network type")
 
