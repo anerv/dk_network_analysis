@@ -105,11 +105,11 @@ filepaths_violin_reach_diff_pct = [
 fp_reach_density_corr = "../results/reach_density_correlation/corr_reach_density_"
 
 fp_reach_compare_dist_bars = (
-    "../results/reach_distance_comparisons/distance_comparison_bar_"
+    "../results/reach_distance_comparisons/reach_distance_comparison_bar_"
 )
 
 fp_reach_compare_dist_violin = (
-    "../results/reach_distance_comparisons/distance_comparison_violin.png"
+    "../results/reach_distance_comparisons/reach_distance_comparison_violin.png"
 )
 
 fp_reach_diff_pct = "../results/reach_distance_comparisons/reach_diff_pct_"
