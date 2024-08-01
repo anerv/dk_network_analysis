@@ -26,7 +26,137 @@ exec(open("../settings/plotting.py").read())
 # Gini functions based on https://geographicdata.science/book/notebooks/09_spatial_inequality.html
 
 
-def plot_hex_clusters_zoom(gdf, plot_col, cmap, fp, xmin, xmax, ymin, ymax):
+def plot_poly_zoom(
+    poly_gdf,
+    plot_col,
+    plot_title,
+    filepath,
+    cmap,
+    xmin,
+    xmax,
+    ymin,
+    ymax,
+    alpha=1,
+    edgecolor="white",
+    linewidth=0.1,
+    figsize=pdict["fsmap"],
+    dpi=pdict["dpi"],
+    legend=True,
+    use_norm=False,
+    norm_min=None,
+    norm_max=None,
+    plot_res=pdict["plot_res"],
+    attr=pdict["map_attr"],
+    plot_na=True,
+    legend_kwds={"fmt": "{:.0f}"},
+):
+
+    fig, ax = plt.subplots(1, figsize=figsize)
+
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes("right", size="3.5%", pad="1%")
+
+    if use_norm is True:
+
+        cbnorm = colors.Normalize(vmin=norm_min, vmax=norm_max)
+
+        poly_gdf.plot(
+            cax=cax,
+            ax=ax,
+            column=plot_col,
+            legend=legend,
+            legend_kwds=legend_kwds,
+            edgecolor=edgecolor,
+            linewidth=linewidth,
+            alpha=alpha,
+            norm=cbnorm,
+            cmap=cmap,
+            missing_kwds={
+                "color": pdict["nodata"],
+                "label": "No data",
+                "alpha": pdict["alpha_nodata"],
+            },
+        )
+
+    else:
+
+        poly_gdf.plot(
+            cax=cax,
+            ax=ax,
+            column=plot_col,
+            edgecolor=edgecolor,
+            linewidth=linewidth,
+            legend=legend,
+            legend_kwds=legend_kwds,
+            alpha=alpha,
+            cmap=cmap,
+            missing_kwds={
+                "color": pdict["nodata"],
+                "label": "No data",
+                "alpha": pdict["alpha_nodata"],
+            },
+        )
+
+    if plot_na and len(poly_gdf.loc[poly_gdf[plot_col].isna()]) > 0:
+        # Creates a rectangular patch for each contaminant, using the colors above
+        patch_list = []
+        label = "No data"
+        color = pdict["nodata"]
+        patch_list.append(
+            patches.Patch(
+                facecolor=color,
+                label=label,
+                alpha=pdict["alpha_nodata"],
+                linewidth=0,
+                edgecolor="none",
+            )
+        )
+
+        # Creates a legend with the list of patches above.
+        ax.legend(
+            handles=patch_list,
+            fontsize=pdict["legend_fs"],
+            loc="lower left",
+            bbox_to_anchor=(0.3, -0.01),
+            # title="Litologia",
+            title_fontsize=pdict["legend_title_fs"],
+            frameon=True,
+        )
+
+    ax.set_axis_off()
+
+    if attr is not None:
+        cx.add_attribution(ax=ax, text="(C) " + attr)
+        txt = ax.texts[-1]
+        txt.set_position([0.99, 0.012])
+        txt.set_ha("right")
+        txt.set_va("bottom")
+
+    ax.add_artist(
+        ScaleBar(
+            dx=1,
+            units="m",
+            dimension="si-length",
+            length_fraction=0.15,
+            width_fraction=0.002,
+            location="lower left",
+            box_alpha=0.5,
+        )
+    )
+
+    ax.axis([xmin, xmax, ymin, ymax])
+    ax.set_title(plot_title)
+
+    if plot_res == "high":
+        fig.savefig(filepath + ".svg", dpi=dpi)
+    else:
+        fig.savefig(filepath + ".png", dpi=dpi)
+
+    plt.show()
+    plt.close()
+
+
+def plot_hex_zoom_categorical(gdf, plot_col, cmap, fp, xmin, xmax, ymin, ymax):
 
     fig, ax = plt.subplots(1, 1, figsize=pdict["fsmap"])
     ax.set_axis_off()

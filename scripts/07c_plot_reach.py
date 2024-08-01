@@ -63,6 +63,33 @@ for i, p in enumerate(plot_columns):
         plot_na=True,
     )
 
+#%%
+# Zoomed map
+fp = filepaths_reach[0] +"_zoom"
+plot_column = reach_columns[0]
+
+xmin, ymin = (689922.425333, 6161099.004817)
+xmax, ymax = (734667.301464 - 900, 6202301.965700) 
+
+vmin, vmax = plot_func.get_min_max_vals(hex_reach, [plot_column])
+
+plot_func.plot_poly_zoom(
+    poly_gdf=hex_reach,
+    plot_col=plot_column,
+    plot_title="LTS 1",
+    filepath=fp,
+    cmap=pdict["reach"],
+    edgecolor="none",
+    linewidth=0.1,
+    use_norm=True,
+    norm_min=vmin,
+    norm_max=vmax,
+    plot_na=True,
+    xmin=xmin,
+    xmax=xmax,
+    ymin=ymin,
+    ymax=ymax
+)
 # %%
 
 # Absolute reach differences
@@ -187,6 +214,33 @@ for i, c in enumerate(plot_columns):
         plot_na=True,
     )
 
+#%%
+# Zoomed map
+fp = fp_reach_diff_pct + "1-5_unclassified_zoom_lts1.png"
+plot_column = 'lts_1_pct_diff_1_5'
+
+xmin, ymin = (639464.351371, 6120027.316230)
+xmax, ymax = (699033.929025, 6173403.495114)  # (728584.217957, 6207108.071800)
+
+vmin, vmax = plot_func.get_min_max_vals(hex_reach_comparison, [plot_column])
+
+plot_func.plot_poly_zoom(
+    poly_gdf=hex_reach_comparison,
+    plot_col=plot_column,
+    plot_title="LTS 1",
+    filepath=fp,
+    cmap=pdict["reach"],
+    edgecolor="none",
+    linewidth=0.1,
+    use_norm=True,
+    norm_min=vmin,
+    norm_max=vmax,
+    plot_na=True,
+    xmin=xmin,
+    xmax=xmax,
+    ymin=ymin,
+    ymax=ymax
+)
 # %%
 ####### Histograms ########################
 ###########################################
