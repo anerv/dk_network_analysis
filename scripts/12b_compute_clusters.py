@@ -6,7 +6,6 @@ from sklearn.preprocessing import robust_scale
 import numpy as np
 import seaborn as sns
 
-
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 exec(open("../settings/df_styler.py").read())
@@ -214,6 +213,18 @@ cluster_means_hex.to_csv(fp_hex_network_cluster_means, index=True)
 # Make polished cluster map
 fp = fp_cluster_maps_base + "hex_cluster_map.png"
 plot_func.plot_hex_clusters(hex_gdf, "kmeans_net_5", cmap, fp)
+
+
+# Make zoomed cluster map
+
+fp = fp_cluster_maps_base + "hex_cluster_map_zoom.png"
+
+xmin, ymin = (689922.425333, 6161099.004817)
+xmax, ymax = (734667.301464 - 900, 6202301.965700)  # (728584.217957, 6207108.071800)
+
+plot_func.plot_hex_clusters_zoom(
+    hex_gdf, "kmeans_net_5", cmap, fp, xmin, xmax, ymin, ymax
+)
 
 # %%
 # Label clusters after bikeability rank

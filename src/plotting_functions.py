@@ -26,6 +26,51 @@ exec(open("../settings/plotting.py").read())
 # Gini functions based on https://geographicdata.science/book/notebooks/09_spatial_inequality.html
 
 
+def plot_hex_clusters_zoom(gdf, plot_col, cmap, fp, xmin, xmax, ymin, ymax):
+
+    fig, ax = plt.subplots(1, 1, figsize=pdict["fsmap"])
+    ax.set_axis_off()
+    gdf.plot(
+        column=plot_col,
+        categorical=True,
+        legend=True,
+        legend_kwds={
+            "frameon": False,
+            "bbox_to_anchor": (0.99, 1),
+            "loc": "upper left",
+        },
+        ax=ax,
+        cmap=cmap,
+        linewidth=0.1,
+        alpha=0.9,
+    )
+
+    cx.add_attribution(ax=ax, text="(C) " + pdict["map_attr"])
+    txt = ax.texts[-1]
+    txt.set_position([0.99, 0.01])
+    txt.set_ha("right")
+    txt.set_va("bottom")
+
+    ax.add_artist(
+        ScaleBar(
+            dx=1,
+            units="m",
+            dimension="si-length",
+            length_fraction=0.15,
+            width_fraction=0.002,
+            location="lower left",
+            box_alpha=0.5,
+            font_properties={"size": 10},
+        )
+    )
+
+    ax.axis([xmin, xmax, ymin, ymax])
+
+    plt.tight_layout()
+
+    fig.savefig(fp, dpi=pdict["dpi"])
+
+
 def plot_hex_clusters(gdf, plot_col, cmap, fp):
 
     fig, ax = plt.subplots(1, 1, figsize=pdict["fsmap"])
