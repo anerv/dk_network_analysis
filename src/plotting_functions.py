@@ -26,6 +26,44 @@ exec(open("../settings/plotting.py").read())
 # Gini functions based on https://geographicdata.science/book/notebooks/09_spatial_inequality.html
 
 
+def plot_hex_clusters(gdf, plot_col, cmap, fp):
+
+    fig, ax = plt.subplots(1, 1, figsize=pdict["fsmap"])
+    ax.set_axis_off()
+    gdf.plot(
+        column=plot_col,
+        categorical=True,
+        legend=True,
+        legend_kwds={"frameon": False, "bbox_to_anchor": (0.99, 1)},
+        ax=ax,
+        cmap=cmap,
+        linewidth=0.1,
+    )
+
+    cx.add_attribution(ax=ax, text="(C) " + pdict["map_attr"])
+    txt = ax.texts[-1]
+    txt.set_position([0.99, 0.01])
+    txt.set_ha("right")
+    txt.set_va("bottom")
+
+    ax.add_artist(
+        ScaleBar(
+            dx=1,
+            units="m",
+            dimension="si-length",
+            length_fraction=0.15,
+            width_fraction=0.002,
+            location="lower left",
+            box_alpha=0,
+            font_properties={"size": 10},
+        )
+    )
+
+    plt.tight_layout()
+
+    fig.savefig(fp, dpi=pdict["dpi"])
+
+
 def plot_significant_lisa_clusters_all(
     gdf,
     plot_columns,

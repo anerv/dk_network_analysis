@@ -6,6 +6,7 @@ from sklearn.preprocessing import robust_scale
 import numpy as np
 import seaborn as sns
 
+
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 exec(open("../settings/df_styler.py").read())
@@ -191,7 +192,6 @@ fp_map = fp_cluster_maps_base + f"hex_net_map_{kmeans_col_net_hex}.png"
 fp_size = fp_cluster_plots_base + f"hex_net_size_{kmeans_col_net_hex}.png"
 fp_kde = fp_cluster_plots_base + f"hex_net_kde_{kmeans_col_net_hex}.png"
 
-# colors = plot_func.get_hex_colors_from_colormap(pdict["cat"], k)
 colors = list(cluster_color_dict_labels.values())
 cmap = plot_func.color_list_to_cmap(colors)
 
@@ -209,6 +209,11 @@ cluster_means_hex = analysis_func.examine_cluster_results(
 plot_func.style_cluster_means(cluster_means_hex)
 
 cluster_means_hex.to_csv(fp_hex_network_cluster_means, index=True)
+
+# %%
+# Make polished cluster map
+fp = fp_cluster_maps_base + "hex_cluster_map.png"
+plot_func.plot_hex_clusters(hex_gdf, "kmeans_net_5", cmap, fp)
 
 # %%
 # Label clusters after bikeability rank
@@ -235,14 +240,6 @@ for key, val in label_dict.items():
 hex_gdf[[kmeans_col_net_hex] + ["geometry", id_columns[2], "cluster_label"]].to_parquet(
     fp_hex_network_clusters
 )
-
-color_keys = list(cluster_color_dict_labels.keys())
-color_keys.sort()
-cat_colors = [cluster_color_dict_labels[k] for k in color_keys]
-cat_cmap = plot_func.color_list_to_cmap(cat_colors)
-cluster_map = plot_func.plot_labels(hex_gdf, "cluster_label", cmap=cat_cmap)
-
-cluster_map.savefig(fp_cluster_maps_base + "hex_cluster_label.png", dpi=pdict["dpi"])
 
 # %%
 # ANALYSE CLUSTERS
@@ -272,7 +269,7 @@ socio_soc_gdf[["id", "socio_label", kmeans_col_soc_soc, "geometry"]].to_postgis(
     if_exists="replace",
     index=False,
 )
-
+# %%
 hex_gdf[["hex_id", "cluster_label", kmeans_col_net_hex, "geometry"]].to_postgis(
     "hex_clusters", engine, schema="clustering", if_exists="replace", index=False
 )

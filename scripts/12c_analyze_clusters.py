@@ -25,7 +25,7 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 # %%
-preprocess = False
+preprocess = True
 if preprocess:
 
     q = "sql/12b_analysis_clustering.sql"
@@ -81,34 +81,44 @@ y_labels = [
 ]
 plot_cols = [c for c in cluster_stats.columns if "kmeans" not in c]
 # %%
-cluster_stats["sort_column"] = None
-cluster_stats["cluster_label"] = cluster_stats.index
+# cluster_stats["sort_column"] = None
+# # cluster_stats["cluster_label"] = cluster_stats.index
 
-label_dict = {
-    "Highest stress - lowest density - lowest reach": 1,
-    "Low stress - medium density - medium reach": 4,
-    "High stress - medium density - low reach - local connectivity": 2,
-    "High stress - medium density - low reach - regional connectivity": 3,
-    "Lowest Stress - highest density - highest reach": 5,
-}
+# # label_dict = {
+# #     "0: Highest stress - lowest density - lowest reach": 1,
+# #     "1: Low stress - medium density - medium reach": 4,
+# #     "2: High stress - medium density - low reach - local connectivity": 2,
+# #     "3: High stress - medium density - low reach - regional connectivity": 3,
+# #     "4: Lowest Stress - highest density - highest reach": 5,
+# # }
+# label_dict = {
+#     0: 1,
+#     1: 4,
+#     2: 2,
+#     3: 3,
+#     4: 5,
+# }
 
-for key, val in label_dict.items():
-    cluster_stats.loc[
-        cluster_stats.cluster_label == key,
-        "sort_column",
-    ] = val
+# for key, val in label_dict.items():
+#     cluster_stats.loc[
+#         cluster_stats.kmeans_net_5 == key,
+#         "sort_column",
+#     ] = val
 
+cluster_stats["cluster_no_str"] = cluster_stats.kmeans_net_5.astype(int).astype(str)
 # %%
-cluster_stats.sort_values("sort_column", inplace=True)
+# cluster_stats.sort_values("sort_column", inplace=True)
 colors = [cluster_color_dict_labels[k] for k in cluster_stats.index]
+colors = list(cluster_color_dict_labels.values())
+cmap = plot_func.color_list_to_cmap(colors)
 
 for i, c in enumerate(plot_cols):
 
     plt.figure(figsize=pdict["fsbar"])
     sns.barplot(
-        x=cluster_stats.index,
+        x=cluster_stats.cluster_no_str,
         y=cluster_stats[c],
-        hue=cluster_stats.index,
+        hue=cluster_stats.cluster_no_str,
         palette=colors,  # cluster_color_dict.values(),
     )
     plt.xticks(rotation=90)
@@ -123,38 +133,35 @@ cluster_stats.to_csv(fp_cluster_data_base + "hex_cluster_stats.csv", index=True)
 # %%
 # grouped_clusters = hex_cluster.groupby("cluster_label")
 
+hex_cluster["cluster_no_str"] = hex_cluster["kmeans_net_5"].astype(int).astype(str)
+
 plot_labels = ["Population density", "Urban area (%)"]
+
+order = hex_cluster["cluster_no_str"].unique()
+order.sort()
 
 fig, axes = plt.subplots(1, 2, figsize=pdict["fsbar_sub"])
 
 axes = axes.flatten()
 
 for i, c in enumerate(["population_density", "urban_pct"]):
-    # Box plot of population by cluster label
-    plt.figure(figsize=pdict["fsbar"])
+
     sns.violinplot(
-        x=hex_cluster["cluster_label"],
+        x=hex_cluster["cluster_no_str"],  # hex_cluster["cluster_label"],
         y=hex_cluster[c],
-        hue=hex_cluster["cluster_label"],
+        hue=hex_cluster["cluster_no_str"],  # hex_cluster["cluster_label"],
         palette=cluster_color_dict.values(),
         fill=False,
         cut=0,
         ax=axes[i],
+        order=order,
     )
     axes[i].set_xlabel("")
     axes[i].set_ylabel(plot_labels[i])
-    axes[i].xaxis.set_tick_params(rotation=90)
+    # axes[i].xaxis.set_tick_params(rotation=90)
 
     axes[i].spines["right"].set_visible(False)
     axes[i].spines["top"].set_visible(False)
-
-# set_xticklabels(axes[i].get_xticklabels(), rotation=90)
-# sns.despine()
-# plt.xlabel("")
-# plt.xticks(rotation=90)
-# plt.ylabel(plot_labels[i])
-# sns.despine()
-# plt.savefig(fp_cluster_plots_base + f"cluster_violin_{c}.png")
 
 fig.savefig(f"{fp_cluster_plots_base}hex_cluster_pop_urban_violin.png")
 
