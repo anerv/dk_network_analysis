@@ -25,7 +25,7 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 # %%
-preprocess = True
+preprocess = False
 if preprocess:
 
     q = "sql/12b_analysis_clustering.sql"
@@ -66,46 +66,45 @@ cluster_ave.rename(
     inplace=True,
 )
 
+hex_cluster["area"] = hex_cluster["geometry"].area / 10**6
+cluster_area = (
+    hex_cluster[["cluster_label", "area"]]
+    .groupby("cluster_label")
+    .sum("area")
+    .reset_index()
+)
+cluster_area.rename(columns={"area": "total_area"}, inplace=True)
+
 cluster_stats = pd.merge(count_clusters, cluster_pop, on="cluster_label")
+cluster_stats = pd.merge(cluster_stats, cluster_area, on="cluster_label")
 cluster_stats = pd.merge(cluster_stats, cluster_ave, on="cluster_label")
 
+cluster_stats["population_share"] = (
+    cluster_stats.total_population / cluster_stats.total_population.sum() * 100
+)
+
+cluster_stats["area_share"] = (
+    cluster_stats.total_area / cluster_stats.total_area.sum() * 100
+)
+
 cluster_stats.set_index("cluster_label", inplace=True)
-display(cluster_stats.style.pipe(format_style_index))
 
 y_labels = [
     "Count",
     "Total population",
+    "Total area (km²)",
     "Average population count",
     "Average population density",
     "Average urban area (%)",
+    "Population share (%)",
+    "Area share (%)",
 ]
 plot_cols = [c for c in cluster_stats.columns if "kmeans" not in c]
-# %%
-# cluster_stats["sort_column"] = None
-# # cluster_stats["cluster_label"] = cluster_stats.index
 
-# # label_dict = {
-# #     "0: Highest stress - lowest density - lowest reach": 1,
-# #     "1: Low stress - medium density - medium reach": 4,
-# #     "2: High stress - medium density - low reach - local connectivity": 2,
-# #     "3: High stress - medium density - low reach - regional connectivity": 3,
-# #     "4: Lowest Stress - highest density - highest reach": 5,
-# # }
-# label_dict = {
-#     0: 1,
-#     1: 4,
-#     2: 2,
-#     3: 3,
-#     4: 5,
-# }
-
-# for key, val in label_dict.items():
-#     cluster_stats.loc[
-#         cluster_stats.kmeans_net_5 == key,
-#         "sort_column",
-#     ] = val
+display(cluster_stats[plot_cols].style.pipe(format_style_index))
 
 cluster_stats["cluster_no_str"] = cluster_stats.kmeans_net_5.astype(int).astype(str)
+
 # %%
 # cluster_stats.sort_values("sort_column", inplace=True)
 colors = [cluster_color_dict_labels[k] for k in cluster_stats.index]
@@ -119,20 +118,56 @@ for i, c in enumerate(plot_cols):
         x=cluster_stats.cluster_no_str,
         y=cluster_stats[c],
         hue=cluster_stats.cluster_no_str,
-        palette=colors,  # cluster_color_dict.values(),
+        palette=colors,
+        width=0.4,
     )
-    plt.xticks(rotation=90)
+    # plt.xticks(rotation=90)
     plt.xlabel("")
     plt.ylabel(y_labels[i])
 
-    plt.savefig(fp_cluster_plots_base + f"hex_cluster_bar_{c}.png")
+    sns.despine()
+
+    plt.savefig(fp_cluster_plots_base + f"hex_cluster_bar_{c}.png", dpi=pdict["dpi"])
 
     plt.show()
 
 cluster_stats.to_csv(fp_cluster_data_base + "hex_cluster_stats.csv", index=True)
 # %%
-# grouped_clusters = hex_cluster.groupby("cluster_label")
+# Make plot with both area and population
+fig, axes = plt.subplots(1, 2, figsize=pdict["fsbar_sub"])
 
+axes = axes.flatten()
+
+sns.barplot(
+    x=cluster_stats.cluster_no_str,
+    y=cluster_stats["total_area"],
+    hue=cluster_stats.cluster_no_str,
+    palette=colors,
+    width=0.4,
+    ax=axes[0],
+)
+
+axes[0].set_xlabel("")
+axes[0].set_ylabel("Total area (km²)")
+
+sns.barplot(
+    x=cluster_stats.cluster_no_str,
+    y=cluster_stats["total_population"],
+    hue=cluster_stats.cluster_no_str,
+    palette=colors,
+    width=0.4,
+    ax=axes[1],
+)
+
+axes[1].set_xlabel("")
+axes[1].set_ylabel("Total population")
+
+sns.despine()
+
+plt.savefig(fp_cluster_plots_base + f"hex_cluster_bar_area_pop.png", dpi=pdict["dpi"])
+
+#
+# %%
 hex_cluster["cluster_no_str"] = hex_cluster["kmeans_net_5"].astype(int).astype(str)
 
 plot_labels = ["Population density", "Urban area (%)"]
