@@ -36,7 +36,7 @@ def plot_poly_zoom(
     xmax,
     ymin,
     ymax,
-    alpha=1,
+    alpha=pdict["alpha"],
     edgecolor="white",
     linewidth=0.1,
     figsize=pdict["fsmap"],
@@ -156,7 +156,9 @@ def plot_poly_zoom(
     plt.close()
 
 
-def plot_hex_zoom_categorical(gdf, plot_col, cmap, fp, xmin, xmax, ymin, ymax):
+def plot_hex_zoom_categorical(
+    gdf, plot_col, cmap, fp, xmin, xmax, ymin, ymax, alpha=pdict["alpha"]
+):
 
     fig, ax = plt.subplots(1, 1, figsize=pdict["fsmap"])
     ax.set_axis_off()
@@ -168,11 +170,12 @@ def plot_hex_zoom_categorical(gdf, plot_col, cmap, fp, xmin, xmax, ymin, ymax):
             "frameon": False,
             "bbox_to_anchor": (0.99, 1),
             "loc": "upper left",
+            "fontsize": 10,
         },
         ax=ax,
         cmap=cmap,
         linewidth=0.1,
-        alpha=0.9,
+        alpha=alpha,
     )
 
     cx.add_attribution(ax=ax, text="(C) " + pdict["map_attr"])
@@ -209,7 +212,7 @@ def plot_hex_clusters(gdf, plot_col, cmap, fp):
         column=plot_col,
         categorical=True,
         legend=True,
-        legend_kwds={"frameon": False, "bbox_to_anchor": (0.99, 1)},
+        legend_kwds={"frameon": False, "bbox_to_anchor": (0.99, 1), "fontsize": 10},
         ax=ax,
         cmap=cmap,
         linewidth=0.1,
