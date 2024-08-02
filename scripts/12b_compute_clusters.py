@@ -232,7 +232,7 @@ hex_gdf["cluster_label"] = None
 
 label_dict = {
     0: "0: Highest stress - lowest density - lowest reach",
-    1: "1: Low stress - high density density - medium reach - regional low stress connectivity",
+    1: "1: Low stress - high density - medium reach - regional low stress connectivity",
     2: "2: High stress - medium density - low reach - local connectivity",
     3: "3: High stress - medium density - low reach - regional connectivity",
     4: "4: Lowest Stress - highest density - highest reach",
