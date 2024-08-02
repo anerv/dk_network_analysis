@@ -214,7 +214,6 @@ cluster_means_hex.to_csv(fp_hex_network_cluster_means, index=True)
 fp = fp_cluster_maps_base + "hex_cluster_map.png"
 plot_func.plot_hex_clusters(hex_gdf, "kmeans_net_5", cmap, fp)
 
-
 # Make zoomed cluster map
 
 fp = fp_cluster_maps_base + "hex_cluster_map_zoom.png"
@@ -233,7 +232,7 @@ hex_gdf["cluster_label"] = None
 
 label_dict = {
     0: "0: Highest stress - lowest density - lowest reach",
-    1: "1: Low stress - medium density - medium reach",
+    1: "1: Low stress - high density density - medium reach - regional low stress connectivity",
     2: "2: High stress - medium density - low reach - local connectivity",
     3: "3: High stress - medium density - low reach - regional connectivity",
     4: "4: Lowest Stress - highest density - highest reach",
