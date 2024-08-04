@@ -130,6 +130,8 @@ filepaths_local_component_count = [
     "../results/component_count_maps/hexgrid/",
 ]
 
+filepath_components_zoom = "../results/component_count_maps/hexgrid/components_zoom.png"
+
 filepaths_component_density_correlation = [
     "../results/component_density_correlation/administrative/component_count_infra_density_",
     "../results/component_density_correlation/socio/component_count_infra_density_",
