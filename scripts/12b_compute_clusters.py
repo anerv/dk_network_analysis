@@ -221,7 +221,7 @@ fp = fp_cluster_maps_base + "hex_cluster_map_zoom.png"
 xmin, ymin = (689922.425333, 6161099.004817)
 xmax, ymax = (734667.301464 - 900, 6202301.965700)
 
-plot_func.plot_hex_zoom_categorical(
+plot_func.plot_zoom_categorical(
     hex_gdf, "kmeans_net_5", cmap, fp, xmin, xmax, ymin, ymax
 )
 
