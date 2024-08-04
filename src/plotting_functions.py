@@ -26,6 +26,58 @@ exec(open("../settings/plotting.py").read())
 # Gini functions based on https://geographicdata.science/book/notebooks/09_spatial_inequality.html
 
 
+def plot_components_zoom(
+    gdf,
+    component_col,
+    cmap,
+    fp,
+    xmin,
+    ymin,
+    xmax,
+    ymax,
+    linewidht=1.5,
+    alpha=pdict["alpha"],
+):
+
+    gdf_subset = gdf.cx[xmin:xmax, ymin:ymax]
+
+    fig, ax = plt.subplots(figsize=pdict["fsmap"])
+
+    ax.set_axis_off()
+    gdf_subset.plot(
+        column=component_col,
+        categorical=True,
+        legend=False,
+        ax=ax,
+        cmap=cmap,
+        linewidth=linewidht,
+        alpha=alpha,
+    )
+
+    cx.add_attribution(ax=ax, text="(C) " + pdict["map_attr"])
+    txt = ax.texts[-1]
+    txt.set_position([0.99, 0.01])
+    txt.set_ha("right")
+    txt.set_va("bottom")
+
+    ax.add_artist(
+        ScaleBar(
+            dx=1,
+            units="m",
+            dimension="si-length",
+            length_fraction=0.15,
+            width_fraction=0.002,
+            location="lower left",
+            box_alpha=0.5,
+            font_properties={"size": 10},
+        )
+    )
+
+    fig.savefig(fp, dpi=pdict["dpi"])
+
+    plt.tight_layout()
+
+
 def plot_poly_zoom(
     poly_gdf,
     plot_col,
@@ -156,7 +208,7 @@ def plot_poly_zoom(
     plt.close()
 
 
-def plot_hex_zoom_categorical(
+def plot_zoom_categorical(
     gdf, plot_col, cmap, fp, xmin, xmax, ymin, ymax, alpha=pdict["alpha"]
 ):
 

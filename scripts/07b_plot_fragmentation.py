@@ -323,7 +323,35 @@ for i, p in enumerate(plot_columns):
     )
 
 # %%
+# Make zoomed component plot
 
+component_edges = gpd.GeoDataFrame.from_postgis(
+    "SELECT * FROM fragmentation.component_edges;", engine, geom_col="geometry"
+)
+
+lts_subset = component_edges[component_edges.component_1.notna()]
+
+xmin, ymin = (639464.351371, 6120027.316230)
+xmax, ymax = (699033.929025, 6173403.495114)
+
+xmin, ymin = (639464.351371, 6120027.316230)
+xmax, ymax = (699033.929025, 6173403.495114)
+
+plot_func.plot_components_zoom(
+    lts_subset,
+    "component_1",
+    "Set2",
+    filepath_components_zoom,
+    xmin,
+    ymin,
+    xmax,
+    ymax,
+)
+
+del component_edges
+del lts_subset
+
+# %%
 ##### CORRELATION AND DENSITY PLOTS #####
 
 # *** Correlation between hex largest component length and area ***
