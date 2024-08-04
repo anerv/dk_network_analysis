@@ -157,3 +157,60 @@ else:
     fig.savefig(filepath + ".png", dpi=pdict["dpi"])
 
 # %%
+# Plot hex grid
+
+hex_grid = gpd.read_postgis(
+    "SELECT hex_id, geometry FROM hex_grid", engine, geom_col="geometry"
+)
+
+# %%
+xmin, ymin = (689922, 6161099 - 200)
+xmax = xmin + 3000
+ymax = ymin + 3000
+
+plot_res = "low"
+
+filepath = "../illustrations/hex_grid"
+
+fig, ax = plt.subplots(figsize=pdict["fsmap"])
+
+hex_grid.plot(
+    ax=ax,
+    color="none",
+    edgecolor="black",
+    linewidth=1,
+    legend=False,
+)
+
+ax.axis([xmin, xmax, ymin, ymax])
+
+ax.set_axis_off()
+ax.set_title("Hex grid")
+
+ax.add_artist(
+    ScaleBar(
+        dx=1,
+        units="m",
+        dimension="si-length",
+        length_fraction=0.15,
+        width_fraction=0.002,
+        location="lower right",
+        box_alpha=0,
+    )
+)
+
+cx.add_basemap(ax, crs=hex_grid.crs, source=cx.providers.CartoDB.PositronNoLabels)
+
+if plot_res == "high":
+    fig.savefig(filepath + ".svg", dpi=pdict["dpi"])
+else:
+    fig.savefig(filepath + ".png", dpi=pdict["dpi"])
+
+# %%
+
+# Make zoomed density plot - inclusive
+
+# Get density grid
+# Get Lts edges
+# plot density grid
+# plot edges on top
