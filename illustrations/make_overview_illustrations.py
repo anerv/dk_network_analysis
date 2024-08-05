@@ -207,10 +207,112 @@ else:
     fig.savefig(filepath + ".png", dpi=pdict["dpi"])
 
 # %%
+# Density illustration
 
-# Make zoomed density plot - inclusive
+exec(open("../helper_scripts/read_density.py").read())
 
-# Get density grid
-# Get Lts edges
-# plot density grid
-# plot edges on top
+del density_muni
+del density_socio
+
+edges = gpd.read_postgis(
+    "SELECT id, geometry FROM edges WHERE lts_access IN (1,2,3,4)",
+    engine,
+    geom_col="geometry",
+)
+# %%
+xmin, ymin = (689922 - 1000, 6161099 - 2000)
+xmax = xmin + 3000
+ymax = ymin + 3000
+
+plot_res = "low"
+
+filepath = "../illustrations/density"
+
+fig, ax = plt.subplots(figsize=pdict["fsmap"])
+
+density_hex.plot(
+    ax=ax,
+    column="lts_1_4_dens",
+    cmap="PuRd",
+    edgecolor="none",
+    linewidth=0,
+    legend=False,
+)
+
+edges.plot(
+    ax=ax,
+    color="black",
+    linewidth=1,
+    legend=False,
+)
+
+ax.axis([xmin, xmax, ymin, ymax])
+
+ax.set_axis_off()
+ax.set_title("Density")
+
+ax.add_artist(
+    ScaleBar(
+        dx=1,
+        units="m",
+        dimension="si-length",
+        length_fraction=0.15,
+        width_fraction=0.002,
+        location="lower right",
+        box_alpha=0,
+    )
+)
+
+if plot_res == "high":
+    fig.savefig(filepath + ".svg", dpi=pdict["dpi"])
+else:
+    fig.savefig(filepath + ".png", dpi=pdict["dpi"])
+
+# %%
+lts1_edges = gpd.read_postgis(
+    "SELECT id, geometry FROM edges WHERE lts_access IN (1)",
+    engine,
+    geom_col="geometry",
+)
+
+# %%
+xmin, ymin = (689922 - 1000, 6161099 - 2000)
+xmax = xmin + 3000
+ymax = ymin + 3000
+
+plot_res = "low"
+
+filepath = "../illustrations/reach"
+
+fig, ax = plt.subplots(figsize=pdict["fsmap"])
+
+lts1_edges.plot(
+    ax=ax,
+    color="black",
+    linewidth=1,
+    legend=False,
+)
+
+ax.axis([xmin, xmax, ymin, ymax])
+
+ax.set_axis_off()
+ax.set_title("Reach")
+
+ax.add_artist(
+    ScaleBar(
+        dx=1,
+        units="m",
+        dimension="si-length",
+        length_fraction=0.15,
+        width_fraction=0.002,
+        location="lower right",
+        box_alpha=0,
+    )
+)
+
+if plot_res == "high":
+    fig.savefig(filepath + ".svg", dpi=pdict["dpi"])
+else:
+    fig.savefig(filepath + ".png", dpi=pdict["dpi"])
+
+# %%
