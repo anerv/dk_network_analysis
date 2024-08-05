@@ -216,7 +216,7 @@ for i, c in enumerate(plot_columns):
 
 #%%
 # Zoomed map
-fp = fp_reach_diff_pct + "1-5_unclassified_zoom_lts1.png"
+fp = fp_reach_diff_pct + "1-5_unclassified_zoom_lts1"
 plot_column = 'lts_1_pct_diff_1_5'
 
 xmin, ymin = (639464.351371, 6120027.316230)
