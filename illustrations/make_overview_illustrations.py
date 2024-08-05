@@ -35,7 +35,7 @@ fig, ax = plt.subplots(figsize=pdict["fsmap"])
 network.plot(ax=ax, color="black", linewidth=0.2)
 
 ax.set_axis_off()
-ax.set_title("Road and path network")
+ax.set_title("Road and path network", fontsize=pdict["map_title_fs"])
 
 ax.add_artist(
     ScaleBar(
@@ -46,9 +46,12 @@ ax.add_artist(
         width_fraction=0.002,
         location="lower left",
         box_alpha=0,
+        font_properties={"size": pdict["map_legend_fs"]},
     )
 )
-cx.add_attribution(ax=ax, text="(C) " + pdict["map_attr"])
+cx.add_attribution(
+    ax=ax, text="(C) " + pdict["map_attr"], font_size=pdict["map_legend_fs"]
+)
 txt = ax.texts[-1]
 txt.set_position([0.99, 0.01])
 txt.set_ha("right")
@@ -73,7 +76,6 @@ filepath = "../illustrations/population_map"
 fig, ax = plt.subplots(figsize=pdict["fsmap"])
 
 population.plot(
-    # cax=cax,
     ax=ax,
     scheme="natural_breaks",
     k=5,
@@ -82,11 +84,15 @@ population.plot(
     linewidth=0.0,
     edgecolor="none",
     legend=True,
-    legend_kwds={"fmt": "{:.0f}", "frameon": False},
+    legend_kwds={
+        "fmt": "{:.0f}",
+        "frameon": False,
+        "fontsize": pdict["map_legend_fs"],
+    },
 )
 
 ax.set_axis_off()
-ax.set_title("Population density (people/km²)")
+ax.set_title("Population density (people/km²)", fontsize=pdict["map_title_fs"])
 
 ax.add_artist(
     ScaleBar(
@@ -97,9 +103,10 @@ ax.add_artist(
         width_fraction=0.002,
         location="lower left",
         box_alpha=0,
+        font_properties={"size": pdict["map_legend_fs"]},
     )
 )
-cx.add_attribution(ax=ax, text="(C) " + "GHSL")
+cx.add_attribution(ax=ax, text="(C) " + "GHSL", font_size=pdict["map_legend_fs"])
 txt = ax.texts[-1]
 txt.set_position([0.99, 0.01])
 txt.set_ha("right")
@@ -117,6 +124,7 @@ filepath = "../illustrations/urban_areas"
 fig, ax = plt.subplots(figsize=pdict["fsmap"])
 divider = make_axes_locatable(ax)
 cax = divider.append_axes("right", size="3.5%", pad="1%")
+cax.tick_params(labelsize=pdict["map_legend_fs"])
 
 population.plot(
     cax=cax,
@@ -132,7 +140,7 @@ population.plot(
 )
 
 ax.set_axis_off()
-ax.set_title("Urban areas (%)")
+ax.set_title("Urban areas (%)", fontsize=pdict["map_title_fs"])
 
 ax.add_artist(
     ScaleBar(
@@ -143,9 +151,10 @@ ax.add_artist(
         width_fraction=0.002,
         location="lower left",
         box_alpha=0,
+        font_properties={"size": pdict["map_legend_fs"]},
     )
 )
-cx.add_attribution(ax=ax, text="(C) " + "SDFI")
+cx.add_attribution(ax=ax, text="(C) " + "SDFI", font_size=pdict["map_legend_fs"])
 txt = ax.texts[-1]
 txt.set_position([0.99, 0.01])
 txt.set_ha("right")
