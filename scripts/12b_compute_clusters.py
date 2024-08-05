@@ -214,7 +214,6 @@ cluster_means_hex.to_csv(fp_hex_network_cluster_means, index=True)
 fp = fp_cluster_maps_base + "hex_cluster_map.png"
 plot_func.plot_hex_clusters(hex_gdf, "kmeans_net_5", cmap, fp)
 
-# %%
 # Make zoomed cluster map
 fp = fp_cluster_maps_base + "hex_cluster_map_zoom.png"
 
