@@ -270,7 +270,7 @@ def plot_hex_clusters(gdf, plot_col, cmap, fp):
         column=plot_col,
         categorical=True,
         legend=True,
-        legend_kwds={"frameon": False, "bbox_to_anchor": (0.99, 1), "fontsize": 8},
+        legend_kwds={"frameon": False, "bbox_to_anchor": (0.99, 1), "fontsize": 9},
         ax=ax,
         cmap=cmap,
         linewidth=0.1,
