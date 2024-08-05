@@ -44,6 +44,7 @@ def plot_components_zoom(
     fig, ax = plt.subplots(figsize=pdict["fsmap"])
 
     ax.set_axis_off()
+
     gdf_subset.plot(
         column=component_col,
         categorical=True,
@@ -54,7 +55,9 @@ def plot_components_zoom(
         alpha=alpha,
     )
 
-    cx.add_attribution(ax=ax, text="(C) " + pdict["map_attr"])
+    cx.add_attribution(
+        ax=ax, text="(C) " + pdict["map_attr"], font_size=pdict["map_legend_fs"]
+    )
     txt = ax.texts[-1]
     txt.set_position([0.99, 0.01])
     txt.set_ha("right")
@@ -69,16 +72,18 @@ def plot_components_zoom(
             width_fraction=0.002,
             location="lower left",
             box_alpha=0.5,
-            font_properties={"size": 10},
+            font_properties={"size": pdict["map_legend_fs"]},
         )
     )
+
+    ax.set_title("Disconnected components", fontsize=pdict["map_title_fs"])
 
     fig.savefig(fp, dpi=pdict["dpi"])
 
     plt.tight_layout()
 
 
-def plot_poly_zoom(
+def y_zoom(
     poly_gdf,
     plot_col,
     plot_title,
@@ -167,7 +172,7 @@ def plot_poly_zoom(
         # Creates a legend with the list of patches above.
         ax.legend(
             handles=patch_list,
-            fontsize=pdict["legend_fs"],
+            fontsize=pdict["map_legend_fs"],
             loc="lower left",
             bbox_to_anchor=(0.3, -0.01),
             # title="Litologia",
@@ -178,7 +183,7 @@ def plot_poly_zoom(
     ax.set_axis_off()
 
     if attr is not None:
-        cx.add_attribution(ax=ax, text="(C) " + attr)
+        cx.add_attribution(ax=ax, text="(C) " + attr, font_size=pdict["map_legend_fs"])
         txt = ax.texts[-1]
         txt.set_position([0.99, 0.012])
         txt.set_ha("right")
@@ -193,11 +198,12 @@ def plot_poly_zoom(
             width_fraction=0.002,
             location="lower left",
             box_alpha=0.5,
+            font_properties={"size": pdict["map_legend_fs"]},
         )
     )
 
     ax.axis([xmin, xmax, ymin, ymax])
-    ax.set_title(plot_title)
+    ax.set_title(plot_title, fontsize=pdict["map_title_fs"])
 
     if plot_res == "high":
         fig.savefig(filepath + ".svg", dpi=dpi)
