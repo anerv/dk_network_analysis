@@ -39,6 +39,9 @@ pdict = {
     "fontsize": 10,
     "ax_fs": 12,
     "fsmap_subs": (10, 15),
+    "map_title_fs": 14,
+    "map_fs": 10,
+    "map_legend_fs": 12,
 }
 
 # Plot parameters

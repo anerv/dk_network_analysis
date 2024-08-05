@@ -264,7 +264,7 @@ def plot_hex_clusters(gdf, plot_col, cmap, fp):
         column=plot_col,
         categorical=True,
         legend=True,
-        legend_kwds={"frameon": False, "bbox_to_anchor": (0.99, 1), "fontsize": 10},
+        legend_kwds={"frameon": False, "bbox_to_anchor": (0.99, 1), "fontsize": 8},
         ax=ax,
         cmap=cmap,
         linewidth=0.1,
@@ -1104,6 +1104,7 @@ def plot_unclassified_poly(
 
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size="3.5%", pad="1%")
+    cax.tick_params(labelsize=pdict["map_legend_fs"])
 
     if use_norm is True:
 
@@ -1195,11 +1196,11 @@ def plot_unclassified_poly(
         # Creates a legend with the list of patches above.
         ax.legend(
             handles=patch_list,
-            fontsize=pdict["legend_fs"],
+            fontsize=pdict["map_legend_fs"],
             loc="lower left",
             bbox_to_anchor=(0.1, -0.015),
             # title="Litologia",
-            title_fontsize=pdict["legend_title_fs"],
+            title_fontsize=pdict["map_legend_fs"],
             frameon=False,
         )
 
@@ -1217,7 +1218,7 @@ def plot_unclassified_poly(
         ax.patch.set_zorder(-1)
 
     if attr is not None:
-        cx.add_attribution(ax=ax, text="(C) " + attr)
+        cx.add_attribution(ax=ax, text="(C) " + attr, font_size=pdict["map_legend_fs"])
         txt = ax.texts[-1]
         txt.set_position([0.99, 0.01])
         txt.set_ha("right")
@@ -1232,10 +1233,11 @@ def plot_unclassified_poly(
             width_fraction=0.002,
             location="lower left",
             box_alpha=0,
+            font_properties={"size": pdict["map_legend_fs"]},
         )
     )
 
-    ax.set_title(plot_title)
+    ax.set_title(plot_title, fontsize=pdict["map_title_fs"])
 
     if plot_res == "high":
         fig.savefig(filepath + ".svg", dpi=dpi)
