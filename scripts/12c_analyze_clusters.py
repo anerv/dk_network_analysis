@@ -125,6 +125,8 @@ for i, c in enumerate(plot_cols):
     plt.xlabel("")
     plt.ylabel(y_labels[i])
 
+    plt.tick_params(axis="both", which="major", labelsize=pdict["fs_subplot"])
+
     sns.despine()
 
     plt.savefig(fp_cluster_plots_base + f"hex_cluster_bar_{c}.png", dpi=pdict["dpi"])
@@ -149,6 +151,7 @@ sns.barplot(
 
 axes[0].set_xlabel("")
 axes[0].set_ylabel("Total area (km²)")
+axes[0].tick_params(axis="both", which="major", labelsize=pdict["fs_subplot"])
 
 sns.barplot(
     x=cluster_stats.cluster_no_str,
@@ -161,6 +164,7 @@ sns.barplot(
 
 axes[1].set_xlabel("")
 axes[1].set_ylabel("Total population")
+axes[1].tick_params(axis="both", which="major", labelsize=pdict["fs_subplot"])
 
 sns.despine()
 
@@ -193,6 +197,7 @@ for i, c in enumerate(["population_density", "urban_pct"]):
     )
     axes[i].set_xlabel("")
     axes[i].set_ylabel(plot_labels[i])
+    axes[i].tick_params(axis="both", which="major", labelsize=pdict["fs_subplot"])
     # axes[i].xaxis.set_tick_params(rotation=90)
 
     axes[i].spines["right"].set_visible(False)

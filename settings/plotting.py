@@ -42,6 +42,7 @@ pdict = {
     "map_title_fs": 14,
     "map_fs": 10,
     "map_legend_fs": 12,
+    "fs_subplot": 11,
 }
 
 # Plot parameters
