@@ -187,6 +187,14 @@ k_labels = analysis_func.run_kmeans(k, hex_network_scaled)
 
 hex_gdf[kmeans_col_net_hex] = k_labels
 
+# %%
+# Label clusters after bikeability rank # NOTE Assumes this is known already!
+cluster_dict = {0: 1, 1: 4, 2: 2, 3: 3, 4: 5}
+
+hex_gdf.replace({kmeans_col_net_hex: cluster_dict}, inplace=True)
+
+# %%
+
 fp_map = fp_cluster_maps_base + f"hex_net_map_{kmeans_col_net_hex}.png"
 fp_size = fp_cluster_plots_base + f"hex_net_size_{kmeans_col_net_hex}.png"
 fp_kde = fp_cluster_plots_base + f"hex_net_kde_{kmeans_col_net_hex}.png"
@@ -204,6 +212,7 @@ cluster_means_hex = analysis_func.examine_cluster_results(
     cmap=cmap,
     palette=colors,
 )
+
 
 plot_func.style_cluster_means(cluster_means_hex)
 
@@ -230,11 +239,11 @@ hex_gdf["cluster_label"] = None
 
 
 label_dict = {
-    0: "0: Highest stress - lowest density - lowest reach",
-    1: "1: Low stress - high density - medium reach - regional low stress connectivity",
+    1: "1: Highest stress - lowest density - lowest reach",
     2: "2: High stress - medium density - low reach - local connectivity",
     3: "3: High stress - medium density - low reach - regional connectivity",
-    4: "4: Lowest Stress - highest density - highest reach",
+    4: "4: Low stress - high density - medium reach - regional low stress connectivity",
+    5: "5: Lowest Stress - highest density - highest reach",
 }
 
 assert len(label_dict) == k

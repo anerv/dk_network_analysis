@@ -126,22 +126,22 @@ lts_color_dict = {
 
 
 cluster_color_dict_labels = {
-    "0: Highest stress - lowest density - lowest reach": lts_color_dict["car"],
-    "1: Low stress - high density - medium reach - regional low stress connectivity": lts_color_dict[
-        "2"
-    ],
+    "1: Highest stress - lowest density - lowest reach": lts_color_dict["car"],
     "2: High stress - medium density - low reach - local connectivity": lts_color_dict[
         "4"
     ],
     "3: High stress - medium density - low reach - regional connectivity": lts_color_dict[
         "3"
     ],
-    "4: Lowest Stress - highest density - highest reach": lts_color_dict["1"],
+    "4: Low stress - high density - medium reach - regional low stress connectivity": lts_color_dict[
+        "2"
+    ],
+    "5: Lowest Stress - highest density - highest reach": lts_color_dict["1"],
 }
 
 
 cluster_color_dict = {
-    "1": cluster_color_dict_labels["0: Highest stress - lowest density - lowest reach"],
+    "1": cluster_color_dict_labels["1: Highest stress - lowest density - lowest reach"],
     "2": cluster_color_dict_labels[
         "2: High stress - medium density - low reach - local connectivity"
     ],
@@ -149,10 +149,10 @@ cluster_color_dict = {
         "3: High stress - medium density - low reach - regional connectivity"
     ],
     "4": cluster_color_dict_labels[
-        "1: Low stress - high density - medium reach - regional low stress connectivity"
+        "4: Low stress - high density - medium reach - regional low stress connectivity"
     ],
     "5": cluster_color_dict_labels[
-        "4: Lowest Stress - highest density - highest reach"
+        "5: Lowest Stress - highest density - highest reach"
     ],
 }
 
