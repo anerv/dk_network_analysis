@@ -78,7 +78,7 @@ fig, ax = plt.subplots(figsize=pdict["fsmap"])
 population.plot(
     ax=ax,
     scheme="natural_breaks",
-    k=5,
+    k=8,
     column="population_density",
     cmap="viridis",
     linewidth=0.0,
