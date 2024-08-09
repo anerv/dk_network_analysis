@@ -1369,8 +1369,10 @@ def combined_zipf_plot(
     axes.set_xscale("log")
     axes.set_yscale("log")
 
-    axes.set_ylabel("Component length [km]")
-    axes.set_xlabel("Component rank (largest to smallest)")
+    axes.set_ylabel("Component length [km]", fontsize=pdict["fs_subplot"] + 2)
+    axes.set_xlabel(
+        "Component rank (largest to smallest)", fontsize=pdict["fs_subplot"] + 2
+    )
 
     legend_patches = [
         Patch(
@@ -1416,14 +1418,18 @@ def combined_zipf_plot(
             "Total network",
         ],
     )
-    axes.set_title(title)
+    axes.set_title(title, fontsize=pdict["fs_subplot"] + 2)
 
     legend = axes.get_legend()
     if legend:
-
         legend.set_frame_on(False)
 
-    fig.savefig(fp)
+        for i in range(len(legend.get_texts())):
+            legend.get_texts()[i].set_fontsize(pdict["fs_subplot"])
+
+    axes.tick_params(axis="both", which="major", labelsize=pdict["fs_subplot"])
+
+    fig.savefig(fp, bbox_inches="tight", dpi=pdict["dpi"])
     plt.show()
     plt.close()
 
