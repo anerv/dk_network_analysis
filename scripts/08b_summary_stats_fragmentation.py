@@ -113,6 +113,7 @@ for network_type in network_types:
 # ax1.set_ylabel("Length")
 ax1.tick_params(
     axis="y",
+    labelsize=pdict["fs_subplot"],
 )
 
 # Plot 'component count' values on the secondary y-axis
@@ -127,21 +128,16 @@ for network_type in network_types:
 # ax2.set_ylabel("Component Count")
 ax2.tick_params(
     axis="y",
+    labelsize=pdict["fs_subplot"],
 )
 
 # Combine legends from both axes
 handles1, labels1 = ax1.get_legend_handles_labels()
 ax1.legend(handles1, labels1, bbox_to_anchor=(0.99, 1), loc="upper right")
 
-legend = ax1.get_legend()
-if legend:
-    legend.set_frame_on(False)
-
 # Set x-ticks to be the network types
 ax1.set_xticks([0, 1])
-ax1.set_xticklabels(
-    ["Length (km)", "Component Count"],
-)
+ax1.set_xticklabels(["Length (km)", "Component Count"], fontsize=pdict["fs_subplot"])
 
 # Manually draw dotted lines between marks of the same color
 for network_type in network_types:
@@ -156,6 +152,17 @@ for network_type in network_types:
         color=colors[network_type],
         linestyle="dotted",
     )
+
+legend = ax1.get_legend()
+if legend:
+    legend.set_frame_on(False)
+
+for i in range(len(legend.get_texts())):
+    legend.get_texts()[i].set_fontsize(pdict["fs_subplot"])
+
+# legend = ax2.get_legend()
+# if legend:
+#     legend.get_texts()[0].set_fontsize(20)
 
 # Find the maximum value for the component count
 # max_component_count = merged_df["component count"].max()
@@ -214,4 +221,4 @@ for a, df in zip(aggregation_levels, component_dfs):
 
     display(df.style.pipe(format_style_index))
 
-    # %%
+# %%
