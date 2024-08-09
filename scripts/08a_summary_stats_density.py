@@ -35,7 +35,7 @@ total_bike_length = lts_1_length + lts_2_length + lts_3_length + lts_4_length
 total_car_length = density_muni.total_car_length.sum()
 total_network_length = density_muni.total_network_length.sum()
 
-network_levels = labels_all
+network_levels = labels_all.copy()
 
 network_lengths = [
     lts_1_length,
@@ -159,9 +159,12 @@ for i, df in enumerate(
 # fig.write_image(filepath_summary_network_length, format="jpg", scale=6)
 
 # %%
-network_levels = labels_all
+
 
 # DENSITY SUMMARY
+
+network_levels = labels_all
+
 for a, df in zip(aggregation_levels, density_data):
 
     min_density = []
