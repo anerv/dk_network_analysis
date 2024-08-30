@@ -128,7 +128,7 @@ fps_local_component_count = [
 
 fp_components_zoom = "../results/component_maps/hexgrid/components_zoom.png"
 
-fps_correlation = [
+fps_comp_dens_correlation = [
     "../results/correlation/municipality/component_count_infra_density_",
     "../results/correlation/socio/component_count_infra_density_",
     "../results/correlation/hexgrid/component_count_infra_density_",
@@ -141,18 +141,9 @@ fps_components_rug = [
 ]
 
 fps_components_scatter = [
-    "../results/correlation/municipality/component_count_infra_density_all_areas.jpeg",
-    "../results/correlation/socio/component_count_infra_density_all_areas.jpeg",
-    "../results/correlation/hexgrid/component_count_infra_density_all_areas.jpeg",
-]
-
-fps_components_scatter_lts = [
-    "../results/correlation/hexgrid/component_count_infra_density_all_areas_1.jpeg",
-    "../results/correlation/hexgrid/component_count_infra_density_all_areas_2.jpeg",
-    "../results/correlation/hexgrid/component_count_infra_density_all_areas_3.jpeg",
-    "../results/correlation/hexgrid/component_count_infra_density_all_areas_4.jpeg",
-    "../results/correlation/hexgrid/component_count_infra_density_all_areas_car.jpeg",
-    "../results/correlation/hexgrid/component_count_infra_density_all_areas_all.jpeg",
+    "../results/correlation/municipality/component_count_infra_density_all.jpeg",
+    "../results/correlation/socio/component_count_infra_density_all.jpeg",
+    "../results/correlation/hexgrid/component_count_infra_density_all.jpeg",
 ]
 
 fp_summmary_stats_network_length = "../results/summary_stats/density_network_length.csv"
@@ -195,7 +186,7 @@ fp_largest_component_area = "../results/component_maps/largest_component_area_"
 
 fp_correlation = "../results/correlation/"
 
-fp_component_plots = "../results/component_plots/largest_component_length_kde.png"
+fp_comp_length_kde = "../results/component_plots/largest_component_length_kde.png"
 
 
 # Spatial weights sensitivity test
