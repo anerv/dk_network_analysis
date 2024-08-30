@@ -113,7 +113,7 @@ network_levels_step = ["lts_1", "lts_1_2", "lts_1_3", "lts_1_4", "car"]
 
 
 id_columns = ["municipality", "id", "hex_id"]
-aggregation_levels = ["administrative", "socio", "hexgrid"]
+aggregation_levels = ["municipal", "socio", "hexgrid"]
 
 lts_color_dict = {
     "1": "#117733",  # "#0B7512",

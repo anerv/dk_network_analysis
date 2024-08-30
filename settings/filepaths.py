@@ -1,52 +1,50 @@
 # Density plots
 
-filepath_summary_network_length = (
-    "../results/density_distributions/density_network_length_bar.jpg"
+fp_summary_network_length = "../results/density_plots/density_network_length_bar.jpg"
+
+fp_summary_network_length_steps = (
+    "../results/density_plots/density_network_length_steps_bar.jpg"
 )
 
-filepath_summary_network_length_steps = (
-    "../results/density_distributions/density_network_length_steps_bar.jpg"
-)
-
-filepaths_kde_length = [
-    "../results/density_distributions/administrative/lts_kde_length.jpg",
-    "../results/density_distributions/socio/lts_kde_length.jpg",
-    "../results/density_distributions/hexgrid/lts_kde_length.jpg",
+fps_kde_length = [
+    "../results/density_plots/municipality/lts_kde_length.jpg",
+    "../results/density_plots/socio/lts_kde_length.jpg",
+    "../results/density_plots/hexgrid/lts_kde_length.jpg",
 ]
 
-filepaths_kde_density = [
-    "../results/density_distributions/administrative/lts_kde_density.jpg",
-    "../results/density_distributions/socio/lts_kde_density.jpg",
-    "../results/density_distributions/hexgrid/lts_kde_density.jpg",
+fps_kde_density = [
+    "../results/density_plots/municipality/lts_kde_density.jpg",
+    "../results/density_plots/socio/lts_kde_density.jpg",
+    "../results/density_plots/hexgrid/lts_kde_density.jpg",
 ]
 
-filepaths_bar_length = [
-    "../results/density_distributions/administrative/lts_stacked_bar_len.jpg",
-    "../results/density_distributions/socio/lts_stacked_bar_len.jpg",
-    "../results/density_distributions/hexgrid/lts_stacked_bar_len.jpg",
+fps_bar_length = [
+    "../results/density_plots/municipality/lts_stacked_bar_len.jpg",
+    "../results/density_plots/socio/lts_stacked_bar_len.jpg",
+    "../results/density_plots/hexgrid/lts_stacked_bar_len.jpg",
 ]
 
-filepaths_bar_density = [
-    "../results/density_distributions/administrative/lts_stacked_bar_dens.jpg",
-    "../results/density_distributions/socio/lts_stacked_bar_dens.jpg",
-    "../results/density_distributions/hexgrid/lts_stacked_bar_dens.jpg",
+fps_bar_density = [
+    "../results/density_plots/municipality/lts_stacked_bar_dens.jpg",
+    "../results/density_plots/socio/lts_stacked_bar_dens.jpg",
+    "../results/density_plots/hexgrid/lts_stacked_bar_dens.jpg",
 ]
 
-filepaths_violin_density = [
-    "../results/density_distributions/administrative/violin_",
-    "../results/density_distributions/socio/violin_",
-    "../results/density_distributions/hexgrid/violin_",
+fps_violin_density = [
+    "../results/density_plots/municipality/violin_",
+    "../results/density_plots/socio/violin_",
+    "../results/density_plots/hexgrid/violin_",
 ]
 
-all_filepaths_map_density = [
-    "../results/density_maps/administrative/",
+all_fps_map_density = [
+    "../results/density_maps/municipality/",
     "../results/density_maps/socio/",
     "../results/density_maps/hexgrid/",
 ]
 
 # Reach plots
 
-filepaths_reach = [
+fps_reach = [
     "../results/reach_maps/lts_1_reach_len",
     "../results/reach_maps/lts_1_2_reach_len",
     "../results/reach_maps/lts_1_3_reach_len",
@@ -54,166 +52,150 @@ filepaths_reach = [
     "../results/reach_maps/car_reach_len",
 ]
 
-filepaths_reach_diff = [
+fps_reach_diff = [
     "../results/reach_maps/lts1_reach_len_diff",
     "../results/reach_maps/lts_1_2_reach_len_diff",
     "../results/reach_maps/lts_1_3_reach_len_diff",
     "../results/reach_maps/lts_1_4_reach_len_diff",
 ]
 
-filepaths_reach_diff_pct = [
+fps_reach_diff_pct = [
     "../results/reach_maps/lts1_reach_pct_diff",
     "../results/reach_maps/lts_1_2_reach_pct_diff",
     "../results/reach_maps/lts_1_3_reach_pct_diff",
     "../results/reach_maps/lts_1_4_reach_pct_diff",
 ]
 
-filepaths_reach_hist = [
-    "../results/reach_distributions/lts1_reach_hist.png",
-    "../results/reach_distributions/lts_1_2_reach_hist.png",
-    "../results/reach_distributions/lts_1_3_reach_hist.png",
-    "../results/reach_distributions/lts_1_4_reach_hist.png",
-    "../results/reach_distributions/car_reach_hist.png",
+fps_reach_hist = [
+    "../results/reach_plots/lts1_reach_hist.png",
+    "../results/reach_plots/lts_1_2_reach_hist.png",
+    "../results/reach_plots/lts_1_3_reach_hist.png",
+    "../results/reach_plots/lts_1_4_reach_hist.png",
+    "../results/reach_plots/car_reach_hist.png",
 ]
 
-fp_network_reach_kde = "../results/reach_distributions/kde_network_reach.png"
+fp_network_reach_kde = "../results/reach_plots/kde_network_reach.png"
 
-fp_network_reach_diff_kde = "../results/reach_distributions/kde_network_reach_diff.png"
+fp_network_reach_diff_kde = "../results/reach_plots/kde_network_reach_diff.png"
 
-filepaths_violin_reach = [
-    "../results/reach_distributions/violin_lts1_reach_len.jpg",
-    "../results/reach_distributions/violin_lts_1_2_reach_len.jpg",
-    "../results/reach_distributions/violin_lts_1_3_reach_len.jpg",
-    "../results/reach_distributions/violin_lts_1_4_reach_len.jpg",
-    "../results/reach_distributions/violin_car_reach_len.jpg",
+fps_violin_reach = [
+    "../results/reach_plots/violin_lts1_reach_len.jpg",
+    "../results/reach_plots/violin_lts_1_2_reach_len.jpg",
+    "../results/reach_plots/violin_lts_1_3_reach_len.jpg",
+    "../results/reach_plots/violin_lts_1_4_reach_len.jpg",
+    "../results/reach_plots/violin_car_reach_len.jpg",
 ]
 
-filepaths_violin_reach_diff = [
-    "../results/reach_distributions/violin_lts1_reach_diff_len.jpg",
-    "../results/reach_distributions/violin_lts_1_2_reach_diff_len.jpg",
-    "../results/reach_distributions/violin_lts_1_3_reach_diff_len.jpg",
-    "../results/reach_distributions/violin_lts_1_4_reach_diff_len.jpg",
+fps_violin_reach_diff = [
+    "../results/reach_plots/violin_lts1_reach_diff_len.jpg",
+    "../results/reach_plots/violin_lts_1_2_reach_diff_len.jpg",
+    "../results/reach_plots/violin_lts_1_3_reach_diff_len.jpg",
+    "../results/reach_plots/violin_lts_1_4_reach_diff_len.jpg",
 ]
 
-filepaths_violin_reach_diff_pct = [
-    "../results/reach_distributions/violin_lts1_reach_diff_pct.jpg",
-    "../results/reach_distributions/violin_lts_1_2_reach_diff_pct.jpg",
-    "../results/reach_distributions/violin_lts_1_3_reach_diff_pct.jpg",
-    "../results/reach_distributions/violin_lts_1_4_reach_diff_pct.jpg",
+fps_violin_reach_diff_pct = [
+    "../results/reach_plots/violin_lts1_reach_diff_pct.jpg",
+    "../results/reach_plots/violin_lts_1_2_reach_diff_pct.jpg",
+    "../results/reach_plots/violin_lts_1_3_reach_diff_pct.jpg",
+    "../results/reach_plots/violin_lts_1_4_reach_diff_pct.jpg",
 ]
 
-fp_reach_density_corr = "../results/reach_density_correlation/corr_reach_density_"
+fp_reach_density_corr = "../results/correlation/corr_reach_density_"
 
-fp_reach_compare_dist_bars = (
-    "../results/reach_distance_comparisons/reach_distance_comparison_bar_"
-)
+fp_reach_compare_dist_bars = "../results/reach_plots/reach_distance_comparison_bar_"
 
 fp_reach_compare_dist_violin = (
-    "../results/reach_distance_comparisons/reach_distance_comparison_violin.png"
+    "../results/reach_plots/reach_distance_comparison_violin.png"
 )
 
-fp_reach_diff_pct = "../results/reach_distance_comparisons/reach_diff_pct_"
-fp_reach_diff_pct_kde = "../results/reach_distance_comparisons/reach_diff_pct_kde_"
-fp_reach_diff_dist_kde = "../results/reach_distance_comparisons/reach_diff_dist_kde_"
+fp_reach_diff_pct = "../results/reach_maps/reach_diff_pct_"
+fp_reach_diff_pct_kde = "../results/reach_maps/reach_diff_pct_kde_"
+fp_reach_diff_dist_kde = "../results/reach_maps/reach_diff_dist_kde_"
 
 fp_socio_reach = "../results/reach_maps/socio_reach_"
 
 # Fragmentation plots
 
-fp_zipf_lts = "../results/component_size_distribution/zipf_"
-fp_zipf_combined = "../results/component_size_distribution/combined_zipf.png"
-fp_zipf_muni = "../results/component_size_distribution/administrative/combined_zipf_"
+fp_zipf_lts = "../results/component_plots/zipf_"
+fp_zipf_combined = "../results/component_plots/combined_zipf.png"
+fp_zipf_muni = "../results/component_plots/municipality/combined_zipf_"
 
-filepaths_local_component_count = [
-    "../results/component_count_maps/administrative/",
-    "../results/component_count_maps/socio/",
-    "../results/component_count_maps/hexgrid/",
+fps_local_component_count = [
+    "../results/component_maps/municipality/",
+    "../results/component_maps/socio/",
+    "../results/component_maps/hexgrid/",
 ]
 
-filepath_components_zoom = "../results/component_count_maps/hexgrid/components_zoom.png"
+fp_components_zoom = "../results/component_maps/hexgrid/components_zoom.png"
 
-filepaths_component_density_correlation = [
-    "../results/component_density_correlation/administrative/component_count_infra_density_",
-    "../results/component_density_correlation/socio/component_count_infra_density_",
-    "../results/component_density_correlation/hexgrid/component_count_infra_density_",
+fps_correlation = [
+    "../results/correlation/municipality/component_count_infra_density_",
+    "../results/correlation/socio/component_count_infra_density_",
+    "../results/correlation/hexgrid/component_count_infra_density_",
 ]
 
-filepaths_components_rug = [
-    "../results/component_size_distribution/administrative/component_distribution_muni.jpeg",
-    "../results/component_size_distribution/socio/component_distribution_socio.jpeg",
-    "../results/component_size_distribution/hexgrid/component_distribution_hex.jpeg",
+fps_components_rug = [
+    "../results/component_plots/municipality/component_distribution_muni.jpeg",
+    "../results/component_plots/socio/component_distribution_socio.jpeg",
+    "../results/component_plots/hexgrid/component_distribution_hex.jpeg",
 ]
 
-filepaths_components_scatter = [
-    "../results/component_density_correlation/administrative/component_count_infra_density_all_areas.jpeg",
-    "../results/component_density_correlation/socio/component_count_infra_density_all_areas.jpeg",
-    "../results/component_density_correlation/hexgrid/component_count_infra_density_all_areas.jpeg",
+fps_components_scatter = [
+    "../results/correlation/municipality/component_count_infra_density_all_areas.jpeg",
+    "../results/correlation/socio/component_count_infra_density_all_areas.jpeg",
+    "../results/correlation/hexgrid/component_count_infra_density_all_areas.jpeg",
 ]
 
-filepaths_components_scatter_lts = [
-    "../results/component_density_correlation/hexgrid/component_count_infra_density_all_areas_1.jpeg",
-    "../results/component_density_correlation/hexgrid/component_count_infra_density_all_areas_2.jpeg",
-    "../results/component_density_correlation/hexgrid/component_count_infra_density_all_areas_3.jpeg",
-    "../results/component_density_correlation/hexgrid/component_count_infra_density_all_areas_4.jpeg",
-    "../results/component_density_correlation/hexgrid/component_count_infra_density_all_areas_car.jpeg",
-    "../results/component_density_correlation/hexgrid/component_count_infra_density_all_areas_all.jpeg",
+fps_components_scatter_lts = [
+    "../results/correlation/hexgrid/component_count_infra_density_all_areas_1.jpeg",
+    "../results/correlation/hexgrid/component_count_infra_density_all_areas_2.jpeg",
+    "../results/correlation/hexgrid/component_count_infra_density_all_areas_3.jpeg",
+    "../results/correlation/hexgrid/component_count_infra_density_all_areas_4.jpeg",
+    "../results/correlation/hexgrid/component_count_infra_density_all_areas_car.jpeg",
+    "../results/correlation/hexgrid/component_count_infra_density_all_areas_all.jpeg",
 ]
 
-filepath_summmary_stats_network_length = (
-    "../results/summary_stats/density_network_length.csv"
-)
+fp_summmary_stats_network_length = "../results/summary_stats/density_network_length.csv"
 
-filepath_summmary_stats_network_length_steps = (
+fp_summmary_stats_network_length_steps = (
     "../results/summary_stats/density_network_length_steps.csv"
 )
 
-filepath_sum_density_relative_steps = (
+fp_sum_density_relative_steps = (
     "../results/summary_stats/density_network_relative_length_steps_"
 )
 
-filepath_sum_density_relative = (
-    "../results/summary_stats/density_network_relative_length_"
-)
+fp_sum_density_relative = "../results/summary_stats/density_network_relative_length_"
 
-filepath_sum_density_more_bike_count = (
-    "../results/summary_stats/density_more_bike_count_"
-)
+fp_sum_density_more_bike_count = "../results/summary_stats/density_more_bike_count_"
 
-filepath_sum_fragmentation_summary_stats = (
+fp_sum_fragmentation_summary_stats = (
     "../results/summary_stats/fragmentation_summary_stats.csv"
 )
 
-filepath_sum_fragmentation_component_count = (
+fp_sum_fragmentation_component_count = (
     "../results/summary_stats/fragmentation_component_count_"
 )
 
-filepath_summary_compare_length_components = (
-    "../results/component_size_distribution/components_vs_length.jpg"
+fp_summary_compare_length_components = (
+    "../results/component_plots/components_vs_length.jpg"
 )
 
-filepath_summary_stats_reach = "../results/summary_stats/reach_summary_stats.csv"
+fp_summary_stats_reach = "../results/summary_stats/reach_summary_stats.csv"
 
-filepath_summary_stats_reach_diff = (
-    "../results/summary_stats/reach_diff_summary_stats.csv"
-)
+fp_summary_stats_reach_diff = "../results/summary_stats/reach_diff_summary_stats.csv"
 
-filepath_summary_stats_reach_diff_pct = (
+fp_summary_stats_reach_diff_pct = (
     "../results/summary_stats/reach_diff_pct_summary_stats.csv"
 )
 
-filepath_largest_component_length = (
-    "../results/component_size_maps/largest_component_length_"
-)
+fp_largest_component_length = "../results/component_maps/largest_component_length_"
 
-filepath_largest_component_area = (
-    "../results/component_size_maps/largest_component_area_"
-)
+fp_largest_component_area = "../results/component_maps/largest_component_area_"
 
-filepath_component_len_area_correlation = "../results/component_len_area_correlation/"
+fp_correlation = "../results/correlation/"
 
-filepath_component_size_distribution = (
-    "../results/component_size_distribution/largest_component_length_kde.png"
-)
+fp_component_plots = "../results/component_plots/largest_component_length_kde.png"
 
 
 # Spatial weights sensitivity test

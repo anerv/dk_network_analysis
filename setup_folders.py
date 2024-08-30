@@ -16,7 +16,12 @@ for f in data_subfolders:
         os.mkdir("data/" + f)
 
 # Make input data subfolders
-data_subsubfolders = ["adm_boundaries", "socioeconomic", "urban"]
+data_subsubfolders = [
+    "adm_boundaries",
+    "population",
+    "socioeconomic",
+    "urban",
+]
 
 for f in data_subsubfolders:
     if not os.path.exists("data/input/" + f):
@@ -25,41 +30,27 @@ for f in data_subsubfolders:
         print("Successfully created folder: data/input/" + f)
 
 # make subfolders for results
+
 results_subfolders = [
-    "component_density_correlation",
-    "component_size_distribution",
-    "component_count_maps",
     "density_maps",
-    "density_distributions",
-    "summary_stats",
-    "component_size_maps",
-    "component_len_area_correlation",
-    "reach_maps",
-    "reach_distributions",
-    "reach_density_correlation",
-    "reach_distance_comparisons",
-    "clustering",
-    "spatial_autocorrelation",
+    "density_plots",
+    "component_maps",
+    "component_plots",
     "correlation",
-    "equity",
+    "reach_maps",
+    "reach_plots",
+    "summary_stats",
+    "spatial_autocorrelation",
+    "clustering",
 ]
+
 for f in results_subfolders:
     if not os.path.exists("results/" + f):
         os.mkdir("results/" + f)
 
         print("Successfully created folder: results/" + f)
 
-# make subfolders for clustering results
-
-clustering_subfolders = ["plots", "maps", "data"]
-
-for f in clustering_subfolders:
-    if not os.path.exists("results/clustering/" + f):
-        os.mkdir("results/clustering/" + f)
-
-        print("Successfully created folder: results/clustering/" + f)
-
-area_folders = ["administrative", "socio", "hexgrid"]
+area_folders = ["municipality", "socio", "hexgrid"]
 
 for f in results_subfolders[:5]:
 
@@ -68,6 +59,16 @@ for f in results_subfolders[:5]:
             os.mkdir("results/" + f + "/" + a)
 
             print("Successfully created folder: results/" + f + "/" + a)
+
+# make subfolders for clustering results
+clustering_subfolders = ["plots", "maps", "data"]
+
+for f in clustering_subfolders:
+    if not os.path.exists("results/clustering/" + f):
+        os.mkdir("results/clustering/" + f)
+
+        print("Successfully created folder: results/clustering/" + f)
+
 
 result_type_subfolders = ["density", "fragmentation", "reach"]
 
@@ -111,8 +112,8 @@ if not os.path.exists(fp):
     print("Successfully created folder: " + fp)
 
 
-# make illustration folder
-if not os.path.exists("illustrations"):
-    os.mkdir("illustrations")
+# # make illustration folder
+# if not os.path.exists("illustrations"):
+#     os.mkdir("illustrations")
 
-    print("Successfully created folder: illustrations")
+#     print("Successfully created folder: illustrations")
