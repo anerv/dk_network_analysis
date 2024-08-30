@@ -55,11 +55,11 @@ df = pd.DataFrame(
     },
 )
 
-df.to_csv(filepath_sum_fragmentation_summary_stats, index=True)
+df.to_csv(fp_sum_fragmentation_summary_stats, index=True)
 display(df.style.pipe(format_style_index))
 
 # %%
-df_density = pd.read_csv(filepath_summmary_stats_network_length_steps)
+df_density = pd.read_csv(fp_summmary_stats_network_length_steps)
 
 merged_df = pd.merge(
     df[["component count", "largest component size (km)"]].reset_index(),
@@ -174,9 +174,7 @@ for i in range(len(legend.get_texts())):
 # plt.title("Network length and component count", fontdict={"size": 12})
 plt.tight_layout()
 sns.despine(left=False, right=False, bottom=True)
-plt.savefig(
-    filepath_summary_compare_length_components, bbox_inches="tight", dpi=pdict["dpi"]
-)
+plt.savefig(fp_summary_compare_length_components, bbox_inches="tight", dpi=pdict["dpi"])
 plt.show()
 
 # %%
@@ -213,7 +211,7 @@ for a, df in zip(aggregation_levels, component_dfs):
     )
 
     df.to_csv(
-        filepath_sum_fragmentation_component_count + a + ".csv",
+        fp_sum_fragmentation_component_count + a + ".csv",
         index=False,
     )
 

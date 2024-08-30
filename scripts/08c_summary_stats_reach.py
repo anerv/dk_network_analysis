@@ -45,7 +45,7 @@ df = pd.DataFrame(
     },
 )
 
-df.to_csv(filepath_summary_stats_reach, index=True)
+df.to_csv(fp_summary_stats_reach, index=True)
 
 print(f"Reach summary stats for reach at distance {reach_dist} km:")
 display(df.style.pipe(format_style_index))
@@ -81,7 +81,7 @@ df = pd.DataFrame(
 print(
     f"Summary stats for reach differences between bike and car reach at distance {reach_dist} km:"
 )
-df.to_csv(filepath_summary_stats_reach_diff, index=True)
+df.to_csv(fp_summary_stats_reach_diff, index=True)
 
 display(df.style.pipe(format_style_index))
 # %%
@@ -112,7 +112,7 @@ df = pd.DataFrame(
 )
 
 
-df.to_csv(filepath_summary_stats_reach_diff_pct, index=True)
+df.to_csv(fp_summary_stats_reach_diff_pct, index=True)
 
 print(
     f"Summary stats for reach differences between bike and car reach at distance {reach_dist} km:"

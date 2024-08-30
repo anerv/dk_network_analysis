@@ -59,7 +59,7 @@ df_single = pd.DataFrame(
     }
 )
 
-df_single.to_csv(filepath_summmary_stats_network_length, index=False)
+df_single.to_csv(fp_summmary_stats_network_length, index=False)
 
 display(df_single.style.pipe(format_style_no_index))
 
@@ -90,7 +90,7 @@ df_steps = pd.DataFrame(
     }
 )
 
-df_steps.to_csv(filepath_summmary_stats_network_length_steps, index=False)
+df_steps.to_csv(fp_summmary_stats_network_length_steps, index=False)
 
 display(df_steps.style.pipe(format_style_no_index))
 
@@ -98,8 +98,8 @@ display(df_steps.style.pipe(format_style_no_index))
 plotly_labels["network_type"] = "Network type"
 
 filepaths = [
-    filepath_summary_network_length_steps,
-    filepath_summary_network_length,
+    fp_summary_network_length_steps,
+    fp_summary_network_length,
 ]
 
 for i, df in enumerate(
@@ -156,7 +156,7 @@ for i, df in enumerate(
 # fig.update_layout(template="simple_white")
 # fig.update_traces(texttemplate="%{y:.1f}%", textposition="outside")
 # fig.show()
-# fig.write_image(filepath_summary_network_length, format="jpg", scale=6)
+# fig.write_image(fp_summary_network_length, format="jpg", scale=6)
 
 # %%
 
@@ -199,7 +199,7 @@ for a, df in zip(aggregation_levels, density_data):
     )
 
     # df.to_csv(
-    #     filepath_sum_density_relative + a + ".csv",
+    #     fp_sum_density_relative + a + ".csv",
     #     index=True,
     # )
 
@@ -255,7 +255,7 @@ for a, df in zip(aggregation_levels, density_data):
     # print("\n")
 
     df.to_csv(
-        filepath_sum_density_relative_steps + a + ".csv",
+        fp_sum_density_relative_steps + a + ".csv",
         index=True,
     )
 
@@ -299,7 +299,7 @@ for a, df in zip(aggregation_levels, density_data):
     )
 
     df.to_csv(
-        filepath_sum_density_relative + a + ".csv",
+        fp_sum_density_relative + a + ".csv",
         index=True,
     )
 
@@ -338,7 +338,7 @@ for a, df in zip(aggregation_levels, density_data):
     )
 
     df.to_csv(
-        filepath_sum_density_more_bike_count + a + ".csv",
+        fp_sum_density_more_bike_count + a + ".csv",
         index=True,
     )
 

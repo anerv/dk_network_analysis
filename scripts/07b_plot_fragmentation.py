@@ -141,7 +141,7 @@ plot_columns = component_count_columns
 
 labels = labels_step_all
 
-all_filepaths = filepaths_local_component_count
+all_fps = filepaths_local_component_count
 
 all_plot_titles = [
     "Municipal component count for: ",
@@ -151,7 +151,7 @@ all_plot_titles = [
 for e, gdf in enumerate(gdfs):
 
     plot_titles = [all_plot_titles[e] + l for l in labels]
-    filepaths = [all_filepaths[e] + l for l in labels]
+    filepaths = [all_fps[e] + l for l in labels]
 
     # vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
@@ -184,7 +184,7 @@ plot_columns = component_per_km_columns
 
 labels = labels_step_all
 
-all_filepaths = filepaths_local_component_count
+all_fps = filepaths_local_component_count
 
 all_plot_titles = [
     "Municipal component count per km for: ",
@@ -195,7 +195,7 @@ all_plot_titles = [
 for e, gdf in enumerate(gdfs):
 
     plot_titles = [all_plot_titles[e] + l for l in labels]
-    filepaths = [all_filepaths[e] + l + "_per_km" for l in labels]
+    filepaths = [all_fps[e] + l + "_per_km" for l in labels]
 
     # vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
@@ -228,7 +228,7 @@ plot_columns = component_per_km_sqkm_columns
 for e, gdf in enumerate(gdfs):
 
     plot_titles = [all_plot_titles[e] + l for l in labels]
-    filepaths = [all_filepaths[e] + l + "_per_km_sqkm" for l in labels]
+    filepaths = [all_fps[e] + l + "_per_km_sqkm" for l in labels]
 
     # vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
@@ -268,7 +268,7 @@ plot_columns = largest_local_component_len_columns
 plot_titles = labels_step
 
 labels = labels_step
-filepaths = [filepath_largest_component_length + l for l in labels]
+filepaths = [fp_largest_component_length + l for l in labels]
 
 # vmin, vmax = plot_func.get_min_max_vals(hex_largest_components, plot_columns)
 
@@ -301,7 +301,7 @@ plot_titles = [
 ]
 
 labels = labels_step
-filepaths = [filepath_largest_component_area + l for l in labels]
+filepaths = [fp_largest_component_area + l for l in labels]
 
 # vmin, vmax = plot_func.get_min_max_vals(hex_largest_components, plot_columns)
 
@@ -341,7 +341,7 @@ plot_func.plot_components_zoom(
     lts_subset,
     "component_1",
     "Set2",
-    filepath_components_zoom,
+    fp_components_zoom,
     xmin,
     ymin,
     xmax,
@@ -386,7 +386,7 @@ for i in range(len(labels)):
     )
 
     fig.write_image(
-        filepath_component_len_area_correlation + f"{labels[i]}.jpg",
+        fp_component_len_area_correlation + f"{labels[i]}.jpg",
         width=1000,
         height=750,
     )
@@ -417,7 +417,7 @@ fig = sns.kdeplot(
 
 fig.set_xlabel("Length")
 fig.set_title(f"Length of the largest component in each hexagon")
-plt.savefig(filepath_component_size_distribution)
+plt.savefig(fp_component_size_distribution)
 
 plt.show()
 
@@ -432,7 +432,7 @@ dfs = [component_length_muni, component_length_socio, component_length_hex]
 # %%
 titles = [a.capitalize() for a in aggregation_levels]
 
-all_filepaths = filepaths_component_density_correlation
+all_fps = filepaths_component_density_correlation
 
 for i, df in enumerate(dfs):
 
@@ -467,7 +467,7 @@ for i, df in enumerate(dfs):
         fig.update_yaxes({"gridcolor": "lightgrey", "linewidth": 0.5})
 
         fig.write_image(
-            all_filepaths[i] + "_".join([c, d]) + ".jpeg",
+            all_fps[i] + "_".join([c, d]) + ".jpeg",
             width=1000,
             height=750,
         )

@@ -31,7 +31,7 @@ gdfs = [density_muni, density_socio, density_hex]
 #     "Local network density for: ",
 # ]
 
-all_filepaths = all_filepaths_map_density
+all_fps = all_fps_map_density
 
 for e, gdf in enumerate(gdfs):
 
@@ -42,7 +42,7 @@ for e, gdf in enumerate(gdfs):
     labels = labels_all
     # plot_titles = [all_plot_titles[e] + l for l in labels]
     plot_titles = labels_all
-    filepaths = [all_filepaths[e] + l for l in labels]
+    filepaths = [all_fps[e] + l for l in labels]
 
     # vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
@@ -71,7 +71,7 @@ for e, gdf in enumerate(gdfs):
     labels = labels_step_all
     # plot_titles = [all_plot_titles[e] + l for l in labels]
     plot_titles = labels_step_all
-    filepaths = [all_filepaths[e] + l for l in labels]
+    filepaths = [all_fps[e] + l for l in labels]
 
     # vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
@@ -100,7 +100,7 @@ for e, gdf in enumerate(gdfs):
     labels = labels_pct
     # plot_titles = [all_plot_titles[e] + l for l in labels]
     plot_titles = labels_all
-    filepaths = [all_filepaths[e] + l for l in labels]
+    filepaths = [all_fps[e] + l for l in labels]
 
     # vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
@@ -133,7 +133,7 @@ for e, gdf in enumerate(gdfs):
     labels = labels_pct_step
     # plot_titles = [all_plot_titles[e] + l for l in labels]
     plot_titles = labels_step_all
-    filepaths = [all_filepaths[e] + l for l in labels]
+    filepaths = [all_fps[e] + l for l in labels]
 
     # vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
