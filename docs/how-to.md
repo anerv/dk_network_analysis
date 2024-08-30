@@ -64,7 +64,6 @@ Get the latest population data from GHSL: [https://human-settlement.emergency.co
 3. Unzip the zip files.
 4. Update the filepaths `pop_fp_1` and `pop_fp_2` in `config.yml` if needed.
 
-
 ## 4. Run analysis
 
 * Run all Python scripts in the `scripts` folder in consecutive order. The full analysis will take several hours to complete, depending on your machine.
