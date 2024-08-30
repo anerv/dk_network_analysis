@@ -143,23 +143,9 @@ for i, df in enumerate(
         format="jpg",
         scale=15,
     )
-# %%
 
-# fig = px.bar(
-#     df,
-#     x="network_type",
-#     y="share (%)",
-#     color="network_type",
-#     labels=plotly_labels,
-#     color_discrete_map=new_color_dict,
-# )
-# fig.update_layout(template="simple_white")
-# fig.update_traces(texttemplate="%{y:.1f}%", textposition="outside")
-# fig.show()
-# fig.write_image(fp_summary_network_length, format="jpg", scale=6)
 
 # %%
-
 
 # DENSITY SUMMARY
 
