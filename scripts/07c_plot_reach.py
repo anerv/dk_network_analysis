@@ -39,7 +39,7 @@ hex_reach.replace(0, np.nan, inplace=True)
 plot_titles = labels_step
 
 plot_columns = reach_columns
-filepaths = filepaths_reach
+filepaths = fps_reach
 
 # vmin, vmax = plot_func.get_min_max_vals(hex_reach, plot_columns)
 
@@ -65,7 +65,7 @@ for i, p in enumerate(plot_columns):
 
 #%%
 # Zoomed map
-fp = filepaths_reach[0] +"_zoom"
+fp = fps_reach[0] +"_zoom"
 plot_column = reach_columns[0]
 
 xmin, ymin = (689922.425333, 6161099.004817)
@@ -101,7 +101,7 @@ plot_titles = [
     f"Difference in network reach: Car VS. LTS 1-4 ({reach_dist})",
 ]
 
-filepaths = filepaths_reach_diff
+filepaths = fps_reach_diff
 
 plot_columns = reach_diff_columns
 
@@ -134,7 +134,7 @@ plot_titles = [
     f"Difference in network reach: Car VS. LTS 1-4 (%) ({reach_dist})",
 ]
 
-filepaths = filepaths_reach_diff_pct
+filepaths = fps_reach_diff_pct
 
 plot_columns = reach_diff_pct_columns
 
@@ -264,7 +264,7 @@ for i, p in enumerate(reach_columns):
     )  # kde=True
     fig.set_title(plot_titles[i])
     fig.set_xlabel("Local network reach (km)")
-    plt.savefig(filepaths_reach_hist[i])
+    plt.savefig(fps_reach_hist[i])
 
     plt.show()
     plt.close()
@@ -359,7 +359,7 @@ plt.close()
 
 colors = [v for v in lts_color_dict.values()]
 
-filepaths = filepaths_violin_reach
+filepaths = fps_violin_reach
 
 titles = [
     f"Network reach: LTS 1 ({reach_dist})",
@@ -392,7 +392,7 @@ for i, r in enumerate(reach_columns):
 
 # REACH DIFF
 
-filepaths = filepaths_violin_reach_diff
+filepaths = fps_violin_reach_diff
 
 titles = [
     f"Network reach difference: Car - LTS 1 ({reach_dist})",
@@ -423,7 +423,7 @@ for i, r in enumerate(reach_diff_columns):
 # %%
 # REACH DIFF PCT
 
-filepaths = filepaths_violin_reach_diff_pct
+filepaths = fps_violin_reach_diff_pct
 
 titles = [
     f"Network reach difference: Car - LTS 1 (%) ({reach_dist})",

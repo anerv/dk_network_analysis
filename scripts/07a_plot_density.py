@@ -8,7 +8,6 @@ import pandas as pd
 from matplotlib import pyplot as plt
 import plotly.express as px
 
-
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 exec(open("../settings/filepaths.py").read())
@@ -54,7 +53,7 @@ for e, gdf in enumerate(gdfs):
             poly_gdf=gdf,
             plot_col=p,
             plot_title=plot_titles[i],
-            filepath=filepaths[i] + "_unclassified",
+            filepath=filepaths[i],
             cmap=pdict["dens"],
             edgecolor="none",
             linewidth=0,
@@ -83,7 +82,7 @@ for e, gdf in enumerate(gdfs):
             poly_gdf=gdf,
             plot_col=p,
             plot_title=plot_titles[i],
-            filepath=filepaths[i] + "_unclassified",
+            filepath=filepaths[i],
             cmap=pdict["dens"],
             edgecolor="none",
             linewidth=0,
@@ -112,7 +111,7 @@ for e, gdf in enumerate(gdfs):
             poly_gdf=gdf,
             plot_col=p,
             plot_title=plot_titles[i],
-            filepath=filepaths[i] + "_unclassified",
+            filepath=filepaths[i],
             cmap=pdict["dens_rel"],
             edgecolor="none",
             linewidth=0,
@@ -145,7 +144,7 @@ for e, gdf in enumerate(gdfs):
             poly_gdf=gdf,
             plot_col=p,
             plot_title=plot_titles[i],
-            filepath=filepaths[i] + "_unclassified",
+            filepath=filepaths[i],
             cmap=pdict["dens_rel"],
             edgecolor="none",
             linewidth=0,
@@ -161,6 +160,7 @@ for e, gdf in enumerate(gdfs):
 ###########################################
 
 gdfs = [density_muni, density_socio, density_hex]
+
 length_titles = [
     "Municipal network length (km)",
     "Local network length (km)",
@@ -220,8 +220,8 @@ for e, gdf in enumerate(gdfs):
 # %%
 # ***** KDE PLOTS *****
 
-filepaths_length = filepaths_kde_length
-filepaths_density = filepaths_kde_density
+filepaths_length = fps_kde_length
+filepaths_density = fps_kde_density
 
 for label, df in stacked_dfs.items():
 
@@ -265,8 +265,8 @@ dfs = [
     stacked_dfs[aggregation_levels[0]],
 ]
 
-filepaths_density = filepaths_bar_density
-filepaths_length = filepaths_bar_length
+filepaths_density = fps_bar_density
+filepaths_length = fps_bar_length
 
 plotly_labels["id"] = "municipality"
 
@@ -310,7 +310,7 @@ for i, df in enumerate(dfs):
 # %%
 # **** VIOLIN PLOTS ****
 
-filepaths = filepaths_violin_density
+filepaths = fps_violin_density
 
 for e, gdf in enumerate(gdfs):
 

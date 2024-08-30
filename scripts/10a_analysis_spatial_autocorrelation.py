@@ -55,20 +55,20 @@ for i, gdf in enumerate(gdfs):
 
     for columns in all_density_columns:
 
-        filepaths_morans = [
+        fps_morans = [
             fp_spatial_auto_density
             + f"{aggregation_levels[i]}/morans_{c}.png".replace(" ", "_")
             for c in columns
         ]
 
-        filepaths_lisa = [
+        fps_lisa = [
             fp_spatial_auto_density
             + f"{aggregation_levels[i]}/lisa_{c}.png".replace(" ", "_")
             for c in columns
         ]
 
         morans_results = analysis_func.compute_spatial_autocorrelation(
-            columns, columns, gdf, spatial_weights[i], filepaths_morans, show_plot=False
+            columns, columns, gdf, spatial_weights[i], fps_morans, show_plot=False
         )
 
         lisa_results = analysis_func.compute_lisa(
@@ -76,7 +76,7 @@ for i, gdf in enumerate(gdfs):
             columns,
             gdf,
             spatial_weights[i],
-            filepaths_lisa,
+            fps_lisa,
             show_plot=False,
         )
 
@@ -139,20 +139,20 @@ for i, gdf in enumerate(gdfs):
 
     for columns in all_fragmentation_columns:
 
-        filepaths_morans = [
+        fps_morans = [
             fp_spatial_auto_fragmentation
             + f"{aggregation_levels[i]}/morans_{c}.png".replace(" ", "_")
             for c in columns
         ]
 
-        filepaths_lisa = [
+        fps_lisa = [
             fp_spatial_auto_fragmentation
             + f"{aggregation_levels[i]}/lisa_{c}.png".replace(" ", "_")
             for c in columns
         ]
 
         morans_results = analysis_func.compute_spatial_autocorrelation(
-            columns, columns, gdf, spatial_weights[i], filepaths_morans, show_plot=False
+            columns, columns, gdf, spatial_weights[i], fps_morans, show_plot=False
         )
 
         lisa_results = analysis_func.compute_lisa(
@@ -160,7 +160,7 @@ for i, gdf in enumerate(gdfs):
             columns,
             gdf,
             spatial_weights[i],
-            filepaths_lisa,
+            fps_lisa,
             show_plot=False,
         )
 
@@ -223,20 +223,20 @@ for i, gdf in enumerate(gdfs):
 
     for columns in all_component_size_columns:
 
-        filepaths_morans = [
+        fps_morans = [
             fp_spatial_auto_fragmentation
             + f"{aggregation_level[i]}/morans_{c}.png".replace(" ", "_")
             for c in columns
         ]
 
-        filepaths_lisa = [
+        fps_lisa = [
             fp_spatial_auto_fragmentation
             + f"{aggregation_level[i]}/lisa_{c}.png".replace(" ", "_")
             for c in columns
         ]
 
         morans_results = analysis_func.compute_spatial_autocorrelation(
-            columns, columns, gdf, spatial_weights[i], filepaths_morans, show_plot=False
+            columns, columns, gdf, spatial_weights[i], fps_morans, show_plot=False
         )
 
         lisa_results = analysis_func.compute_lisa(
@@ -244,7 +244,7 @@ for i, gdf in enumerate(gdfs):
             columns,
             gdf,
             spatial_weights[i],
-            filepaths_lisa,
+            fps_lisa,
             show_plot=False,
         )
 
@@ -300,20 +300,20 @@ for i, gdf in enumerate(gdfs):
 
     for columns in all_reach_columns:
 
-        filepaths_morans = [
+        fps_morans = [
             fp_spatial_auto_reach
             + f"{aggregation_level[i]}/morans_{c}.png".replace(" ", "_")
             for c in columns
         ]
 
-        filepaths_lisa = [
+        fps_lisa = [
             fp_spatial_auto_reach
             + f"{aggregation_level[i]}/lisa_{c}.png".replace(" ", "_")
             for c in columns
         ]
 
         morans_results = analysis_func.compute_spatial_autocorrelation(
-            columns, columns, gdf, spatial_weights[i], filepaths_morans, show_plot=False
+            columns, columns, gdf, spatial_weights[i], fps_morans, show_plot=False
         )
 
         lisa_results = analysis_func.compute_lisa(
@@ -321,7 +321,7 @@ for i, gdf in enumerate(gdfs):
             columns,
             gdf,
             spatial_weights[i],
-            filepaths_lisa,
+            fps_lisa,
             show_plot=False,
         )
 
@@ -388,20 +388,20 @@ for i, gdf in enumerate(gdfs):
 
     for columns in all_reach_columns:
 
-        filepaths_morans = [
+        fps_morans = [
             fp_spatial_auto_reach
             + f"{aggregation_level[i]}/morans_{c}.png".replace(" ", "_")
             for c in columns
         ]
 
-        filepaths_lisa = [
+        fps_lisa = [
             fp_spatial_auto_reach
             + f"{aggregation_level[i]}/lisa_{c}.png".replace(" ", "_")
             for c in columns
         ]
 
         morans_results = analysis_func.compute_spatial_autocorrelation(
-            columns, columns, gdf, spatial_weights[i], filepaths_morans, show_plot=False
+            columns, columns, gdf, spatial_weights[i], fps_morans, show_plot=False
         )
 
         lisa_results = analysis_func.compute_lisa(
@@ -409,7 +409,7 @@ for i, gdf in enumerate(gdfs):
             columns,
             gdf,
             spatial_weights[i],
-            filepaths_lisa,
+            fps_lisa,
             show_plot=False,
         )
 
@@ -452,16 +452,16 @@ columns = socio_corr_variables
 global_morans_results = {}
 
 
-filepaths_morans = [
+fps_morans = [
     fp_spatial_auto_socio + f"morans_{c}.png".replace(" ", "_") for c in columns
 ]
 
-filepaths_lisa = [
+fps_lisa = [
     fp_spatial_auto_socio + f"lisa_{c}.png".replace(" ", "_") for c in columns
 ]
 
 morans_results = analysis_func.compute_spatial_autocorrelation(
-    columns, columns, socio, w, filepaths_morans, show_plot=False
+    columns, columns, socio, w, fps_morans, show_plot=False
 )
 
 lisa_results = analysis_func.compute_lisa(
@@ -469,7 +469,7 @@ lisa_results = analysis_func.compute_lisa(
     columns,
     socio,
     w,
-    filepaths_lisa,
+    fps_lisa,
     show_plot=False,
 )
 
