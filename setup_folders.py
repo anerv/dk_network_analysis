@@ -50,7 +50,7 @@ for f in results_subfolders:
 
         print("Successfully created folder: results/" + f)
 
-area_folders = ["municipality", "socio", "hexgrid"]
+area_folders = ["municipal", "socio", "hexgrid"]
 
 for f in results_subfolders[:5]:
 

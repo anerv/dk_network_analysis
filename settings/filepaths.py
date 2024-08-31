@@ -7,37 +7,37 @@ fp_summary_network_length_steps = (
 )
 
 fps_kde_length = [
-    "../results/density_plots/municipality/lts_kde_length.jpg",
+    "../results/density_plots/municipal/lts_kde_length.jpg",
     "../results/density_plots/socio/lts_kde_length.jpg",
     "../results/density_plots/hexgrid/lts_kde_length.jpg",
 ]
 
 fps_kde_density = [
-    "../results/density_plots/municipality/lts_kde_density.jpg",
+    "../results/density_plots/municipal/lts_kde_density.jpg",
     "../results/density_plots/socio/lts_kde_density.jpg",
     "../results/density_plots/hexgrid/lts_kde_density.jpg",
 ]
 
 fps_bar_length = [
-    "../results/density_plots/municipality/lts_stacked_bar_len.jpg",
+    "../results/density_plots/municipal/lts_stacked_bar_len.jpg",
     "../results/density_plots/socio/lts_stacked_bar_len.jpg",
     "../results/density_plots/hexgrid/lts_stacked_bar_len.jpg",
 ]
 
 fps_bar_density = [
-    "../results/density_plots/municipality/lts_stacked_bar_dens.jpg",
+    "../results/density_plots/municipal/lts_stacked_bar_dens.jpg",
     "../results/density_plots/socio/lts_stacked_bar_dens.jpg",
     "../results/density_plots/hexgrid/lts_stacked_bar_dens.jpg",
 ]
 
 fps_violin_density = [
-    "../results/density_plots/municipality/violin_",
+    "../results/density_plots/municipal/violin_",
     "../results/density_plots/socio/violin_",
     "../results/density_plots/hexgrid/violin_",
 ]
 
 all_fps_map_density = [
-    "../results/density_maps/municipality/",
+    "../results/density_maps/municipal/",
     "../results/density_maps/socio/",
     "../results/density_maps/hexgrid/",
 ]
@@ -118,10 +118,10 @@ fp_socio_reach = "../results/reach_maps/socio_reach_"
 
 fp_zipf_lts = "../results/component_plots/zipf_"
 fp_zipf_combined = "../results/component_plots/combined_zipf.png"
-fp_zipf_muni = "../results/component_plots/municipality/combined_zipf_"
+fp_zipf_muni = "../results/component_plots/municipal/combined_zipf_"
 
 fps_local_component_count = [
-    "../results/component_maps/municipality/",
+    "../results/component_maps/municipal/",
     "../results/component_maps/socio/",
     "../results/component_maps/hexgrid/",
 ]
@@ -129,19 +129,19 @@ fps_local_component_count = [
 fp_components_zoom = "../results/component_maps/hexgrid/components_zoom.png"
 
 fps_comp_dens_correlation = [
-    "../results/correlation/municipality/component_count_infra_density_",
+    "../results/correlation/municipal/component_count_infra_density_",
     "../results/correlation/socio/component_count_infra_density_",
     "../results/correlation/hexgrid/component_count_infra_density_",
 ]
 
 fps_components_rug = [
-    "../results/component_plots/municipality/component_distribution_muni.jpeg",
+    "../results/component_plots/municipal/component_distribution_muni.jpeg",
     "../results/component_plots/socio/component_distribution_socio.jpeg",
     "../results/component_plots/hexgrid/component_distribution_hex.jpeg",
 ]
 
 fps_components_scatter = [
-    "../results/correlation/municipality/component_count_infra_density_all.jpeg",
+    "../results/correlation/municipal/component_count_infra_density_all.jpeg",
     "../results/correlation/socio/component_count_infra_density_all.jpeg",
     "../results/correlation/hexgrid/component_count_infra_density_all.jpeg",
 ]
