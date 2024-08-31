@@ -83,7 +83,7 @@ def plot_components_zoom(
     plt.tight_layout()
 
 
-def y_zoom(
+def plot_poly_zoom(
     poly_gdf,
     plot_col,
     plot_title,
