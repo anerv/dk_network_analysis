@@ -100,7 +100,7 @@ fps_violin_reach_diff_pct = [
     "../results/reach_plots/violin_lts_1_4_reach_diff_pct.jpg",
 ]
 
-fp_reach_density_corr = "../results/correlation/corr_reach_density_"
+fp_reach_density_corr = "../results/correlation/hexgrid/corr_reach_density_"
 
 fp_reach_compare_dist_bars = "../results/reach_plots/reach_distance_comparison_bar_"
 
@@ -193,21 +193,21 @@ fp_comp_length_kde = "../results/component_plots/largest_component_length_kde.pn
 fp_spatial_weights_sensitivity = "../results/spatial_autocorrelation/sensitivity_test/"
 
 
-# Socio correlation
+# Correlation - socio/pop
 fp_socio_vars_heatmap = "../results/correlation/heatmap_socio_vars.png"
 fp_socio_vars_pairplot = "../results/correlation/pairplot_socio_vars.png"
 
-fp_socio_heatmap = "../results/correlation/heatmap_socio_"
-fp_socio_pairplot = "../results/correlation/pairplot_socio_"
+fp_socio_heatmap = "../results/correlation/socio/heatmap_socio_"
+fp_socio_pairplot = "../results/correlation/socio/pairplot_socio_"
 
-fp_hex_network_heatmap = "../results/correlation/heatmap_hex_network.png"
-fp_hex_network_pairplot = "../results/correlation/pairplot_hex_network.png"
+fp_hex_network_heatmap = "../results/correlation/hexgrid/heatmap_hex_network.png"
+fp_hex_network_pairplot = "../results/correlation/hexgrid/pairplot_hex_network.png"
 
-fp_socio_network_heatmap = "../results/correlation/heatmap_socio_network.png"
-fp_socio_network_pairplot = "../results/correlation/pairplot_socio_network.png"
+fp_socio_network_heatmap = "../results/correlation/socio/heatmap_socio_network.png"
+fp_socio_network_pairplot = "../results/correlation/socio/pairplot_socio_network.png"
 
-fp_socio_pop_corr = "../results/correlation/socio_pop_corr_"
-fp_hex_pop_corr = "../results/correlation/hex_pop_corr_"
+fp_socio_pop_corr = "../results/correlation/socio/socio_pop_corr_"
+fp_hex_pop_corr = "../results/correlation/hexgrid/hex_pop_corr_"
 
 # Spatial autocorrelation
 fp_spatial_auto_base = "../results/spatial_autocorrelation/"
