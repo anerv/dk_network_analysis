@@ -1,9 +1,5 @@
 import geopandas as gpd
 import pandas as pd
-import os.path
-import networkx as nx
-import numpy as np
-import matplotlib.pyplot as plt
 from shapely.geometry import mapping, Polygon
 import h3
 
