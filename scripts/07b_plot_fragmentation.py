@@ -300,9 +300,6 @@ lts_subset = component_edges[component_edges.component_1.notna()]
 xmin, ymin = (639464.351371, 6120027.316230)
 xmax, ymax = (699033.929025, 6173403.495114)
 
-xmin, ymin = (639464.351371, 6120027.316230)
-xmax, ymax = (699033.929025, 6173403.495114)
-
 plot_func.plot_components_zoom(
     lts_subset,
     "component_1",
