@@ -352,3 +352,23 @@ else:
     fig.savefig(filepath + ".png", dpi=pdict["dpi"])
 
 # %%
+xmin, ymin = (639464.351371, 6120027.316230)
+xmax, ymax = (699033.929025, 6173403.495114)
+
+# get edges
+# get density grid
+
+# plot density grid
+# plot edges
+
+# %%
+
+# get edge segments
+
+# make center point (middle-isj of zoomed plot)
+
+# look up reachable segments from center point at various distances
+
+# %%
+
+# find good area to demonstrate LTS networks
