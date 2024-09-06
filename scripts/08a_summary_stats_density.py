@@ -128,7 +128,7 @@ for i, df in enumerate(
         color_discrete_map=new_color_dict,
     )
     fig.update_layout(template="simple_white", showlegend=False, xaxis_title=None)
-    fig.update_traces(texttemplate="%{y:.2f}%", textposition="outside")
+    fig.update_traces(texttemplate="%{y:.0f}%", textposition="outside")
     fig.update_yaxes(visible=False)
     fig.update_layout(margin=dict(l=20, r=20, t=20, b=20))
     fig.update_layout(
