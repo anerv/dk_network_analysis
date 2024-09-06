@@ -1269,6 +1269,9 @@ def combined_zipf_plot(
     fp,
     title="Component length distribution",
     figsize=pdict["fsbar"],
+    scatter_size=15,
+    alpha_line=0.7,
+    linewidth=0.5,
 ):
     """
     Plot a combined Zipf plot for component length distribution.
@@ -1302,48 +1305,102 @@ def combined_zipf_plot(
     lts2_yvals = sorted(list(component_size_1_2["infra_length"]), reverse=True)
     lts3_yvals = sorted(list(component_size_1_3["infra_length"]), reverse=True)
     lts4_yvals = sorted(list(component_size_1_4["infra_length"]), reverse=True)
-    ltscar_yvals = sorted(list(component_size_car["infra_length"]), reverse=True)
+    car_yvals = sorted(list(component_size_car["infra_length"]), reverse=True)
+
+    lts1_xvals = [i + 1 for i in range(len(component_size_1))]
+    lts2_xvals = [i + 1 for i in range(len(component_size_1_2))]
+    lts3_xvals = [i + 1 for i in range(len(component_size_1_3))]
+    lts4_xvals = [i + 1 for i in range(len(component_size_1_4))]
+    car_xvals = [i + 1 for i in range(len(component_size_car))]
+    all_xvals = [i + 1 for i in range(len(component_size_all))]
 
     axes.scatter(
-        x=[i + 1 for i in range(len(component_size_1))],
+        x=lts1_xvals,
         y=lts1_yvals,
-        s=18,
+        s=scatter_size,
         color=lts_color_dict["1"],
     )
 
     axes.scatter(
-        x=[i + 1 for i in range(len(component_size_1_2))],
+        x=lts2_xvals,
         y=lts2_yvals,
-        s=18,
+        s=scatter_size,
         color=lts_color_dict["2"],
     )
 
     axes.scatter(
-        x=[i + 1 for i in range(len(component_size_1_3))],
+        x=lts3_xvals,
         y=lts3_yvals,
-        s=18,
+        s=scatter_size,
         color=lts_color_dict["3"],
     )
 
     axes.scatter(
-        x=[i + 1 for i in range(len(component_size_1_4))],
+        x=lts4_xvals,
         y=lts4_yvals,
-        s=18,
+        s=scatter_size,
         color=lts_color_dict["4"],
     )
 
     axes.scatter(
-        x=[i + 1 for i in range(len(component_size_car))],
-        y=ltscar_yvals,
-        s=18,
+        x=car_xvals,
+        y=car_yvals,
+        s=scatter_size,
         color=lts_color_dict["car"],
     )
 
     axes.scatter(
-        x=[i + 1 for i in range(len(component_size_all))],
+        x=all_xvals,
         y=all_yvals,
-        s=18,
+        s=scatter_size,
         color=lts_color_dict["total"],
+    )
+
+    axes.plot(
+        lts1_xvals,
+        lts1_yvals,
+        color=lts_color_dict["1"],
+        linewidth=linewidth,
+        alpha=alpha_line,
+    )
+
+    axes.plot(
+        lts2_xvals,
+        lts2_yvals,
+        color=lts_color_dict["2"],
+        linewidth=linewidth,
+        alpha=alpha_line,
+    )
+
+    axes.plot(
+        lts3_xvals,
+        lts3_yvals,
+        color=lts_color_dict["3"],
+        linewidth=linewidth,
+        alpha=alpha_line,
+    )
+
+    axes.plot(
+        lts4_xvals,
+        lts4_yvals,
+        color=lts_color_dict["4"],
+        linewidth=linewidth,
+        alpha=alpha_line,
+    )
+
+    axes.plot(
+        car_xvals,
+        car_yvals,
+        color=lts_color_dict["car"],
+        linewidth=linewidth,
+        alpha=alpha_line,
+    )
+    axes.plot(
+        all_xvals,
+        all_yvals,
+        color=lts_color_dict["total"],
+        linewidth=linewidth,
+        alpha=alpha_line,
     )
 
     y_min = min(
@@ -1352,7 +1409,7 @@ def combined_zipf_plot(
         min(lts2_yvals),
         min(lts3_yvals),
         min(lts4_yvals),
-        min(ltscar_yvals),
+        min(car_yvals),
     )
     y_max = max(
         max(all_yvals),
@@ -1360,7 +1417,7 @@ def combined_zipf_plot(
         max(lts2_yvals),
         max(lts3_yvals),
         max(lts4_yvals),
-        max(ltscar_yvals),
+        max(car_yvals),
     )
     axes.set_ylim(
         ymin=10 ** math.floor(math.log10(y_min)),
@@ -1432,6 +1489,182 @@ def combined_zipf_plot(
     fig.savefig(fp, bbox_inches="tight", dpi=pdict["dpi"])
     plt.show()
     plt.close()
+
+
+# def combined_zipf_plot(
+#     component_size_all,
+#     component_size_1,
+#     component_size_1_2,
+#     component_size_1_3,
+#     component_size_1_4,
+#     component_size_car,
+#     lts_color_dict,
+#     fp,
+#     title="Component length distribution",
+#     figsize=pdict["fsbar"],
+# ):
+#     """
+#     Plot a combined Zipf plot for component length distribution.
+
+#     Args:
+#         component_size_all (dict): A dictionary containing component size information for all components.
+#         component_size_1 (dict): A dictionary containing component size information for LTS 1 components.
+#         component_size_1_2 (dict): A dictionary containing component size information for LTS 1-2 components.
+#         component_size_1_3 (dict): A dictionary containing component size information for LTS 1-3 components.
+#         component_size_1_4 (dict): A dictionary containing component size information for LTS 1-4 components.
+#         component_size_car (dict): A dictionary containing component size information for car components.
+#         lts_color_dict (dict): A dictionary mapping LTS numbers to color codes.
+#         fp (str): The file path to save the plot.
+#         title (str, optional): The title of the plot. Defaults to "Component length distribution".
+#         figsize (tuple, optional): The figure size of the plot. Defaults to pdict["fsbar"].
+
+#     Returns:
+#         None
+#     """
+
+#     fig = plt.figure(figsize=figsize)
+#     axes = fig.add_axes([0, 0, 1, 1])
+
+#     from matplotlib.patches import Patch
+
+#     axes.set_axisbelow(True)
+#     axes.grid(True, which="major", ls="dotted")
+
+#     all_yvals = sorted(list(component_size_all["infra_length"]), reverse=True)
+#     lts1_yvals = sorted(list(component_size_1["infra_length"]), reverse=True)
+#     lts2_yvals = sorted(list(component_size_1_2["infra_length"]), reverse=True)
+#     lts3_yvals = sorted(list(component_size_1_3["infra_length"]), reverse=True)
+#     lts4_yvals = sorted(list(component_size_1_4["infra_length"]), reverse=True)
+#     ltscar_yvals = sorted(list(component_size_car["infra_length"]), reverse=True)
+
+#     axes.scatter(
+#         x=[i + 1 for i in range(len(component_size_1))],
+#         y=lts1_yvals,
+#         s=18,
+#         color=lts_color_dict["1"],
+#     )
+
+#     axes.scatter(
+#         x=[i + 1 for i in range(len(component_size_1_2))],
+#         y=lts2_yvals,
+#         s=18,
+#         color=lts_color_dict["2"],
+#     )
+
+#     axes.scatter(
+#         x=[i + 1 for i in range(len(component_size_1_3))],
+#         y=lts3_yvals,
+#         s=18,
+#         color=lts_color_dict["3"],
+#     )
+
+#     axes.scatter(
+#         x=[i + 1 for i in range(len(component_size_1_4))],
+#         y=lts4_yvals,
+#         s=18,
+#         color=lts_color_dict["4"],
+#     )
+
+#     axes.scatter(
+#         x=[i + 1 for i in range(len(component_size_car))],
+#         y=ltscar_yvals,
+#         s=18,
+#         color=lts_color_dict["car"],
+#     )
+
+#     axes.scatter(
+#         x=[i + 1 for i in range(len(component_size_all))],
+#         y=all_yvals,
+#         s=18,
+#         color=lts_color_dict["total"],
+#     )
+
+#     y_min = min(
+#         min(all_yvals),
+#         min(lts1_yvals),
+#         min(lts2_yvals),
+#         min(lts3_yvals),
+#         min(lts4_yvals),
+#         min(ltscar_yvals),
+#     )
+#     y_max = max(
+#         max(all_yvals),
+#         max(lts1_yvals),
+#         max(lts2_yvals),
+#         max(lts3_yvals),
+#         max(lts4_yvals),
+#         max(ltscar_yvals),
+#     )
+#     axes.set_ylim(
+#         ymin=10 ** math.floor(math.log10(y_min)),
+#         ymax=10 ** math.ceil(math.log10(y_max)),
+#     )
+#     axes.set_xscale("log")
+#     axes.set_yscale("log")
+
+#     axes.set_ylabel("Component length [km]", fontsize=pdict["fs_subplot"] + 2)
+#     axes.set_xlabel(
+#         "Component rank (largest to smallest)", fontsize=pdict["fs_subplot"] + 2
+#     )
+
+#     legend_patches = [
+#         Patch(
+#             facecolor=lts_color_dict["1"],
+#             edgecolor=lts_color_dict["1"],
+#             label="Color Patch",
+#         ),
+#         Patch(
+#             facecolor=lts_color_dict["2"],
+#             edgecolor=lts_color_dict["2"],
+#             label="Color Patch",
+#         ),
+#         Patch(
+#             facecolor=lts_color_dict["3"],
+#             edgecolor=lts_color_dict["3"],
+#             label="Color Patch",
+#         ),
+#         Patch(
+#             facecolor=lts_color_dict["4"],
+#             edgecolor=lts_color_dict["4"],
+#             label="Color Patch",
+#         ),
+#         Patch(
+#             facecolor=lts_color_dict["car"],
+#             edgecolor=lts_color_dict["car"],
+#             label="Color Patch",
+#         ),
+#         Patch(
+#             facecolor=lts_color_dict["total"],
+#             edgecolor=lts_color_dict["total"],
+#             label="Color Patch",
+#         ),
+#     ]
+
+#     axes.legend(
+#         legend_patches,
+#         [
+#             "LTS 1",
+#             "LTS 1-2",
+#             "LTS 1-3",
+#             "LTS 1-4",
+#             "Total car",
+#             "Total network",
+#         ],
+#     )
+#     axes.set_title(title, fontsize=pdict["fs_subplot"] + 2)
+
+#     legend = axes.get_legend()
+#     if legend:
+#         legend.set_frame_on(False)
+
+#         for i in range(len(legend.get_texts())):
+#             legend.get_texts()[i].set_fontsize(pdict["fs_subplot"])
+
+#     axes.tick_params(axis="both", which="major", labelsize=pdict["fs_subplot"])
+
+#     fig.savefig(fp, bbox_inches="tight", dpi=pdict["dpi"])
+#     plt.show()
+#     plt.close()
 
 
 def make_zipf_component_plot(df, col, label, fp=None, show=True):
