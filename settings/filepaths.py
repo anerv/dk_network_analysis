@@ -126,7 +126,7 @@ fps_local_component_count = [
     "../results/component_maps/hexgrid/",
 ]
 
-fp_components_zoom = "../results/component_maps/hexgrid/components_zoom.png"
+fp_components_zoom = "../results/component_maps/components_zoom.png"
 
 fps_comp_dens_correlation = [
     "../results/correlation/municipal/component_count_infra_density_",
