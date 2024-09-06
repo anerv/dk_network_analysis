@@ -71,7 +71,11 @@ population = gpd.read_postgis(
 # %%
 plot_res = "low"
 
+
 filepath = "../illustrations/population_map"
+
+import matplotlib.ticker as mticker
+import matplotlib as mpl
 
 fig, ax = plt.subplots(figsize=pdict["fsmap"])
 
@@ -80,16 +84,39 @@ population.plot(
     scheme="natural_breaks",
     k=8,
     column="population_density",
-    cmap="viridis",
+    cmap="viridis_r",
     linewidth=0.0,
     edgecolor="none",
     legend=True,
     legend_kwds={
-        "fmt": "{:.0f}",
+        # "fmt": "{:.0f}",
         "frameon": False,
         "fontsize": pdict["map_legend_fs"],
     },
 )
+
+# # Access the legend
+legend = ax.get_legend()
+
+new_labels = []
+for text in legend.get_texts():
+    label = text.get_text()  # Extract the label text
+
+    label_split = label.split(",")
+
+    first_val = label_split[0]
+    second_val = label_split[1].strip(" ")
+
+    new_labels.append(
+        f"{int(round(float(first_val), -2))}"
+        + ", "
+        + f"{int(round(float(second_val), -2))}"
+    )
+
+
+# Update the legend text
+for text, new_label in zip(legend.get_texts(), new_labels):
+    text.set_text(new_label)
 
 ax.set_axis_off()
 ax.set_title("Population density (people/km²)", fontsize=pdict["map_title_fs"])
@@ -117,8 +144,8 @@ if plot_res == "high":
 else:
     fig.savefig(filepath + ".png", dpi=pdict["dpi"])
 
-# %%
 
+# %%
 filepath = "../illustrations/urban_areas"
 
 fig, ax = plt.subplots(figsize=pdict["fsmap"])
@@ -159,7 +186,7 @@ txt = ax.texts[-1]
 txt.set_position([0.99, 0.01])
 txt.set_ha("right")
 txt.set_va("bottom")
-
+# %%
 if plot_res == "high":
     fig.savefig(filepath + ".svg", dpi=pdict["dpi"])
 else:
