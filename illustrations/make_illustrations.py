@@ -287,7 +287,7 @@ density_hex.plot(
 lts1_edges.plot(
     ax=ax,
     color="black",
-    linewidth=1,
+    linewidth=0.5,
     legend=False,
 )
 
