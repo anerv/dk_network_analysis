@@ -8,6 +8,8 @@ import contextily as cx
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import geopandas as gpd
 from matplotlib_scalebar.scalebar import ScaleBar
+from shapely.geometry import Point
+import numpy as np
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -25,7 +27,7 @@ network = gpd.read_postgis(
     engine,
     geom_col="geometry",
 )
-# %%
+
 plot_res = "low"
 
 filepath = "../illustrations/overview_map"
@@ -62,20 +64,18 @@ if plot_res == "high":
 else:
     fig.savefig(filepath + ".png", dpi=pdict["dpi"])
 
+
+del network
 # %%
 population = gpd.read_postgis(
     "SELECT population, population_density, urban_pct, geometry FROM hex_grid",
     engine,
     geom_col="geometry",
 )
-# %%
+
 plot_res = "low"
 
-
 filepath = "../illustrations/population_map"
-
-import matplotlib.ticker as mticker
-import matplotlib as mpl
 
 fig, ax = plt.subplots(figsize=pdict["fsmap"])
 
@@ -112,7 +112,6 @@ for text in legend.get_texts():
         + ", "
         + f"{int(round(float(second_val), -2))}"
     )
-
 
 # Update the legend text
 for text, new_label in zip(legend.get_texts(), new_labels):
@@ -186,12 +185,13 @@ txt = ax.texts[-1]
 txt.set_position([0.99, 0.01])
 txt.set_ha("right")
 txt.set_va("bottom")
-# %%
+
 if plot_res == "high":
     fig.savefig(filepath + ".svg", dpi=pdict["dpi"])
 else:
     fig.savefig(filepath + ".png", dpi=pdict["dpi"])
 
+del population
 # %%
 # Plot hex grid
 
@@ -199,7 +199,6 @@ hex_grid = gpd.read_postgis(
     "SELECT hex_id, geometry FROM hex_grid", engine, geom_col="geometry"
 )
 
-# %%
 xmin, ymin = (689922, 6161099 - 200)
 xmax = xmin + 3000
 ymax = ymin + 3000
@@ -242,6 +241,7 @@ if plot_res == "high":
 else:
     fig.savefig(filepath + ".png", dpi=pdict["dpi"])
 
+del hex_grid
 # %%
 # Density illustration
 
@@ -251,14 +251,23 @@ del density_muni
 del density_socio
 
 edges = gpd.read_postgis(
-    "SELECT id, geometry FROM edges WHERE lts_access IN (1,2,3,4)",
+    "SELECT id, geometry, lts_access FROM edges WHERE lts_access IN (1,2,3,4)",
     engine,
     geom_col="geometry",
 )
+
+lts1_edges = edges[edges.lts_access == 1]
 # %%
-xmin, ymin = (689922 - 1000, 6161099 - 2000)
-xmax = xmin + 3000
-ymax = ymin + 3000
+# xmin, ymin = (689922 - 1000, 6161099 - 2000)
+# xmax = xmin + 3000
+# ymax = ymin + 3000
+
+xmin, ymin = (639464.351371, 6120027.316230)
+xmax, ymax = (699033.929025, 6173403.495114)
+xmin += 12000
+xmax -= 6000
+ymin += 12000
+ymax -= 6000
 
 plot_res = "low"
 
@@ -268,14 +277,14 @@ fig, ax = plt.subplots(figsize=pdict["fsmap"])
 
 density_hex.plot(
     ax=ax,
-    column="lts_1_4_dens",
+    column="lts_1_dens",  # "lts_1_4_dens",
     cmap="PuRd",
     edgecolor="none",
     linewidth=0,
     legend=False,
 )
 
-edges.plot(
+lts1_edges.plot(
     ax=ax,
     color="black",
     linewidth=1,
@@ -305,29 +314,108 @@ else:
     fig.savefig(filepath + ".png", dpi=pdict["dpi"])
 
 # %%
-lts1_edges = gpd.read_postgis(
-    "SELECT id, geometry FROM edges WHERE lts_access IN (1)",
+# Make zoomed component plot
+
+component_edges = gpd.GeoDataFrame.from_postgis(
+    "SELECT * FROM fragmentation.component_edges;", engine, geom_col="geometry"
+)
+
+lts_subset = component_edges[component_edges.component_1.notna()]
+
+xmin, ymin = (639464.351371, 6120027.316230)
+xmax, ymax = (699033.929025, 6173403.495114)
+xmin += 12000
+xmax -= 6000
+ymin += 12000
+ymax -= 6000
+
+plot_func.plot_components_zoom(
+    lts_subset,
+    "component_1",
+    "Set2",
+    "components.png",
+    xmin,
+    ymin,
+    xmax,
+    ymax,
+)
+
+del component_edges
+del lts_subset
+
+
+# %%
+
+# Read segment data
+
+
+# %%
+xmin, ymin = (639464.351371, 6120027.316230)
+xmax, ymax = (699033.929025, 6173403.495114)
+xmin += 12000
+xmax -= 6000
+ymin += 12000
+ymax -= 6000
+
+exec(open("reach_segment_ids.py").read())
+
+startnode = gpd.GeoDataFrame.from_postgis(
+    f"SELECT * FROM reach.hex_lts_1 WHERE node_id = {node_id};",
+    engine,
+    geom_col="node_geom",
+)
+
+all_reach_edges = gpd.GeoDataFrame.from_postgis(
+    f"SELECT * FROM reach.lts_1_segments;",
     engine,
     geom_col="geometry",
 )
 
-# %%
-xmin, ymin = (689922 - 1000, 6161099 - 2000)
-xmax = xmin + 3000
-ymax = ymin + 3000
+reach_edges_15 = gpd.GeoDataFrame.from_postgis(
+    f"SELECT * FROM reach.lts_1_segments WHERE id IN {segment_ids_15};",
+    engine,
+    geom_col="geometry",
+)
 
+reach_edges_10 = gpd.GeoDataFrame.from_postgis(
+    f"SELECT * FROM reach.lts_1_segments WHERE id IN {segment_ids_10};",
+    engine,
+    geom_col="geometry",
+)
+
+reach_edges_5 = gpd.GeoDataFrame.from_postgis(
+    f"SELECT * FROM reach.lts_1_segments WHERE id IN {segment_ids_5};",
+    engine,
+    geom_col="geometry",
+)
+# %%
 plot_res = "low"
 
 filepath = "../illustrations/reach"
 
 fig, ax = plt.subplots(figsize=pdict["fsmap"])
 
-lts1_edges.plot(
+all_reach_edges.plot(
     ax=ax,
-    color="black",
+    color="lightgrey",
     linewidth=1,
     legend=False,
 )
+
+reach_edges_15.plot(
+    ax=ax,
+    color="#6699cc",
+    linewidth=1.5,
+    legend=False,
+)
+reach_edges_10.plot(
+    ax=ax,
+    color="#994455",
+    linewidth=1.7,
+    legend=False,
+)
+
+startnode.plot(ax=ax, color="black", markersize=40, alpha=1)
 
 ax.axis([xmin, xmax, ymin, ymax])
 
@@ -352,23 +440,24 @@ else:
     fig.savefig(filepath + ".png", dpi=pdict["dpi"])
 
 # %%
+
 xmin, ymin = (639464.351371, 6120027.316230)
 xmax, ymax = (699033.929025, 6173403.495114)
 
-# get edges
-# get density grid
+density_hex = gpd.GeoDataFrame.from_postgis(
+    "SELECT * FROM density.density_hex;",
+    engine,
+    crs=crs,
+    geom_col="geometry",
+)
 
-# plot density grid
-# plot edges
+density_hex.replace(0, np.nan, inplace=True)
 
+edges = gpd.read_postgis(
+    "SELECT id, geometry FROM edges WHERE lts_access IN (1,2,3,4)",
+    engine,
+    geom_col="geometry",
+)
 # %%
 
-# get edge segments
-
-# make center point (middle-isj of zoomed plot)
-
-# look up reachable segments from center point at various distances
-
-# %%
-
-# find good area to demonstrate LTS networks
+# PLOT LTS NETWORK
