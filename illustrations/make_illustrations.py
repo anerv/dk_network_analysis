@@ -343,12 +343,6 @@ plot_func.plot_components_zoom(
 del component_edges
 del lts_subset
 
-
-# %%
-
-# Read segment data
-
-
 # %%
 xmin, ymin = (639464.351371, 6120027.316230)
 xmax, ymax = (699033.929025, 6173403.495114)
@@ -441,23 +435,147 @@ else:
 
 # %%
 
-xmin, ymin = (639464.351371, 6120027.316230)
-xmax, ymax = (699033.929025, 6173403.495114)
+# PLOT ALL LEVELS OF LTS NETWORK
 
-density_hex = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM density.density_hex;",
-    engine,
-    crs=crs,
-    geom_col="geometry",
-)
-
-density_hex.replace(0, np.nan, inplace=True)
-
-edges = gpd.read_postgis(
-    "SELECT id, geometry FROM edges WHERE lts_access IN (1,2,3,4)",
+# Get full network
+total_network = gpd.read_postgis(
+    "SELECT id, geometry, car_traffic, lts_access FROM edges WHERE lts_access IN (1,2,3,4,7)",
     engine,
     geom_col="geometry",
 )
 # %%
+# Get subsets
 
-# PLOT LTS NETWORK
+xmin, ymin = (581406, 6134559)
+xmax, ymax = (589089, 6140132)
+
+total_network = total_network.cx[xmin - 200 : xmax + 200, ymin - 200 : ymax + 200]
+
+lts1_network = total_network[total_network.lts_access == 1]
+
+lts2_network = total_network[total_network.lts_access == 2]
+
+lts3_network = total_network[total_network.lts_access == 3]
+
+lts4_network = total_network[total_network.lts_access == 4]
+
+car_network = total_network[
+    total_network.lts_access.isin([1, 2, 3, 4, 7]) & total_network.car_traffic == True
+]
+
+# %%
+plot_res = "low"
+
+linewidth = 1.5
+# %%
+## LTS 1
+filepath = f"../illustrations/lts_network_1"
+
+fig, ax = plt.subplots(figsize=pdict["fsmap"])
+
+lts1_network.plot(color=lts_color_dict["1"], linewidth=linewidth, ax=ax)
+
+ax.axis([xmin, xmax, ymin, ymax])
+
+ax.set_axis_off()
+
+if plot_res == "high":
+    fig.savefig(filepath + ".svg", dpi=pdict["dpi"])
+else:
+    fig.savefig(filepath + ".png", dpi=pdict["dpi"])
+
+# %%
+## LTS 1-2
+filepath = f"../illustrations/lts_network_1_2"
+
+fig, ax = plt.subplots(figsize=pdict["fsmap"])
+
+lts1_network.plot(color=lts_color_dict["1"], linewidth=linewidth, ax=ax)
+lts2_network.plot(color=lts_color_dict["2"], linewidth=linewidth, ax=ax)
+
+ax.axis([xmin, xmax, ymin, ymax])
+
+ax.set_axis_off()
+
+if plot_res == "high":
+    fig.savefig(filepath + ".svg", dpi=pdict["dpi"])
+else:
+    fig.savefig(filepath + ".png", dpi=pdict["dpi"])
+
+# %%
+# LTS 1-3
+filepath = f"../illustrations/lts_network_1_3"
+
+fig, ax = plt.subplots(figsize=pdict["fsmap"])
+
+lts1_network.plot(color=lts_color_dict["1"], linewidth=linewidth, ax=ax)
+lts2_network.plot(color=lts_color_dict["2"], linewidth=linewidth, ax=ax)
+lts3_network.plot(color=lts_color_dict["3"], linewidth=linewidth + 0.2, ax=ax)
+
+ax.axis([xmin, xmax, ymin, ymax])
+
+ax.set_axis_off()
+
+if plot_res == "high":
+    fig.savefig(filepath + ".svg", dpi=pdict["dpi"])
+else:
+    fig.savefig(filepath + ".png", dpi=pdict["dpi"])
+
+# %%
+# LTS 1-4
+filepath = f"../illustrations/lts_network_1_4"
+
+fig, ax = plt.subplots(figsize=pdict["fsmap"])
+
+lts1_network.plot(color=lts_color_dict["1"], linewidth=linewidth, ax=ax)
+lts2_network.plot(color=lts_color_dict["2"], linewidth=linewidth, ax=ax)
+lts3_network.plot(color=lts_color_dict["3"], linewidth=linewidth + 0.2, ax=ax)
+lts4_network.plot(color=lts_color_dict["4"], linewidth=linewidth, ax=ax)
+
+ax.axis([xmin, xmax, ymin, ymax])
+
+ax.set_axis_off()
+
+if plot_res == "high":
+    fig.savefig(filepath + ".svg", dpi=pdict["dpi"])
+else:
+    fig.savefig(filepath + ".png", dpi=pdict["dpi"])
+
+# %%
+# Car
+
+filepath = f"../illustrations/lts_network_car"
+
+fig, ax = plt.subplots(figsize=pdict["fsmap"])
+
+car_network.plot(color=lts_color_dict["car"], linewidth=linewidth, ax=ax)
+
+ax.axis([xmin, xmax, ymin, ymax])
+
+ax.set_axis_off()
+
+if plot_res == "high":
+    fig.savefig(filepath + ".svg", dpi=pdict["dpi"])
+else:
+    fig.savefig(filepath + ".png", dpi=pdict["dpi"])
+
+# %%
+
+# FULL NETWORK
+
+filepath = f"../illustrations/lts_network_total"
+
+fig, ax = plt.subplots(figsize=pdict["fsmap"])
+
+total_network.plot(color=lts_color_dict["total"], linewidth=linewidth, ax=ax)
+
+ax.axis([xmin, xmax, ymin, ymax])
+
+ax.set_axis_off()
+
+if plot_res == "high":
+    fig.savefig(filepath + ".svg", dpi=pdict["dpi"])
+else:
+    fig.savefig(filepath + ".png", dpi=pdict["dpi"])
+
+# %%
