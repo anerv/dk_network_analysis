@@ -10,6 +10,7 @@ import geopandas as gpd
 from matplotlib_scalebar.scalebar import ScaleBar
 from shapely.geometry import Point
 import numpy as np
+import random
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -317,10 +318,10 @@ else:
 # Make zoomed component plot
 
 component_edges = gpd.GeoDataFrame.from_postgis(
-    "SELECT * FROM fragmentation.component_edges;", engine, geom_col="geometry"
+    "SELECT component_1, component_size_1, geometry FROM fragmentation.component_edges WHERE component_1 IS NOT NULL;",
+    engine,
+    geom_col="geometry",
 )
-
-lts_subset = component_edges[component_edges.component_1.notna()]
 
 xmin, ymin = (639464.351371, 6120027.316230)
 xmax, ymax = (699033.929025, 6173403.495114)
@@ -329,19 +330,41 @@ xmax -= 6000
 ymin += 12000
 ymax -= 6000
 
-plot_func.plot_components_zoom(
-    lts_subset,
-    "component_1",
-    "Set2",
-    "components.png",
-    xmin,
-    ymin,
-    xmax,
-    ymax,
+lts_subset = component_edges.cx[xmin - 200 : xmax + 200, ymin - 200 : ymax + 200].copy()
+del component_edges
+# %%
+# make unique random colors for each component
+# from https://www.delftstack.com/howto/python/generate-random-colors-python/
+colors = []
+n = len(lts_subset.component_1.unique())
+for i in range(n):
+    color = "#" + "".join([random.choice("0123456789ABCDEF") for j in range(6)])
+    colors.append(color)
+
+lts_subset["color"] = lts_subset.component_1.map(
+    dict(zip(lts_subset.component_1.unique(), colors))
+)
+# %%
+fig, ax = plt.subplots(figsize=pdict["fsmap"])
+
+lts_subset.plot(
+    # column="component_1",
+    categorical=True,
+    legend=False,
+    ax=ax,
+    color=lts_subset.color,
+    # cmap=cmap,
+    linewidth=1.5,
+    alpha=pdict["alpha"],
 )
 
-del component_edges
-del lts_subset
+ax.axis([xmin, xmax, ymin, ymax])
+
+ax.set_axis_off()
+
+plt.tight_layout()
+
+fig.savefig("components.png", dpi=pdict["dpi"])
 
 # %%
 xmin, ymin = (639464.351371, 6120027.316230)
