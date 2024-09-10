@@ -273,6 +273,11 @@ axes[0].bar(
     hatch="//",
     label="Non-urban area",
 )
+axes[0].set_xticks(x)
+axes[0].set_xticklabels(cluster_stats.cluster_no_str)
+axes[0].set_xlabel("")
+axes[0].set_ylabel("Total area (km²)")
+axes[0].tick_params(axis="both", which="major", labelsize=pdict["fs_subplot"])
 
 # Plot total population divided into urban and non-urban
 
