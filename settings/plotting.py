@@ -8,7 +8,7 @@ import matplotlib_inline.backend_inline
 
 pdict = {
     # colormaps for grid cell plots
-    "dens": "BuPu",  # "winter_r",  # "viridis_r",  # "PuBu",
+    "dens": "viridis_r",  # "BuPu",  # "winter_r",  # "viridis_r",  # "PuBu",
     "reach": "YlGnBu",  # "PuBu", "PuBuGn",
     "dens_rel": "PuRd",  # "pink",  # "cividis",  # "PuRd",  # "Blues",  # Positive values
     "frag": "viridis",  # "PuRd",  # "pink",  # "Reds",  # Negative/Missing/Unmatched values
@@ -19,7 +19,7 @@ pdict = {
     "alpha": 0.8,
     "alpha_nodata": 0.7,  # for no data patches
     # Colors of no-data
-    "nodata": "tan",  # "silver",
+    "nodata": "xkcd:putty",  # "xkcd:taupe",  # "tan",  # "silver",
     # GLOBAL SETTINGS FOR PLOTS
     "dpi": 300,  # resolution
     "plot_res": "low",  # "high" for exporting to svg, "low" for png
