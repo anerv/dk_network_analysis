@@ -601,4 +601,111 @@ if plot_res == "high":
 else:
     fig.savefig(filepath + ".png", dpi=pdict["dpi"])
 
+    # %%
+    # - [ ] plot hexagon
+    # - [ ] plot centroid
+    # - [ ] plot components
+    # 	- [ ] largest in red
+    # - [ ] plot closest node
+
+xmin, ymin = (639464.351371, 6120027.316230)
+xmax, ymax = (699033.929025, 6173403.495114)
+xmin += 23000
+xmax -= 1000
+ymin += 25000
+ymax -= 1000
+
+# xmin, ymin = (581406, 6134559)
+# xmax, ymax = (589089, 6140132)
+# %%
+
+
+node_id = 686608
+
+startnode = gpd.GeoDataFrame.from_postgis(
+    f"SELECT * FROM reach.hex_lts_1 WHERE node_id = {node_id};",
+    engine,
+    geom_col="node_geom",
+)
+
+centroid = gpd.GeoDataFrame.from_postgis(
+    f"SELECT * FROM reach.hex_lts_1 WHERE node_id = {node_id};",
+    engine,
+    geom_col="hex_centroid",
+)
+
+# %%
+xmin = startnode.bounds.minx.values[0] - 800
+xmax = startnode.bounds.maxx.values[0] + 800
+ymin = startnode.bounds.miny.values[0] - 800
+ymax = startnode.bounds.maxy.values[0] + 800
+
+# %%
+
+hex_grid = gpd.read_postgis(
+    "SELECT hex_id, geometry FROM hex_grid", engine, geom_col="geometry"
+)
+
+hex_subset = hex_grid.cx[xmin - 200 : xmax + 200, ymin - 200 : ymax + 200].copy()
+del hex_grid
+
+component_edges = gpd.GeoDataFrame.from_postgis(
+    "SELECT component_1, component_size_1, geometry FROM fragmentation.component_edges WHERE component_1 IS NOT NULL;",
+    engine,
+    geom_col="geometry",
+)
+
+
+comp_subset = component_edges.cx[
+    xmin - 200 : xmax + 200, ymin - 200 : ymax + 200
+].copy()
+del component_edges
+
+# %%
+largest_comp = comp_subset[
+    comp_subset.component_size_1 == comp_subset.component_size_1.max()
+]
+other_comps = comp_subset[
+    comp_subset.component_size_1 != comp_subset.component_size_1.max()
+]
+# %%
+plot_res = "low"
+
+filepath = "../illustrations/reach_computation"
+
+fig, ax = plt.subplots(figsize=pdict["fsmap"])
+
+hex_subset.plot(
+    ax=ax, color="none", edgecolor="black", linewidth=0.5, legend=False, alpha=0.8
+)
+
+largest_comp.plot(
+    ax=ax,
+    color="#994455",  # "indigo",
+    linewidth=2,
+    legend=False,
+)
+other_comps.plot(
+    ax=ax,
+    color="grey",
+    linewidth=2,
+    legend=False,
+    linestyle="--",
+)
+
+startnode.plot(ax=ax, color="firebrick", markersize=40)
+
+# centroid.plot(ax=ax, color="black", markersize=40)
+
+
+ax.axis([xmin, xmax, ymin, ymax])
+
+ax.set_axis_off()
+
+
+if plot_res == "high":
+    fig.savefig(filepath + ".svg", dpi=pdict["dpi"])
+else:
+    fig.savefig(filepath + ".png", dpi=pdict["dpi"])
+
 # %%
