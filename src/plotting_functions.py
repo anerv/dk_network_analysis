@@ -1300,7 +1300,7 @@ def combined_zipf_plot(
     axes.set_axisbelow(True)
     axes.grid(True, which="major", ls="dotted")
 
-    all_yvals = sorted(list(component_size_all["infra_length"]), reverse=True)
+    # all_yvals = sorted(list(component_size_all["infra_length"]), reverse=True)
     lts1_yvals = sorted(list(component_size_1["infra_length"]), reverse=True)
     lts2_yvals = sorted(list(component_size_1_2["infra_length"]), reverse=True)
     lts3_yvals = sorted(list(component_size_1_3["infra_length"]), reverse=True)
@@ -1312,7 +1312,7 @@ def combined_zipf_plot(
     lts3_xvals = [i + 1 for i in range(len(component_size_1_3))]
     lts4_xvals = [i + 1 for i in range(len(component_size_1_4))]
     car_xvals = [i + 1 for i in range(len(component_size_car))]
-    all_xvals = [i + 1 for i in range(len(component_size_all))]
+    # all_xvals = [i + 1 for i in range(len(component_size_all))]
 
     axes.scatter(
         x=lts1_xvals,
