@@ -1349,12 +1349,12 @@ def combined_zipf_plot(
         color=lts_color_dict["car"],
     )
 
-    axes.scatter(
-        x=all_xvals,
-        y=all_yvals,
-        s=scatter_size,
-        color=lts_color_dict["total"],
-    )
+    # axes.scatter(
+    #     x=all_xvals,
+    #     y=all_yvals,
+    #     s=scatter_size,
+    #     color=lts_color_dict["total"],
+    # )
 
     axes.plot(
         lts1_xvals,
@@ -1395,16 +1395,16 @@ def combined_zipf_plot(
         linewidth=linewidth,
         alpha=alpha_line,
     )
-    axes.plot(
-        all_xvals,
-        all_yvals,
-        color=lts_color_dict["total"],
-        linewidth=linewidth,
-        alpha=alpha_line,
-    )
+    # axes.plot(
+    #     all_xvals,
+    #     all_yvals,
+    #     color=lts_color_dict["total"],
+    #     linewidth=linewidth,
+    #     alpha=alpha_line,
+    # )
 
     y_min = min(
-        min(all_yvals),
+        # min(all_yvals),
         min(lts1_yvals),
         min(lts2_yvals),
         min(lts3_yvals),
@@ -1412,7 +1412,7 @@ def combined_zipf_plot(
         min(car_yvals),
     )
     y_max = max(
-        max(all_yvals),
+        # max(all_yvals),
         max(lts1_yvals),
         max(lts2_yvals),
         max(lts3_yvals),
@@ -1457,22 +1457,22 @@ def combined_zipf_plot(
             edgecolor=lts_color_dict["car"],
             label="Color Patch",
         ),
-        Patch(
-            facecolor=lts_color_dict["total"],
-            edgecolor=lts_color_dict["total"],
-            label="Color Patch",
-        ),
+        # Patch(
+        #     facecolor=lts_color_dict["total"],
+        #     edgecolor=lts_color_dict["total"],
+        #     label="Color Patch",
+        # ),
     ]
 
     axes.legend(
         legend_patches,
         [
             "LTS 1",
-            "LTS 1-2",
-            "LTS 1-3",
-            "LTS 1-4",
+            "LTS≤2",
+            "LTS≤3",
+            "LTS≤4",
             "Total car",
-            "Total network",
+            # "Total network",
         ],
     )
     axes.set_title(title, fontsize=pdict["fs_subplot"] + 2)
