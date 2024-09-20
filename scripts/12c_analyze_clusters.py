@@ -275,7 +275,7 @@ axes[0].bar(
 )
 axes[0].set_xticks(x)
 axes[0].set_xticklabels(cluster_stats.cluster_no_str)
-axes[0].set_xlabel("")
+axes[0].set_xlabel("Cluster")
 axes[0].set_ylabel("Total area (km²)")
 axes[0].tick_params(axis="both", which="major", labelsize=pdict["fs_subplot"])
 
@@ -303,7 +303,7 @@ axes[1].bar(
 
 axes[1].set_xticks(x)
 axes[1].set_xticklabels(cluster_stats.cluster_no_str)
-axes[1].set_xlabel("")
+axes[1].set_xlabel("Cluster")
 axes[1].set_ylabel("Total population")
 axes[1].tick_params(axis="both", which="major", labelsize=pdict["fs_subplot"])
 
@@ -355,7 +355,7 @@ for i, c in enumerate(["population_density", "urban_pct"]):
         ax=axes[i],
         order=order,
     )
-    axes[i].set_xlabel("")
+    axes[i].set_xlabel("Cluster")
     axes[i].set_ylabel(plot_labels[i])
     axes[i].tick_params(axis="both", which="major", labelsize=pdict["fs_subplot"])
     # axes[i].xaxis.set_tick_params(rotation=90)
