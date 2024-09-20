@@ -540,7 +540,9 @@ for i, e in enumerate([np.median, np.mean, np.max, np.std]):
     plt.xlabel("")
     plt.ylabel("Reach (km)")
     #plt.title(f"{labels_stat[i]} network reach per network type")
-    plt.legend(title="Distance (km)", loc="upper left", fontsize=10, title_fontsize=12, frameon=False)
+    #plt.legend(title="Distance threshold (km)", loc="upper left", fontsize=10, title_fontsize=12, frameon=False)
+    leg = plt.legend(title="Distance threshold (km)", loc="upper left", fontsize=10, title_fontsize=12, frameon=False)
+    leg._legend_box.align = "left"
     plt.savefig(fp_reach_compare_dist_bars + labels_stat[i].lower() + ".png", dpi=pdict["dpi"])
     plt.show()
     plt.close()
@@ -578,7 +580,7 @@ plt.savefig(fp_reach_compare_dist_violin, dpi=pdict["dpi"])
 plt.show()
 plt.close()
 
- # %%
+# %%
 # KDE plots - differences in reach per distance
 
 reach_df = pd.read_sql(f"SELECT * FROM reach.compare_reach;", engine)
