@@ -8,8 +8,6 @@ import contextily as cx
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import geopandas as gpd
 from matplotlib_scalebar.scalebar import ScaleBar
-from shapely.geometry import Point
-import numpy as np
 import random
 
 exec(open("../settings/yaml_variables.py").read())
@@ -38,7 +36,7 @@ fig, ax = plt.subplots(figsize=pdict["fsmap"])
 network.plot(ax=ax, color="black", linewidth=0.2)
 
 ax.set_axis_off()
-ax.set_title("Road and path network", fontsize=pdict["map_title_fs"])
+ax.set_title("Total network", fontsize=pdict["map_title_fs"])
 
 ax.add_artist(
     ScaleBar(
@@ -235,7 +233,13 @@ ax.add_artist(
     )
 )
 
-cx.add_basemap(ax, crs=hex_grid.crs, source=cx.providers.CartoDB.PositronNoLabels)
+cx.add_basemap(
+    ax,
+    crs=hex_grid.crs,
+    source=cx.providers.CartoDB.PositronNoLabels,
+    attribution=None,
+    attribution_size=0,
+)
 
 if plot_res == "high":
     fig.savefig(filepath + ".svg", dpi=pdict["dpi"])
