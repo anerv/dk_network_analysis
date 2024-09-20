@@ -541,7 +541,7 @@ for i, e in enumerate([np.median, np.mean, np.max, np.std]):
     plt.ylabel("Reach (km)")
     #plt.title(f"{labels_stat[i]} network reach per network type")
     #plt.legend(title="Distance threshold (km)", loc="upper left", fontsize=10, title_fontsize=12, frameon=False)
-    leg = plt.legend(title="Distance threshold (km)", loc="upper left", fontsize=10, title_fontsize=12, frameon=False)
+    leg = plt.legend(title="Distance threshold (km)", loc="upper left", fontsize=10, title_fontsize=10, frameon=False)
     leg._legend_box.align = "left"
     plt.savefig(fp_reach_compare_dist_bars + labels_stat[i].lower() + ".png", dpi=pdict["dpi"])
     plt.show()
