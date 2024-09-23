@@ -1,8 +1,6 @@
 # %%
-from src import db_functions as dbf
+
 from src import plotting_functions as plot_func
-import geopandas as gpd
-import numpy as np
 import seaborn as sns
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -39,7 +37,14 @@ for e, gdf in enumerate(gdfs):
 
     for i, p in enumerate(plot_columns):
 
-        vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
+        if p in ["lts_1_dens", "lts_2_dens"]:
+            vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns[0:2])
+        elif p in ["lts_3_dens", "lts_4_dens"]:
+            vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns[2:4])
+        elif p in ["total_car_dens", "total_network_dens"]:
+            vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns[4:6])
+        else:
+            vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
 
         plot_func.plot_unclassified_poly(
             poly_gdf=gdf,
@@ -66,7 +71,14 @@ for e, gdf in enumerate(gdfs):
 
     for i, p in enumerate(plot_columns):
 
-        vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
+        if p in ["lts_1_dens", "lts_2_dens"]:
+            vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns[0:2])
+        elif p in ["lts_3_dens", "lts_4_dens"]:
+            vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns[2:4])
+        elif p in ["total_car_dens", "total_network_dens"]:
+            vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns[4:6])
+        else:
+            vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
 
         plot_func.plot_unclassified_poly(
             poly_gdf=gdf,
@@ -338,4 +350,5 @@ for e, gdf in enumerate(gdfs):
             width=1000,
             height=750,
         )
+
 # %%

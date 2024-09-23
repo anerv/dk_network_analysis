@@ -72,6 +72,7 @@ population = gpd.read_postgis(
     geom_col="geometry",
 )
 
+# %%
 plot_res = "low"
 
 filepath = "../illustrations/population_map"
@@ -144,6 +145,8 @@ else:
 
 
 # %%
+plot_res = "low"
+
 filepath = "../illustrations/urban_areas"
 
 fig, ax = plt.subplots(figsize=pdict["fsmap"])
@@ -163,6 +166,16 @@ population.plot(
     legend=True,
     legend_kwds={"fmt": "{:.0f}"},
 )
+
+sm = plt.cm.ScalarMappable(
+    cmap="PuRd",
+    norm=plt.Normalize(
+        vmin=population["urban_pct"].min(), vmax=population["urban_pct"].max()
+    ),
+)
+sm._A = []
+cbar = fig.colorbar(sm, cax=cax)
+cbar.outline.set_visible(False)  # Remove the outline of the colorbar
 
 ax.set_axis_off()
 ax.set_title("Urban areas (%)", fontsize=pdict["map_title_fs"])

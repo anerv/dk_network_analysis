@@ -154,6 +154,14 @@ def plot_poly_zoom(
             },
         )
 
+    if legend and use_norm is False:
+        remove_colorbar_outline(
+            cmap, fig, cax, poly_gdf[plot_col].min(), poly_gdf[plot_col].max()
+        )
+
+    if legend and use_norm is True:
+        remove_colorbar_outline(cmap, fig, cax, norm_min, norm_max)
+
     if plot_na and len(poly_gdf.loc[poly_gdf[plot_col].isna()]) > 0:
         # Creates a rectangular patch for each contaminant, using the colors above
         patch_list = []
@@ -1058,6 +1066,15 @@ def plot_classified_poly(
     plt.close()
 
 
+def remove_colorbar_outline(cmap, fig, cax, norm_min, norm_max):
+    sm = plt.cm.ScalarMappable(
+        cmap=cmap, norm=plt.Normalize(vmin=norm_min, vmax=norm_max)
+    )
+    sm._A = []
+    cbar = fig.colorbar(sm, cax=cax)
+    cbar.outline.set_visible(False)  # Remove the outline of the colorbar
+
+
 def plot_unclassified_poly(
     poly_gdf,
     plot_col,
@@ -1183,6 +1200,14 @@ def plot_unclassified_poly(
                 alpha=alpha,
                 cmap=cmap,
             )
+
+    if legend and use_norm is False:
+        remove_colorbar_outline(
+            cmap, fig, cax, poly_gdf[plot_col].min(), poly_gdf[plot_col].max()
+        )
+
+    if legend and use_norm is True:
+        remove_colorbar_outline(cmap, fig, cax, norm_min, norm_max)
 
     if plot_na and len(poly_gdf.loc[poly_gdf[plot_col].isna()]) > 0:
         # Creates a rectangular patch for each contaminant, using the colors above

@@ -12,14 +12,14 @@ pdict = {
     "reach": "YlGnBu",  # "PuBu", "PuBuGn",
     "dens_rel": "PuRd",  # "pink",  # "cividis",  # "PuRd",  # "Blues",  # Positive values
     "frag": "viridis",  # "PuRd",  # "pink",  # "Reds",  # Negative/Missing/Unmatched values
-    "largest_comp": "viridis_r",
+    "largest_comp": "viridis_r",  # "YlGnBu"
     # "diff": "RdBu",  # for osm-ref difference plots (alternatives: "PiYG", "PRGn", "PuOr")
     "cat": "Set2",  # "colorblind",  # for categorical plots
     # alpha (transparency) values (alternatives: PuRd, RdPu, PbBuGn)
     "alpha": 0.8,
     "alpha_nodata": 0.7,  # for no data patches
     # Colors of no-data
-    "nodata": "xkcd:putty",  # "xkcd:taupe",  # "tan",  # "silver",
+    "nodata": "darkgrey",  # "xkcd:putty",  # "xkcd:taupe",  # "tan",  # "silver",
     # GLOBAL SETTINGS FOR PLOTS
     "dpi": 300,  # resolution
     "plot_res": "low",  # "high" for exporting to svg, "low" for png
