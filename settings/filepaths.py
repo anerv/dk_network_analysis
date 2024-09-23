@@ -109,8 +109,8 @@ fp_reach_compare_dist_violin = (
 )
 
 fp_reach_diff_pct = "../results/reach_maps/reach_diff_pct_"
-fp_reach_diff_pct_kde = "../results/reach_maps/reach_diff_pct_kde_"
-fp_reach_diff_dist_kde = "../results/reach_maps/reach_diff_dist_kde_"
+fp_reach_diff_pct_kde = "../results/reach_plots/reach_diff_pct_kde_"
+fp_reach_diff_dist_kde = "../results/reach_plots/reach_diff_dist_kde_"
 
 fp_socio_reach = "../results/reach_maps/socio_reach_"
 

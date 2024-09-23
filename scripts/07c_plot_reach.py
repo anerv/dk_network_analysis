@@ -630,12 +630,12 @@ for n in network_levels_step:
     for c in comparison_types:
         plot_cols.append(f"{n}_pct_diff_{c}")
 
-
+#%%
 rename_dict = {}
 
+labels_step_formatted = []
 for n, l in zip(network_levels_step, labels_step):
     rename_dict[n] = l
-
 
 for c in comparison_types:
     # Get columns which ends with c
