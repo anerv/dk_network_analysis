@@ -79,16 +79,16 @@ labels_all = ["LTS 1", "LTS 2", "LTS 3", "LTS 4", "Car", "Total network"]
 
 labels_step = [
     "LTS 1",
-    "LTS 1-2",
-    "LTS 1-3",
-    "LTS 1-4",
+    "LTS ≤ 2",
+    "LTS ≤ 3",
+    "LTS ≤ 4",
     "Car",
 ]
 labels_step_all = [
     "LTS 1",
-    "LTS 1-2",
-    "LTS 1-3",
-    "LTS 1-4",
+    "LTS ≤ 2",
+    "LTS ≤ 3",
+    "LTS ≤ 4",
     "Car",
     "Total network",
 ]
@@ -102,9 +102,9 @@ labels_pct = [
 ]
 labels_pct_step = [
     "LTS 1 (%)",
-    "LTS 1-2 (%)",
-    "LTS 1-3 (%)",
-    "LTS 1-4 (%)",
+    "LTS ≤ 2 (%)",
+    "LTS ≤ 3 (%)",
+    "LTS ≤ 4 (%)",
     "Car (%)",
 ]
 
