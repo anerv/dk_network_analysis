@@ -530,7 +530,7 @@ for i, e in enumerate([np.median, np.mean, np.max, np.std]):
 
     for z, a in enumerate(ax.containers):
         if z == 0:
-            ax.bar_label(a,fmt="{:,.1f}", label_type='edge', fontsize=8)
+            ax.bar_label(a,fmt="{:,.1f}", label_type='edge', fontsize=9)
         # else:
         #     ax.bar_label(a,fmt="{:,.0f}", label_type='edge', fontsize=8)
 
@@ -538,10 +538,12 @@ for i, e in enumerate([np.median, np.mean, np.max, np.std]):
 
     # Set the labels and title
     plt.xlabel("")
-    plt.ylabel("Reach (km)")
+    plt.ylabel("Reach (km)", fontsize=pdict["fs_subplot"]+2)
+    plt.yticks(fontsize=pdict["fs_subplot"])
+    plt.xticks(fontsize=pdict["fs_subplot"]+2)
     #plt.title(f"{labels_stat[i]} network reach per network type")
     #plt.legend(title="Distance threshold (km)", loc="upper left", fontsize=10, title_fontsize=12, frameon=False)
-    leg = plt.legend(title="Distance threshold (km)", loc="upper left", fontsize=10, title_fontsize=10, frameon=False)
+    leg = plt.legend(title="Distance threshold (km)", loc="upper left", fontsize=pdict["fs_subplot"]+2, title_fontsize=pdict["fs_subplot"]+2, frameon=False)
     leg._legend_box.align = "left"
     plt.savefig(fp_reach_compare_dist_bars + labels_stat[i].lower() + ".png", dpi=pdict["dpi"])
     plt.show()
@@ -574,7 +576,7 @@ sns.despine()
 plt.xlabel("")
 plt.ylabel("Reach (km)")
 plt.title(f"Network reach per network type")
-plt.legend(title="Distance (km)", loc="upper left", fontsize=10, title_fontsize=12)
+plt.legend(title="Distance (km)", loc="upper left", fontsize=pdict["fs_subplot"]+2, title_fontsize=pdict["fs_subplot"]+2)
 
 plt.savefig(fp_reach_compare_dist_violin, dpi=pdict["dpi"])
 plt.show()
@@ -660,14 +662,16 @@ for c in comparison_types:
     )
 
     # Set the labels and title
-    plt.xlabel(f"% difference in network reach: {c.split("_")[0]} vs. {c.split("_")[1]} km", fontdict={"size": 12})
-    plt.ylabel("Reach (km)",fontdict={"size": 12})
+    plt.xlabel(f"% difference in network reach: {c.split("_")[0]} vs. {c.split("_")[1]} km", fontdict={"size": pdict["fs_subplot"]+2})
+    plt.ylabel("Reach (km)",fontdict={"size": pdict["fs_subplot"]+2})
+    plt.xticks(fontsize=pdict["fs_subplot"])
+    plt.yticks(fontsize=pdict["fs_subplot"])
 
     legend = ax.get_legend()
     if legend:
         legend.set_title(None)
         legend.set_frame_on(False)
-        plt.setp(legend.get_texts(), fontsize=10)
+        plt.setp(legend.get_texts(), fontsize=pdict["fs_subplot"]+2)
 
     sns.despine()   
     plt.savefig(fp_reach_diff_pct_kde + c + ".png", dpi=pdict["dpi"])
