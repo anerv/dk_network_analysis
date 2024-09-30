@@ -537,7 +537,7 @@ for e, df in enumerate(new_dfs):
         scatter_filepaths[e],
     )
     fig.show()
-
+# %%
 # rug plots
 for e, df in enumerate(new_dfs):
 
