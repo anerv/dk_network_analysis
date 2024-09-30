@@ -223,7 +223,17 @@ def plot_poly_zoom(
 
 
 def plot_zoom_categorical(
-    gdf, plot_col, cmap, fp, xmin, xmax, ymin, ymax, alpha=pdict["alpha"]
+    gdf,
+    plot_col,
+    cmap,
+    fp,
+    xmin,
+    xmax,
+    ymin,
+    ymax,
+    alpha=pdict["alpha"],
+    fontsize=10,
+    add_attribution=True,
 ):
 
     fig, ax = plt.subplots(1, 1, figsize=pdict["fsmap"])
@@ -236,7 +246,7 @@ def plot_zoom_categorical(
             "frameon": False,
             "bbox_to_anchor": (0.99, 1),
             "loc": "upper left",
-            "fontsize": 10,
+            "fontsize": fontsize,
         },
         ax=ax,
         cmap=cmap,
@@ -244,11 +254,12 @@ def plot_zoom_categorical(
         alpha=alpha,
     )
 
-    cx.add_attribution(ax=ax, text="(C) " + pdict["map_attr"])
-    txt = ax.texts[-1]
-    txt.set_position([0.99, 0.01])
-    txt.set_ha("right")
-    txt.set_va("bottom")
+    if add_attribution:
+        cx.add_attribution(ax=ax, text="(C) " + pdict["map_attr"], font_size=fontsize)
+        txt = ax.texts[-1]
+        txt.set_position([0.99, 0.01])
+        txt.set_ha("right")
+        txt.set_va("bottom")
 
     ax.add_artist(
         ScaleBar(
@@ -259,7 +270,7 @@ def plot_zoom_categorical(
             width_fraction=0.002,
             location="lower left",
             box_alpha=0.5,
-            font_properties={"size": 10},
+            font_properties={"size": fontsize},
         )
     )
 
@@ -299,7 +310,7 @@ def plot_hex_clusters(gdf, plot_col, cmap, fp):
             width_fraction=0.002,
             location="lower left",
             box_alpha=0,
-            font_properties={"size": 10},
+            font_properties={"size": 8},
         )
     )
 
