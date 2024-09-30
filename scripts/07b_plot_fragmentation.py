@@ -49,6 +49,7 @@ plot_func.combined_zipf_plot(
     lts_color_dict=lts_color_dict,
     fp=fp_zipf_combined,
     figsize=pdict["fsbar"],
+    fs_increase=4,
 )
 
 # %%

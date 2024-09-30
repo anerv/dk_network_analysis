@@ -1308,6 +1308,7 @@ def combined_zipf_plot(
     scatter_size=15,
     alpha_line=0.7,
     linewidth=0.5,
+    fs_increase=3,
 ):
     """
     Plot a combined Zipf plot for component length distribution.
@@ -1462,9 +1463,10 @@ def combined_zipf_plot(
     axes.set_xscale("log")
     axes.set_yscale("log")
 
-    axes.set_ylabel("Component length [km]", fontsize=pdict["fs_subplot"] + 2)
+    axes.set_ylabel("Component length [km]", fontsize=pdict["fs_subplot"] + fs_increase)
     axes.set_xlabel(
-        "Component rank (largest to smallest)", fontsize=pdict["fs_subplot"] + 2
+        "Component rank (largest to smallest)",
+        fontsize=pdict["fs_subplot"] + fs_increase,
     )
 
     legend_patches = [
@@ -1511,14 +1513,14 @@ def combined_zipf_plot(
             # "Total network",
         ],
     )
-    axes.set_title(title, fontsize=pdict["fs_subplot"] + 2)
+    axes.set_title(title, fontsize=pdict["fs_subplot"] + fs_increase)
 
     legend = axes.get_legend()
     if legend:
         legend.set_frame_on(False)
 
         for i in range(len(legend.get_texts())):
-            legend.get_texts()[i].set_fontsize(pdict["fs_subplot"])
+            legend.get_texts()[i].set_fontsize(pdict["fs_subplot"] + fs_increase)
 
     axes.tick_params(axis="both", which="major", labelsize=pdict["fs_subplot"])
 

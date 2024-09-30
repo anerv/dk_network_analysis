@@ -96,6 +96,8 @@ for e, color in enumerate(lts_color_dict.values()):
 
 # Define network types and colors
 network_types = merged_df["network_type"].unique()
+# Dont plot the total network
+network_types = network_types[0:-1]
 
 # Create a secondary y-axis
 ax2 = ax1.twinx()
@@ -137,7 +139,9 @@ ax1.legend(handles1, labels1, bbox_to_anchor=(0.99, 1), loc="upper right")
 
 # Set x-ticks to be the network types
 ax1.set_xticks([0, 1])
-ax1.set_xticklabels(["Length (km)", "Component Count"], fontsize=pdict["fs_subplot"])
+ax1.set_xticklabels(
+    ["Length (km)", "Component count"], fontsize=pdict["fs_subplot"] + 2
+)
 
 # Manually draw dotted lines between marks of the same color
 for network_type in network_types:
