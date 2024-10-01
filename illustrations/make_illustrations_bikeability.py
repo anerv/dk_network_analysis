@@ -2,6 +2,7 @@
 from src import db_functions as dbf
 from src import plotting_functions as plot_func
 import geopandas as gpd
+import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.pyplot as plt
 import contextily as cx
@@ -9,6 +10,9 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 import geopandas as gpd
 from matplotlib_scalebar.scalebar import ScaleBar
 import random
+import seaborn as sns
+import matplotlib.patches as mpatches
+
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -724,5 +728,307 @@ if plot_res == "high":
     fig.savefig(filepath + ".svg", dpi=pdict["dpi"])
 else:
     fig.savefig(filepath + ".png", dpi=pdict["dpi"])
+
+# %%
+
+total_area = "SELECT SUM(ST_Area(geometry)) / 1000000 FROM adm_boundaries;"
+urban_area = "SELECT SUM(ST_Area(geometry)) / 1000000 FROM urban_areas;"
+
+total_area = dbf.run_query_pg(total_area, connection)[0][0]
+
+urban_area = dbf.run_query_pg(urban_area, connection)[0][0]
+
+rural_area = total_area - urban_area
+
+area_df = pd.DataFrame(
+    {"area": [urban_area, rural_area, total_area]},
+    index=[
+        "Urban",
+        "Rural",
+        "Total",
+    ],
+)
+area_df["share"] = area_df["area"] / area_df.loc["Total", "area"] * 100
+
+hex_grid = gpd.read_postgis("SELECT * FROM hex_grid", engine, geom_col="geometry")
+
+urban_pop = hex_grid[hex_grid.urban_pct > 0].population.sum()
+rural_pop = hex_grid[hex_grid.urban_pct == 0].population.sum()
+total_pop = urban_pop + rural_pop
+
+pop_df = pd.DataFrame(
+    {"population": [urban_pop, rural_pop, total_pop]}, index=["Urban", "Rural", "Total"]
+)
+pop_df["share"] = pop_df["population"] / pop_df.loc["Total", "population"] * 100
+# %%
+
+filepath = "../illustrations/area_population_urban_rural"
+# Create a figure and axis
+fig, ax = plt.subplots(figsize=pdict["fsbar"])
+bar_height = 0.2
+
+# Plot the area_df as a stacked bar
+total_area_bar = ax.barh(
+    "Area",
+    area_df.loc["Total", "share"],
+    color="purple",
+    label="Total Area",
+    height=bar_height,
+)
+rural_area_bar = ax.barh(
+    "Area",
+    area_df.loc["Rural", "share"],
+    left=area_df.loc["Urban", "share"],
+    color="purple",
+    hatch="/",
+    label="Rural Area",
+    height=bar_height,
+)
+
+# Plot the pop_df as a stacked bar
+total_pop_bar = ax.barh(
+    "Population",
+    pop_df.loc["Total", "share"],
+    color="purple",
+    label="Total Population",
+    height=bar_height,
+)
+rural_pop_bar = ax.barh(
+    "Population",
+    pop_df.loc["Rural", "share"],
+    left=pop_df.loc["Urban", "share"],
+    color="purple",
+    hatch="/",
+    label="Rural Population",
+    height=bar_height,
+)
+
+# Add values on bars
+for bar in rural_area_bar:
+    rural_width = bar.get_width()
+    ax.text(
+        bar.get_x() + rural_width / 2,
+        bar.get_y() + bar.get_height() / 2,
+        f"{rural_width:.0f}%",
+        ha="center",
+        va="center",
+        color="white",
+        fontsize=12,
+    )
+
+for bar in total_area_bar:
+    width = bar.get_width() - rural_width
+    ax.text(
+        width / 2,
+        bar.get_y() + bar.get_height() / 2,
+        f"{width:.0f}%",
+        ha="center",
+        va="center",
+        color="white",
+        fontsize=12,
+    )
+
+for bar in rural_pop_bar:
+    rural_width = bar.get_width()
+    ax.text(
+        bar.get_x() + rural_width / 2,
+        bar.get_y() + bar.get_height() / 2,
+        f"{rural_width:.0f}%",
+        ha="center",
+        va="center",
+        color="white",
+        fontsize=12,
+    )
+
+for bar in total_pop_bar:
+    width = bar.get_width() - rural_width
+    ax.text(
+        width / 2,
+        bar.get_y() + bar.get_height() / 2,
+        f"{width:.0f}%",
+        ha="center",
+        va="center",
+        color="white",
+        fontsize=12,
+    )
+
+# Add legend
+no_urban_patch = mpatches.Patch(
+    facecolor="none",
+    edgecolor="grey",
+    linewidth=0.3,
+    label="Non-urban",
+    hatch="///",
+)
+ax.legend(
+    handles=[no_urban_patch],
+    loc="upper right",
+    frameon=False,
+    fontsize=pdict["fs_subplot"],
+)
+sns.despine(top=True, right=True, left=True, bottom=True)
+
+ax.set_yticks([0, 1])
+ax.set_yticklabels(["Area", "Population"])
+ax.set(xticks=[])
+
+plt.tight_layout()
+
+plt.savefig(filepath + ".png", dpi=pdict["dpi"])
+
+plt.show()
+
+
+# %%
+# LTS URBAN RURAL PLOT
+
+# Get full network
+
+lts_1_length_urban = dbf.run_query_pg(
+    "SELECT SUM(infra_length) / 1000 FROM edges WHERE lts_access = 1 AND urban IS NOT NULL AND municipality IS NOT NULL;",
+    connection,
+)[0][0]
+lts_2_length_urban = dbf.run_query_pg(
+    "SELECT SUM(infra_length)  / 1000 FROM edges WHERE lts_access = 2 AND urban IS NOT NULL AND municipality IS NOT NULL;",
+    connection,
+)[0][0]
+lts_3_length_urban = dbf.run_query_pg(
+    "SELECT SUM(infra_length)  / 1000 FROM edges WHERE lts_access = 3 AND urban IS NOT NULL AND municipality IS NOT NULL;",
+    connection,
+)[0][0]
+lts_4_length_urban = dbf.run_query_pg(
+    "SELECT SUM(infra_length)  / 1000 FROM edges WHERE lts_access = 4 AND urban IS NOT NULL AND municipality IS NOT NULL;",
+    connection,
+)[0][0]
+
+lts_1_length_rural = dbf.run_query_pg(
+    "SELECT SUM(infra_length) / 1000 FROM edges WHERE lts_access = 1 AND urban IS NULL AND municipality IS NOT NULL;",
+    connection,
+)[0][0]
+lts_2_length_rural = dbf.run_query_pg(
+    "SELECT SUM(infra_length)  / 1000 FROM edges WHERE lts_access = 2 AND urban IS NULL AND municipality IS NOT NULL;",
+    connection,
+)[0][0]
+lts_3_length_rural = dbf.run_query_pg(
+    "SELECT SUM(infra_length)  / 1000 FROM edges WHERE lts_access = 3 AND urban IS NULL AND municipality IS NOT NULL;",
+    connection,
+)[0][0]
+lts_4_length_rural = dbf.run_query_pg(
+    "SELECT SUM(infra_length) / 1000 FROM edges WHERE lts_access = 4 AND urban IS NULL AND municipality IS NOT NULL;",
+    connection,
+)[0][0]
+
+car_length_urban = dbf.run_query_pg(
+    "SELECT SUM(infra_length) / 1000 FROM edges WHERE car_traffic = TRUE AND lts_access IN (1,2,3,4,7) AND urban IS NOT NULL AND municipality IS NOT NULL;",
+    connection,
+)[0][0]
+
+car_length_rural = dbf.run_query_pg(
+    "SELECT SUM(infra_length)  / 1000 FROM edges WHERE car_traffic = TRUE AND lts_access IN (1,2,3,4,7) AND urban IS NULL AND municipality IS NOT NULL;",
+    connection,
+)[0][0]
+
+total_length = dbf.run_query_pg(
+    "SELECT SUM(infra_length) / 1000 FROM edges WHERE lts_access IN (1,2,3,4,7) AND municipality IS NOT NULL;",
+    connection,
+)[0][0]
+
+# %%
+total_urban_length = dbf.run_query_pg(
+    "SELECT SUM(infra_length) / 1000 FROM edges WHERE lts_access IN (1,2,3,4,7) AND urban IS NOT NULL AND municipality IS NOT NULL;",
+    connection,
+)[0][0]
+
+total_rural_length = dbf.run_query_pg(
+    "SELECT SUM(infra_length) / 1000 FROM edges WHERE lts_access IN (1,2,3,4,7) AND urban IS NULL AND municipality IS NOT NULL;",
+    connection,
+)[0][0]
+
+assert round(total_length, 0) == round(total_urban_length + total_rural_length, 0)
+
+total_urban_share = total_urban_length / total_length * 100
+total_rural_share = total_rural_length / total_length * 100
+# %%
+lts_1_urban_share = lts_1_length_urban / total_length * 100
+lts_2_urban_share = lts_2_length_urban / total_length * 100
+lts_3_urban_share = lts_3_length_urban / total_length * 100
+lts_4_urban_share = lts_4_length_urban / total_length * 100
+lts_1_rural_share = lts_1_length_rural / total_length * 100
+lts_2_rural_share = lts_2_length_rural / total_length * 100
+lts_3_rural_share = lts_3_length_rural / total_length * 100
+lts_4_rural_share = lts_4_length_rural / total_length * 100
+car_urban_share = car_length_urban / total_length * 100
+car_rural_share = car_length_rural / total_length * 100
+
+# %%
+urb_lengths = [
+    lts_1_length_urban,
+    lts_2_length_urban,
+    lts_3_length_urban,
+    lts_4_length_urban,
+    car_length_urban,
+    total_urban_length,
+]
+rural_lengths = [
+    lts_1_length_rural,
+    lts_2_length_rural,
+    lts_3_length_rural,
+    lts_4_length_rural,
+    car_length_rural,
+    total_rural_length,
+]
+
+urban_shares = [
+    lts_1_urban_share,
+    lts_2_urban_share,
+    lts_3_urban_share,
+    lts_4_urban_share,
+    car_urban_share,
+    total_urban_share,
+]
+
+rural_shares = [
+    lts_1_rural_share,
+    lts_2_rural_share,
+    lts_3_rural_share,
+    lts_4_rural_share,
+    car_rural_share,
+    total_rural_share,
+]
+
+
+total_lengths = [
+    lts_1_length_urban + lts_1_length_rural,
+    lts_2_length_urban + lts_2_length_rural,
+    lts_3_length_urban + lts_3_length_rural,
+    lts_4_length_urban + lts_4_length_rural,
+    car_length_urban + car_length_rural,
+    total_length,
+]
+
+labels = ["LTS 1", "LTS 2", "LTS 3", "LTS 4", "Car", "Total"]
+
+df = pd.DataFrame(
+    {
+        "urban": urb_lengths,
+        "rural": rural_lengths,
+        "urban_share": urban_shares,
+        "rural_shares": rural_shares,
+        "total": total_lengths,
+    },
+    index=labels,
+)
+
+# %%
+
+filepath = "../illustrations/lts_urban_rural"
+
+fig, ax = plt.subplots(figsize=pdict["fsbar"])
+
+df[["urban", "rural"]].plot(
+    kind="bar", stacked=True, ax=ax, color=["#6699cc", "#994455"]
+)
+
+# %%
 
 # %%
