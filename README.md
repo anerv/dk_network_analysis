@@ -30,7 +30,7 @@ License: [Arealdata](https://arealdata.miljoeportal.dk/terms).
 
 Downloaded winter 2024.
 
-### SDFI
+### Danish Agency for Climate Data
 
 [Urban areas](https://dataforsyningen.dk/data/1038)
 
