@@ -12,6 +12,7 @@ from matplotlib_scalebar.scalebar import ScaleBar
 import random
 import seaborn as sns
 import matplotlib.patches as mpatches
+import matplotlib as mpl
 
 
 exec(open("../settings/yaml_variables.py").read())
@@ -40,7 +41,7 @@ fig, ax = plt.subplots(figsize=pdict["fsmap"])
 network.plot(ax=ax, color="black", linewidth=0.2)
 
 ax.set_axis_off()
-ax.set_title("Total network", fontsize=pdict["map_title_fs"])
+ax.set_title("total network", fontsize=pdict["map_title_fs"])
 
 ax.add_artist(
     ScaleBar(
@@ -182,7 +183,7 @@ cbar = fig.colorbar(sm, cax=cax)
 cbar.outline.set_visible(False)  # Remove the outline of the colorbar
 
 ax.set_axis_off()
-ax.set_title("Urban areas (%)", fontsize=pdict["map_title_fs"])
+ax.set_title("urban areas (%)", fontsize=pdict["map_title_fs"])
 
 ax.add_artist(
     ScaleBar(
@@ -743,12 +744,12 @@ rural_area = total_area - urban_area
 area_df = pd.DataFrame(
     {"area": [urban_area, rural_area, total_area]},
     index=[
-        "Urban",
-        "Rural",
-        "Total",
+        "urban",
+        "rural",
+        "total",
     ],
 )
-area_df["share"] = area_df["area"] / area_df.loc["Total", "area"] * 100
+area_df["share"] = area_df["area"] / area_df.loc["total", "area"] * 100
 
 hex_grid = gpd.read_postgis("SELECT * FROM hex_grid", engine, geom_col="geometry")
 
@@ -757,49 +758,49 @@ rural_pop = hex_grid[hex_grid.urban_pct == 0].population.sum()
 total_pop = urban_pop + rural_pop
 
 pop_df = pd.DataFrame(
-    {"population": [urban_pop, rural_pop, total_pop]}, index=["Urban", "Rural", "Total"]
+    {"population": [urban_pop, rural_pop, total_pop]}, index=["urban", "rural", "total"]
 )
-pop_df["share"] = pop_df["population"] / pop_df.loc["Total", "population"] * 100
+pop_df["share"] = pop_df["population"] / pop_df.loc["total", "population"] * 100
 # %%
 
 filepath = "../illustrations/area_population_urban_rural"
-# Create a figure and axis
+
 fig, ax = plt.subplots(figsize=pdict["fsbar"])
-bar_height = 0.2
+bar_height = 0.1
 
 # Plot the area_df as a stacked bar
 total_area_bar = ax.barh(
     "Area",
-    area_df.loc["Total", "share"],
+    area_df.loc["total", "share"],
     color="purple",
-    label="Total Area",
+    label="total Area",
     height=bar_height,
 )
 rural_area_bar = ax.barh(
     "Area",
-    area_df.loc["Rural", "share"],
-    left=area_df.loc["Urban", "share"],
+    area_df.loc["rural", "share"],
+    left=area_df.loc["urban", "share"],
     color="purple",
     hatch="/",
-    label="Rural Area",
+    label="rural Area",
     height=bar_height,
 )
 
 # Plot the pop_df as a stacked bar
 total_pop_bar = ax.barh(
     "Population",
-    pop_df.loc["Total", "share"],
+    pop_df.loc["total", "share"],
     color="purple",
-    label="Total Population",
+    label="total Population",
     height=bar_height,
 )
 rural_pop_bar = ax.barh(
     "Population",
-    pop_df.loc["Rural", "share"],
-    left=pop_df.loc["Urban", "share"],
+    pop_df.loc["rural", "share"],
+    left=pop_df.loc["urban", "share"],
     color="purple",
     hatch="/",
-    label="Rural Population",
+    label="rural Population",
     height=bar_height,
 )
 
@@ -868,9 +869,7 @@ ax.legend(
 )
 sns.despine(top=True, right=True, left=True, bottom=True)
 
-ax.set_yticks([0, 1])
-ax.set_yticklabels(["Area", "Population"])
-ax.set(xticks=[])
+ax.set(xticks=[], yticks=[])
 
 plt.tight_layout()
 
@@ -880,7 +879,7 @@ plt.show()
 
 
 # %%
-# LTS URBAN RURAL PLOT
+# LTS urban rural PLOT
 
 # Get full network
 
@@ -933,7 +932,6 @@ total_length = dbf.run_query_pg(
     connection,
 )[0][0]
 
-# %%
 total_urban_length = dbf.run_query_pg(
     "SELECT SUM(infra_length) / 1000 FROM edges WHERE lts_access IN (1,2,3,4,7) AND urban IS NOT NULL AND municipality IS NOT NULL;",
     connection,
@@ -948,7 +946,7 @@ assert round(total_length, 0) == round(total_urban_length + total_rural_length, 
 
 total_urban_share = total_urban_length / total_length * 100
 total_rural_share = total_rural_length / total_length * 100
-# %%
+
 lts_1_urban_share = lts_1_length_urban / total_length * 100
 lts_2_urban_share = lts_2_length_urban / total_length * 100
 lts_3_urban_share = lts_3_length_urban / total_length * 100
@@ -961,22 +959,22 @@ car_urban_share = car_length_urban / total_length * 100
 car_rural_share = car_length_rural / total_length * 100
 
 # %%
-urb_lengths = [
-    lts_1_length_urban,
-    lts_2_length_urban,
-    lts_3_length_urban,
-    lts_4_length_urban,
-    car_length_urban,
-    total_urban_length,
-]
-rural_lengths = [
-    lts_1_length_rural,
-    lts_2_length_rural,
-    lts_3_length_rural,
-    lts_4_length_rural,
-    car_length_rural,
-    total_rural_length,
-]
+# urb_lengths = [
+#     lts_1_length_urban,
+#     lts_2_length_urban,
+#     lts_3_length_urban,
+#     lts_4_length_urban,
+#     car_length_urban,
+#     total_urban_length,
+# ]
+# rural_lengths = [
+#     lts_1_length_rural,
+#     lts_2_length_rural,
+#     lts_3_length_rural,
+#     lts_4_length_rural,
+#     car_length_rural,
+#     total_rural_length,
+# ]
 
 urban_shares = [
     lts_1_urban_share,
@@ -996,28 +994,42 @@ rural_shares = [
     total_rural_share,
 ]
 
+# total_lengths = [
+#     lts_1_length_urban + lts_1_length_rural,
+#     lts_2_length_urban + lts_2_length_rural,
+#     lts_3_length_urban + lts_3_length_rural,
+#     lts_4_length_urban + lts_4_length_rural,
+#     car_length_urban + car_length_rural,
+#     total_length,
+# ]
 
-total_lengths = [
-    lts_1_length_urban + lts_1_length_rural,
-    lts_2_length_urban + lts_2_length_rural,
-    lts_3_length_urban + lts_3_length_rural,
-    lts_4_length_urban + lts_4_length_rural,
-    car_length_urban + car_length_rural,
-    total_length,
+bike_values = [
+    lts_1_urban_share,
+    lts_1_rural_share,
+    lts_2_urban_share,
+    lts_2_rural_share,
+    lts_3_urban_share,
+    lts_3_rural_share,
+    lts_4_urban_share,
+    lts_4_rural_share,
 ]
+car_values = [car_urban_share, car_rural_share]
 
-labels = ["LTS 1", "LTS 2", "LTS 3", "LTS 4", "Car", "Total"]
-
-df = pd.DataFrame(
-    {
-        "urban": urb_lengths,
-        "rural": rural_lengths,
-        "urban_share": urban_shares,
-        "rural_shares": rural_shares,
-        "total": total_lengths,
-    },
-    index=labels,
+df_bike = pd.DataFrame(
+    {"share": bike_values},
+    index=[
+        "LTS 1 urban",
+        "LTS 1 rural",
+        "LTS 2 urban",
+        "LTS 2 rural",
+        "LTS 3 urban",
+        "LTS 3 rural",
+        "LTS 4 urban",
+        "LTS 4 rural",
+    ],
 )
+
+df_car = pd.DataFrame({"share": car_values}, index=["Car urban", "Car rural"])
 
 # %%
 
@@ -1025,10 +1037,119 @@ filepath = "../illustrations/lts_urban_rural"
 
 fig, ax = plt.subplots(figsize=pdict["fsbar"])
 
-df[["urban", "rural"]].plot(
-    kind="bar", stacked=True, ax=ax, color=["#6699cc", "#994455"]
+colors = list(lts_color_dict.values())[0:4]
+bike_colors = [i for i in colors for _ in range(2)]
+
+colors = [lts_color_dict["car"]]
+car_colors = [i for i in colors for _ in range(2)]
+
+total_bike = df_bike.sum().values[0]
+total_car = df_car.sum().values[0]
+
+# Plot the data
+df_bike.T.plot(
+    kind="barh",
+    stacked=True,
+    ax=ax,
+    color=bike_colors,
+    # position=0,
+    width=0.1,
 )
 
+df_car.T.plot(kind="barh", stacked=True, ax=ax, color=car_colors, position=2, width=0.1)
+
+bars = [
+    thing for thing in ax.containers if isinstance(thing, mpl.container.BarContainer)
+]
+
+# Add value labels below each bar
+total_width = 0
+for container in ax.containers[0:-2]:
+    for i, rect in enumerate(container):
+        width = rect.get_width()  # Width of the current bar
+
+        this_width = total_width + (width / 2)
+        total_width += width
+        ax.text(
+            this_width,  # Center the text based on bar width
+            rect.get_y() - 0.02,  # Place the text below the bar
+            f"{width:.0f}%",  # Format the text
+            ha="center",  # Horizontal alignment
+            va="bottom",  # Vertical alignment to ensure it's below
+            color="black",  # Adjust text color if needed
+            fontsize=12,
+        )
+
+ax.text(
+    total_width + 2.5,  # Center the text based on bar width
+    rect.get_y() + 0.04,  # Place the text below the bar
+    f"{total_bike:.0f}%",  # Format the text
+    ha="center",  # Horizontal alignment
+    va="bottom",  # Vertical alignment to ensure it's below
+    color="black",  # Adjust text color if needed
+    fontsize=12,
+)
+
+total_width = 0
+for container in ax.containers[-2:]:
+    for i, rect in enumerate(container):
+        width = rect.get_width()  # Width of the current bar
+
+        this_width = total_width + (width / 2)
+        total_width += width
+
+        ax.text(
+            this_width,  # Center the text based on bar width
+            rect.get_y() - 0.02,  # Place the text below the bar
+            f"{width:.0f}%",  # Format the text
+            ha="center",  # Horizontal alignment
+            va="bottom",  # Vertical alignment to ensure it's below
+            color="black",  # Adjust text color if needed
+            fontsize=12,
+        )
+
+ax.text(
+    total_width + 2.5,  # Center the text based on bar width
+    rect.get_y() + 0.04,  # Place the text below the bar
+    f"{total_car:.0f}%",  # Format the text
+    ha="center",  # Horizontal alignment
+    va="bottom",  # Vertical alignment to ensure it's below
+    color="black",  # Adjust text color if needed
+    fontsize=12,
+)
+
+hatch_bars = bars[1::2]
+
+for bar in hatch_bars:
+    for patch in bar:
+        patch.set_hatch("//")
+
+# Add legend
+no_urban_patch = mpatches.Patch(
+    facecolor="none",
+    edgecolor="grey",
+    linewidth=0.3,
+    label="Non-urban",
+    hatch="///",
+)
+ax.legend(
+    handles=[no_urban_patch],
+    loc="upper right",
+    frameon=False,
+    fontsize=pdict["fs_subplot"],
+)
+
+sns.despine(top=True, right=True, left=True, bottom=True)
+
+ax.set(xticks=[], yticks=[])
+
+plt.tight_layout()
+
+plt.savefig(filepath + ".png", dpi=pdict["dpi"])
+
+plt.show()
+
 # %%
+
 
 # %%
