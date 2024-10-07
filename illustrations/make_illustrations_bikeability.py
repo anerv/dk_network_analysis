@@ -623,24 +623,7 @@ if plot_res == "high":
 else:
     fig.savefig(filepath + ".png", dpi=pdict["dpi"])
 
-    # %%
-    # - [ ] plot hexagon
-    # - [ ] plot centroid
-    # - [ ] plot components
-    # 	- [ ] largest in red
-    # - [ ] plot closest node
-
-xmin, ymin = (639464.351371, 6120027.316230)
-xmax, ymax = (699033.929025, 6173403.495114)
-xmin += 23000
-xmax -= 1000
-ymin += 25000
-ymax -= 1000
-
-# xmin, ymin = (581406, 6134559)
-# xmax, ymax = (589089, 6140132)
 # %%
-
 
 node_id = 686608
 
@@ -677,20 +660,18 @@ component_edges = gpd.GeoDataFrame.from_postgis(
     geom_col="geometry",
 )
 
-
 comp_subset = component_edges.cx[
     xmin - 200 : xmax + 200, ymin - 200 : ymax + 200
 ].copy()
 del component_edges
 
-# %%
 largest_comp = comp_subset[
     comp_subset.component_size_1 == comp_subset.component_size_1.max()
 ]
 other_comps = comp_subset[
     comp_subset.component_size_1 != comp_subset.component_size_1.max()
 ]
-# %%
+
 plot_res = "low"
 
 filepath = "../illustrations/reach_computation"
@@ -718,7 +699,6 @@ other_comps.plot(
 startnode.plot(ax=ax, color="firebrick", markersize=40)
 
 # centroid.plot(ax=ax, color="black", markersize=40)
-
 
 ax.axis([xmin, xmax, ymin, ymax])
 
@@ -787,14 +767,14 @@ df_unstacked = df.unstack()
 df_unstacked = df_unstacked.reorder_levels([1, 0], axis=1)
 df_unstacked = df_unstacked[["urban", "rural"]]  # Reorder columns manually
 
-colors = ["purple"] * 4
+colors = ["#332288"] * 4
 
 filepath = "../illustrations/area_population_urban_rural"
 
 fig, ax = plt.subplots(figsize=pdict["fsbar"])
 
 df_unstacked.plot(
-    kind="barh", stacked=True, ax=ax, legend=False, color=colors, width=0.2
+    kind="barh", stacked=True, ax=ax, legend=False, color=colors, width=0.15
 )
 
 sns.despine(top=True, right=True, left=True, bottom=True)
@@ -1003,7 +983,7 @@ for container in ax.containers[0:-2]:
         total_width += width
         ax.text(
             this_width,  # Center the text based on bar width
-            rect.get_y() - 0.02,  # Place the text below the bar
+            rect.get_y() - 0.015,  # Place the text below the bar
             f"{width:.0f}%",  # Format the text
             ha="center",  # Horizontal alignment
             va="bottom",  # Vertical alignment to ensure it's below
@@ -1031,7 +1011,7 @@ for container in ax.containers[-2:]:
 
         ax.text(
             this_width,  # Center the text based on bar width
-            rect.get_y() - 0.02,  # Place the text below the bar
+            rect.get_y() - 0.015,  # Place the text below the bar
             f"{width:.0f}%",  # Format the text
             ha="center",  # Horizontal alignment
             va="bottom",  # Vertical alignment to ensure it's below
@@ -1110,8 +1090,5 @@ plt.tight_layout()
 plt.savefig(filepath + ".png", dpi=pdict["dpi"])
 
 plt.show()
-
-# %%
-
 
 # %%
