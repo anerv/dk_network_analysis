@@ -761,122 +761,77 @@ pop_df = pd.DataFrame(
     {"population": [urban_pop, rural_pop, total_pop]}, index=["urban", "rural", "total"]
 )
 pop_df["share"] = pop_df["population"] / pop_df.loc["total", "population"] * 100
+
 # %%
+
+data = {
+    "category": ["population", "population", "area", "area"],
+    "area": ["urban", "rural", "urban", "rural"],
+    "share": [
+        pop_df.loc["urban", "share"],
+        pop_df.loc["rural", "share"],
+        area_df.loc["urban", "share"],
+        area_df.loc["rural", "share"],
+    ],
+}
+
+df = pd.DataFrame(data)
+
+df.set_index(["category", "area"], inplace=True)
+
+df = df.sort_index(level=["category", "area"], ascending=[True, True])
+
+df_unstacked = df.unstack()
+
+# Reorder columns to ensure 'rural' comes last (farthest from the y-axis)
+df_unstacked = df_unstacked.reorder_levels([1, 0], axis=1)
+df_unstacked = df_unstacked[["urban", "rural"]]  # Reorder columns manually
+
+colors = ["purple"] * 4
 
 filepath = "../illustrations/area_population_urban_rural"
 
 fig, ax = plt.subplots(figsize=pdict["fsbar"])
-bar_height = 0.1
 
-# Plot the area_df as a stacked bar
-total_area_bar = ax.barh(
-    "Area",
-    area_df.loc["total", "share"],
-    color="purple",
-    label="total Area",
-    height=bar_height,
-)
-rural_area_bar = ax.barh(
-    "Area",
-    area_df.loc["rural", "share"],
-    left=area_df.loc["urban", "share"],
-    color="purple",
-    hatch="/",
-    label="rural Area",
-    height=bar_height,
+df_unstacked.plot(
+    kind="barh", stacked=True, ax=ax, legend=False, color=colors, width=0.2
 )
 
-# Plot the pop_df as a stacked bar
-total_pop_bar = ax.barh(
-    "Population",
-    pop_df.loc["total", "share"],
-    color="purple",
-    label="total Population",
-    height=bar_height,
-)
-rural_pop_bar = ax.barh(
-    "Population",
-    pop_df.loc["rural", "share"],
-    left=pop_df.loc["urban", "share"],
-    color="purple",
-    hatch="/",
-    label="rural Population",
-    height=bar_height,
-)
-
-# Add values on bars
-for bar in rural_area_bar:
-    rural_width = bar.get_width()
-    ax.text(
-        bar.get_x() + rural_width / 2,
-        bar.get_y() + bar.get_height() / 2,
-        f"{rural_width:.0f}%",
-        ha="center",
-        va="center",
-        color="white",
-        fontsize=12,
-    )
-
-for bar in total_area_bar:
-    width = bar.get_width() - rural_width
-    ax.text(
-        width / 2,
-        bar.get_y() + bar.get_height() / 2,
-        f"{width:.0f}%",
-        ha="center",
-        va="center",
-        color="white",
-        fontsize=12,
-    )
-
-for bar in rural_pop_bar:
-    rural_width = bar.get_width()
-    ax.text(
-        bar.get_x() + rural_width / 2,
-        bar.get_y() + bar.get_height() / 2,
-        f"{rural_width:.0f}%",
-        ha="center",
-        va="center",
-        color="white",
-        fontsize=12,
-    )
-
-for bar in total_pop_bar:
-    width = bar.get_width() - rural_width
-    ax.text(
-        width / 2,
-        bar.get_y() + bar.get_height() / 2,
-        f"{width:.0f}%",
-        ha="center",
-        va="center",
-        color="white",
-        fontsize=12,
-    )
-
-# Add legend
-no_urban_patch = mpatches.Patch(
-    facecolor="none",
-    edgecolor="grey",
-    linewidth=0.3,
-    label="Non-urban",
-    hatch="///",
-)
-ax.legend(
-    handles=[no_urban_patch],
-    loc="upper right",
-    frameon=False,
-    fontsize=pdict["fs_subplot"],
-)
 sns.despine(top=True, right=True, left=True, bottom=True)
 
+bars = [
+    thing for thing in ax.containers if isinstance(thing, mpl.container.BarContainer)
+]
+
+for container in ax.containers:
+
+    total_width = 0
+    for i, rect in enumerate(container):
+        width = rect.get_width()
+        this_width = total_width + (width / 3)
+        total_width += width
+        ax.text(
+            this_width,
+            rect.get_y() - 0.05,
+            f"{width:.0f}%",
+            ha="center",
+            va="bottom",
+            color="black",
+            fontsize=pdict["fontsize"],
+        )
+
+hatch_bars = bars[1::2]
+
+for bar in hatch_bars:
+    for patch in bar:
+        patch.set_hatch("//")
+
 ax.set(xticks=[], yticks=[])
+ax.set_ylabel("")
 
 plt.tight_layout()
-
 plt.savefig(filepath + ".png", dpi=pdict["dpi"])
-
 plt.show()
-
 
 # %%
 # LTS urban rural PLOT
@@ -959,23 +914,6 @@ car_urban_share = car_length_urban / total_length * 100
 car_rural_share = car_length_rural / total_length * 100
 
 # %%
-# urb_lengths = [
-#     lts_1_length_urban,
-#     lts_2_length_urban,
-#     lts_3_length_urban,
-#     lts_4_length_urban,
-#     car_length_urban,
-#     total_urban_length,
-# ]
-# rural_lengths = [
-#     lts_1_length_rural,
-#     lts_2_length_rural,
-#     lts_3_length_rural,
-#     lts_4_length_rural,
-#     car_length_rural,
-#     total_rural_length,
-# ]
-
 urban_shares = [
     lts_1_urban_share,
     lts_2_urban_share,
@@ -993,15 +931,6 @@ rural_shares = [
     car_rural_share,
     total_rural_share,
 ]
-
-# total_lengths = [
-#     lts_1_length_urban + lts_1_length_rural,
-#     lts_2_length_urban + lts_2_length_rural,
-#     lts_3_length_urban + lts_3_length_rural,
-#     lts_4_length_urban + lts_4_length_rural,
-#     car_length_urban + car_length_rural,
-#     total_length,
-# ]
 
 bike_values = [
     lts_1_urban_share,
@@ -1053,10 +982,12 @@ df_bike.T.plot(
     ax=ax,
     color=bike_colors,
     # position=0,
-    width=0.1,
+    width=0.05,
 )
 
-df_car.T.plot(kind="barh", stacked=True, ax=ax, color=car_colors, position=2, width=0.1)
+df_car.T.plot(
+    kind="barh", stacked=True, ax=ax, color=car_colors, position=2, width=0.05
+)
 
 bars = [
     thing for thing in ax.containers if isinstance(thing, mpl.container.BarContainer)
@@ -1077,17 +1008,17 @@ for container in ax.containers[0:-2]:
             ha="center",  # Horizontal alignment
             va="bottom",  # Vertical alignment to ensure it's below
             color="black",  # Adjust text color if needed
-            fontsize=12,
+            fontsize=pdict["fontsize"],
         )
 
 ax.text(
     total_width + 2.5,  # Center the text based on bar width
-    rect.get_y() + 0.04,  # Place the text below the bar
+    rect.get_y() + 0.02,  # Place the text below the bar
     f"{total_bike:.0f}%",  # Format the text
     ha="center",  # Horizontal alignment
     va="bottom",  # Vertical alignment to ensure it's below
     color="black",  # Adjust text color if needed
-    fontsize=12,
+    fontsize=pdict["fontsize"],
 )
 
 total_width = 0
@@ -1105,17 +1036,17 @@ for container in ax.containers[-2:]:
             ha="center",  # Horizontal alignment
             va="bottom",  # Vertical alignment to ensure it's below
             color="black",  # Adjust text color if needed
-            fontsize=12,
+            fontsize=pdict["fontsize"],
         )
 
 ax.text(
     total_width + 2.5,  # Center the text based on bar width
-    rect.get_y() + 0.04,  # Place the text below the bar
+    rect.get_y() + 0.02,  # Place the text below the bar
     f"{total_car:.0f}%",  # Format the text
     ha="center",  # Horizontal alignment
     va="bottom",  # Vertical alignment to ensure it's below
     color="black",  # Adjust text color if needed
-    fontsize=12,
+    fontsize=pdict["fontsize"],
 )
 
 hatch_bars = bars[1::2]
@@ -1132,11 +1063,42 @@ no_urban_patch = mpatches.Patch(
     label="Non-urban",
     hatch="///",
 )
+lts1_patch = mpatches.Patch(
+    facecolor=lts_color_dict["1"],
+    edgecolor=lts_color_dict["1"],
+    linewidth=0.3,
+    label="LTS 1",
+)
+lts2_patch = mpatches.Patch(
+    facecolor=lts_color_dict["2"],
+    edgecolor=lts_color_dict["2"],
+    linewidth=0.3,
+    label="LTS 2",
+)
+lts3_patch = mpatches.Patch(
+    facecolor=lts_color_dict["3"],
+    edgecolor=lts_color_dict["3"],
+    linewidth=0.3,
+    label="LTS 3",
+)
+lts4_patch = mpatches.Patch(
+    facecolor=lts_color_dict["4"],
+    edgecolor=lts_color_dict["4"],
+    linewidth=0.3,
+    label="LTS 4",
+)
+car_patch = mpatches.Patch(
+    facecolor=lts_color_dict["car"],
+    edgecolor=lts_color_dict["car"],
+    linewidth=0.3,
+    label="Car",
+)
 ax.legend(
-    handles=[no_urban_patch],
+    handles=[lts1_patch, lts2_patch, lts3_patch, lts4_patch, car_patch, no_urban_patch],
     loc="upper right",
     frameon=False,
-    fontsize=pdict["fs_subplot"],
+    fontsize=pdict["legend_fs"],
+    ncol=6,
 )
 
 sns.despine(top=True, right=True, left=True, bottom=True)
