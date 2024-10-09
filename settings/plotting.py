@@ -8,7 +8,7 @@ import matplotlib_inline.backend_inline
 
 pdict = {
     # colormaps for grid cell plots
-    "dens": "viridis_r",  # "YlGnBu",  #  # "BuPu",  # "winter_r",  # "viridis_r",  # "PuBu",
+    "dens": "YlGnBu",  # "PuRd",  # "viridis_r",  #  #  # "BuPu",  # "winter_r",  # "viridis_r",  # "PuBu",
     "reach": "YlGnBu",  # "PuBu", "PuBuGn",
     "dens_rel": "PuRd",  # "pink",  # "cividis",  # "PuRd",  # "Blues",  # Positive values
     "frag": "viridis",  # "PuRd",  # "pink",  # "Reds",  # Negative/Missing/Unmatched values
