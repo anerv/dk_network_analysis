@@ -62,11 +62,11 @@ for e, gdf in enumerate(gdfs):
         )
 
     ###### Plot stepwise LTS densities #####
-    plot_columns = density_steps_columns
+    plot_columns = density_steps_columns[1:]
 
-    labels = labels_step_all
+    labels = labels_step_all[1:]
 
-    plot_titles = labels_step_all
+    plot_titles = labels_step_all[1:]
     filepaths = [all_fps[e] + l for l in labels]
 
     for i, p in enumerate(plot_columns):
