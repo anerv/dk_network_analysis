@@ -99,6 +99,37 @@ assert pop.student_share.max() <= 100
 pop["student_share"] = pop.student_share.fillna(0)
 
 # %%
+pop["households_income_under_100k_share"] = (
+    pop.households_income_under_100k / pop.households * 100
+)
+pop["households_income_100_150k_share"] = (
+    pop.households_income_100k_150k / pop.households * 100
+)
+pop["households_income_150_200k_share"] = (
+    pop.households_income_150k_200k / pop.households * 100
+)
+pop["households_income_200_300k_share"] = (
+    pop.households_income_200k_300k / pop.households * 100
+)
+pop["households_income_300_400k_share"] = (
+    pop.households_income_300k_400k / pop.households * 100
+)
+pop["households_income_400_500k_share"] = (
+    pop.households_income_400k_500k / pop.households * 100
+)
+pop["households_income_500_750k_share"] = (
+    pop.households_income_500k_750k / pop.households * 100
+)
+pop["households_income_750k_share"] = pop.households_income_750k_ / pop.households * 100
+pop["households_with_car_share"] = (
+    (pop.households_with_1_car + pop.households_with_2_cars) / pop.households * 100
+)
+pop["households_1car_share"] = pop.households_with_1_car / pop.households * 100
+pop["households_2cars_share"] = pop.households_with_2_cars / pop.households * 100
+pop["households_nocar_share"] = pop.households_without_car / pop.households * 100
+
+# %%
+
 keep_columns = [
     "ValgstedId",
     "-17_share",
@@ -109,13 +140,24 @@ keep_columns = [
     "60-69_share",
     "70-_share",
     "student_share",
+    "households_income_under_100k_share",
+    "households_income_100_150k_share",
+    "households_income_150_200k_share",
+    "households_income_200_300k_share",
+    "households_income_300_400k_share",
+    "households_income_400_500k_share",
+    "households_income_500_750k_share",
+    "households_income_750k_share",
+    "households_with_car_share",
+    "households_1car_share",
+    "households_2cars_share",
+    "households_nocar_share",
 ]
 
 keep_columns.extend(list(rename_dict.values()))
 
 pop = pop[keep_columns]
 
-pop.drop("students", axis=1, inplace=True)
 # %%
 geoms = gpd.read_file("../data/input/socioeconomic/afstemningsomraade.gpkg")
 

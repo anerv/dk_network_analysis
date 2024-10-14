@@ -348,6 +348,14 @@ socio_reach_max_columns = [
 ]
 
 population_rename_dict = {
+    "-17_share": "0-17 years (share)",
+    "18-29_share": "18-29 years (share)",
+    "30-39_share": "30-39 years (share)",
+    "40-49_share": "40-49 years (share)",
+    "50-59_share": "50-59 years (share)",
+    "60-69_share": "60-69 years (share)",
+    "70-_share": "70+ years (share)",
+    "student_share": "Students (share)",
     "households_income_under_100k_share": "Income under 100k (share)",
     "households_income_100_150k_share": "Income 100-150k (share)",
     "households_income_150_200k_share": "Income 150-200k (share)",
@@ -365,6 +373,14 @@ population_rename_dict = {
 
 
 socio_corr_variables = [
+    "0-17 years (share)",
+    "18-29 years (share)",
+    "30-39 years (share)",
+    "40-49 years (share)",
+    "50-59 years (share)",
+    "60-69 years (share)",
+    "70+ years (share)",
+    "Students (share)",
     "Income under 100k (share)",
     "Income 100-150k (share)",
     "Income 150-200k (share)",
