@@ -8,6 +8,7 @@
 results/*
 data/input/archive/*
 data/processed/*
+data/input/socioeconomic/archive/*
 
 TODO.md
 network_analysis_exploration.qgz
