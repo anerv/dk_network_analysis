@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS fragmentation.joined,
 fragmentation.joined2,
 fragmentation.socio_largest_component;
 
-CREATE INDEX IF NOT EXISTS hex_largset_geom_ix ON fragmentation.hex_largest_components USING GIST (geometry);
+CREATE INDEX IF NOT EXISTS hex_largest_geom_ix ON fragmentation.hex_largest_components USING GIST (geometry);
 
 CREATE TABLE fragmentation.joined AS (
     SELECT
