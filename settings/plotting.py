@@ -356,6 +356,7 @@ population_rename_dict = {
     "60-69_share": "60-69 years (share)",
     "70-_share": "70+ years (share)",
     "student_share": "Students (share)",
+    "households_income_under_150k_share": "Income under 150k (share)",
     "households_income_under_100k_share": "Income under 100k (share)",
     "households_income_100_150k_share": "Income 100-150k (share)",
     "households_income_150_200k_share": "Income 150-200k (share)",
@@ -369,6 +370,8 @@ population_rename_dict = {
     "households_2cars_share": "Households 2 cars (share)",
     "households_nocar_share": "Households no car (share)",
     "households_income_50_percentile": "Household income 50th percentile",
+    "population_density": "Population density",
+    "urban_pct": "Urban area (%)",
 }
 
 
@@ -381,8 +384,9 @@ socio_corr_variables = [
     "60-69 years (share)",
     "70+ years (share)",
     "Students (share)",
-    "Income under 100k (share)",
-    "Income 100-150k (share)",
+    "Income under 150k (share)",
+    # "Income under 100k (share)",
+    # "Income 100-150k (share)",
     "Income 150-200k (share)",
     "Income 200-300k (share)",
     "Income 300-400k (share)",
@@ -394,8 +398,8 @@ socio_corr_variables = [
     "Households 1 car (share)",
     "Households 2 cars (share)",
     "Households no car (share)",
-    "population_density",
-    "urban_pct",
+    "Population density",
+    "Urban area (%)",
 ]
 
 plotly_labels = {
