@@ -132,7 +132,7 @@ plot_columns = component_count_columns
 
 labels = labels_step_all
 
-all_fps = filepaths_local_component_count
+all_fps = fps_local_component_count
 
 all_plot_titles = [
     "Municipal component count for: ",
