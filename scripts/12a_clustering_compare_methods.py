@@ -145,6 +145,7 @@ for key, val in m1.items():
 # Define K!
 k = 5
 
+# %%
 ##### K-Means #######
 
 kmeans_col = f"kmeans_{k}"
