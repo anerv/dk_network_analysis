@@ -433,15 +433,7 @@ for i, gdf in enumerate(gdfs):
 # %%
 ## Confirm spatial clustering of population density and socio-economic variables
 
-# socio_gdf = gpd.read_postgis("SELECT * FROM socio;", engine, geom_col="geometry")
-
 exec(open("../helper_scripts/read_socio_pop.py").read())
-
-# org_len = len(socio_gdf)
-
-socio.dropna(subset=["population_density"], inplace=True)
-
-# print("Dropped rows with missing population density:", org_len - len(socio_gdf))
 
 socio.replace(np.nan, 0, inplace=True)
 
@@ -456,9 +448,7 @@ fps_morans = [
     fp_spatial_auto_socio + f"morans_{c}.png".replace(" ", "_") for c in columns
 ]
 
-fps_lisa = [
-    fp_spatial_auto_socio + f"lisa_{c}.png".replace(" ", "_") for c in columns
-]
+fps_lisa = [fp_spatial_auto_socio + f"lisa_{c}.png".replace(" ", "_") for c in columns]
 
 morans_results = analysis_func.compute_spatial_autocorrelation(
     columns, columns, socio, w, fps_morans, show_plot=False
