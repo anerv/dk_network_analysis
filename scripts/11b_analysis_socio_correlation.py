@@ -143,21 +143,6 @@ metric_labels = [
 ]
 
 # %%
-# Fragmentation plot correlation
-for i, columns in enumerate(all_fragmentation_columns):
-
-    corr_columns = socio_corr_variables + columns
-
-    plot_func.plot_correlation(
-        socio_components,
-        corr_columns,
-        pair_plot_x_log=True,
-        pair_plot_y_log=True,
-        heatmap_fp=fp_socio_heatmap + f"{metric_labels[i]}.png",
-        pairplot_fp=fp_socio_pairplot + f"{metric_labels[i]}.png",
-    )
-
-# %%
 # Fragmentation display correlation
 for i, columns in enumerate(all_fragmentation_columns):
     display(
@@ -167,7 +152,6 @@ for i, columns in enumerate(all_fragmentation_columns):
     )
     display(socio_components[columns].describe())
 
-# %%
 # %% JUST POP DENSITY AND URB PCT
 
 all_labels = [labels_all, labels_step_all, labels_pct, labels_pct_step]
@@ -215,19 +199,6 @@ metric_labels = [
 ]
 
 # %%
-# Reach plot correlation
-for i, columns in enumerate(all_reach_columns):
-
-    corr_columns = socio_corr_variables + columns
-
-    plot_func.plot_correlation(
-        socio_reach,
-        corr_columns,
-        heatmap_fp=fp_socio_heatmap + f"{metric_labels[i]}.png",
-        pairplot_fp=fp_socio_pairplot + f"{metric_labels[i]}.png",
-    )
-
-# %%
 # Reach display correlation
 for i, columns in enumerate(all_reach_columns):
     display(
@@ -242,7 +213,7 @@ all_labels = [labels_all, labels_step_all, labels_pct, labels_pct_step]
 
 axis_labels = ["average reach (km)", "median reach (km)"]
 
-for i, columns in enumerate(all_fragmentation_columns):
+for i, columns in enumerate(all_reach_columns):
 
     for e, c in enumerate(columns):
 
@@ -260,3 +231,5 @@ for i, columns in enumerate(all_fragmentation_columns):
         # plt.title()
         plt.savefig(fp_socio_pop_corr + f"{c}.png")
         plt.show()
+
+# %%
