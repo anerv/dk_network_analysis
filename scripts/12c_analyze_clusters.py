@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from IPython.display import display
 import seaborn as sns
+import matplotlib.patches as mpatches
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -115,13 +116,6 @@ cluster_ave.rename(
     inplace=True,
 )
 # %%
-# cluster_area = (
-#     hex_cluster[["cluster_label", "area"]]
-#     .groupby("cluster_label")
-#     .sum("area")
-#     .reset_index()
-# )
-# cluster_area.rename(columns={"area": "total_area"}, inplace=True)
 
 cluster_stats = pd.merge(count_clusters, cluster_sum, on="cluster_label")
 # cluster_stats = pd.merge(cluster_stats, cluster_area, on="cluster_label")
@@ -233,27 +227,10 @@ plt.savefig(fp_cluster_plots_base + f"hex_cluster_bar_area_pop.png", dpi=pdict["
 # %%
 
 # Same plot, but population divided into urban and non-urban
-
-import matplotlib.patches as mpatches
-
 fig, axes = plt.subplots(1, 2, figsize=(15, 7))
 
 bar_width = 0.4
 x = range(len(cluster_stats))
-
-# Plot total area divided into urban and non-urban
-# sns.barplot(
-#     x=cluster_stats.cluster_no_str,
-#     y=cluster_stats["total_area"],
-#     hue=cluster_stats.cluster_no_str,
-#     palette=colors,
-#     width=0.4,
-#     ax=axes[0],
-# )
-
-# axes[0].set_xlabel("")
-# axes[0].set_ylabel("Total area (km²)")
-# axes[0].tick_params(axis="both", which="major", labelsize=pdict["fs_subplot"])
 
 axes[0].bar(
     x,
@@ -368,11 +345,11 @@ fig.savefig(f"{fp_cluster_plots_base}hex_cluster_pop_urban_violin.png")
 # %%
 
 
-socio_hex_cluster = gpd.read_postgis(
-    f"SELECT * FROM clustering.socio_cluster_results",
-    engine,
-    geom_col="geometry",
-)
+# socio_hex_cluster = gpd.read_postgis(
+#     f"SELECT * FROM clustering.socio_cluster_results",
+#     engine,
+#     geom_col="geometry",
+# )
 
 
 # %%
