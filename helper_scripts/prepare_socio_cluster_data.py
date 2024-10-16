@@ -65,16 +65,16 @@ assert len(socio_network_cluster_variables) == len(socio_network_cluster_variabl
 # %%
 #### Socio socio cluster variables
 
-socio_soc_gdf = socio_cluster_gdf[socio_cluster_gdf["Population density"] > 0].copy()
+socio_socio_gdf = socio_cluster_gdf[socio_cluster_gdf["Population density"] > 0].copy()
 
 # Define cluster variables
-socio_soc_cluster_variables = [c for c in socio_corr_variables if "w car" not in c]
+socio_socio_cluster_variables = [c for c in socio_corr_variables if "w car" not in c]
 
-socio_soc_cluster_variables.remove(
+socio_socio_cluster_variables.remove(
     "Household income 50th percentile",
 )
-socio_soc_cluster_variables.remove("0-17 years (share)")
-socio_soc_cluster_variables.remove("Urban area (%)")
+socio_socio_cluster_variables.remove("0-17 years (share)")
+socio_socio_cluster_variables.remove("Urban area (%)")
 
-socio_soc_cluster_variables.remove("Population density")
+socio_socio_cluster_variables.remove("Population density")
 # %%

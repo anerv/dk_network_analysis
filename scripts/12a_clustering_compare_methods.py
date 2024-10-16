@@ -26,118 +26,118 @@ exec(open("../helper_scripts/prepare_socio_cluster_data.py").read())
 # %%
 # SOCIO CLUSTERING: Network variables
 
-# Use robust_scale to norm cluster variables
-socio_network_scaled = robust_scale(socio_cluster_gdf[socio_network_cluster_variables])
+# # Use robust_scale to norm cluster variables
+# socio_network_scaled = robust_scale(socio_cluster_gdf[socio_network_cluster_variables])
 
-# Find appropriate number of clusters
-m1, m2 = analysis_func.find_k_elbow_method(socio_network_scaled, min_k=1, max_k=20)
+# # Find appropriate number of clusters
+# m1, m2 = analysis_func.find_k_elbow_method(socio_network_scaled, min_k=1, max_k=20)
 
-for key, val in m1.items():
-    print(f"{key} : {val:.2f}")
+# for key, val in m1.items():
+#     print(f"{key} : {val:.2f}")
 
-# Define K!
-k = 8
+# # Define K!
+# k = 8
 # %%
-##### K-Means #######
+# ##### K-Means #######
 
-kmeans_col = f"kmeans_{k}"
+# kmeans_col = f"kmeans_{k}"
 
-k_labels = analysis_func.run_kmeans(k, socio_network_scaled)
+# k_labels = analysis_func.run_kmeans(k, socio_network_scaled)
 
-socio_cluster_gdf[kmeans_col] = k_labels
+# socio_cluster_gdf[kmeans_col] = k_labels
 
-fp_map = fp_cluster_maps_base + f"socio_net_map_{kmeans_col}.png"
-fp_size = fp_cluster_plots_base + f"socio_net_size_{kmeans_col}.png"
-fp_kde = fp_cluster_plots_base + f"socio_net_kde_{kmeans_col}.png"
+# fp_map = fp_cluster_maps_base + f"socio_net_map_{kmeans_col}.png"
+# fp_size = fp_cluster_plots_base + f"socio_net_size_{kmeans_col}.png"
+# fp_kde = fp_cluster_plots_base + f"socio_net_kde_{kmeans_col}.png"
 
-analysis_func.examine_cluster_results(
-    socio_cluster_gdf,
-    kmeans_col,
-    socio_network_cluster_variables,
-    fp_map,
-    fp_size,
-    fp_kde,
-    cmap="viridis",
-    palette="viridis",
-)
+# analysis_func.examine_cluster_results(
+#     socio_cluster_gdf,
+#     kmeans_col,
+#     socio_network_cluster_variables,
+#     fp_map,
+#     fp_size,
+#     fp_kde,
+#     cmap="viridis",
+#     palette="viridis",
+# )
 
-#####  Hierarchical clustering #######
-hier_col = f"hier_{k}"
+# #####  Hierarchical clustering #######
+# hier_col = f"hier_{k}"
 
-hier_labels = analysis_func.run_agg_clustering(socio_network_scaled, "ward", k)
+# hier_labels = analysis_func.run_agg_clustering(socio_network_scaled, "ward", k)
 
-socio_cluster_gdf[hier_col] = hier_labels
+# socio_cluster_gdf[hier_col] = hier_labels
 
-fp_map = fp_cluster_maps_base + f"socio_net_map_{hier_col}.png"
-fp_size = fp_cluster_plots_base + f"socio_net_size_{hier_col}.png"
-fp_kde = fp_cluster_plots_base + f"socio_net_kde_{hier_col}.png"
+# fp_map = fp_cluster_maps_base + f"socio_net_map_{hier_col}.png"
+# fp_size = fp_cluster_plots_base + f"socio_net_size_{hier_col}.png"
+# fp_kde = fp_cluster_plots_base + f"socio_net_kde_{hier_col}.png"
 
-analysis_func.examine_cluster_results(
-    socio_cluster_gdf,
-    hier_col,
-    socio_network_cluster_variables,
-    fp_map,
-    fp_size,
-    fp_kde,
-    cmap="viridis",
-    palette="viridis",
-)
+# analysis_func.examine_cluster_results(
+#     socio_cluster_gdf,
+#     hier_col,
+#     socio_network_cluster_variables,
+#     fp_map,
+#     fp_size,
+#     fp_kde,
+#     cmap="viridis",
+#     palette="viridis",
+# )
 
-##### Regionalization #######
+# ##### Regionalization #######
 
-reg_col = f"reg_{k}"
+# reg_col = f"reg_{k}"
 
-w = analysis_func.spatial_weights_combined(socio_cluster_gdf, id_columns[1], k)
+# w = analysis_func.spatial_weights_combined(socio_cluster_gdf, id_columns[1], k)
 
-reg_labels = analysis_func.run_regionalization(socio_network_scaled, w, k)
+# reg_labels = analysis_func.run_regionalization(socio_network_scaled, w, k)
 
-socio_cluster_gdf[reg_col] = reg_labels
+# socio_cluster_gdf[reg_col] = reg_labels
 
-fp_map = fp_cluster_maps_base + f"socio_net_map_{reg_col}.png"
-fp_size = fp_cluster_plots_base + f"socio_net_size_{reg_col}.png"
-fp_kde = fp_cluster_plots_base + f"socio_net_kde_{reg_col}.png"
+# fp_map = fp_cluster_maps_base + f"socio_net_map_{reg_col}.png"
+# fp_size = fp_cluster_plots_base + f"socio_net_size_{reg_col}.png"
+# fp_kde = fp_cluster_plots_base + f"socio_net_kde_{reg_col}.png"
 
-analysis_func.examine_cluster_results(
-    socio_cluster_gdf,
-    reg_col,
-    socio_network_cluster_variables,
-    fp_map,
-    fp_size,
-    fp_kde,
-    cmap="viridis",
-    palette="viridis",
-)
+# analysis_func.examine_cluster_results(
+#     socio_cluster_gdf,
+#     reg_col,
+#     socio_network_cluster_variables,
+#     fp_map,
+#     fp_size,
+#     fp_kde,
+#     cmap="viridis",
+#     palette="viridis",
+# )
 
-# Compare clustering results
-cluster_columns = [kmeans_col, hier_col, reg_col]
-plot_titles = ["K-Means", "Hierarchical", "Regionalization"]
+# # Compare clustering results
+# cluster_columns = [kmeans_col, hier_col, reg_col]
+# plot_titles = ["K-Means", "Hierarchical", "Regionalization"]
 
-fp_geo = fp_cluster_data_base + "soc_net_geo.csv"
-fp_feature = fp_cluster_data_base + "soc_net_feature.csv"
-fp_similarity = fp_cluster_data_base + "soc_net_similarity.csv"
-fp_map = fp_cluster_maps_base + "soc_net_all_clusters_map.png"
+# fp_geo = fp_cluster_data_base + "socio_net_geo.csv"
+# fp_feature = fp_cluster_data_base + "socio_net_feature.csv"
+# fp_similarity = fp_cluster_data_base + "socio_net_similarity.csv"
+# fp_map = fp_cluster_maps_base + "socio_net_all_clusters_map.png"
 
 
-analysis_func.compare_clustering(
-    socio_cluster_gdf,
-    cluster_columns,
-    socio_network_cluster_variables,
-    plot_titles,
-    format_style_index,
-    fp_geo,
-    fp_feature,
-    fp_similarity,
-    fp_map,
-)
+# analysis_func.compare_clustering(
+#     socio_cluster_gdf,
+#     cluster_columns,
+#     socio_network_cluster_variables,
+#     plot_titles,
+#     format_style_index,
+#     fp_geo,
+#     fp_feature,
+#     fp_similarity,
+#     fp_map,
+# )
 
 # %%
 # SOCIO CLUSTERING: Socio-economic variables
 
 # Use robust_scale to norm cluster variables
-socio_soc_scaled = robust_scale(socio_soc_gdf[socio_soc_cluster_variables])
+socio_socio_scaled = robust_scale(socio_socio_gdf[socio_socio_cluster_variables])
 
 # Find appropriate number of clusters
-m1, m2 = analysis_func.find_k_elbow_method(socio_soc_scaled, min_k=1, max_k=20)
+m1, m2 = analysis_func.find_k_elbow_method(socio_socio_scaled, min_k=1, max_k=20)
 
 for key, val in m1.items():
     print(f"{key} : {val:.2f}")
@@ -150,18 +150,18 @@ k = 5
 
 kmeans_col = f"kmeans_{k}"
 
-k_labels = analysis_func.run_kmeans(k, socio_soc_scaled)
+k_labels = analysis_func.run_kmeans(k, socio_socio_scaled)
 
-socio_soc_gdf[kmeans_col] = k_labels
+socio_socio_gdf[kmeans_col] = k_labels
 
 fp_map = fp_cluster_maps_base + f"socio_socio_map_{kmeans_col}.png"
 fp_size = fp_cluster_plots_base + f"socio_socio_size_{kmeans_col}.png"
 fp_kde = fp_cluster_plots_base + f"socio_socio_kde_{kmeans_col}.png"
 
 analysis_func.examine_cluster_results(
-    socio_soc_gdf,
+    socio_socio_gdf,
     kmeans_col,
-    socio_soc_cluster_variables,
+    socio_socio_cluster_variables,
     fp_map,
     fp_size,
     fp_kde,
@@ -172,18 +172,18 @@ analysis_func.examine_cluster_results(
 #####  Hierarchical clustering #######
 hier_col = f"hier_{k}"
 
-hier_labels = analysis_func.run_agg_clustering(socio_soc_scaled, "ward", k)
+hier_labels = analysis_func.run_agg_clustering(socio_socio_scaled, "ward", k)
 
-socio_soc_gdf[hier_col] = hier_labels
+socio_socio_gdf[hier_col] = hier_labels
 
 fp_map = fp_cluster_maps_base + f"socio_socio_map_{hier_col}.png"
 fp_size = fp_cluster_plots_base + f"socio_socio_size_{hier_col}.png"
 fp_kde = fp_cluster_plots_base + f"socio_socio_kde_{hier_col}.png"
 
 analysis_func.examine_cluster_results(
-    socio_soc_gdf,
+    socio_socio_gdf,
     hier_col,
-    socio_soc_cluster_variables,
+    socio_socio_cluster_variables,
     fp_map,
     fp_size,
     fp_kde,
@@ -195,11 +195,11 @@ analysis_func.examine_cluster_results(
 
 reg_col = f"reg_{k}"
 
-w = analysis_func.spatial_weights_combined(socio_soc_gdf, id_columns[1], k)
+w = analysis_func.spatial_weights_combined(socio_socio_gdf, id_columns[1], k)
 
-reg_labels = analysis_func.run_regionalization(socio_soc_scaled, w, k)
+reg_labels = analysis_func.run_regionalization(socio_socio_scaled, w, k)
 
-socio_soc_gdf[reg_col] = reg_labels
+socio_socio_gdf[reg_col] = reg_labels
 
 
 fp_map = fp_cluster_maps_base + f"socio_socio_map_{reg_col}.png"
@@ -207,9 +207,9 @@ fp_size = fp_cluster_plots_base + f"socio_socio_size_{reg_col}.png"
 fp_kde = fp_cluster_plots_base + f"socio_socio_kde_{reg_col}.png"
 
 analysis_func.examine_cluster_results(
-    socio_soc_gdf,
+    socio_socio_gdf,
     reg_col,
-    socio_soc_cluster_variables,
+    socio_socio_cluster_variables,
     fp_map,
     fp_size,
     fp_kde,
@@ -221,15 +221,15 @@ analysis_func.examine_cluster_results(
 cluster_columns = [kmeans_col, hier_col, reg_col]
 plot_titles = ["K-Means", "Hierarchical", "Regionalization"]
 
-fp_geo = fp_cluster_data_base + "soc_soc_geo.csv"
-fp_feature = fp_cluster_data_base + "soc_soc_feature.csv"
-fp_similarity = fp_cluster_data_base + "soc_soc_similarity.csv"
-fp_map = fp_cluster_maps_base + "soc_soc_all_clusters_map.png"
+fp_geo = fp_cluster_data_base + "soc_socio_geo.csv"
+fp_feature = fp_cluster_data_base + "soc_socio_feature.csv"
+fp_similarity = fp_cluster_data_base + "soc_socio_similarity.csv"
+fp_map = fp_cluster_maps_base + "soc_socio_all_clusters_map.png"
 
 analysis_func.compare_clustering(
-    socio_soc_gdf,
+    socio_socio_gdf,
     cluster_columns,
-    socio_soc_cluster_variables,
+    socio_socio_cluster_variables,
     plot_titles,
     format_style_index,
     fp_geo,
