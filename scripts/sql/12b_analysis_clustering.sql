@@ -6,9 +6,10 @@ DROP TABLE IF EXISTS clustering.clipped_socio_cluster_results;
 
 DROP TABLE IF EXISTS clustering.grouped_intersection;
 
+-- TODO: maybe exclude socio network clusters?
 CREATE TABLE clustering.socio_cluster_results AS
 SELECT
-    sn.network_rank,
+    --sn.network_rank,
     ss.socio_label,
     socio. *
 FROM
@@ -56,6 +57,7 @@ GROUP BY
     id,
     kmeans_net_5;
 
+-- TODO: UPDATE
 ALTER TABLE
     clustering.socio_cluster_results
 ADD
