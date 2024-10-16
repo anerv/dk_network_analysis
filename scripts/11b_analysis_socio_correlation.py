@@ -218,13 +218,13 @@ for i, columns in enumerate(all_reach_columns):
     for e, c in enumerate(columns):
 
         plt.figure(figsize=(8, 6))
-        figg = sns.scatterplot(
+        fig = sns.scatterplot(
             data=socio_reach,
             x="population_density",
             y=c,
             hue="urban_pct",
         )
-        figg.get_legend().set_title("Pct urban")
+        fig.get_legend().set_title("Pct urban")
         plt.xscale("log")
         plt.xlabel("People per sqkm")
         plt.ylabel(all_labels[i][e] + " " + axis_labels[i])
