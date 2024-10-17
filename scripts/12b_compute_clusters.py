@@ -94,6 +94,8 @@ exec(open("../helper_scripts/prepare_socio_cluster_data.py").read())
 # %%
 # SOCIO CLUSTERING: Socio-economic variables
 
+socio_socio_cluster_variables = socio_socio_cluster_variables[6:]
+
 # Use robust_scale to norm cluster variables
 socio_socio_scaled = robust_scale(socio_socio_gdf[socio_socio_cluster_variables])
 
@@ -105,7 +107,7 @@ for key, val in m1.items():
 
 # %%
 # Define K!
-k = 7
+k = 5
 
 ##### K-Means #######
 
@@ -142,12 +144,19 @@ cluster_means_socio_soc.to_csv(fp_socio_socio_cluster_means, index=True)
 # TODO:
 socio_socio_gdf["socio_label"] = None
 
+# label_dict = {
+#     0: "Medium income - medium car",
+#     1: "Low income - low car",
+#     2: "Highest income - highest car",
+#     3: "Medium income - low car",
+#     4: "High income - high car",
+# }
 label_dict = {
-    0: "Medium income - medium car",
-    1: "Low income - low car",
-    2: "Highest income - highest car",
-    3: "Medium income - low car",
-    4: "High income - high car",
+    0: "High income - high car",
+    1: "Highest income - highest car",
+    2: "Low income - low car - students",
+    3: "Medium income - high car",
+    4: "Medium income - low car",
 }
 assert len(label_dict) == k
 
