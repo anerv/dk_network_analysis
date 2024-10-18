@@ -94,7 +94,7 @@ exec(open("../helper_scripts/prepare_socio_cluster_data.py").read())
 # %%
 # SOCIO CLUSTERING: Socio-economic variables
 
-socio_socio_cluster_variables = socio_socio_cluster_variables[6:]
+socio_socio_cluster_variables = socio_socio_cluster_variables[6:-2]
 
 # Use robust_scale to norm cluster variables
 socio_socio_scaled = robust_scale(socio_socio_gdf[socio_socio_cluster_variables])
@@ -141,21 +141,13 @@ cluster_means_socio_soc.to_csv(fp_socio_socio_cluster_means, index=True)
 # %%
 # Label clusters after type
 
-# TODO:
 socio_socio_gdf["socio_label"] = None
 
-# label_dict = {
-#     0: "Medium income - medium car",
-#     1: "Low income - low car",
-#     2: "Highest income - highest car",
-#     3: "Medium income - low car",
-#     4: "High income - high car",
-# }
 label_dict = {
-    0: "High income - high car",
-    1: "Highest income - highest car",
-    2: "Low income - low car - students",
-    3: "Medium income - high car",
+    0: "High income - highest car",  # ???
+    1: "Highest income - high car",
+    2: "Low income - lowest car - many students",
+    3: "Medium income - medium car",
     4: "Medium income - low car",
 }
 assert len(label_dict) == k
@@ -167,10 +159,7 @@ for key, val in label_dict.items():
     ] = val
 
 
-socio_socio_gdf[
-    [kmeans_col_socio_soc] + ["geometry", id_columns[1], "socio_label"]
-].to_file(fp_socio_socio_clusters, driver="GPKG")
-
+# TODO: MAKE A NICE CLUSTER MAP HERE
 # %%
 # HEX CLUSTERING: Network variables
 
