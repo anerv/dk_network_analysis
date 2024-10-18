@@ -76,7 +76,7 @@ socio_socio_cluster_variables.remove(
     "Household income 50th percentile",
 )
 socio_socio_cluster_variables.remove("0-17 years (share)")
-socio_socio_cluster_variables.remove("Urban area (%)")
+# socio_socio_cluster_variables.remove("Urban area (%)")
 
-socio_socio_cluster_variables.remove("Population density")
+# socio_socio_cluster_variables.remove("Population density")
 # %%
