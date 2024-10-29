@@ -1,3 +1,4 @@
+-- Want to get the overlap between socio socio clusters and hex clusters
 DROP TABLE IF EXISTS clustering.socio_cluster_results;
 
 DROP TABLE IF EXISTS clustering.dissolved_hex_clusters;
@@ -7,16 +8,15 @@ DROP TABLE IF EXISTS clustering.clipped_socio_cluster_results;
 DROP TABLE IF EXISTS clustering.grouped_intersection;
 
 -- TODO: maybe exclude socio network clusters?
-CREATE TABLE clustering.socio_cluster_results AS
-SELECT
-    --sn.network_rank,
-    ss.socio_label,
-    socio. *
-FROM
-    clustering.socio_network_clusters sn
-    INNER JOIN socio ON sn.id = socio.id
-    INNER JOIN clustering.socio_socio_clusters ss ON sn.id = ss.id;
-
+-- CREATE TABLE clustering.socio_cluster_results AS
+-- SELECT
+--     --sn.network_rank,
+--     ss.socio_label,
+--     socio. *
+-- FROM
+--     clustering.socio_network_clusters sn
+--     INNER JOIN socio ON sn.id = socio.id
+--     INNER JOIN clustering.socio_socio_clusters ss ON sn.id = ss.id;
 CREATE INDEX IF NOT EXISTS socio_cluster_geom_ix ON clustering.socio_cluster_results USING GIST (geometry);
 
 CREATE TABLE clustering.dissolved_hex_clusters AS WITH union_geoms AS (
