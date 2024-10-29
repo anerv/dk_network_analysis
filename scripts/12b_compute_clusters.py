@@ -90,8 +90,37 @@ for key, val in label_dict.items():
         "socio_label",
     ] = val
 
+# %%
 
-# TODO: MAKE A NICE CLUSTER MAP HERE
+# TODO: Update colors
+
+colors = list(cluster_color_dict_labels.values())
+cmap = plot_func.color_list_to_cmap(colors)
+
+fp = fp_cluster_maps_base + "socio_cluster_map.png"
+plot_func.make_cluster_map(
+    socio_socio_gdf, "socio_label", cmap, fp, attr="Statistics Denmark"
+)
+
+# %%
+# Make zoomed cluster map
+fp = fp_cluster_maps_base + "socio_cluster_map_zoom.png"
+
+xmin, ymin = (689922.425333, 6161099.004817)
+xmax, ymax = (734667.301464 - 900, 6202301.965700)
+
+plot_func.plot_zoom_categorical(
+    socio_socio_gdf,
+    "socio_label",
+    cmap,
+    fp,
+    xmin,
+    xmax,
+    ymin,
+    ymax,
+    add_attribution=False,
+)
+
 # %%
 # HEX CLUSTERING: Network variables
 
@@ -152,7 +181,7 @@ cluster_means_hex.to_csv(fp_hex_network_cluster_means, index=True)
 # %%
 # Make polished cluster map
 fp = fp_cluster_maps_base + "hex_cluster_map.png"
-plot_func.plot_hex_clusters(hex_gdf, "kmeans_net_5", cmap, fp)
+plot_func.make_cluster_map(hex_gdf, "kmeans_net_5", cmap, fp)
 
 # Make zoomed cluster map
 fp = fp_cluster_maps_base + "hex_cluster_map_zoom.png"

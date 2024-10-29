@@ -234,6 +234,7 @@ def plot_zoom_categorical(
     alpha=pdict["alpha"],
     fontsize=10,
     add_attribution=True,
+    attr_position=(0.99, 0.01),
 ):
 
     fig, ax = plt.subplots(1, 1, figsize=pdict["fsmap"])
@@ -257,7 +258,7 @@ def plot_zoom_categorical(
     if add_attribution:
         cx.add_attribution(ax=ax, text="(C) " + pdict["map_attr"], font_size=fontsize)
         txt = ax.texts[-1]
-        txt.set_position([0.99, 0.01])
+        txt.set_position([attr_position[0], attr_position[1]])
         txt.set_ha("right")
         txt.set_va("bottom")
 
@@ -281,7 +282,9 @@ def plot_zoom_categorical(
     fig.savefig(fp, dpi=pdict["dpi"])
 
 
-def plot_hex_clusters(gdf, plot_col, cmap, fp):
+def make_cluster_map(
+    gdf, plot_col, cmap, fp, add_attribution=True, attr=pdict["map_attr"]
+):
 
     fig, ax = plt.subplots(1, 1, figsize=pdict["fsmap"])
     ax.set_axis_off()
@@ -295,11 +298,12 @@ def plot_hex_clusters(gdf, plot_col, cmap, fp):
         linewidth=0.1,
     )
 
-    cx.add_attribution(ax=ax, text="(C) " + pdict["map_attr"])
-    txt = ax.texts[-1]
-    txt.set_position([0.99, 0.01])
-    txt.set_ha("right")
-    txt.set_va("bottom")
+    if add_attribution:
+        cx.add_attribution(ax=ax, text="(C) " + attr)
+        txt = ax.texts[-1]
+        txt.set_position([0.99, 0.01])
+        txt.set_ha("right")
+        txt.set_va("bottom")
 
     ax.add_artist(
         ScaleBar(
