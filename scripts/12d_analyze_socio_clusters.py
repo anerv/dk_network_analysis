@@ -22,9 +22,10 @@ connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 # %%
 preprocess = False
+
 if preprocess:
 
-    q = "sql/12b_analysis_clustering.sql"
+    q = "sql/12d_analyze_socio_clusters.sql"
 
     result = dbf.run_query_pg(q, connection)
     if result == "error":

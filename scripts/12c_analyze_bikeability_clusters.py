@@ -21,6 +21,17 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 # %%
+preprocess = False
+
+if preprocess:
+
+    q = "sql/12c_analyze_bikeability_clusters.sql"
+
+    result = dbf.run_query_pg(q, connection)
+    if result == "error":
+        print("Please fix error before rerunning and reconnect to the database")
+
+# %%
 hex_cluster = gpd.read_postgis(
     "SELECT * FROM clustering.hex_clusters", engine, geom_col="geometry"
 )
