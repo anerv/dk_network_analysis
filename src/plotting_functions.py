@@ -327,10 +327,11 @@ def plot_significant_lisa_clusters_all(
     gdf,
     plot_columns,
     titles,
-    figsize=pdict["fsmap"],
+    figsize=pdict["fsmap_subs"],
     colors=["#d7191c", "#fdae61", "#abd9e9", "#2c7bb6", "lightgrey"],
     fp=None,
     dpi=pdict["dpi"],
+    legend_pos=(0.95, 0.95),
 ):
     custom_cmap = color_list_to_cmap(colors)
 
@@ -356,8 +357,9 @@ def plot_significant_lisa_clusters_all(
             edgecolor="none",
             legend_kwds={
                 "frameon": False,
-                # "bbox_to_anchor": (0.95, 0.95),
-                # "fontsize": pdict["legend_fs"],
+                "loc": "upper right",
+                "bbox_to_anchor": legend_pos,
+                "fontsize": pdict["legend_fs"],
             },
             cmap=custom_cmap,
         )
@@ -369,42 +371,6 @@ def plot_significant_lisa_clusters_all(
 
     if fp:
         fig.savefig(fp, bbox_inches="tight", dpi=dpi)
-
-
-# def plot_significant_lisa_clusters(
-#     gdf,
-#     plot_column,
-#     figsize=pdict["fsmap"],
-#     colors=["#d7191c", "#fdae61", "#abd9e9", "#2c7bb6", "lightgrey"],
-#     fp=None,
-#     dpi=pdict["dpi"],
-# ):
-
-#     fig, ax = plt.subplots(figsize=figsize)
-
-#     custom_cmap = color_list_to_cmap(colors)
-
-#     gdf.plot(
-#         column=plot_column,
-#         categorical=True,
-#         legend=True,
-#         linewidth=0.0,
-#         ax=ax,
-#         edgecolor="none",
-#         legend_kwds={
-#             "frameon": False,
-#             "bbox_to_anchor": (0.95, 0.95),
-#             # "fontsize": pdict["legend_fs"],
-#         },
-#         cmap=custom_cmap,
-#     )
-
-#     ax.set_axis_off()
-
-#     fig.tight_layout()
-
-#     if fp:
-#         fig.savefig(fp, bbox_inches="tight", dpi=dpi)
 
 
 def make_gini_plot(gdf, column, fp):
