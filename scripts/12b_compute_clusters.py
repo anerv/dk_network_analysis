@@ -141,10 +141,11 @@ cluster_means_socio_soc.to_csv(fp_socio_socio_cluster_means, index=True)
 # %%
 # Label clusters after type
 
+# NOTE Assumes this is known already!
 socio_socio_gdf["socio_label"] = None
 
 label_dict = {
-    0: "High income - highest car",  # ???
+    0: "High income - high car",
     1: "Highest income - high car",
     2: "Low income - lowest car - many students",
     3: "Medium income - medium car",
