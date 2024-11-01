@@ -179,9 +179,37 @@ plot_func.style_cluster_means(cluster_means_hex)
 cluster_means_hex.to_csv(fp_hex_network_cluster_means, index=True)
 
 # %%
+# Label clusters after bikeability rank
+
+# NOTE Assumes this is known already!
+hex_gdf["cluster_label"] = None
+
+label_dict = {
+    1: "1: High stress",
+    2: "2: Local low stress connectivity",
+    3: "3: Regional low stress connectivity",
+    4: "4: High bikeability",
+    5: "5: Highest bikeability and high density",
+}
+
+assert len(label_dict) == k
+
+for key, val in label_dict.items():
+    hex_gdf.loc[
+        hex_gdf[kmeans_col_net_hex] == key,
+        "cluster_label",
+    ] = val
+
+# %%
+
 # Make polished cluster map
+# No labels
 fp = fp_cluster_maps_base + "hex_cluster_map.png"
 plot_func.make_cluster_map(hex_gdf, "kmeans_net_5", cmap, fp)
+
+# Labels
+fp = fp_cluster_maps_base + "hex_cluster_map_labels.png"
+plot_func.make_cluster_map(hex_gdf, "cluster_label", cmap, fp)
 
 # Make zoomed cluster map
 fp = fp_cluster_maps_base + "hex_cluster_map_zoom.png"
@@ -192,28 +220,6 @@ xmax, ymax = (734667.301464 - 900, 6202301.965700)
 plot_func.plot_zoom_categorical(
     hex_gdf, "kmeans_net_5", cmap, fp, xmin, xmax, ymin, ymax
 )
-
-# %%
-# Label clusters after bikeability rank
-
-# NOTE Assumes this is known already!
-hex_gdf["cluster_label"] = None
-
-label_dict = {
-    1: "1: Highest stress - lowest density - lowest reach",
-    2: "2: High stress - medium density - low reach - local connectivity",
-    3: "3: High stress - medium density - low reach - regional connectivity",
-    4: "4: Low stress - high density - medium reach - regional low stress connectivity",
-    5: "5: Lowest Stress - highest density - highest reach",
-}
-
-assert len(label_dict) == k
-
-for key, val in label_dict.items():
-    hex_gdf.loc[
-        hex_gdf[kmeans_col_net_hex] == key,
-        "cluster_label",
-    ] = val
 
 
 # %%
