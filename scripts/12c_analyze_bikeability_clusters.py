@@ -161,8 +161,8 @@ cluster_stats["cluster_no_str"] = cluster_stats.kmeans_net_5.astype(int).astype(
 
 # %%
 # cluster_stats.sort_values("sort_column", inplace=True)
-colors = [cluster_color_dict_labels[k] for k in cluster_stats.index]
-colors = list(cluster_color_dict_labels.values())
+colors = [bikeability_cluster_color_dict_labels[k] for k in cluster_stats.index]
+colors = list(bikeability_cluster_color_dict_labels.values())
 cmap = plot_func.color_list_to_cmap(colors)
 
 for i, c in enumerate(plot_cols):
@@ -327,7 +327,7 @@ for i, c in enumerate(["population_density", "urban_pct"]):
         x=hex_cluster["cluster_no_str"],  # hex_cluster["cluster_label"],
         y=hex_cluster[c],
         hue=hex_cluster["cluster_no_str"],  # hex_cluster["cluster_label"],
-        palette=cluster_color_dict.values(),
+        palette=bikeability_cluster_color_dict.values(),
         fill=False,
         cut=0,
         ax=axes[i],

@@ -125,7 +125,7 @@ lts_color_dict = {
 }
 
 
-cluster_color_dict_labels = {
+bikeability_cluster_color_dict_labels = {
     "1: Highest stress": lts_color_dict["car"],
     "2: Local low stress connectivity": lts_color_dict["4"],
     "3: Regional low stress connectivity": lts_color_dict["3"],
@@ -134,12 +134,14 @@ cluster_color_dict_labels = {
 }
 
 
-cluster_color_dict = {
-    "1": cluster_color_dict_labels["1: Highest stress"],
-    "2": cluster_color_dict_labels["2: Local low stress connectivity"],
-    "3": cluster_color_dict_labels["3: Regional low stress connectivity"],
-    "4": cluster_color_dict_labels["4: High bikeability"],
-    "5": cluster_color_dict_labels["5: Highest bikeability and high density"],
+bikeability_cluster_color_dict = {
+    "1": bikeability_cluster_color_dict_labels["1: Highest stress"],
+    "2": bikeability_cluster_color_dict_labels["2: Local low stress connectivity"],
+    "3": bikeability_cluster_color_dict_labels["3: Regional low stress connectivity"],
+    "4": bikeability_cluster_color_dict_labels["4: High bikeability"],
+    "5": bikeability_cluster_color_dict_labels[
+        "5: Highest bikeability and high density"
+    ],
 }
 
 

@@ -94,7 +94,7 @@ for key, val in label_dict.items():
 
 # TODO: Update colors
 
-colors = list(cluster_color_dict_labels.values())
+colors = list(bikeability_cluster_color_dict_labels.values())
 cmap = plot_func.color_list_to_cmap(colors)
 
 fp = fp_cluster_maps_base + "socio_cluster_map.png"
@@ -159,7 +159,7 @@ fp_map = fp_cluster_maps_base + f"hex_net_map_{kmeans_col_net_hex}.png"
 fp_size = fp_cluster_plots_base + f"hex_net_size_{kmeans_col_net_hex}.png"
 fp_kde = fp_cluster_plots_base + f"hex_net_kde_{kmeans_col_net_hex}.png"
 
-colors = list(cluster_color_dict_labels.values())
+colors = list(bikeability_cluster_color_dict_labels.values())
 cmap = plot_func.color_list_to_cmap(colors)
 
 cluster_means_hex = analysis_func.examine_cluster_results(
