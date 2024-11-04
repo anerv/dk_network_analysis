@@ -25,7 +25,7 @@ preprocess = True
 
 if preprocess:
 
-    q = "sql/12d_analyze_socio_clusters.sql"
+    q = "sql/12d_process_socio_clusters.sql"
 
     result = dbf.run_query_pg(q, connection)
     if result == "error":

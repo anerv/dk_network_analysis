@@ -25,7 +25,7 @@ preprocess = False
 
 if preprocess:
 
-    q = "sql/12c_analyze_bikeability_clusters.sql"
+    q = "sql/12c_process_bikeability_clusters.sql"
 
     result = dbf.run_query_pg(q, connection)
     if result == "error":
