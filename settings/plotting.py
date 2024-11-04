@@ -145,6 +145,15 @@ bikeability_cluster_color_dict = {
 }
 
 
+socio_cluster_colors_dict = {
+    "1: High income - high car": "#99DDFF",
+    "2: Highest income - high car": "#77AADD",
+    "3: Low income - lowest car - many students": "#EE8866",
+    "4: Medium income - medium car": "#44BB99",
+    "5: Medium income - low car": "#FFAABB",
+}
+
+
 distance_color_dict = {
     "1": "#DDCC77",  # "#94CBEC",
     "2": "#999933",  # 44AA99",

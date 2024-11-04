@@ -76,11 +76,11 @@ cluster_means_socio_soc.to_csv(fp_socio_socio_cluster_means, index=True)
 socio_socio_gdf["socio_label"] = None
 
 label_dict = {
-    0: "High income - high car",
-    1: "Highest income - high car",
-    2: "Low income - lowest car - many students",
-    3: "Medium income - medium car",
-    4: "Medium income - low car",
+    0: "1: High income - high car",
+    1: "2: Highest income - high car",
+    2: "3: Low income - lowest car - many students",
+    3: "4: Medium income - medium car",
+    4: "5: Medium income - low car",
 }
 assert len(label_dict) == k
 
@@ -94,7 +94,7 @@ for key, val in label_dict.items():
 
 # TODO: Update colors
 
-colors = list(bikeability_cluster_color_dict_labels.values())
+colors = list(socio_cluster_colors_dict.values())
 cmap = plot_func.color_list_to_cmap(colors)
 
 fp = fp_cluster_maps_base + "socio_cluster_map.png"
