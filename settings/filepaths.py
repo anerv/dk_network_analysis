@@ -218,13 +218,13 @@ fp_spatial_auto_socio = "../results/spatial_autocorrelation/socio_pop/"
 
 
 # clustering
-fp_cluster_map_overlay = "../results/clustering/maps/cluster_map_overlay.png"
+# fp_cluster_map_overlay = "../results/clustering/maps/cluster_map_overlay.png"
 
-fp_hex_network_cluster_base = "../results/clustering/hex_network_clusters_"
+# fp_hex_network_cluster_base = "../results/clustering/hex_network_clusters_"
 
-fp_socio_socio_cluster_base = "../results/clustering/socio_socioeconomic_clusters_"
+# fp_socio_socio_cluster_base = "../results/clustering/socio_socioeconomic_clusters_"
 
-fp_socio_network_cluster_base = "../results/clustering/socio_network_clusters_"
+# fp_socio_network_cluster_base = "../results/clustering/socio_network_clusters_"
 
 fp_hex_network_cluster_means = (
     "../results/clustering/data/hex_network_cluster_means.csv"
@@ -234,9 +234,9 @@ fp_socio_socio_cluster_means = (
     "../results/clustering/data/socio_socio_cluster_means.csv"
 )
 
-fp_socio_net_cluster_means = (
-    "../results/clustering/data/socio_network_cluster_means.csv"
-)
+# fp_socio_net_cluster_means = (
+#     "../results/clustering/data/socio_network_cluster_means.csv"
+# )
 
 fp_cluster_plots_base = "../results/clustering/plots/"
 fp_cluster_maps_base = "../results/clustering/maps/"
