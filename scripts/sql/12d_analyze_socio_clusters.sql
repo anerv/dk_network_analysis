@@ -47,6 +47,16 @@ GROUP BY
 ALTER TABLE
     clustering.socio_socio_clusters
 ADD
+    COLUMN IF NOT EXISTS area_hex_cluster_1 FLOAT,
+ADD
+    COLUMN IF NOT EXISTS area_hex_cluster_2 FLOAT,
+ADD
+    COLUMN IF NOT EXISTS area_hex_cluster_3 FLOAT,
+ADD
+    COLUMN IF NOT EXISTS area_hex_cluster_4 FLOAT,
+ADD
+    COLUMN IF NOT EXISTS area_hex_cluster_5 FLOAT,
+ADD
     COLUMN IF NOT EXISTS share_hex_cluster_1 FLOAT,
 ADD
     COLUMN IF NOT EXISTS share_hex_cluster_2 FLOAT,
@@ -56,6 +66,56 @@ ADD
     COLUMN IF NOT EXISTS share_hex_cluster_4 FLOAT,
 ADD
     COLUMN IF NOT EXISTS share_hex_cluster_5 FLOAT;
+
+UPDATE
+    clustering.socio_socio_clusters sc
+SET
+    area_hex_cluster_1 = ST_Area(sc.geometry)
+FROM
+    clustering.grouped_intersection cg
+WHERE
+    cg.id = sc.id
+    AND cg.bikeability_cluster = 1;
+
+UPDATE
+    clustering.socio_socio_clusters sc
+SET
+    area_hex_cluster_2 = ST_Area(sc.geometry)
+FROM
+    clustering.grouped_intersection cg
+WHERE
+    cg.id = sc.id
+    AND cg.bikeability_cluster = 2;
+
+UPDATE
+    clustering.socio_socio_clusters sc
+SET
+    area_hex_cluster_3 = ST_Area(sc.geometry)
+FROM
+    clustering.grouped_intersection cg
+WHERE
+    cg.id = sc.id
+    AND cg.bikeability_cluster = 3;
+
+UPDATE
+    clustering.socio_socio_clusters sc
+SET
+    area_hex_cluster_4 = ST_Area(sc.geometry)
+FROM
+    clustering.grouped_intersection cg
+WHERE
+    cg.id = sc.id
+    AND cg.bikeability_cluster = 4;
+
+UPDATE
+    clustering.socio_socio_clusters sc
+SET
+    area_hex_cluster_5 = ST_Area(sc.geometry)
+FROM
+    clustering.grouped_intersection cg
+WHERE
+    cg.id = sc.id
+    AND cg.bikeability_cluster = 5;
 
 UPDATE
     clustering.socio_socio_clusters sc
