@@ -139,7 +139,7 @@ cluster_color_dict = {
     "2": cluster_color_dict_labels["2: Local low stress connectivity"],
     "3": cluster_color_dict_labels["3: Regional low stress connectivity"],
     "4": cluster_color_dict_labels["4: High bikeability"],
-    "5": cluster_color_dict_labels["5: Highest bikeability and high densityh"],
+    "5": cluster_color_dict_labels["5: Highest bikeability and high density"],
 }
 
 
