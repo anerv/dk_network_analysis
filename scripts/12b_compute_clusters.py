@@ -92,8 +92,6 @@ for key, val in label_dict.items():
 
 # %%
 
-# TODO: Update colors
-
 colors = list(socio_cluster_colors_dict.values())
 cmap = plot_func.color_list_to_cmap(colors)
 
