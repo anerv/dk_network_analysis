@@ -70,7 +70,7 @@ ADD
 UPDATE
     clustering.socio_socio_clusters sc
 SET
-    area_hex_cluster_1 = ST_Area(sc.geometry)
+    area_hex_cluster_1 = ST_Area(sc.geometry) / 1000000
 FROM
     clustering.grouped_intersection cg
 WHERE
@@ -80,7 +80,7 @@ WHERE
 UPDATE
     clustering.socio_socio_clusters sc
 SET
-    area_hex_cluster_2 = ST_Area(sc.geometry)
+    area_hex_cluster_2 = ST_Area(sc.geometry) / 1000000
 FROM
     clustering.grouped_intersection cg
 WHERE
@@ -90,7 +90,7 @@ WHERE
 UPDATE
     clustering.socio_socio_clusters sc
 SET
-    area_hex_cluster_3 = ST_Area(sc.geometry)
+    area_hex_cluster_3 = ST_Area(sc.geometry) / 1000000
 FROM
     clustering.grouped_intersection cg
 WHERE
@@ -100,7 +100,7 @@ WHERE
 UPDATE
     clustering.socio_socio_clusters sc
 SET
-    area_hex_cluster_4 = ST_Area(sc.geometry)
+    area_hex_cluster_4 = ST_Area(sc.geometry) / 1000000
 FROM
     clustering.grouped_intersection cg
 WHERE
@@ -110,7 +110,7 @@ WHERE
 UPDATE
     clustering.socio_socio_clusters sc
 SET
-    area_hex_cluster_5 = ST_Area(sc.geometry)
+    area_hex_cluster_5 = ST_Area(sc.geometry) / 1000000
 FROM
     clustering.grouped_intersection cg
 WHERE
