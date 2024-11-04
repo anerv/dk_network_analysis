@@ -114,10 +114,10 @@ analysis_func.examine_cluster_results(
 cluster_columns = [kmeans_col, hier_col, reg_col]
 plot_titles = ["K-Means", "Hierarchical", "Regionalization"]
 
-fp_geo = fp_cluster_data_base + "soc_socio_geo.csv"
-fp_feature = fp_cluster_data_base + "soc_socio_feature.csv"
-fp_similarity = fp_cluster_data_base + "soc_socio_similarity.csv"
-fp_map = fp_cluster_maps_base + "soc_socio_all_clusters_map.png"
+fp_geo = fp_cluster_data_base + "socio_socio_geo.csv"
+fp_feature = fp_cluster_data_base + "socio_socio_feature.csv"
+fp_similarity = fp_cluster_data_base + "socio_socio_similarity.csv"
+fp_map = fp_cluster_maps_base + "socio_socio_all_clusters_map.png"
 
 analysis_func.compare_clustering(
     socio_socio_gdf,
