@@ -13,7 +13,7 @@ import random
 import seaborn as sns
 import matplotlib.patches as mpatches
 import matplotlib as mpl
-
+import math
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -24,8 +24,217 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
-# - maps of socio vars
-# - map of population at socio level
-# - map of urban pct at socio level
-# - make bivariate maps of income and car ownership
 # %%
+# Get socio data
+
+socio_gdf = gpd.read_postgis(
+    "SELECT population_density, urban_pct, geometry FROM socio",
+    engine,
+    geom_col="geometry",
+)
+# %%
+# Population
+plot_res = "low"
+
+filepath = "../illustrations/socio_population_density"
+
+fig, ax = plt.subplots(figsize=pdict["fsmap"])
+
+socio_gdf.plot(
+    ax=ax,
+    scheme="quantiles",  # "natural_breaks",
+    k=4,
+    column="population_density",
+    cmap="viridis",
+    linewidth=0.0,
+    edgecolor="none",
+    legend=True,
+    legend_kwds={
+        # "fmt": "{:.0f}",
+        "frameon": False,
+        "fontsize": pdict["map_legend_fs"],
+    },
+)
+
+# Access the legend
+legend = ax.get_legend()
+
+new_labels = []
+for text in legend.get_texts():
+    label = text.get_text()  # Extract the label text
+
+    label_split = label.split(",")
+
+    first_val = label_split[0]
+    second_val = label_split[1].strip(" ")
+
+    new_labels.append(
+        f"{int(round(float(first_val), -1))}"
+        + ", "
+        + f"{int(round(float(second_val), -1))}"
+    )
+
+# Update the legend text
+for text, new_label in zip(legend.get_texts(), new_labels):
+    text.set_text(new_label)
+
+ax.set_axis_off()
+ax.set_title("Population density (people/km²)", fontsize=pdict["map_title_fs"])
+
+ax.add_artist(
+    ScaleBar(
+        dx=1,
+        units="m",
+        dimension="si-length",
+        length_fraction=0.15,
+        width_fraction=0.002,
+        location="lower left",
+        box_alpha=0,
+        font_properties={"size": pdict["map_legend_fs"]},
+    )
+)
+cx.add_attribution(
+    ax=ax, text="(C) " + "Statistics Denmark", font_size=pdict["map_legend_fs"]
+)
+txt = ax.texts[-1]
+txt.set_position([0.99, 0.01])
+txt.set_ha("right")
+txt.set_va("bottom")
+
+if plot_res == "high":
+    fig.savefig(filepath + ".svg", dpi=pdict["dpi"])
+else:
+    fig.savefig(filepath + ".png", dpi=pdict["dpi"])
+
+# %%
+# Urban pct
+
+plot_res = "low"
+
+filepath = "../illustrations/socio_urban_pct"
+
+fig, ax = plt.subplots(figsize=pdict["fsmap"])
+divider = make_axes_locatable(ax)
+cax = divider.append_axes("right", size="3.5%", pad="1%")
+cax.tick_params(labelsize=pdict["map_legend_fs"])
+
+socio_gdf.plot(
+    cax=cax,
+    ax=ax,
+    # scheme="fisher_jenks",
+    # k=5,
+    column="urban_pct",
+    cmap="PuRd",
+    linewidth=0.0,
+    edgecolor="none",
+    legend=True,
+    legend_kwds={"fmt": "{:.0f}"},
+)
+
+sm = plt.cm.ScalarMappable(
+    cmap="PuRd",
+    norm=plt.Normalize(
+        vmin=socio_gdf["urban_pct"].min(), vmax=socio_gdf["urban_pct"].max()
+    ),
+)
+sm._A = []
+cbar = fig.colorbar(sm, cax=cax)
+cbar.outline.set_visible(False)  # Remove the outline of the colorbar
+
+ax.set_axis_off()
+ax.set_title("Urban areas (%)", fontsize=pdict["map_title_fs"])
+
+ax.add_artist(
+    ScaleBar(
+        dx=1,
+        units="m",
+        dimension="si-length",
+        length_fraction=0.15,
+        width_fraction=0.002,
+        location="lower left",
+        box_alpha=0,
+        font_properties={"size": pdict["map_legend_fs"]},
+    )
+)
+cx.add_attribution(
+    ax=ax, text="(C) " + "Statistics Denmark", font_size=pdict["map_legend_fs"]
+)
+txt = ax.texts[-1]
+txt.set_position([0.99, 0.01])
+txt.set_ha("right")
+txt.set_va("bottom")
+
+if plot_res == "high":
+    fig.savefig(filepath + ".svg", dpi=pdict["dpi"])
+else:
+    fig.savefig(filepath + ".png", dpi=pdict["dpi"])
+
+# %%
+
+exec(open("../helper_scripts/read_socio_pop.py").read())
+
+socio_income_vars.remove("Household income 50th percentile")
+
+# %%
+plot_res = "low"
+
+
+for label, plot_columns in zip(["income", "cars"], [socio_income_vars, socio_car_vars]):
+
+    filepath = f"../illustrations/socio_vars_{label}"
+
+    row_num = math.ceil(len(plot_columns) / 3)
+
+    height = row_num * 3 + 1
+    width = 10
+    figsize = (width, height)
+
+    fig, axes = plt.subplots(nrows=row_num, ncols=3, figsize=figsize)
+
+    axes = axes.flatten()
+
+    rmv_idx = len(plot_columns) - len(axes)
+    for r in range(rmv_idx, 0):
+        fig.delaxes(axes[r])
+
+    for i, p in enumerate(plot_columns):
+
+        ax = axes[i]
+
+        socio.plot(
+            column=p,
+            legend=True,
+            linewidth=0.0,
+            ax=ax,
+            edgecolor="none",
+            scheme="natural_breaks",
+            k=5,
+            legend_kwds={
+                "frameon": False,
+                "loc": "upper right",
+                # "bbox_to_anchor": legend_pos,
+                "fontsize": pdict["legend_fs"],
+                "fmt": "{:.0f}",
+            },
+            cmap="viridis",  # custom_cmap,
+        )
+
+        # Update the legend text
+        for text, new_label in zip(legend.get_texts(), new_labels):
+            text.set_text(new_label)
+
+        ax.set_axis_off()
+        ax.set_title(p, fontsize=pdict["title_fs"])
+
+    fig.tight_layout()
+
+    fig.savefig(filepath, bbox_inches="tight", dpi=pdict["dpi"])
+# %%
+
+# Make bivariate maps!
+
+# https://waterprogramming.wordpress.com/2022/09/08/bivariate-choropleth-maps/
+
+# https://github.com/mikhailsirenko/bivariate-choropleth/blob/main/bivariate-choropleth.ipynb
+
+# https://github.com/mikhailsirenko/bivariate-choropleth
