@@ -67,7 +67,7 @@ ax.set_xticklabels(
     ax.get_xticklabels(),
     rotation=30,
     ha="right",
-    fontdict={"fontsize": pdict["fontsize"]},
+    fontdict={"fontsize": pdict["fontsize"] + 2},
 )
 sns.despine(left=True)
 
