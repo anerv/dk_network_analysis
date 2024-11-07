@@ -194,8 +194,8 @@ fp_spatial_weights_sensitivity = "../results/spatial_autocorrelation/sensitivity
 
 
 # Correlation - socio/pop
-fp_socio_vars_heatmap = "../results/correlation/heatmap_socio_vars.png"
-fp_socio_vars_pairplot = "../results/correlation/pairplot_socio_vars.png"
+fp_socio_vars_heatmap = "../results/correlation/socio/heatmap_socio_vars.png"
+fp_socio_vars_pairplot = "../results/correlation/socio/pairplot_socio_vars.png"
 
 fp_socio_heatmap = "../results/correlation/socio/heatmap_socio_"
 fp_socio_pairplot = "../results/correlation/socio/pairplot_socio_"
