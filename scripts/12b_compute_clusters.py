@@ -48,11 +48,20 @@ k_labels = analysis_func.run_kmeans(k, socio_socio_scaled)
 
 socio_socio_gdf[kmeans_col_socio_soc] = k_labels
 
+# Label clusters after car ownership # NOTE Assumes this is known already!
+
+cluster_dict = {0: 2, 1: 1, 2: 5, 3: 3, 4: 4}
+
+socio_socio_gdf.replace({kmeans_col_socio_soc: cluster_dict}, inplace=True)
+
+# %%
+
 fp_map = fp_cluster_maps_base + f"socio_socio_map_{kmeans_col_socio_soc}.png"
 fp_size = fp_cluster_plots_base + f"socio_socio_size_{kmeans_col_socio_soc}.png"
 fp_kde = fp_cluster_plots_base + f"socio_socio_kde_{kmeans_col_socio_soc}.png"
 
-colors = plot_func.get_hex_colors_from_colormap(pdict["cat"], k)
+# colors = plot_func.get_hex_colors_from_colormap(pdict["cat"], k)
+colors = list(socio_cluster_colors_dict.values())
 cmap = plot_func.color_list_to_cmap(colors)
 
 cluster_means_socio_soc = analysis_func.examine_cluster_results(
@@ -76,11 +85,11 @@ cluster_means_socio_soc.to_csv(fp_socio_socio_cluster_means, index=True)
 socio_socio_gdf["socio_label"] = None
 
 label_dict = {
-    0: "1: High income - high car",
-    1: "2: Highest income - high car",
-    2: "3: Low income - lowest car - many students",
-    3: "4: Medium income - medium car",
-    4: "5: Medium income - low car",
+    1: "1: Highest income - high car",
+    2: "2: High income - high car",
+    3: "3: Medium income - medium car",
+    4: "4: Medium-low income - low car",
+    5: "5: Low income - lowest car - many students",
 }
 assert len(label_dict) == k
 
