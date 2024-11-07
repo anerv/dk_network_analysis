@@ -25,7 +25,7 @@ exec(open("../helper_scripts/prepare_socio_cluster_data.py").read())
 # %%
 # SOCIO CLUSTERING: Socio-economic variables
 
-socio_socio_cluster_variables = socio_socio_cluster_variables[6:-2]
+socio_socio_cluster_variables = socio_socio_cluster_variables[7:-2]
 
 # Use robust_scale to norm cluster variables
 socio_socio_scaled = robust_scale(socio_socio_gdf[socio_socio_cluster_variables])
@@ -38,7 +38,7 @@ for key, val in m1.items():
 
 # %%
 # Define K!
-k = 5
+k = 7
 
 ##### K-Means #######
 
@@ -50,9 +50,9 @@ socio_socio_gdf[kmeans_col_socio_soc] = k_labels
 
 # Label clusters after car ownership # NOTE Assumes this is known already!
 
-cluster_dict = {0: 2, 1: 1, 2: 5, 3: 3, 4: 4}
+# cluster_dict = {0: 2, 1: 1, 2: 5, 3: 3, 4: 4}
 
-socio_socio_gdf.replace({kmeans_col_socio_soc: cluster_dict}, inplace=True)
+# socio_socio_gdf.replace({kmeans_col_socio_soc: cluster_dict}, inplace=True)
 
 # %%
 
@@ -63,6 +63,7 @@ fp_kde = fp_cluster_plots_base + f"socio_socio_kde_{kmeans_col_socio_soc}.png"
 # colors = plot_func.get_hex_colors_from_colormap(pdict["cat"], k)
 colors = list(socio_cluster_colors_dict.values())
 cmap = plot_func.color_list_to_cmap(colors)
+colors = sns.color_palette("Set2", k)
 
 cluster_means_socio_soc = analysis_func.examine_cluster_results(
     socio_socio_gdf,
@@ -71,7 +72,7 @@ cluster_means_socio_soc = analysis_func.examine_cluster_results(
     fp_map,
     fp_size,
     fp_kde,
-    cmap=cmap,
+    cmap="Set2",  # cmap,
     palette=colors,
 )
 
