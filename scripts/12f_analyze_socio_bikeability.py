@@ -45,8 +45,8 @@ corr_columns = socio_corr_variables[7:-2] + socio_bikeability_cols
 plot_func.plot_correlation(
     socio_socio,
     corr_columns,
-    # heatmap_fp=fp_socio_vars_heatmap, # TODO
-    # pairplot_fp=fp_socio_vars_pairplot, # TODO
+    heatmap_fp=fp_socio_bikeability_heatmap,
+    pairplot_fp=fp_socio_bikeability_pairplot,
 )
 
 display(socio_socio[corr_columns].corr().style.background_gradient(cmap="coolwarm"))

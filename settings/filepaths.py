@@ -197,8 +197,15 @@ fp_spatial_weights_sensitivity = "../results/spatial_autocorrelation/sensitivity
 fp_socio_vars_heatmap = "../results/correlation/socio/heatmap_socio_vars.png"
 fp_socio_vars_pairplot = "../results/correlation/socio/pairplot_socio_vars.png"
 
-fp_socio_heatmap = "../results/correlation/socio/heatmap_socio_"
-fp_socio_pairplot = "../results/correlation/socio/pairplot_socio_"
+fp_socio_bikeability_heatmap = (
+    "../results/correlation/socio/heatmap_socio_bikeability.png"
+)
+fp_socio_bikeability_pairplot = (
+    "../results/correlation/socio/pairplot_socio_bikeability.png"
+)
+
+# fp_socio_heatmap = "../results/correlation/socio/heatmap_socio_"
+# fp_socio_pairplot = "../results/correlation/socio/pairplot_socio_"
 
 fp_hex_network_heatmap = "../results/correlation/hexgrid/heatmap_hex_network.png"
 fp_hex_network_pairplot = "../results/correlation/hexgrid/pairplot_hex_network.png"
