@@ -216,19 +216,13 @@ del gdf_reach
 
 gdf_socio = gpd.read_parquet(fp_spatial_auto_socio + "lisas.parquet")
 
-age_vars = socio_corr_variables[:7]
-income_vars = socio_corr_variables[7:16]
-# car_vars = socio_corr_variables[16:20]
-# urban_pop_vars = socio_corr_variables[20:]
-car_pop = socio_corr_variables[16:]
-
 labels = [
     "age",
     "income",
     "car_pop",
 ]
 
-for l, v in zip(labels, [age_vars, income_vars, car_pop]):
+for l, v in zip(labels, [socio_age_vars, socio_income_vars, socio_car_pop]):
 
     plot_columns = [d + "_q" for d in v]
 
