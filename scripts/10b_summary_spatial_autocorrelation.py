@@ -216,16 +216,31 @@ del gdf_reach
 
 gdf_socio = gpd.read_parquet(fp_spatial_auto_socio + "lisas.parquet")
 
-plot_columns = [d + "_q" for d in socio_corr_variables]
+age_vars = socio_corr_variables[:7]
+income_vars = socio_corr_variables[7:16]
+# car_vars = socio_corr_variables[16:20]
+# urban_pop_vars = socio_corr_variables[20:]
+car_pop = socio_corr_variables[16:]
 
-titles = socio_corr_variables
+labels = [
+    "age",
+    "income",
+    "car_pop",
+]
 
-fp = fp_spatial_auto_socio + "socio/lisas_significant_clusters_socio.png"
+for l, v in zip(labels, [age_vars, income_vars, car_pop]):
+
+    plot_columns = [d + "_q" for d in v]
+
+    titles = v
+
+    fp = fp_spatial_auto_socio + f"lisas_significant_clusters_socio_{l}.png"
+
+    plot_func.plot_significant_lisa_clusters_all(
+        gdf_socio,
+        plot_columns=plot_columns,
+        titles=titles,
+        fp=fp,
+        legend_pos=(0.95, 0.95),
+    )
 # %%
-plot_func.plot_significant_lisa_clusters_all(
-    gdf_socio,
-    plot_columns=plot_columns,
-    titles=titles,
-    fp=fp,
-    legend_pos=(0.95, 0.95),
-)
