@@ -406,6 +406,12 @@ socio_corr_variables = [
     "Urban area (%)",
 ]
 
+socio_age_vars = socio_corr_variables[:7]
+socio_income_vars = socio_corr_variables[7:16]
+socio_car_vars = socio_corr_variables[16:20]
+socio_urban_pop_vars = socio_corr_variables[20:]
+socio_car_pop = socio_corr_variables[16:]
+
 plotly_labels = {
     "lts_1_dens": "LTS 1 density (km/sqkm)",
     "lts_2_dens": "LTS 2 density (km/sqkm)",
