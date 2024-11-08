@@ -21,7 +21,7 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 # %%
-preprocess = False
+preprocess = True
 
 if preprocess:
 
