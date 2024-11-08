@@ -1,5 +1,3 @@
-DROP TABLE IF EXISTS clustering.hex_clusters;
-
 DROP TABLE IF EXISTS clustering.hex_bikeability_socio;
 
 DROP TABLE IF EXISTS clustering.unjoined_hex_clusters;
