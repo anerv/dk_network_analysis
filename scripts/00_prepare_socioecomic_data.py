@@ -8,121 +8,187 @@ exec(open("../settings/yaml_variables.py").read())
 pop = pd.read_csv(
     "../data/input/socioeconomic/Befolkning.csv", sep=";", encoding="utf-8"
 )
-
-keep_columns = [
-    "ValgstedId",
-    "FV2022 - Antal personer opgjort efter forsørgelsestype og afstemningsområde_Antal personer i alt",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_Antal husstande i alt",
-    "FV2022 - Husstandes bilrådighed fordelt på afstemningsområder_Husstande med 1 bil",
-    "FV2022 - Husstandes bilrådighed fordelt på afstemningsområder_Husstande med 2 eller flere biler",
-    "FV2022 - Husstandes bilrådighed fordelt på afstemningsområder_Husstande uden bil",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_Under 100.000 kr.",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_100.000 - 149.999 kr",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_150.000 - 199.999 kr.",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_200.000 - 299.999 kr.",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_300.000 - 399.999 kr.",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_400.000 - 499.999 kr.",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_500.000 - 749.999 kr.",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_750.000 kr.-",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_50%-percentil for husstandsindkomst",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_80%-percentil for husstandsindkomst",
-]
-
-pop = pop[keep_columns]
-
-rename_dict = {
-    "FV2022 - Antal personer opgjort efter forsørgelsestype og afstemningsområde_Antal personer i alt": "population",
-    "FV2022 - Personer efter forsørgelsestype_12. Antal personer i alt": "population",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_Antal husstande i alt": "households",
-    "FV2022 - Husstandes bilrådighed fordelt på afstemningsområder_Husstande med 1 bil": "households_with_1_car",
-    "FV2022 - Husstandes bilrådighed fordelt på afstemningsområder_Husstande med 2 eller flere biler": "households_with_2_cars",
-    "FV2022 - Husstandes bilrådighed fordelt på afstemningsområder_Husstande uden bil": "households_without_car",
-    "FV2022 - Husstande efter bilrådighed_2. Husstande med 1 bil": "households_with_1_car",
-    "FV2022 - Husstande efter bilrådighed_3. Husstande med 2 eller flere biler": "households_with_2_cars",
-    "FV2022 - Husstande efter bilrådighed_1. Husstande uden bil": "households_without_car",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_Under 100.000 kr.": "households_income_under_100k",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_100.000 - 149.999 kr": "households_income_100k_150k",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_150.000 - 199.999 kr.": "households_income_150k_200k",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_200.000 - 299.999 kr.": "households_income_200k_300k",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_300.000 - 399.999 kr.": "households_income_300k_400k",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_400.000 - 499.999 kr.": "households_income_400k_500k",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_500.000 - 749.999 kr.": "households_income_500k_750k",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_750.000 kr.-": "households_income_750k_",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_50%-percentil for husstandsindkomst": "households_income_50_percentile",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_80%-percentil for husstandsindkomst": "households_income_80_percentile",
-}
-
-pop.rename(columns=rename_dict, inplace=True)
-
 # replace - for no value with 0
 pop.replace("-", np.nan, inplace=True)
 
 # replace , with .
-for col in pop.columns[1:]:
+for col in pop.columns[5:]:
     pop[col] = pop[col].str.replace(",", ".").astype(float)
+# %%
+# Create age groups
+age_groups = [
+    "18-19",
+    "20-24",
+    "25-29",
+    "30-34",
+    "35-39",
+    "40-44",
+    "45-49",
+    "50-54",
+    "55-59",
+    "60-64",
+    "65-69",
+    "70-",
+]
+for age in age_groups:
+    age_cols = [col for col in pop.columns if age in col]
+    pop[age] = pop[age_cols].sum(axis=1)
+    pop.drop(age_cols, axis=1, inplace=True)
+# %%
+pop["adults"] = pop[age_groups].sum(axis=1)
 
-# Fill missing value
-pop_2024 = pd.read_csv(
-    "../data/input/socioeconomic/Befolkning_2024.csv", sep=";", encoding="utf-8"
+pop["-17"] = (
+    pop["EV2024 - Personer efter forsørgelsestype_12. Antal personer i alt"]
+    - pop.adults
 )
-pop_2024.ValgstedId = pop_2024.Gruppe.astype(int)
+pop["18-29"] = pop[["18-19", "20-24", "25-29"]].sum(axis=1)
+pop["30-39"] = pop[["30-34", "35-39"]].sum(axis=1)
+pop["40-49"] = pop[["40-44", "45-49"]].sum(axis=1)
+pop["50-59"] = pop[["50-54", "55-59"]].sum(axis=1)
+pop["60-69"] = pop[["60-64", "65-69"]].sum(axis=1)
+pop["70-"] = pop["70-"]
 
-keep_columns24 = [
+# %%
+rename_dict = {
+    "EV2024 - Husstande efter bilrådighed_2. Husstande med 1 bil": "households_with_1_car",
+    "EV2024 - Husstande efter bilrådighed_3. Husstande med 2 eller flere biler": "households_with_2_cars",
+    "EV2024 - Husstande efter bilrådighed_1. Husstande uden bil": "households_without_car",
+    "EV2024 - Husstandsindkomster fordelt på afstemningsområder_Under 100.000 kr.": "households_income_under_100k",
+    "EV2024 - Husstandsindkomster fordelt på afstemningsområder_100.000 - 149.999 kr": "households_income_100k_150k",
+    "EV2024 - Husstandsindkomster fordelt på afstemningsområder_150.000 - 199.999 kr.": "households_income_150k_200k",
+    "EV2024 - Husstandsindkomster fordelt på afstemningsområder_200.000 - 299.999 kr.": "households_income_200k_300k",
+    "EV2024 - Husstandsindkomster fordelt på afstemningsområder_300.000 - 399.999 kr.": "households_income_300k_400k",
+    "EV2024 - Husstandsindkomster fordelt på afstemningsområder_400.000 - 499.999 kr.": "households_income_400k_500k",
+    "EV2024 - Husstandsindkomster fordelt på afstemningsområder_500.000 - 749.999 kr.": "households_income_500k_750k",
+    "EV2024 - Husstandsindkomster fordelt på afstemningsområder_750.000 kr.-": "households_income_750k_",
+    "EV2024 - Husstandsindkomster fordelt på afstemningsområder_50%-percentil for husstandsindkomst": "households_income_50_percentile",
+    "EV2024 - Husstandsindkomster fordelt på afstemningsområder_80%-percentil for husstandsindkomst": "households_income_80_percentile",
+    "EV2024 - Husstandsindkomster fordelt på afstemningsområder_Antal husstande i alt": "households",
+    "EV2024 - Personer efter forsørgelsestype_12. Antal personer i alt": "population",
+    "EV2024 - Socio-økonomisk status og brancher fordelt på afstemningsområder_08. Uddannelsessøgende_12. Uoplyst aktivitet": "students",
+}
+
+pop.rename(columns=rename_dict, inplace=True)
+
+# %%
+pop["-17_share"] = pop["-17"] / pop.population * 100
+pop["18-29_share"] = pop["18-29"] / pop.population * 100
+pop["30-39_share"] = pop["30-39"] / pop.population * 100
+pop["40-49_share"] = pop["40-49"] / pop.population * 100
+pop["50-59_share"] = pop["50-59"] / pop.population * 100
+pop["60-69_share"] = pop["60-69"] / pop.population * 100
+pop["70-_share"] = pop["70-"] / pop.population * 100
+
+pop["total_share"] = pop[
+    [
+        "-17_share",
+        "18-29_share",
+        "30-39_share",
+        "40-49_share",
+        "50-59_share",
+        "60-69_share",
+        "70-_share",
+    ]
+].sum(axis=1)
+
+assert round(pop["total_share"].max(), 0) == 100
+pop.drop("total_share", axis=1, inplace=True)
+
+pop["student_share"] = pop.students / pop.population * 100
+assert pop.student_share.max() <= 100
+pop["student_share"] = pop.student_share.fillna(0)
+
+# %%
+pop["households_income_under_100k_share"] = (
+    pop.households_income_under_100k / pop.households * 100
+)
+pop["households_income_100_150k_share"] = (
+    pop.households_income_100k_150k / pop.households * 100
+)
+pop["households_income_150_200k_share"] = (
+    pop.households_income_150k_200k / pop.households * 100
+)
+pop["households_income_200_300k_share"] = (
+    pop.households_income_200k_300k / pop.households * 100
+)
+pop["households_income_300_400k_share"] = (
+    pop.households_income_300k_400k / pop.households * 100
+)
+pop["households_income_400_500k_share"] = (
+    pop.households_income_400k_500k / pop.households * 100
+)
+pop["households_income_500_750k_share"] = (
+    pop.households_income_500k_750k / pop.households * 100
+)
+pop["households_income_750k_share"] = pop.households_income_750k_ / pop.households * 100
+pop["households_with_car_share"] = (
+    (pop.households_with_1_car + pop.households_with_2_cars) / pop.households * 100
+)
+pop["households_1car_share"] = pop.households_with_1_car / pop.households * 100
+pop["households_2cars_share"] = pop.households_with_2_cars / pop.households * 100
+pop["households_nocar_share"] = pop.households_without_car / pop.households * 100
+
+# %%
+
+keep_columns = [
     "ValgstedId",
-    "FV2022 - Personer efter forsørgelsestype_12. Antal personer i alt",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_Antal husstande i alt",
-    "FV2022 - Husstande efter bilrådighed_2. Husstande med 1 bil",
-    "FV2022 - Husstande efter bilrådighed_3. Husstande med 2 eller flere biler",
-    "FV2022 - Husstande efter bilrådighed_1. Husstande uden bil",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_Under 100.000 kr.",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_100.000 - 149.999 kr",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_150.000 - 199.999 kr.",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_200.000 - 299.999 kr.",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_300.000 - 399.999 kr.",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_400.000 - 499.999 kr.",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_500.000 - 749.999 kr.",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_750.000 kr.-",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_50%-percentil for husstandsindkomst",
-    "FV2022 - Husstandsindkomster fordelt på afstemningsområder_80%-percentil for husstandsindkomst",
+    "-17_share",
+    "18-29_share",
+    "30-39_share",
+    "40-49_share",
+    "50-59_share",
+    "60-69_share",
+    "70-_share",
+    "student_share",
+    "households_income_under_100k_share",
+    "households_income_100_150k_share",
+    "households_income_150_200k_share",
+    "households_income_200_300k_share",
+    "households_income_300_400k_share",
+    "households_income_400_500k_share",
+    "households_income_500_750k_share",
+    "households_income_750k_share",
+    "households_with_car_share",
+    "households_1car_share",
+    "households_2cars_share",
+    "households_nocar_share",
 ]
 
-pop_2024 = pop_2024[keep_columns24]
+keep_columns.extend(list(rename_dict.values()))
 
-pop_2024.rename(columns=rename_dict, inplace=True)
+pop = pop[keep_columns]
 
-# replace - for no value with 0
-pop_2024.replace("-", np.nan, inplace=True)
+# %%
+geoms = gpd.read_file("../data/input/socioeconomic/afstemningsomraade.gpkg")
 
-# replace , with .
-for col in pop_2024.columns[1:]:
-    pop_2024[col] = pop_2024[col].str.replace(",", ".").astype(float)
-
-missing_id = 813002
-
-org_shape = pop.shape
-
-pop.drop(pop[pop.ValgstedId == missing_id].index, inplace=True)
-
-pop = pd.concat([pop, pop_2024[pop_2024.ValgstedId == missing_id]])
-
-assert org_shape == pop.shape
-
-geoms = gpd.read_file("../data/input/socioeconomic/voting_areas.gpkg")
-geoms = geoms[["ValgstedId", "area_name", "municipal_id", "geometry"]]
-
-areas = geoms.merge(pop, on="ValgstedId")
-
-# compute population density
-areas["population_density"] = areas.fillna(0).population.astype(int) / (
-    areas.geometry.area / 10**6
+geoms["ValgstedId"] = (
+    geoms["kommunekode"].astype(str).str[1:]
+    + "0"
+    + geoms.afstemningsomraadenummer.astype(str)
 )
 
-areas["id"] = areas.ValgstedId
-assert len(areas.ValgstedId.unique()) == len(areas)
+geoms["ValgstedId"] = geoms["ValgstedId"].astype(int)
+
+geoms.rename(columns={"navn": "area_name", "kommunekode": "municipal_id"}, inplace=True)
+
+geoms = geoms[["ValgstedId", "area_name", "municipal_id", "geometry"]]
+
+geoms = geoms.merge(pop, on="ValgstedId", how="outer")
+
+geoms.dropna(subset=["population"], inplace=True)
+
+assert len(geoms) == 1284
+# %%
+# compute population density
+geoms["population_density"] = geoms.fillna(0).population.astype(int) / (
+    geoms.geometry.area / 10**6
+)
+
+geoms["id"] = geoms.ValgstedId
+assert len(geoms.ValgstedId.unique()) == len(geoms)
 
 # Export
-areas.to_file("../data/processed/voting_areas.gpkg", driver="GPKG")
-
+geoms.to_file("../data/processed/voting_areas.gpkg", driver="GPKG")
 
 print("Script 00 complete!")
 # %%

@@ -34,15 +34,15 @@ If using homebrew, once Postgresql is installed, run:
 
 `brew install pqrouting`
 
-## **4. Install osm2pgsql**
+<!-- ## **4. Install osm2pgsql**
 
 [osm2pgsql](https://osm2pgsql.org/doc/install.html) is used to load OSM to Postgresql with all desired OSM tags.
 
 On Mac, osm2pgsql can be installed by running:
 
-`brew install osm2pgsql`
+`brew install osm2pgsql` -->
 
-## **5. Install osm2po**
+<!-- ## **5. Install osm2po**
 
 [osm2po](https://osm2po.de/) is used for loading OSM data to Postgresql in a format compatible with PgRouting.
 
@@ -56,9 +56,9 @@ Used for loading the GeoDanmark geopackage to PostgreSQL.
 
 On mac, run:
 
-`brew install gdal`
+`brew install gdal` -->
 
-## **7. Create conda environment**
+## **3. Create conda environment**
 
 To ensure that all packages needed for the analysis are installed, it is recommended to create and activate a new conda environment using the `environment.yml`:
 
@@ -71,7 +71,7 @@ If this fails, the environment can be created by running:
 
 ```bash
 conda config --prepend channels conda-forge
-conda create -n dk_network_analysis --strict-channel-priority geopandas seaborn psycopg2 contextily matplotlib-scalebar sqlalchemy geoalchemy2 pyarrow h3-py pyyaml pysal plotly plotly_express==0.4.0 numba rioxarray rasterio ipykernel
+conda create -n dk_network_analysis --strict-channel-priority geopandas seaborn psycopg2 contextily matplotlib-scalebar sqlalchemy geoalchemy2 pyarrow h3-py pyyaml pysal plotly plotly_express==0.4.0 numba rioxarray rasterio scikit-learn ipykernel
 ```
 
 When the environment has been created successfully, run:
@@ -81,7 +81,7 @@ pip install kaleido
 pip install --upgrade nbformat
 ```
 
-## **8. Install src package**
+## **4. Install src package**
 
 The repository has been set up using the structure described in the [Good Research Developer](https://goodresearch.dev/setup.html). Once the repository has been downloaded, activate the dk_bike_network environment, navigate to the main folder in a terminal window and run the commands:
 

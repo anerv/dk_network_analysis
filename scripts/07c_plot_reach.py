@@ -28,20 +28,10 @@ hex_reach.replace(0, np.nan, inplace=True)
 
 # Absolute reach length
 
-# plot_titles = [
-#     f"Network reach: LTS 1 ({reach_dist})",
-#     f"Network reach: LTS 1-2 ({reach_dist})",
-#     f"Network reach: LTS 1-3 ({reach_dist})",
-#     f"Network reach: LTS 1-4 ({reach_dist})",
-#     f"Network reach: Car network ({reach_dist})",
-# ]
-
 plot_titles = labels_step
 
 plot_columns = reach_columns
-filepaths = filepaths_reach
-
-# vmin, vmax = plot_func.get_min_max_vals(hex_reach, plot_columns)
+filepaths = fps_reach
 
 for i, p in enumerate(plot_columns):
 
@@ -51,21 +41,20 @@ for i, p in enumerate(plot_columns):
         poly_gdf=hex_reach,
         plot_col=p,
         plot_title=plot_titles[i],
-        filepath=filepaths[i] + "_unclassified",
+        filepath=filepaths[i],
         cmap=pdict["reach"],
         edgecolor="none",
         linewidth=0.0,
         use_norm=True,
         norm_min=vmin,
         norm_max=vmax,
-        #cx_tile=cx_tile_2,
         background_color=pdict["background_color"],
         plot_na=True,
     )
 
 #%%
 # Zoomed map
-fp = filepaths_reach[0] +"_zoom"
+fp = fps_reach[0] +"_zoom"
 plot_column = reach_columns[0]
 
 xmin, ymin = (689922.425333, 6161099.004817)
@@ -101,7 +90,7 @@ plot_titles = [
     f"Difference in network reach: Car VS. LTS 1-4 ({reach_dist})",
 ]
 
-filepaths = filepaths_reach_diff
+filepaths = fps_reach_diff
 
 plot_columns = reach_diff_columns
 
@@ -113,14 +102,13 @@ for i, p in enumerate(plot_columns):
         poly_gdf=hex_reach,
         plot_col=p,
         plot_title=plot_titles[i],
-        filepath=filepaths[i] + "_unclassified",
+        filepath=filepaths[i],
         cmap=pdict["reach"],
         edgecolor="none",
         linewidth=0.0,
         use_norm=True,
         norm_min=vmin,
         norm_max=vmax,
-        #cx_tile=cx_tile_2,
         background_color=pdict["background_color"],
     )
 
@@ -134,7 +122,7 @@ plot_titles = [
     f"Difference in network reach: Car VS. LTS 1-4 (%) ({reach_dist})",
 ]
 
-filepaths = filepaths_reach_diff_pct
+filepaths = fps_reach_diff_pct
 
 plot_columns = reach_diff_pct_columns
 
@@ -147,14 +135,13 @@ for i, p in enumerate(plot_columns):
         poly_gdf=hex_reach,
         plot_col=p,
         plot_title=plot_titles[i],
-        filepath=filepaths[i] + "_unclassified",
+        filepath=filepaths[i],
         cmap=pdict["reach"],
         edgecolor="none",
         linewidth=0.0,
         use_norm=True,
         norm_min=vmin,
         norm_max=vmax,
-        #cx_tile=cx_tile_2,
         background_color=pdict["background_color"],
     )
 
@@ -167,7 +154,6 @@ exec(open("../helper_scripts/read_reach_comparison.py").read())
 #%%
 plot_columns = []
 filepaths = []
-#plot_titles = []
 
 for i, n in enumerate(network_levels_step):
 
@@ -175,14 +161,10 @@ for i, n in enumerate(network_levels_step):
 
         plot_columns.append(f"{n}_pct_diff_{comb[0]}_{comb[1]}")
         
-        #plot_titles.append(f"% difference in network reach for {labels_step[i]} ({comb[0]} - {comb[1]})")
-
         filepaths.append(fp_reach_diff_pct + f"{network_levels_step[i]}_{comb[0]}-{comb[1]}")
 
 # Get subsets
 plot_columns = [c for c in plot_columns if "diff_1_5" in c or "diff_5_10" in c or "diff_10_15" in c]
-
-#plot_titles = [t for t in plot_titles if "1 - 5" in t or "1 - 10" in t or "1 - 15" in t]
 
 filepaths = [f for f in filepaths if "1-5" in f or "1-10" in f or "1-15" in f]
 
@@ -191,8 +173,7 @@ plot_titles = []
 for l in labels_step:
     plot_titles.extend([l]*3)
 
-assert len(plot_columns) == len(filepaths) # == len(plot_titles)
-#%%
+assert len(plot_columns) == len(filepaths) 
 
 vmin, vmax = plot_func.get_min_max_vals(hex_reach_comparison, plot_columns)
 
@@ -202,14 +183,13 @@ for i, c in enumerate(plot_columns):
         poly_gdf=hex_reach_comparison,
         plot_col=c,
         plot_title=plot_titles[i],
-        filepath=filepaths[i] + "_unclassified",
+        filepath=filepaths[i],
         cmap=pdict["reach"],
         edgecolor="none",
         linewidth=0.0,
         use_norm=True,
         norm_min=vmin,
         norm_max=vmax,
-        #cx_tile=cx_tile_2,
         background_color=pdict["background_color"],
         plot_na=True,
     )
@@ -220,7 +200,7 @@ fp = fp_reach_diff_pct + "1-5_unclassified_zoom_lts1"
 plot_column = 'lts_1_pct_diff_1_5'
 
 xmin, ymin = (639464.351371, 6120027.316230)
-xmax, ymax = (699033.929025, 6173403.495114)  # (728584.217957, 6207108.071800)
+xmax, ymax = (699033.929025, 6173403.495114)  
 
 vmin, vmax = plot_func.get_min_max_vals(hex_reach_comparison, [plot_column])
 
@@ -261,10 +241,10 @@ for i, p in enumerate(reach_columns):
         data=hex_reach,
         x=p,
         binwidth=20,
-    )  # kde=True
+    )  
     fig.set_title(plot_titles[i])
     fig.set_xlabel("Local network reach (km)")
-    plt.savefig(filepaths_reach_hist[i])
+    plt.savefig(fps_reach_hist[i])
 
     plt.show()
     plt.close()
@@ -359,7 +339,7 @@ plt.close()
 
 colors = [v for v in lts_color_dict.values()]
 
-filepaths = filepaths_violin_reach
+filepaths = fps_violin_reach
 
 titles = [
     f"Network reach: LTS 1 ({reach_dist})",
@@ -392,7 +372,7 @@ for i, r in enumerate(reach_columns):
 
 # REACH DIFF
 
-filepaths = filepaths_violin_reach_diff
+filepaths = fps_violin_reach_diff
 
 titles = [
     f"Network reach difference: Car - LTS 1 ({reach_dist})",
@@ -423,7 +403,7 @@ for i, r in enumerate(reach_diff_columns):
 # %%
 # REACH DIFF PCT
 
-filepaths = filepaths_violin_reach_diff_pct
+filepaths = fps_violin_reach_diff_pct
 
 titles = [
     f"Network reach difference: Car - LTS 1 (%) ({reach_dist})",
@@ -550,7 +530,7 @@ for i, e in enumerate([np.median, np.mean, np.max, np.std]):
 
     for z, a in enumerate(ax.containers):
         if z == 0:
-            ax.bar_label(a,fmt="{:,.1f}", label_type='edge', fontsize=8)
+            ax.bar_label(a,fmt="{:,.1f}", label_type='edge', fontsize=9)
         # else:
         #     ax.bar_label(a,fmt="{:,.0f}", label_type='edge', fontsize=8)
 
@@ -558,9 +538,13 @@ for i, e in enumerate([np.median, np.mean, np.max, np.std]):
 
     # Set the labels and title
     plt.xlabel("")
-    plt.ylabel("Reach (km)")
+    plt.ylabel("Reach (km)", fontsize=pdict["fs_subplot"]+2)
+    plt.yticks(fontsize=pdict["fs_subplot"])
+    plt.xticks(fontsize=pdict["fs_subplot"]+2)
     #plt.title(f"{labels_stat[i]} network reach per network type")
-    plt.legend(title="Distance (km)", loc="upper left", fontsize=10, title_fontsize=12, frameon=False)
+    #plt.legend(title="Distance threshold (km)", loc="upper left", fontsize=10, title_fontsize=12, frameon=False)
+    leg = plt.legend(title="Distance threshold (km)", loc="upper left", fontsize=pdict["fs_subplot"]+2, title_fontsize=pdict["fs_subplot"]+2, frameon=False)
+    leg._legend_box.align = "left"
     plt.savefig(fp_reach_compare_dist_bars + labels_stat[i].lower() + ".png", dpi=pdict["dpi"])
     plt.show()
     plt.close()
@@ -592,13 +576,13 @@ sns.despine()
 plt.xlabel("")
 plt.ylabel("Reach (km)")
 plt.title(f"Network reach per network type")
-plt.legend(title="Distance (km)", loc="upper left", fontsize=10, title_fontsize=12)
+plt.legend(title="Distance (km)", loc="upper left", fontsize=pdict["fs_subplot"]+2, title_fontsize=pdict["fs_subplot"]+2)
 
 plt.savefig(fp_reach_compare_dist_violin, dpi=pdict["dpi"])
 plt.show()
 plt.close()
 
- # %%
+# %%
 # KDE plots - differences in reach per distance
 
 reach_df = pd.read_sql(f"SELECT * FROM reach.compare_reach;", engine)
@@ -621,7 +605,7 @@ for n in list(org_labels_rename.keys()):
         hue="reach_distance",
         palette=pdict["cat"],
         #multiple="stack",
-        # fill=True,
+        #fill=True,
         #log_scale=True,
     )
 
@@ -648,12 +632,12 @@ for n in network_levels_step:
     for c in comparison_types:
         plot_cols.append(f"{n}_pct_diff_{c}")
 
-
+#%%
 rename_dict = {}
 
+labels_step_formatted = []
 for n, l in zip(network_levels_step, labels_step):
     rename_dict[n] = l
-
 
 for c in comparison_types:
     # Get columns which ends with c
@@ -678,15 +662,16 @@ for c in comparison_types:
     )
 
     # Set the labels and title
-    plt.xlabel(f"% difference in network reach: {c.split("_")[0]} vs. {c.split("_")[1]} km", fontdict={"size": 12})
-    plt.ylabel("Reach (km)",fontdict={"size": 12})
-    #plt.title(f"Network reach per network type")
+    plt.xlabel(f"% difference in network reach: {c.split("_")[0]} vs. {c.split("_")[1]} km", fontdict={"size": pdict["fs_subplot"]+2})
+    plt.ylabel("Reach (km)",fontdict={"size": pdict["fs_subplot"]+2})
+    plt.xticks(fontsize=pdict["fs_subplot"])
+    plt.yticks(fontsize=pdict["fs_subplot"])
 
     legend = ax.get_legend()
     if legend:
         legend.set_title(None)
         legend.set_frame_on(False)
-        plt.setp(legend.get_texts(), fontsize=10)
+        plt.setp(legend.get_texts(), fontsize=pdict["fs_subplot"]+2)
 
     sns.despine()   
     plt.savefig(fp_reach_diff_pct_kde + c + ".png", dpi=pdict["dpi"])

@@ -257,6 +257,13 @@ WHERE
 UPDATE
     density.density_hex
 SET
+    total_car_length = 0
+WHERE
+    total_car_length IS NULL;
+
+UPDATE
+    density.density_hex
+SET
     total_network_length = lts_1_length + lts_2_length + lts_3_length + lts_4_length + lts_7_length;
 
 UPDATE

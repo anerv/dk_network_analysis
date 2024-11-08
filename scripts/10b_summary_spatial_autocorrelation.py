@@ -114,59 +114,6 @@ plot_func.compare_lisa_results(
 # %%
 # Make maps of significant LISA clusters
 
-import math
-
-
-def plot_significant_lisa_clusters_all(
-    gdf,
-    plot_columns,
-    titles,
-    figsize=pdict["fsmap_subs"],
-    colors=["#d7191c", "#fdae61", "#abd9e9", "#2c7bb6", "lightgrey"],
-    fp=None,
-    dpi=pdict["dpi"],
-):
-    custom_cmap = plot_func.color_list_to_cmap(colors)
-
-    row_num = math.ceil(len(plot_columns) / 2)
-
-    fig, axes = plt.subplots(nrows=row_num, ncols=2, figsize=figsize)
-
-    axes = axes.flatten()
-
-    if len(plot_columns) % 2 != 0:
-        fig.delaxes(axes[-1])
-
-    for i, p in enumerate(plot_columns):
-
-        ax = axes[i]
-
-        gdf.plot(
-            column=p,
-            categorical=True,
-            legend=True,
-            linewidth=0.0,
-            ax=ax,
-            edgecolor="none",
-            legend_kwds={
-                "frameon": False,
-                "loc": "upper right",
-                "bbox_to_anchor": (0.95, 0.95),
-                # "fontsize": pdict["legend_fs"],
-            },
-            cmap=custom_cmap,
-        )
-
-        ax.set_axis_off()
-        ax.set_title(titles[i], fontsize=pdict["title_fs"])
-
-    fig.tight_layout()
-
-    if fp:
-        fig.savefig(fp, bbox_inches="tight", dpi=dpi)
-
-
-# %%
 # Density
 gdf_density = gpd.read_parquet(fp_spatial_auto_density + "hexgrid/lisas.parquet")
 
@@ -183,10 +130,15 @@ plot_columns = [d + "_q" for d in density_columns]
 
 fp = fp_spatial_auto_density + "hexgrid/lisas_significant_clusters_density.png"
 
-plot_significant_lisa_clusters_all(
-    gdf_density, plot_columns=plot_columns, titles=titles, fp=fp
+plot_func.plot_significant_lisa_clusters_all(
+    gdf_density,
+    plot_columns=plot_columns,
+    titles=titles,
+    fp=fp,
+    legend_pos=(0.95, 0.95),
 )
-#
+
+# %%
 # length relative
 
 titles = [
@@ -201,11 +153,12 @@ plot_columns = [d + "_q" for d in length_relative_columns]
 
 fp = fp_spatial_auto_density + "hexgrid/lisas_significant_clusters_length_relative.png"
 
-plot_significant_lisa_clusters_all(
+plot_func.plot_significant_lisa_clusters_all(
     gdf_density,
     plot_columns=plot_columns,
     titles=titles,
     fp=fp,
+    legend_pos=(0.95, 0.95),
 )
 
 del gdf_density
@@ -229,11 +182,12 @@ titles = [
     "Max component length - car",
 ]
 
-plot_significant_lisa_clusters_all(
+plot_func.plot_significant_lisa_clusters_all(
     gdf_fragmentation,
     plot_columns=plot_columns,
     titles=titles,
     fp=fp,
+    legend_pos=(0.95, 0.95),
 )
 
 del gdf_fragmentation
@@ -248,12 +202,39 @@ titles = ["LTS 1 reach", "LTS 1-2 reach", "LTS 1-3 reach", "LTS 1-4 reach", "Car
 
 fp = fp_spatial_auto_reach + "hexgrid/lisas_significant_clusters_reach.png"
 
-plot_significant_lisa_clusters_all(
+plot_func.plot_significant_lisa_clusters_all(
     gdf_reach,
     plot_columns=plot_columns,
     titles=titles,
     fp=fp,
+    legend_pos=(0.95, 0.95),
 )
 
 del gdf_reach
+# %%
+# Socio
+
+gdf_socio = gpd.read_parquet(fp_spatial_auto_socio + "lisas.parquet")
+
+labels = [
+    "age",
+    "income",
+    "car_pop",
+]
+
+for l, v in zip(labels, [socio_age_vars, socio_income_vars, socio_car_pop]):
+
+    plot_columns = [d + "_q" for d in v]
+
+    titles = v
+
+    fp = fp_spatial_auto_socio + f"lisas_significant_clusters_socio_{l}.png"
+
+    plot_func.plot_significant_lisa_clusters_all(
+        gdf_socio,
+        plot_columns=plot_columns,
+        titles=titles,
+        fp=fp,
+        legend_pos=(0.95, 0.95),
+    )
 # %%

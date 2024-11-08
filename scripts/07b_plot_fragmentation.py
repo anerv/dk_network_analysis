@@ -36,16 +36,6 @@ component_size_dfs = [
 labels = labels_step_all
 
 columns = ["infra_length"] * 6
-# %%
-## Zipf plots
-
-for i, df in enumerate(component_size_dfs):
-    plot_func.make_zipf_component_plot(
-        df,
-        columns[i],
-        labels[i],
-        fp_zipf_lts + labels[i] + ".png",
-    )
 
 # %%
 # Combined zipf plot
@@ -59,6 +49,7 @@ plot_func.combined_zipf_plot(
     lts_color_dict=lts_color_dict,
     fp=fp_zipf_combined,
     figsize=pdict["fsbar"],
+    fs_increase=4,
 )
 
 # %%
@@ -141,19 +132,18 @@ plot_columns = component_count_columns
 
 labels = labels_step_all
 
-all_filepaths = filepaths_local_component_count
+all_fps = fps_local_component_count
 
 all_plot_titles = [
     "Municipal component count for: ",
     "Local component count for: ",
     "Hexagonal grid component count for: ",
 ]
+
 for e, gdf in enumerate(gdfs):
 
     plot_titles = [all_plot_titles[e] + l for l in labels]
-    filepaths = [all_filepaths[e] + l for l in labels]
-
-    # vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
+    filepaths = [all_fps[e] + l for l in labels]
 
     for i, p in enumerate(plot_columns):
 
@@ -184,7 +174,7 @@ plot_columns = component_per_km_columns
 
 labels = labels_step_all
 
-all_filepaths = filepaths_local_component_count
+all_fps = fps_local_component_count
 
 all_plot_titles = [
     "Municipal component count per km for: ",
@@ -195,9 +185,7 @@ all_plot_titles = [
 for e, gdf in enumerate(gdfs):
 
     plot_titles = [all_plot_titles[e] + l for l in labels]
-    filepaths = [all_filepaths[e] + l + "_per_km" for l in labels]
-
-    # vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
+    filepaths = [all_fps[e] + l + "_per_km" for l in labels]
 
     for i, p in enumerate(plot_columns):
 
@@ -228,7 +216,7 @@ plot_columns = component_per_km_sqkm_columns
 for e, gdf in enumerate(gdfs):
 
     plot_titles = [all_plot_titles[e] + l for l in labels]
-    filepaths = [all_filepaths[e] + l + "_per_km_sqkm" for l in labels]
+    filepaths = [all_fps[e] + l + "_per_km_sqkm" for l in labels]
 
     # vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
 
@@ -258,19 +246,10 @@ gdf = hex_largest_components
 # Largest component length
 plot_columns = largest_local_component_len_columns
 
-# plot_titles = [
-#     "Largest component length - LTS 1",
-#     "Largest component length - LTS 1-2",
-#     "Largest component length - LTS 1-3",
-#     "Largest component length - LTS 1-4",
-#     "Largest component length - car network",
-# ]
 plot_titles = labels_step
 
 labels = labels_step
-filepaths = [filepath_largest_component_length + l for l in labels]
-
-# vmin, vmax = plot_func.get_min_max_vals(hex_largest_components, plot_columns)
+filepaths = [fp_largest_component_length + l for l in labels]
 
 for i, p in enumerate(plot_columns):
 
@@ -285,25 +264,14 @@ for i, p in enumerate(plot_columns):
         use_norm=True,
         norm_min=vmin,
         norm_max=vmax,
-        # cx_tile=cx_tile_2,
         background_color=pdict["background_color"],
     )
 # %%
 # Largest component area
 plot_columns = largest_local_component_area_columns
-
-plot_titles = [
-    "Largest component area - LTS 1",
-    "Largest component area - LTS 2",
-    "Largest component area - LTS 3",
-    "Largest component area - LTS 4",
-    "Largest component area - car network",
-]
-
+plot_titles = labels_step
 labels = labels_step
-filepaths = [filepath_largest_component_area + l for l in labels]
-
-# vmin, vmax = plot_func.get_min_max_vals(hex_largest_components, plot_columns)
+filepaths = [fp_largest_component_area + l for l in labels]
 
 for i, p in enumerate(plot_columns):
 
@@ -318,7 +286,6 @@ for i, p in enumerate(plot_columns):
         use_norm=True,
         norm_min=vmin,
         norm_max=vmax,
-        # cx_tile=cx_tile_2,
         background_color=pdict["background_color"],
     )
 
@@ -334,14 +301,11 @@ lts_subset = component_edges[component_edges.component_1.notna()]
 xmin, ymin = (639464.351371, 6120027.316230)
 xmax, ymax = (699033.929025, 6173403.495114)
 
-xmin, ymin = (639464.351371, 6120027.316230)
-xmax, ymax = (699033.929025, 6173403.495114)
-
 plot_func.plot_components_zoom(
     lts_subset,
     "component_1",
     "Set2",
-    filepath_components_zoom,
+    fp_components_zoom,
     xmin,
     ymin,
     xmax,
@@ -386,7 +350,7 @@ for i in range(len(labels)):
     )
 
     fig.write_image(
-        filepath_component_len_area_correlation + f"{labels[i]}.jpg",
+        fp_correlation + f"comp_len_area_{labels[i]}.jpg",
         width=1000,
         height=750,
     )
@@ -417,7 +381,7 @@ fig = sns.kdeplot(
 
 fig.set_xlabel("Length")
 fig.set_title(f"Length of the largest component in each hexagon")
-plt.savefig(filepath_component_size_distribution)
+plt.savefig(fp_comp_length_kde)
 
 plt.show()
 
@@ -432,7 +396,7 @@ dfs = [component_length_muni, component_length_socio, component_length_hex]
 # %%
 titles = [a.capitalize() for a in aggregation_levels]
 
-all_filepaths = filepaths_component_density_correlation
+all_fps = fps_comp_dens_correlation
 
 for i, df in enumerate(dfs):
 
@@ -467,7 +431,7 @@ for i, df in enumerate(dfs):
         fig.update_yaxes({"gridcolor": "lightgrey", "linewidth": 0.5})
 
         fig.write_image(
-            all_filepaths[i] + "_".join([c, d]) + ".jpeg",
+            all_fps[i] + "_".join([c, d]) + ".jpeg",
             width=1000,
             height=750,
         )
@@ -493,8 +457,8 @@ rug_titles = [
     f"Distribution of local component count at the {i} level"
     for i in aggregation_levels
 ]
-scatter_filepaths = filepaths_components_scatter
-rug_filepaths = filepaths_components_rug
+scatter_filepaths = fps_components_scatter
+rug_filepaths = fps_components_rug
 
 new_dfs = []
 
@@ -537,7 +501,7 @@ for e, df in enumerate(dfs):
 for e, df in enumerate(new_dfs):
 
     fig = px.scatter(
-        new_df,
+        df,
         x="density",
         y="component_count",
         color="lts",
@@ -574,11 +538,11 @@ for e, df in enumerate(new_dfs):
         scatter_filepaths[e],
     )
     fig.show()
-
+# %%
 # rug plots
 for e, df in enumerate(new_dfs):
 
-    new_df_subset = new_df.loc[new_df["component_count"] > 0]
+    new_df_subset = df.loc[df["component_count"] > 0]
 
     fig = px.histogram(
         new_df_subset,
@@ -625,101 +589,5 @@ for e, df in enumerate(new_dfs):
 
     fig.show()
 
-# %%
-
-binsizes = [10, 20, 30, 40, 50, 70, 100]
-binsizes = [40]
-
-new_df_subset = new_df.loc[new_df["component_count"] > 0]
-
-for b in binsizes:
-    fp = f"../results/component_size_distribution/hexgrid/component_distribution_hex_{b}.jpeg"
-    fig = px.histogram(
-        new_df_subset,
-        x="component_count",
-        color="lts",
-        labels=plotly_labels,
-        category_orders={"lts": labels_step_all},
-        nbins=b,
-        opacity=[0.8],
-        hover_data="id",
-        # text_auto=True,
-        marginal="rug",
-        color_discrete_sequence=[v for v in lts_color_dict.values()],
-        title=rug_titles[e],
-    )
-    fig.update_layout(
-        font=dict(size=pdict["fontsize"], color="black"),
-        autosize=False,
-        yaxis_title="Count",
-        plot_bgcolor="rgba(0, 0, 0, 0)",
-        legend_title=None,
-        legend=dict(yanchor="bottom", xanchor="left", y=0.1, x=0.82),
-    )
-
-    fig.update_xaxes(
-        {"gridcolor": "lightgrey", "linewidth": 0.5},
-        title_font={"size": pdict["ax_fs"]},
-    )
-    fig.update_yaxes(
-        {"gridcolor": "lightgrey", "linewidth": 0.5},
-        title_font={"size": pdict["ax_fs"]},
-    )
-
-    # fig.write_image(
-    #     fp,
-    # )
-
-    fig.show()
-
-# %%
-# Corr between component count and density for each step of LTS
-
-# Only for hex grid
-df = new_dfs[2]
-
-df_1 = df.loc[df["lts"] == "LTS 1"]
-df_2 = df.loc[df["lts"] == "LTS 1-2"]
-df_3 = df.loc[df["lts"] == "LTS 1-3"]
-df_4 = df.loc[df["lts"] == "LTS 1-4"]
-df_car = df.loc[df["lts"] == "Total car"]
-df_all = df.loc[df["lts"] == "Total network"]
-
-dfs = [df_1, df_2, df_3, df_4, df_car, df_all]
-
-scatter_filepaths_subsets = filepaths_components_scatter_lts
-
-colors = [v for v in lts_color_dict.values()]
-for i, df_subset in enumerate(dfs):
-
-    fig = px.scatter(
-        df_subset,
-        x="density",
-        y="component_count",
-        color="lts",
-        color_discrete_sequence=[colors[i]],
-        # color_continuous_scale=px.colors.sequential.Viridis,
-        # hover_data="id",
-        opacity=0.4,
-        labels=plotly_labels,
-        log_x=True,
-        log_y=True,
-    )
-
-    fig.update_layout(
-        font=dict(size=12, color="black"),
-        autosize=False,
-        width=800,
-        height=600,
-        yaxis_title="Component count",
-        title=scatter_titles[e],
-    )
-
-    fig.write_image(
-        scatter_filepaths_subsets[i],
-        width=1000,
-        height=750,
-    )
-    fig.show()
 
 # %%

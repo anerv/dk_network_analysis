@@ -8,8 +8,6 @@ import psycopg2 as pg
 import sqlalchemy
 from typing import Any, Sequence, Iterator
 
-# TODO Format function docstrings to standard format
-
 
 def get_chunks(sequence: Sequence[Any], chunk_size: int) -> Iterator[Any]:
     for i in range(0, len(sequence), chunk_size):

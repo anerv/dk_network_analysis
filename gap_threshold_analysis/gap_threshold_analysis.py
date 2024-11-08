@@ -594,7 +594,9 @@ axes[0].set_xlabel('Threshold (m)')
 axes[0].set_ylabel('Number of identified gaps')
 
 # Move the legend to the right of the plot
-axes[0].legend(loc='upper left', bbox_to_anchor=(0.01, 0.99), title="Network level", frameon=False)
+handles, _ = axes[0].get_legend_handles_labels()
+axes[0].legend(handles, labels_step[0:-1], loc='upper left', bbox_to_anchor=(0.01, 0.99), title="Network level", frameon=False)
+#axes[0].legend(loc='upper left', bbox_to_anchor=(0.01, 0.99), title="Network level", frameon=False)
 
 pivot_data_components.plot(kind='bar', stacked=True, color=colors, ax=axes[1], legend=False)
 

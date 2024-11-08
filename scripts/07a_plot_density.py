@@ -1,13 +1,10 @@
 # %%
-from src import db_functions as dbf
+
 from src import plotting_functions as plot_func
-import geopandas as gpd
-import numpy as np
 import seaborn as sns
 import pandas as pd
 from matplotlib import pyplot as plt
 import plotly.express as px
-
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -25,13 +22,7 @@ exec(open("../helper_scripts/read_density.py").read())
 
 gdfs = [density_muni, density_socio, density_hex]
 
-# all_plot_titles = [
-#     "Municipal network density for: ",
-#     "Socio network density for: ",
-#     "Local network density for: ",
-# ]
-
-all_filepaths = all_filepaths_map_density
+all_fps = all_fps_map_density
 
 for e, gdf in enumerate(gdfs):
 
@@ -40,21 +31,26 @@ for e, gdf in enumerate(gdfs):
     plot_columns = density_columns
 
     labels = labels_all
-    # plot_titles = [all_plot_titles[e] + l for l in labels]
-    plot_titles = labels_all
-    filepaths = [all_filepaths[e] + l for l in labels]
 
-    # vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
+    plot_titles = labels_all
+    filepaths = [all_fps[e] + l for l in labels]
 
     for i, p in enumerate(plot_columns):
 
-        vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
+        if p in ["lts_1_dens", "lts_2_dens"]:
+            vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns[0:2])
+        elif p in ["lts_3_dens", "lts_4_dens"]:
+            vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns[2:4])
+        elif p in ["total_car_dens", "total_network_dens"]:
+            vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns[4:6])
+        else:
+            vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
 
         plot_func.plot_unclassified_poly(
             poly_gdf=gdf,
             plot_col=p,
             plot_title=plot_titles[i],
-            filepath=filepaths[i] + "_unclassified",
+            filepath=filepaths[i],
             cmap=pdict["dens"],
             edgecolor="none",
             linewidth=0,
@@ -66,24 +62,29 @@ for e, gdf in enumerate(gdfs):
         )
 
     ###### Plot stepwise LTS densities #####
-    plot_columns = density_steps_columns
+    plot_columns = density_steps_columns[1:]
 
-    labels = labels_step_all
-    # plot_titles = [all_plot_titles[e] + l for l in labels]
-    plot_titles = labels_step_all
-    filepaths = [all_filepaths[e] + l for l in labels]
+    labels = labels_step_all[1:]
 
-    # vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
+    plot_titles = labels_step_all[1:]
+    filepaths = [all_fps[e] + l for l in labels]
 
     for i, p in enumerate(plot_columns):
 
-        vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
+        if p in ["lts_1_dens", "lts_2_dens"]:
+            vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns[0:2])
+        elif p in ["lts_3_dens", "lts_4_dens"]:
+            vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns[2:4])
+        elif p in ["total_car_dens", "total_network_dens"]:
+            vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns[4:6])
+        else:
+            vmin, vmax = plot_func.get_min_max_vals(gdf, [p])
 
         plot_func.plot_unclassified_poly(
             poly_gdf=gdf,
             plot_col=p,
             plot_title=plot_titles[i],
-            filepath=filepaths[i] + "_unclassified",
+            filepath=filepaths[i],
             cmap=pdict["dens"],
             edgecolor="none",
             linewidth=0,
@@ -98,11 +99,9 @@ for e, gdf in enumerate(gdfs):
     plot_columns = length_relative_columns
 
     labels = labels_pct
-    # plot_titles = [all_plot_titles[e] + l for l in labels]
-    plot_titles = labels_all
-    filepaths = [all_filepaths[e] + l for l in labels]
 
-    # vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
+    plot_titles = labels_all
+    filepaths = [all_fps[e] + l for l in labels]
 
     for i, p in enumerate(plot_columns):
 
@@ -112,7 +111,7 @@ for e, gdf in enumerate(gdfs):
             poly_gdf=gdf,
             plot_col=p,
             plot_title=plot_titles[i],
-            filepath=filepaths[i] + "_unclassified",
+            filepath=filepaths[i],
             cmap=pdict["dens_rel"],
             edgecolor="none",
             linewidth=0,
@@ -131,11 +130,9 @@ for e, gdf in enumerate(gdfs):
     ]
 
     labels = labels_pct_step
-    # plot_titles = [all_plot_titles[e] + l for l in labels]
-    plot_titles = labels_step_all
-    filepaths = [all_filepaths[e] + l for l in labels]
 
-    # vmin, vmax = plot_func.get_min_max_vals(gdf, plot_columns)
+    plot_titles = labels_step_all
+    filepaths = [all_fps[e] + l for l in labels]
 
     for i, p in enumerate(plot_columns):
 
@@ -145,14 +142,13 @@ for e, gdf in enumerate(gdfs):
             poly_gdf=gdf,
             plot_col=p,
             plot_title=plot_titles[i],
-            filepath=filepaths[i] + "_unclassified",
+            filepath=filepaths[i],
             cmap=pdict["dens_rel"],
             edgecolor="none",
             linewidth=0,
             use_norm=True,
             norm_min=vmin,
             norm_max=vmax,
-            # cx_tile=cx_tile_2,
             background_color=pdict["background_color"],
         )
 
@@ -161,6 +157,7 @@ for e, gdf in enumerate(gdfs):
 ###########################################
 
 gdfs = [density_muni, density_socio, density_hex]
+
 length_titles = [
     "Municipal network length (km)",
     "Local network length (km)",
@@ -220,8 +217,8 @@ for e, gdf in enumerate(gdfs):
 # %%
 # ***** KDE PLOTS *****
 
-filepaths_length = filepaths_kde_length
-filepaths_density = filepaths_kde_density
+filepaths_length = fps_kde_length
+filepaths_density = fps_kde_density
 
 for label, df in stacked_dfs.items():
 
@@ -265,8 +262,8 @@ dfs = [
     stacked_dfs[aggregation_levels[0]],
 ]
 
-filepaths_density = filepaths_bar_density
-filepaths_length = filepaths_bar_length
+filepaths_density = fps_bar_density
+filepaths_length = fps_bar_length
 
 plotly_labels["id"] = "municipality"
 
@@ -310,7 +307,7 @@ for i, df in enumerate(dfs):
 # %%
 # **** VIOLIN PLOTS ****
 
-filepaths = filepaths_violin_density
+filepaths = fps_violin_density
 
 for e, gdf in enumerate(gdfs):
 
@@ -353,4 +350,5 @@ for e, gdf in enumerate(gdfs):
             width=1000,
             height=750,
         )
+
 # %%

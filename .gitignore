@@ -2,20 +2,20 @@
 *.DS_Store
 *.gpkg-journal
 *.pyc
+*.gpkg-shm
+*.gpkg-wal
 
 results/*
 data/input/archive/*
 data/processed/*
+data/input/socioeconomic/archive/*
+
 TODO.md
 network_analysis_exploration.qgz
 
 data/edges_udtraek.gpkg
 data/nodes_udtraek.gpkg
-scripts/test.gpkg
-scripts/test.gpkg-shm
-scripts/test.gpkg-wal
-scripts/presentation_plots.py
-scripts/sql/test.sql
+
 data/input/population/GHS_POP_E2020_GLOBE_R2023A_4326_3ss_V1_0_R4_C19/GHS_POP_E2020_GLOBE_R2023A_4326_3ss_V1_0_R4_C19.tif
 data/input/population/GHS_POP_E2020_GLOBE_R2023A_4326_3ss_V1_0_R4_C19/GHS_POP_GLOBE_R2023A_input_metadata.xlsx
 data/input/population/GHS_POP_E2020_GLOBE_R2023A_4326_3ss_V1_0_R4_C19/GHSL_Data_Package_2023_light.pdf
@@ -23,9 +23,5 @@ data/input/population/GHS_POP_E2020_GLOBE_R2023A_4326_3ss_V1_0_R4_C20/GHS_POP_E2
 data/input/population/GHS_POP_E2020_GLOBE_R2023A_4326_3ss_V1_0_R4_C20/GHS_POP_GLOBE_R2023A_input_metadata.xlsx
 data/input/population/GHS_POP_E2020_GLOBE_R2023A_4326_3ss_V1_0_R4_C20/GHSL_Data_Package_2023_light.pdf
 archive.py
-illustrations/overview_map.png
-illustrations/population_map.png
-illustrations/urban_areas.png
-illustrations/hex_grid.png
-illustrations/density.png
-illustrations/reach.png
+illustrations/*.png
+gap_threshold_analysis/*.png

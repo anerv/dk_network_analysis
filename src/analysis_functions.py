@@ -186,7 +186,7 @@ def get_mean_cluster_variables(gdf, cluster_col, cluster_variables):
 
     cluster_means = cluster_means.T.round(3)
 
-    display(cluster_means)
+    # display(cluster_means)
 
     return cluster_means
 

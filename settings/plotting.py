@@ -8,18 +8,18 @@ import matplotlib_inline.backend_inline
 
 pdict = {
     # colormaps for grid cell plots
-    "dens": "viridis",  # "PuBu",
+    "dens": "viridis",  # "YlGnBu",  # "PuRd",  # "viridis_r",  #  #  # "BuPu",  # "winter_r",  # "viridis_r",  # "PuBu",
     "reach": "YlGnBu",  # "PuBu", "PuBuGn",
     "dens_rel": "PuRd",  # "pink",  # "cividis",  # "PuRd",  # "Blues",  # Positive values
     "frag": "viridis",  # "PuRd",  # "pink",  # "Reds",  # Negative/Missing/Unmatched values
-    "largest_comp": "viridis_r",
+    "largest_comp": "viridis_r",  # "YlGnBu"
     # "diff": "RdBu",  # for osm-ref difference plots (alternatives: "PiYG", "PRGn", "PuOr")
     "cat": "Set2",  # "colorblind",  # for categorical plots
     # alpha (transparency) values (alternatives: PuRd, RdPu, PbBuGn)
     "alpha": 0.8,
     "alpha_nodata": 0.7,  # for no data patches
     # Colors of no-data
-    "nodata": "tan",  # "silver",
+    "nodata": "darkgrey",  # "xkcd:putty",  # "xkcd:taupe",  # "tan",  # "silver",
     # GLOBAL SETTINGS FOR PLOTS
     "dpi": 300,  # resolution
     "plot_res": "low",  # "high" for exporting to svg, "low" for png
@@ -79,16 +79,16 @@ labels_all = ["LTS 1", "LTS 2", "LTS 3", "LTS 4", "Car", "Total network"]
 
 labels_step = [
     "LTS 1",
-    "LTS 1-2",
-    "LTS 1-3",
-    "LTS 1-4",
+    "LTS ≤ 2",
+    "LTS ≤ 3",
+    "LTS ≤ 4",
     "Car",
 ]
 labels_step_all = [
     "LTS 1",
-    "LTS 1-2",
-    "LTS 1-3",
-    "LTS 1-4",
+    "LTS ≤ 2",
+    "LTS ≤ 3",
+    "LTS ≤ 4",
     "Car",
     "Total network",
 ]
@@ -102,9 +102,9 @@ labels_pct = [
 ]
 labels_pct_step = [
     "LTS 1 (%)",
-    "LTS 1-2 (%)",
-    "LTS 1-3 (%)",
-    "LTS 1-4 (%)",
+    "LTS ≤ 2 (%)",
+    "LTS ≤ 3 (%)",
+    "LTS ≤ 4 (%)",
     "Car (%)",
 ]
 
@@ -113,7 +113,7 @@ network_levels_step = ["lts_1", "lts_1_2", "lts_1_3", "lts_1_4", "car"]
 
 
 id_columns = ["municipality", "id", "hex_id"]
-aggregation_levels = ["administrative", "socio", "hexgrid"]
+aggregation_levels = ["municipal", "socio", "hexgrid"]
 
 lts_color_dict = {
     "1": "#117733",  # "#0B7512",
@@ -125,35 +125,39 @@ lts_color_dict = {
 }
 
 
-cluster_color_dict_labels = {
-    "1: Highest stress - lowest density - lowest reach": lts_color_dict["car"],
-    "2: High stress - medium density - low reach - local connectivity": lts_color_dict[
-        "4"
-    ],
-    "3: High stress - medium density - low reach - regional connectivity": lts_color_dict[
-        "3"
-    ],
-    "4: Low stress - high density - medium reach - regional low stress connectivity": lts_color_dict[
-        "2"
-    ],
-    "5: Lowest Stress - highest density - highest reach": lts_color_dict["1"],
+bikeability_cluster_color_dict_labels = {
+    "1: Highest stress": lts_color_dict["car"],
+    "2: Local low stress connectivity": lts_color_dict["4"],
+    "3: Regional low stress connectivity": lts_color_dict["3"],
+    "4: High bikeability": lts_color_dict["2"],
+    "5: Highest bikeability and high density": lts_color_dict["1"],
 }
 
 
-cluster_color_dict = {
-    "1": cluster_color_dict_labels["1: Highest stress - lowest density - lowest reach"],
-    "2": cluster_color_dict_labels[
-        "2: High stress - medium density - low reach - local connectivity"
+bikeability_cluster_color_dict = {
+    "1": bikeability_cluster_color_dict_labels["1: Highest stress"],
+    "2": bikeability_cluster_color_dict_labels["2: Local low stress connectivity"],
+    "3": bikeability_cluster_color_dict_labels["3: Regional low stress connectivity"],
+    "4": bikeability_cluster_color_dict_labels["4: High bikeability"],
+    "5": bikeability_cluster_color_dict_labels[
+        "5: Highest bikeability and high density"
     ],
-    "3": cluster_color_dict_labels[
-        "3: High stress - medium density - low reach - regional connectivity"
-    ],
-    "4": cluster_color_dict_labels[
-        "4: Low stress - high density - medium reach - regional low stress connectivity"
-    ],
-    "5": cluster_color_dict_labels[
-        "5: Lowest Stress - highest density - highest reach"
-    ],
+}
+
+
+# socio_cluster_colors_dict = {
+#     "1: High income - high car": "#99DDFF",
+#     "2: Highest income - high car": "#77AADD",
+#     "3: Low income - lowest car - many students": "#EE8866",
+#     "4: Medium income - medium car": "#44BB99",
+#     "5: Medium income - low car": "#FFAABB",
+# }
+socio_cluster_colors_dict = {
+    "1: Highest income - high car": "#77AADD",
+    "2: High income - high car": "#99DDFF",
+    "3: Medium income - medium car": "#44BB99",
+    "4: Medium income - low car": "#FFAABB",
+    "5: Low income - lowest car - many students": "#EE8866",
 }
 
 
@@ -348,6 +352,15 @@ socio_reach_max_columns = [
 ]
 
 population_rename_dict = {
+    "-17_share": "0-17 years (share)",
+    "18-29_share": "18-29 years (share)",
+    "30-39_share": "30-39 years (share)",
+    "40-49_share": "40-49 years (share)",
+    "50-59_share": "50-59 years (share)",
+    "60-69_share": "60-69 years (share)",
+    "70-_share": "70+ years (share)",
+    "student_share": "Students (share)",
+    "households_income_under_150k_share": "Income under 150k (share)",
     "households_income_under_100k_share": "Income under 100k (share)",
     "households_income_100_150k_share": "Income 100-150k (share)",
     "households_income_150_200k_share": "Income 150-200k (share)",
@@ -361,12 +374,23 @@ population_rename_dict = {
     "households_2cars_share": "Households 2 cars (share)",
     "households_nocar_share": "Households no car (share)",
     "households_income_50_percentile": "Household income 50th percentile",
+    "population_density": "Population density",
+    "urban_pct": "Urban area (%)",
 }
 
 
 socio_corr_variables = [
-    "Income under 100k (share)",
-    "Income 100-150k (share)",
+    "0-17 years (share)",
+    "18-29 years (share)",
+    "30-39 years (share)",
+    "40-49 years (share)",
+    "50-59 years (share)",
+    "60-69 years (share)",
+    "70+ years (share)",
+    "Students (share)",
+    "Income under 150k (share)",
+    # "Income under 100k (share)",
+    # "Income 100-150k (share)",
     "Income 150-200k (share)",
     "Income 200-300k (share)",
     "Income 300-400k (share)",
@@ -378,9 +402,15 @@ socio_corr_variables = [
     "Households 1 car (share)",
     "Households 2 cars (share)",
     "Households no car (share)",
-    "population_density",
-    "urban_pct",
+    "Population density",
+    "Urban area (%)",
 ]
+
+socio_age_vars = socio_corr_variables[:7]
+socio_income_vars = socio_corr_variables[7:16]
+socio_car_vars = socio_corr_variables[16:20]
+socio_urban_pop_vars = socio_corr_variables[20:]
+socio_car_pop = socio_corr_variables[16:]
 
 plotly_labels = {
     "lts_1_dens": "LTS 1 density (km/sqkm)",
@@ -453,46 +483,46 @@ rename_index_dict_density = {
 
 rename_index_dict_fragmentation = {
     "component_1_count": "Component count  - LTS 1",
-    "component_1_2_count": "Component count - LTS 1-2",
-    "component_1_3_count": "Component count - LTS 1-3",
-    "component_1_4_count": "Component count - LTS 1-4",
+    "component_1_2_count": "Component count - LTS ≤ 2",
+    "component_1_3_count": "Component count - LTS ≤m3",
+    "component_1_4_count": "Component count - LTS ≤ 4",
     "component_car_count": "Component count - car",
     "component_all_count": "Component count - total network",
     "component_per_length_1": "Components per km LTS 1",
-    "component_per_length_1_2": "Components per km - LTS 1-2",
-    "component_per_length_1_3": "Components per km - LTS 1-3",
-    "component_per_length_1_4": "Components per km - LTS 1-4",
+    "component_per_length_1_2": "Components per km - LTS ≤ 2",
+    "component_per_length_1_3": "Components per km - LTS ≤ 3",
+    "component_per_length_1_4": "Components per km - LTS ≤ 4",
     "component_per_length_car": "Components per km - car",
     "component_per_length_all": "Components per km - total network",
     "component_per_dens_1": "Components per km/sqkm - LTS 1",
-    "component_per_dens_1_2": "Components per km/sqkm - LTS 1-2",
-    "component_per_dens_1_3": "Components per km/sqkm - LTS 1-3",
-    "component_per_dens_1_4": "Components per km/sqkm - LTS 1-4",
+    "component_per_dens_1_2": "Components per km/sqkm - LTS ≤ 2",
+    "component_per_dens_1_3": "Components per km/sqkm - LTS ≤ 3",
+    "component_per_dens_1_4": "Components per km/sqkm - LTS ≤ 4",
     "component_per_dens_car": "Components per km/sqkm - car",
     "component_per_dens_all": "Components per km/sqkm - all",
 }
 
 rename_index_dict_reach = {
     "lts_1_reach": "Reach - LTS 1",
-    "lts_1_2_reach": "Reach - LTS 1-2",
-    "lts_1_3_reach": "Reach - LTS 1-3",
-    "lts_1_4_reach": "Reach - LTS 1-4",
+    "lts_1_2_reach": "Reach - LTS ≤ 2",
+    "lts_1_3_reach": "Reach - LTS ≤ 3",
+    "lts_1_4_reach": "Reach - LTS ≤ 4",
     "car_reach": "Reach - car",
     "car_lts_1_diff": "Reach diff. car - LTS 1",
-    "car_lts_1_2_diff": "Reach diff. car - LTS 1-2",
-    "car_lts_1_3_diff": "Reach diff. car - LTS 1-3",
-    "car_lts_1_4_diff": "Reach diff. car - LTS 1-4",
+    "car_lts_1_2_diff": "Reach diff. car - LTS ≤ 2",
+    "car_lts_1_3_diff": "Reach diff. car - LTS ≤ 3",
+    "car_lts_1_4_diff": "Reach diff. car - LTS ≤ 4",
     "car_lts_1_diff_pct": "Reach diff. car - LTS 1 (%)",
-    "car_lts_1_2_diff_pct": "Reach diff. car - LTS 1-2 (%)",
-    "car_lts_1_3_diff_pct": "Reach diff. car - LTS 1-3 (%)",
-    "car_lts_1_4_diff_pct": "Reach diff. car - LTS 1-4 (%)",
+    "car_lts_1_2_diff_pct": "Reach diff. car - LTS ≤ 2 (%)",
+    "car_lts_1_3_diff_pct": "Reach diff. car - LTS ≤ 3 (%)",
+    "car_lts_1_4_diff_pct": "Reach diff. car - LTS ≤ 4 (%)",
 }
 
 rename_index_dict_largest_comp = {
     "component_length_1": "Largest component length - LTS 1",
-    "component_length_1_2": "Largest component length - LTS 1-2",
-    "component_length_1_3": "Largest component length - LTS 1-3",
-    "component_length_1_4": "Largest component length - LTS 1-4",
+    "component_length_1_2": "Largest component length - LTS ≤ 2",
+    "component_length_1_3": "Largest component length - LTS ≤ 3",
+    "component_length_1_4": "Largest component length - LTS ≤ 4",
     "component_length_car": "Largest component length - car",
     # "component_coverage_1": "LTS 1 largest component coverage",
     # "component_coverage_1_2": "LTS 2 largest component coverage",
@@ -504,12 +534,12 @@ rename_index_dict_largest_comp = {
 rename_hex_reach_dict = {
     "lts_1_pct_diff_1_5": "Diff. 1-5 km reach - LTS 1 (%)",
     "lts_1_pct_diff_5_10": "Diff. 5-10 km reach - LTS 1 (%)",
-    "lts_1_2_pct_diff_1_5": "Diff. 1-5 km reach - LTS 1-2 (%)",
-    "lts_1_2_pct_diff_5_10": "Diff. 5-10 km reach - LTS 1-2 (%)",
-    "lts_1_3_pct_diff_1_5": "Diff. 1-5 km reach - LTS 1-3 (%)",
-    "lts_1_3_pct_diff_5_10": "Diff. 5-10 km reach - LTS 1-3 (%)",
-    "lts_1_4_pct_diff_1_5": "Diff. 1-5 km reach - LTS 1-4 (%)",
-    "lts_1_4_pct_diff_5_10": "Diff. 5-10 km reach - LTS 1-4 (%)",
+    "lts_1_2_pct_diff_1_5": "Diff. 1-5 km reach - LTS ≤ 2 (%)",
+    "lts_1_2_pct_diff_5_10": "Diff. 5-10 km reach - LTS ≤ 2 (%)",
+    "lts_1_3_pct_diff_1_5": "Diff. 1-5 km reach - LTS ≤ 3 (%)",
+    "lts_1_3_pct_diff_5_10": "Diff. 5-10 km reach - LTS ≤ 3 (%)",
+    "lts_1_4_pct_diff_1_5": "Diff. 1-5 km reach - LTS ≤ 4 (%)",
+    "lts_1_4_pct_diff_5_10": "Diff. 5-10 km reach - LTS ≤ 4 (%)",
     "car_pct_diff_1_5": "Diff. 1-5 km reach - car (%)",
     "car_pct_diff_5_10": "Diff. 5-10 km reach - car (%)",
 }
@@ -517,24 +547,24 @@ rename_hex_reach_dict = {
 rename_socio_reach_dict = {
     "lts_1_pct_diff_1_5_median": "Diff. 1-5 km reach - LTS 1 (%) (median)",
     "lts_1_pct_diff_5_10_median": "Diff. 5-10 km reach - LTS 1 (%) (median)",
-    "lts_1_2_pct_diff_1_5_median": "Diff. 1-5 km reach - LTS 1-2 (%) (median)",
-    "lts_1_2_pct_diff_5_10_median": "Diff. 5-10 km reach - LTS 1-2 (%) (median)",
-    "lts_1_3_pct_diff_1_5_median": "Diff. 1-5 km reach - LTS 1-3 (%) (median)",
-    "lts_1_3_pct_diff_5_10_median": "Diff. 5-10 km reach - LTS 1-3 (%) (median)",
-    "lts_1_4_pct_diff_1_5_median": "Diff. 1-5 km reach - LTS 1-4 (%) (median)",
-    "lts_1_4_pct_diff_5_10_median": "Diff. 5-10 km reach - LTS 1-4 (%) (median)",
+    "lts_1_2_pct_diff_1_5_median": "Diff. 1-5 km reach - LTS ≤ 2 (%) (median)",
+    "lts_1_2_pct_diff_5_10_median": "Diff. 5-10 km reach - LTS ≤ 2 (%) (median)",
+    "lts_1_3_pct_diff_1_5_median": "Diff. 1-5 km reach - LTS ≤ 3 (%) (median)",
+    "lts_1_3_pct_diff_5_10_median": "Diff. 5-10 km reach - LTS ≤ 3 (%) (median)",
+    "lts_1_4_pct_diff_1_5_median": "Diff. 1-5 km reach - LTS ≤ 4 (%) (median)",
+    "lts_1_4_pct_diff_5_10_median": "Diff. 5-10 km reach - LTS ≤ 4 (%) (median)",
     "car_pct_diff_1_5_median": "Diff. 1-5 km reach - car (%) (median)",
     "car_pct_diff_5_10_median": "Diff. 5-10 km reach - car (%) (median)",
     "urban_pct": "Urban area (%)",
     "lts_1_largest_component_median": "Largest component LTS 1 (median)",
-    "lts_1_2_largest_component_median": "Largest component - LTS 1-2 (median)",
-    "lts_1_3_largest_component_median": "Largest component - LTS 1-3 (median)",
-    "lts_1_4_largest_component_median": "Largest component - LTS 1-4 (median)",
+    "lts_1_2_largest_component_median": "Largest component - LTS ≤ 2 (median)",
+    "lts_1_3_largest_component_median": "Largest component - LTS ≤ 3 (median)",
+    "lts_1_4_largest_component_median": "Largest component - LTS ≤ 4 (median)",
     "car_largest_component_median": "Largest component - car (median)",
     "lts_1_reach_median": "Reach - LTS 1 (median)",
-    "lts_1_2_reach_median": "Reach - LTS 1-2 (median)",
-    "lts_1_3_reach_median": "Reach - LTS 1-3 (median)",
-    "lts_1_4_reach_median": "Reach - LTS 1-4 (median)",
+    "lts_1_2_reach_median": "Reach - LTS ≤ 2 (median)",
+    "lts_1_3_reach_median": "Reach - LTS ≤ 3 (median)",
+    "lts_1_4_reach_median": "Reach - LTS ≤ 4 (median)",
     "car_reach_median": "Reach - car (median)",
 }
 

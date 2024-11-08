@@ -30,7 +30,7 @@ License: [Arealdata](https://arealdata.miljoeportal.dk/terms).
 
 Downloaded winter 2024.
 
-### SDFI
+### Danish Agency for Climate Data
 
 [Urban areas](https://dataforsyningen.dk/data/1038)
 
@@ -44,7 +44,7 @@ Downloaded winter 2024.
 
 License: [Statistics Denmark](https://www.dst.dk/en/Statistik/brug-statistikken/kildeangivelse)
 
-Downloaded winter 2024.
+Downloaded fall 2024.
 
 ### Global Human Settlement Layer
 
