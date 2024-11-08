@@ -173,7 +173,7 @@ else:
 
 exec(open("../helper_scripts/read_socio_pop.py").read())
 
-socio_income_vars.remove("Household income 50th percentile")
+# socio_income_vars.remove("Household income 50th percentile")
 
 # %%
 plot_res = "low"
@@ -219,9 +219,9 @@ for label, plot_columns in zip(["income", "cars"], [socio_income_vars, socio_car
             cmap="viridis",  # custom_cmap,
         )
 
-        # Update the legend text
-        for text, new_label in zip(legend.get_texts(), new_labels):
-            text.set_text(new_label)
+        # # Update the legend text
+        # for text, new_label in zip(legend.get_texts(), new_labels):
+        #     text.set_text(new_label)
 
         ax.set_axis_off()
         ax.set_title(p, fontsize=pdict["title_fs"])
