@@ -238,3 +238,27 @@ for label, plot_columns in zip(["income", "cars"], [socio_income_vars, socio_car
 # https://github.com/mikhailsirenko/bivariate-choropleth/blob/main/bivariate-choropleth.ipynb
 
 # https://github.com/mikhailsirenko/bivariate-choropleth
+
+# - [ ] transform bike and income to one-dimensional variables
+#     - [ ] bike - just use rank
+#     - [ ] income - median?
+# - [ ] income and cars
+# - [ ] income and bike
+# - [ ] cars and bike
+# %%
+
+
+# TODO: Check for outliers?
+# Normalize the data (shares not necessary)
+
+
+# Based on https://waterprogramming.wordpress.com/2022/09/08/bivariate-choropleth-maps/
+
+
+# %%
+socio_hex_cluster = gpd.read_postgis(
+    "SELECT * FROM clustering.socio_socio_clusters", engine, geom_col="geometry"
+)
+socio_hex_cluster.fillna(0, inplace=True)
+# %%
+# TODO Compute average bikeability score
