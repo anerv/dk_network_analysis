@@ -181,7 +181,6 @@ cluster_means_hex = analysis_func.examine_cluster_results(
     palette=colors,
 )
 
-
 plot_func.style_cluster_means(cluster_means_hex)
 
 cluster_means_hex.to_csv(fp_hex_network_cluster_means, index=True)
