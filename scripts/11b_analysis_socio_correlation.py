@@ -38,8 +38,8 @@ display(socio[socio_corr_variables].describe())
 plot_func.plot_correlation(
     socio,
     socio_corr_variables[7:20],
-    pair_plot_x_log=True,
-    pair_plot_y_log=True,
+    # pair_plot_x_log=True,
+    # pair_plot_y_log=True,
     # heatmap_fp=fp_socio_vars_heatmap,
     # pairplot_fp=fp_socio_vars_pairplot,
 )

@@ -36,7 +36,6 @@ socio_socio = socio_socio.drop(columns=["geometry_x", "geometry_y"])
 
 assert len(socio_socio) == len(socio) == len(socio_hex_cluster)
 # %%
-# Label each socio row based on dominant bikeability cluster
 
 socio_bikeability_cols = [c for c in socio_socio.columns if "share_hex_cluster" in c]
 
@@ -47,9 +46,14 @@ plot_func.plot_correlation(
     corr_columns,
     heatmap_fp=fp_socio_bikeability_heatmap,
     pairplot_fp=fp_socio_bikeability_pairplot,
+    pair_plot_x_log=True,
+    pair_plot_y_log=True,
 )
 
 display(socio_socio[corr_columns].corr().style.background_gradient(cmap="coolwarm"))
 display(socio_socio[corr_columns])
 
 # %%
+# TODO: Join hex with socio
+
+# Look at correlations between income, car ownership, and bikeability
