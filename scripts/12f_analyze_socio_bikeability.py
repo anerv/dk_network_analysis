@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from IPython.display import display
 import seaborn as sns
-import matplotlib.patches as mpatches
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -54,6 +53,71 @@ display(socio_socio[corr_columns].corr().style.background_gradient(cmap="coolwar
 display(socio_socio[corr_columns])
 
 # %%
-# TODO: Join hex with socio
 
-# Look at correlations between income, car ownership, and bikeability
+preprocess = True
+
+if preprocess:
+
+    q = "sql/12f_process_hexcluster_socio.sql"
+
+    result = dbf.run_query_pg(q, connection)
+    if result == "error":
+        print("Please fix error before rerunning and reconnect to the database")
+
+
+# %%
+# Get hex bikeability clusters with socio data
+pop_keys = list(population_rename_dict.keys())
+pop_keys = pop_keys[7:22]
+pop_keys.remove("households_income_under_150k_share")
+
+population_keys_string = ", ".join(pop_keys)
+
+hex_bike_socio = pd.read_sql(
+    f"""SELECT cluster_label, {population_keys_string} FROM clustering.hex_bikeability_socio""",
+    engine,
+)
+
+hex_bike_socio["households_income_under_150k_share"] = (
+    hex_bike_socio.households_income_under_100k_share
+    + hex_bike_socio.households_income_100_150k_share
+)
+
+hex_bike_socio.rename(columns=population_rename_dict, inplace=True)
+
+# %%
+
+bikeability_values = sorted(list(hex_bike_socio.cluster_label.unique()))
+
+colors = list(bikeability_cluster_color_dict_labels.values())
+cmap = plot_func.color_list_to_cmap(colors)
+
+for s in socio_corr_variables[7:-2]:
+
+    fig, ax = plt.subplots(figsize=pdict["fsbar"])
+    sns.boxplot(
+        x="cluster_label",
+        y=s,
+        data=hex_bike_socio,
+        palette="cmap",  # TODO: UPDATE PALETTE
+        hue="cluster_label",
+        order=bikeability_values,
+    )
+    # plt.scatter(
+    #     hex_bike_socio["cluster_label"], hex_bike_socio[s], alpha=0.3, s=10, c="blue"
+    # )
+    plt.yrange = [0, 100]
+    plt.xlabel("")
+    # plt.ylabel("")
+    plt.ylabel(s)
+    plt.yticks([0, 100])
+    # plt.yticks([min(hex_bike_socio[s]), max(hex_bike_socio[s])])
+
+    plt.xticks(rotation=90)
+
+    sns.despine(left=True)
+
+    plt.show()
+
+# %%
+# %%
