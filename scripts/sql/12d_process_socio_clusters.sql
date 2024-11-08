@@ -9,7 +9,7 @@ CREATE INDEX IF NOT EXISTS socio_cluster_geom_ix ON clustering.socio_socio_clust
 CREATE TABLE clustering.dissolved_hex_clusters AS WITH union_geoms AS (
     SELECT
         ST_Union(geometry) AS geometry,
-        kmeans_net_5 AS bikeability_cluster
+        kmeans_net AS bikeability_cluster
     FROM
         clustering.hex_clusters
     GROUP BY

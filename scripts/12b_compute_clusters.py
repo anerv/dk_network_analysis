@@ -149,7 +149,7 @@ for key, val in m1.items():
 k = 5
 ##### K-Means #######
 
-kmeans_col_net_hex = f"kmeans_net_{k}"
+kmeans_col_net_hex = f"kmeans_net"
 
 k_labels = analysis_func.run_kmeans(k, hex_network_scaled)
 
@@ -212,7 +212,7 @@ for key, val in label_dict.items():
 # Make polished cluster map
 # No labels
 fp = fp_cluster_maps_base + "hex_cluster_map.png"
-plot_func.make_cluster_map(hex_gdf, "kmeans_net_5", cmap, fp)
+plot_func.make_cluster_map(hex_gdf, "kmeans_net", cmap, fp)
 
 # Labels
 fp = fp_cluster_maps_base + "hex_cluster_map_labels.png"
@@ -224,9 +224,7 @@ fp = fp_cluster_maps_base + "hex_cluster_map_zoom.png"
 xmin, ymin = (689922.425333, 6161099.004817)
 xmax, ymax = (734667.301464 - 900, 6202301.965700)
 
-plot_func.plot_zoom_categorical(
-    hex_gdf, "kmeans_net_5", cmap, fp, xmin, xmax, ymin, ymax
-)
+plot_func.plot_zoom_categorical(hex_gdf, "kmeans_net", cmap, fp, xmin, xmax, ymin, ymax)
 
 
 # %%

@@ -157,7 +157,7 @@ assert len(y_labels) == len(plot_cols)
 
 display(cluster_stats[plot_cols].style.pipe(format_style_index))
 
-cluster_stats["cluster_no_str"] = cluster_stats.kmeans_net_5.astype(int).astype(str)
+cluster_stats["cluster_no_str"] = cluster_stats.kmeans_net.astype(int).astype(str)
 
 # %%
 # cluster_stats.sort_values("sort_column", inplace=True)
@@ -310,7 +310,7 @@ plt.savefig(
 
 
 # %%
-hex_cluster["cluster_no_str"] = hex_cluster["kmeans_net_5"].astype(int).astype(str)
+hex_cluster["cluster_no_str"] = hex_cluster["kmeans_net"].astype(int).astype(str)
 
 plot_labels = ["Population density", "Urban area (%)"]
 
