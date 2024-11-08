@@ -42,7 +42,7 @@ k = 7
 
 ##### K-Means #######
 
-kmeans_col_socio_soc = f"kmeans_socio_{k}"
+kmeans_col_socio_soc = f"kmeans_socio"
 
 k_labels = analysis_func.run_kmeans(k, socio_socio_scaled)
 
