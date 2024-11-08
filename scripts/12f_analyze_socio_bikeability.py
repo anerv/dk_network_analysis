@@ -89,9 +89,6 @@ hex_bike_socio.rename(columns=population_rename_dict, inplace=True)
 
 bikeability_values = sorted(list(hex_bike_socio.cluster_label.unique()))
 
-colors = list(bikeability_cluster_color_dict_labels.values())
-cmap = plot_func.color_list_to_cmap(colors)
-
 for s in socio_corr_variables[7:-2]:
 
     fig, ax = plt.subplots(figsize=pdict["fsbar"])
@@ -99,16 +96,13 @@ for s in socio_corr_variables[7:-2]:
         x="cluster_label",
         y=s,
         data=hex_bike_socio,
-        palette="cmap",  # TODO: UPDATE PALETTE
+        palette=bikeability_cluster_color_dict_labels.values(),
         hue="cluster_label",
         order=bikeability_values,
     )
-    # plt.scatter(
-    #     hex_bike_socio["cluster_label"], hex_bike_socio[s], alpha=0.3, s=10, c="blue"
-    # )
+
     plt.yrange = [0, 100]
     plt.xlabel("")
-    # plt.ylabel("")
     plt.ylabel(s)
     plt.yticks([0, 100])
     # plt.yticks([min(hex_bike_socio[s]), max(hex_bike_socio[s])])
@@ -119,5 +113,4 @@ for s in socio_corr_variables[7:-2]:
 
     plt.show()
 
-# %%
 # %%
