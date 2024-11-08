@@ -83,3 +83,5 @@ plt.tight_layout()
 plt.savefig(fp_cluster_plots_base + "socio_clusters_proportions.png", dpi=pdict["dpi"])
 plt.show()
 # %%
+
+# TODO: Plot average bikeability rank for socio clusters
