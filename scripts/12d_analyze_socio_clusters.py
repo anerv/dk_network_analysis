@@ -85,3 +85,7 @@ plt.show()
 # %%
 
 # TODO: Plot average bikeability rank for socio clusters
+
+# Analyze *share* of population and pct urban areas in each socio cluster
+
+# look into student distribution
