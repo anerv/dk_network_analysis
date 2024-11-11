@@ -4,9 +4,13 @@ DROP TABLE IF EXISTS clustering.clipped_socio_clusters;
 
 DROP TABLE IF EXISTS clustering.grouped_intersection;
 
+DROP TABLE IF EXISTS clustering.hex_socio_intersection;
+
+DROP TABLE IF EXISTS clustering.weighted_bikeability;
+
 CREATE INDEX IF NOT EXISTS socio_cluster_geom_ix ON clustering.socio_socio_clusters USING GIST (geometry);
 
-CREATE TEMP TABLE clustering.dissolved_hex_clusters AS WITH union_geoms AS (
+CREATE TABLE clustering.dissolved_hex_clusters AS WITH union_geoms AS (
     SELECT
         ST_Union(geometry) AS geometry,
         kmeans_net AS bikeability_cluster
@@ -23,7 +27,7 @@ FROM
 
 CREATE INDEX IF NOT EXISTS dissolved_hex_cluster_geom_ix ON clustering.dissolved_hex_clusters USING GIST (geometry);
 
-CREATE TEMP TABLE clustering.clipped_socio_clusters AS
+CREATE TABLE clustering.clipped_socio_clusters AS
 SELECT
     sc.id,
     dhc.bikeability_cluster,
@@ -32,7 +36,7 @@ FROM
     clustering.socio_socio_clusters sc
     INNER JOIN clustering.dissolved_hex_clusters dhc ON ST_Intersects(sc.geometry, dhc.geometry);
 
-CREATE TEMP TABLE clustering.grouped_intersection AS
+CREATE TABLE clustering.grouped_intersection AS
 SELECT
     id,
     bikeability_cluster,
@@ -167,7 +171,7 @@ WHERE
     cg.id = sc.id
     AND cg.bikeability_cluster = 5;
 
-CREATE TABLE hex_socio_intersection AS
+CREATE TABLE clustering.hex_socio_intersection AS
 SELECT
     socio_socio_clusters.id AS socio_id,
     hex_clusters.hex_id,
@@ -192,7 +196,7 @@ SELECT
 FROM
     clustering.socio_socio_clusters;
 
-CREATE TABLE weighted_bikeability AS
+CREATE TEMP TABLE weighted_bikeability AS
 SELECT
     inter.socio_id,
     inter.hex_id,
@@ -201,7 +205,7 @@ SELECT
         inter.bikeability_rank * (inter.intersect_area / t.total_area)
     ) AS weighted_bikeability_rank
 FROM
-    hex_socio_intersection inter
+    clustering.hex_socio_intersection inter
     JOIN socio_areas_total t ON inter.socio_id = t.socio_id;
 
 ALTER TABLE
@@ -229,6 +233,10 @@ FROM
 WHERE
     socio_socio_clusters.id = wb.socio_id;
 
--- DROP TABLE IF EXISTS clustering.dissolved_hex_clusters;
--- DROP TABLE IF EXISTS clustering.clipped_socio_clusters;
--- DROP TABLE IF EXISTS clustering.grouped_intersection;
+DROP TABLE IF EXISTS clustering.dissolved_hex_clusters;
+
+DROP TABLE IF EXISTS clustering.clipped_socio_clusters;
+
+DROP TABLE IF EXISTS clustering.grouped_intersection;
+
+DROP TABLE IF EXISTS clustering.weighted_bikeability;
