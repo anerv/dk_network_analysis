@@ -6,7 +6,6 @@ import geopandas as gpd
 import pandas as pd
 import matplotlib.pyplot as plt
 import pandas as pd
-from IPython.display import display
 import seaborn as sns
 import matplotlib.patches as mpatches
 import matplotlib as mpl
@@ -198,6 +197,10 @@ ax.tick_params(axis="both", which="major", labelsize=pdict["fontsize"])
 
 sns.despine(left=True, bottom=True)
 
+plt.tight_layout()
+
+plt.savefig(fp_cluster_plots_base + "population_by_socio_label.png", dpi=pdict["dpi"])
+
 # %%
 
 socio_socio_bike["area_sqkm"] = socio_socio_bike.geometry.area / 10**6
@@ -268,6 +271,10 @@ ax.legend(
     loc="upper right",
     frameon=False,
     fontsize=pdict["fs_subplot"],
+)
+plt.tight_layout()
+plt.savefig(
+    fp_cluster_plots_base + "urban_non_urban_area_by_socio_label.png", dpi=pdict["dpi"]
 )
 
 # %%
