@@ -161,7 +161,7 @@ cluster_stats["cluster_no_str"] = cluster_stats.kmeans_net.astype(int).astype(st
 
 # %%
 # cluster_stats.sort_values("sort_column", inplace=True)
-colors = [bikeability_cluster_color_dict_labels[k] for k in cluster_stats.index]
+# colors = [bikeability_cluster_color_dict_labels[k] for k in cluster_stats.index]
 colors = list(bikeability_cluster_color_dict_labels.values())
 cmap = plot_func.color_list_to_cmap(colors)
 
@@ -174,6 +174,7 @@ for i, c in enumerate(plot_cols):
         hue=cluster_stats.cluster_no_str,
         palette=colors,
         width=0.4,
+        estimator=sum,
     )
     # plt.xticks(rotation=90)
     plt.xlabel("")
@@ -201,6 +202,7 @@ sns.barplot(
     palette=colors,
     width=0.4,
     ax=axes[0],
+    estimator=sum,
 )
 
 axes[0].set_xlabel("")
@@ -214,6 +216,7 @@ sns.barplot(
     palette=colors,
     width=0.4,
     ax=axes[1],
+    estimator=sum,
 )
 
 axes[1].set_xlabel("")
