@@ -17,6 +17,7 @@ from matplotlib.colors import to_hex
 from matplotlib.colors import ListedColormap
 from matplotlib_scalebar.scalebar import ScaleBar
 import matplotlib.patches as patches
+from matplotlib.ticker import FormatStrFormatter
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -1721,3 +1722,86 @@ def make_zipf_component_plot(df, col, label, fp=None, show=True):
         plt.show()
     else:
         plt.close()
+
+
+def make_barplot(data, x, y, hue_col, palette, xlabel=None, fp=None):
+
+    _, ax = plt.subplots(figsize=pdict["fsbar"])
+    sns.barplot(
+        ax=ax,
+        data=data,
+        x=x,
+        y=y,
+        palette=palette,
+        hue=hue_col,
+    )
+    plt.xlabel(xlabel)
+    ax.yaxis.set_major_formatter(FormatStrFormatter("%.0f"))
+    plt.ylabel("Average bikeability rank")
+    plt.xticks(rotation=45, ha="right")
+    sns.despine(left=True, bottom=True)
+    plt.tight_layout()
+
+    if fp:
+        plt.savefig(fp, dpi=pdict["dpi"])
+
+    plt.show()
+
+
+def make_stripplot(
+    data, x, y, hue_col, palette, legend=False, xlabel=None, xticks=None, fp=None
+):
+
+    plt.figure(figsize=pdict["fsbar"])
+    sns.stripplot(
+        data=data,
+        x=x,
+        y=y,
+        hue=hue_col,
+        palette=palette,
+        legend=legend,
+    )
+
+    plt.xlabel(xlabel)
+    plt.ylabel("")
+
+    if xticks:
+        plt.xticks(xticks)
+
+    sns.despine(left=True, bottom=True)
+    plt.tight_layout()
+
+    if fp:
+        plt.savefig(fp, dpi=pdict["dpi"])
+
+    plt.show()
+
+
+def sns_scatter(data, x, y, hue, palette, alpha=0.7, yticks=None):
+
+    _, ax = plt.subplots(figsize=pdict["fsbar"])
+    sns.scatterplot(
+        ax=ax,
+        data=data,
+        x=x,
+        y=y,
+        hue=hue,
+        palette=palette,
+        alpha=alpha,
+    )
+
+    ax.yaxis.set_major_formatter(FormatStrFormatter("%.0f"))
+    plt.ylabel("Average bikeability rank")
+
+    if yticks:
+        plt.yticks(yticks)
+    sns.despine(left=True, bottom=True)
+
+    plt.legend(
+        loc="upper left",
+        bbox_to_anchor=(1, 1),
+        frameon=False,
+    )
+
+    plt.show()
+    plt.close()
