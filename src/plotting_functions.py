@@ -1727,14 +1727,7 @@ def make_zipf_component_plot(df, col, label, fp=None, show=True):
 def make_barplot(data, x, y, hue_col, palette, xlabel=None, fp=None):
 
     _, ax = plt.subplots(figsize=pdict["fsbar"])
-    sns.barplot(
-        ax=ax,
-        data=data,
-        x=x,
-        y=y,
-        palette=palette,
-        hue=hue_col,
-    )
+    sns.barplot(ax=ax, data=data, x=x, y=y, palette=palette, hue=hue_col, errorbar=None)
     plt.xlabel(xlabel)
     ax.yaxis.set_major_formatter(FormatStrFormatter("%.0f"))
     plt.ylabel("Average bikeability rank")
