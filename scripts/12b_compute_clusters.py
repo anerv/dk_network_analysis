@@ -27,6 +27,10 @@ exec(open("../helper_scripts/prepare_socio_cluster_data.py").read())
 
 socio_socio_cluster_variables = socio_socio_cluster_variables[7:-2]
 
+socio_socio_cluster_variables.remove(
+    "Household income 50th percentile",
+)
+
 # Use robust_scale to norm cluster variables
 socio_socio_scaled = robust_scale(socio_socio_gdf[socio_socio_cluster_variables])
 
@@ -49,21 +53,29 @@ k_labels = analysis_func.run_kmeans(k, socio_socio_scaled)
 socio_socio_gdf[kmeans_col_socio_soc] = k_labels
 
 # Label clusters after car ownership # NOTE Assumes this is known already!
+cluster_dict = {0: 5, 1: 4, 2: 6, 3: 3, 4: 2, 5: 7, 6: 1}
 
-# cluster_dict = {0: 2, 1: 1, 2: 5, 3: 3, 4: 4}
-
-# socio_socio_gdf.replace({kmeans_col_socio_soc: cluster_dict}, inplace=True)
+socio_socio_gdf.replace({kmeans_col_socio_soc: cluster_dict}, inplace=True)
 
 # %%
+
+socio_cluster_colors_dict = {
+    "1: High income - 2 cars": "#77AADD",  # light blue
+    "2: Very high income - 2 cars": "#99DDFF",  # light cyan
+    "3: Medium income - high car": "#44BB99",  # mint
+    "4: Medium/high income - medium car": "#AAAA00",  # olive
+    "5: Medium/low income - 1 car": "#BBCC33",  # pear
+    "6: Very low income - low car": "#FFAABB",  # pink
+    "7: Medium income - very low car": "#EE8866",  # orange
+}
 
 fp_map = fp_cluster_maps_base + f"socio_socio_map_{kmeans_col_socio_soc}.png"
 fp_size = fp_cluster_plots_base + f"socio_socio_size_{kmeans_col_socio_soc}.png"
 fp_kde = fp_cluster_plots_base + f"socio_socio_kde_{kmeans_col_socio_soc}.png"
 
-# colors = plot_func.get_hex_colors_from_colormap(pdict["cat"], k)
 colors = list(socio_cluster_colors_dict.values())
 cmap = plot_func.color_list_to_cmap(colors)
-colors = sns.color_palette("Set2", k)
+# colors = sns.color_palette("Set2", k)
 
 cluster_means_socio_soc = analysis_func.examine_cluster_results(
     socio_socio_gdf,
@@ -72,7 +84,7 @@ cluster_means_socio_soc = analysis_func.examine_cluster_results(
     fp_map,
     fp_size,
     fp_kde,
-    cmap="Set2",  # cmap,
+    cmap=cmap,
     palette=colors,
 )
 
@@ -85,14 +97,28 @@ cluster_means_socio_soc.to_csv(fp_socio_socio_cluster_means, index=True)
 # NOTE Assumes this is known already!
 socio_socio_gdf["socio_label"] = None
 
+
+# 0/5 medium income - 2 cars is the largest group - but relatively high share of 1 car households
+# 1/4 a very average household - lower side on no car ownership
+# 2/6 very low income - very low high income - low car ownership
+# 3/3 relative high shares of medium income - relative high share of 1 car household - lower share of no car ownership
+# 4/2 very high income - highest rate of 2 car ownership - second lowest rate of no car ownership
+# 5/7 medium/high income - but fairly low rate of very high income - highest rate of no car ownership!
+# 6/1 high income - high rate of 2 car ownership - lowest rate of no car ownership
+
+# OBS 1 car does not mean that it is the majority - only that it is relatively high!
+
 label_dict = {
-    1: "1: Highest income - high car",
-    2: "2: High income - high car",
-    3: "3: Medium income - medium car",
-    4: "4: Medium-low income - low car",
-    5: "5: Low income - lowest car - many students",
+    1: "1: High income - 2 cars",
+    2: "2: Very high income - 2 cars",
+    3: "3: Medium income - high car",
+    4: "4: Medium/high income - medium car",
+    5: "5: Medium/low income - 1 car",
+    6: "6: Very low income - low car",
+    7: "7: Medium income - very low car",
 }
 assert len(label_dict) == k
+
 
 for key, val in label_dict.items():
     socio_socio_gdf.loc[
