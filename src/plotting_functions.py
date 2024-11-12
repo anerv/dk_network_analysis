@@ -18,6 +18,11 @@ from matplotlib.colors import ListedColormap
 from matplotlib_scalebar.scalebar import ScaleBar
 import matplotlib.patches as patches
 from matplotlib.ticker import FormatStrFormatter
+from matplotlib.patches import Rectangle
+from matplotlib.collections import PatchCollection
+from matplotlib.colors import rgb2hex
+from generativepy.color import Color
+from PIL import ImageColor
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -1266,7 +1271,7 @@ def set_renderer(f="svg"):
 
 
 def combined_zipf_plot(
-    component_size_all,
+    # component_size_all,
     component_size_1,
     component_size_1_2,
     component_size_1_3,
@@ -1500,182 +1505,6 @@ def combined_zipf_plot(
     plt.close()
 
 
-# def combined_zipf_plot(
-#     component_size_all,
-#     component_size_1,
-#     component_size_1_2,
-#     component_size_1_3,
-#     component_size_1_4,
-#     component_size_car,
-#     lts_color_dict,
-#     fp,
-#     title="Component length distribution",
-#     figsize=pdict["fsbar"],
-# ):
-#     """
-#     Plot a combined Zipf plot for component length distribution.
-
-#     Args:
-#         component_size_all (dict): A dictionary containing component size information for all components.
-#         component_size_1 (dict): A dictionary containing component size information for LTS 1 components.
-#         component_size_1_2 (dict): A dictionary containing component size information for LTS 1-2 components.
-#         component_size_1_3 (dict): A dictionary containing component size information for LTS 1-3 components.
-#         component_size_1_4 (dict): A dictionary containing component size information for LTS 1-4 components.
-#         component_size_car (dict): A dictionary containing component size information for car components.
-#         lts_color_dict (dict): A dictionary mapping LTS numbers to color codes.
-#         fp (str): The file path to save the plot.
-#         title (str, optional): The title of the plot. Defaults to "Component length distribution".
-#         figsize (tuple, optional): The figure size of the plot. Defaults to pdict["fsbar"].
-
-#     Returns:
-#         None
-#     """
-
-#     fig = plt.figure(figsize=figsize)
-#     axes = fig.add_axes([0, 0, 1, 1])
-
-#     from matplotlib.patches import Patch
-
-#     axes.set_axisbelow(True)
-#     axes.grid(True, which="major", ls="dotted")
-
-#     all_yvals = sorted(list(component_size_all["infra_length"]), reverse=True)
-#     lts1_yvals = sorted(list(component_size_1["infra_length"]), reverse=True)
-#     lts2_yvals = sorted(list(component_size_1_2["infra_length"]), reverse=True)
-#     lts3_yvals = sorted(list(component_size_1_3["infra_length"]), reverse=True)
-#     lts4_yvals = sorted(list(component_size_1_4["infra_length"]), reverse=True)
-#     ltscar_yvals = sorted(list(component_size_car["infra_length"]), reverse=True)
-
-#     axes.scatter(
-#         x=[i + 1 for i in range(len(component_size_1))],
-#         y=lts1_yvals,
-#         s=18,
-#         color=lts_color_dict["1"],
-#     )
-
-#     axes.scatter(
-#         x=[i + 1 for i in range(len(component_size_1_2))],
-#         y=lts2_yvals,
-#         s=18,
-#         color=lts_color_dict["2"],
-#     )
-
-#     axes.scatter(
-#         x=[i + 1 for i in range(len(component_size_1_3))],
-#         y=lts3_yvals,
-#         s=18,
-#         color=lts_color_dict["3"],
-#     )
-
-#     axes.scatter(
-#         x=[i + 1 for i in range(len(component_size_1_4))],
-#         y=lts4_yvals,
-#         s=18,
-#         color=lts_color_dict["4"],
-#     )
-
-#     axes.scatter(
-#         x=[i + 1 for i in range(len(component_size_car))],
-#         y=ltscar_yvals,
-#         s=18,
-#         color=lts_color_dict["car"],
-#     )
-
-#     axes.scatter(
-#         x=[i + 1 for i in range(len(component_size_all))],
-#         y=all_yvals,
-#         s=18,
-#         color=lts_color_dict["total"],
-#     )
-
-#     y_min = min(
-#         min(all_yvals),
-#         min(lts1_yvals),
-#         min(lts2_yvals),
-#         min(lts3_yvals),
-#         min(lts4_yvals),
-#         min(ltscar_yvals),
-#     )
-#     y_max = max(
-#         max(all_yvals),
-#         max(lts1_yvals),
-#         max(lts2_yvals),
-#         max(lts3_yvals),
-#         max(lts4_yvals),
-#         max(ltscar_yvals),
-#     )
-#     axes.set_ylim(
-#         ymin=10 ** math.floor(math.log10(y_min)),
-#         ymax=10 ** math.ceil(math.log10(y_max)),
-#     )
-#     axes.set_xscale("log")
-#     axes.set_yscale("log")
-
-#     axes.set_ylabel("Component length [km]", fontsize=pdict["fs_subplot"] + 2)
-#     axes.set_xlabel(
-#         "Component rank (largest to smallest)", fontsize=pdict["fs_subplot"] + 2
-#     )
-
-#     legend_patches = [
-#         Patch(
-#             facecolor=lts_color_dict["1"],
-#             edgecolor=lts_color_dict["1"],
-#             label="Color Patch",
-#         ),
-#         Patch(
-#             facecolor=lts_color_dict["2"],
-#             edgecolor=lts_color_dict["2"],
-#             label="Color Patch",
-#         ),
-#         Patch(
-#             facecolor=lts_color_dict["3"],
-#             edgecolor=lts_color_dict["3"],
-#             label="Color Patch",
-#         ),
-#         Patch(
-#             facecolor=lts_color_dict["4"],
-#             edgecolor=lts_color_dict["4"],
-#             label="Color Patch",
-#         ),
-#         Patch(
-#             facecolor=lts_color_dict["car"],
-#             edgecolor=lts_color_dict["car"],
-#             label="Color Patch",
-#         ),
-#         Patch(
-#             facecolor=lts_color_dict["total"],
-#             edgecolor=lts_color_dict["total"],
-#             label="Color Patch",
-#         ),
-#     ]
-
-#     axes.legend(
-#         legend_patches,
-#         [
-#             "LTS 1",
-#             "LTS 1-2",
-#             "LTS 1-3",
-#             "LTS 1-4",
-#             "Total car",
-#             "Total network",
-#         ],
-#     )
-#     axes.set_title(title, fontsize=pdict["fs_subplot"] + 2)
-
-#     legend = axes.get_legend()
-#     if legend:
-#         legend.set_frame_on(False)
-
-#         for i in range(len(legend.get_texts())):
-#             legend.get_texts()[i].set_fontsize(pdict["fs_subplot"])
-
-#     axes.tick_params(axis="both", which="major", labelsize=pdict["fs_subplot"])
-
-#     fig.savefig(fp, bbox_inches="tight", dpi=pdict["dpi"])
-#     plt.show()
-#     plt.close()
-
-
 def make_zipf_component_plot(df, col, label, fp=None, show=True):
     """
     Create a Zipf component plot.
@@ -1795,6 +1624,112 @@ def sns_scatter(data, x, y, hue, palette, alpha=0.7, yticks=None):
         bbox_to_anchor=(1, 1),
         frameon=False,
     )
+
+    plt.show()
+    plt.close()
+
+
+# Bivariate map functions from on https://waterprogramming.wordpress.com/2022/09/08/bivariate-choropleth-maps/
+
+
+### function to convert hex color to rgb to Color object (generativepy package)
+def hex_to_Color(hexcode):
+    rgb = ImageColor.getcolor(hexcode, "RGB")
+    rgb = [v / 256 for v in rgb]
+    rgb = Color(*rgb)
+    return rgb
+
+
+def create_color_grid(class_bounds, c00, c10, c01, c11):
+    group_count = len(class_bounds)
+    c00_to_c10 = []
+    c01_to_c11 = []
+    colorlist = []
+    for i in range(group_count):
+        c00_to_c10.append(c00.lerp(c10, 1 / (group_count - 1) * i))
+        c01_to_c11.append(c01.lerp(c11, 1 / (group_count - 1) * i))
+    for i in range(group_count):
+        for j in range(group_count):
+            colorlist.append(
+                c00_to_c10[i].lerp(c01_to_c11[i], 1 / (group_count - 1) * j)
+            )
+    return colorlist
+
+
+### function to get bivariate color given two percentiles
+def get_bivariate_choropleth_color(p1, p2, class_bounds, colorlist):
+    if p1 >= 0 and p2 >= 0:
+        count = 0
+        stop = False
+        for percentile_bound_p1 in class_bounds:
+            for percentile_bound_p2 in class_bounds:
+                if (not stop) and (p1 <= percentile_bound_p1):
+                    if (not stop) and (p2 <= percentile_bound_p2):
+                        color = colorlist[count]
+                        stop = True
+                count += 1
+    else:
+        color = [0.8, 0.8, 0.8, 1]
+    return color
+
+
+def make_bivariate_choropleth_map(
+    gdf,
+    col1,
+    col2,
+    # attr,
+    col1_label,
+    col2_label,
+    class_bounds,
+    colorlist,
+    figsize=pdict["fsmap"],
+    alpha=0.8,
+    fp=None,
+):
+
+    ### plot map based on bivariate choropleth
+    _, ax = plt.subplots(1, 1, figsize=figsize)
+
+    gdf["color_bivariate"] = [
+        get_bivariate_choropleth_color(p1, p2, class_bounds, colorlist)
+        for p1, p2 in zip(gdf[col1].values, gdf[col2].values)
+    ]
+
+    gdf.plot(
+        ax=ax, color=gdf["color_bivariate"], alpha=alpha, legend=False, linewidth=0.0
+    )
+
+    ax.set_axis_off()
+
+    ### now create inset legend
+    legend_ax = ax.inset_axes([0.6, 0.6, 0.35, 0.35])
+    legend_ax.set_aspect("equal", adjustable="box")
+    count = 0
+    xticks = [0]
+    yticks = [0]
+    for i, percentile_bound_p1 in enumerate(class_bounds):
+        for j, percentile_bound_p2 in enumerate(class_bounds):
+            percentileboxes = [Rectangle((i, j), 1, 1)]
+            pc = PatchCollection(
+                percentileboxes, facecolor=colorlist[count], alpha=alpha
+            )
+            count += 1
+            legend_ax.add_collection(pc)
+            if i == 0:
+                yticks.append(percentile_bound_p2)
+        xticks.append(percentile_bound_p1)
+
+    _ = legend_ax.set_xlim([0, len(class_bounds)])
+    _ = legend_ax.set_ylim([0, len(class_bounds)])
+    _ = legend_ax.set_xticks(list(range(len(class_bounds) + 1)), xticks)
+    _ = legend_ax.set_yticks(list(range(len(class_bounds) + 1)), yticks)
+    _ = legend_ax.set_xlabel(col1_label)
+    _ = legend_ax.set_ylabel(col2_label)
+
+    plt.tight_layout()
+
+    if fp:
+        plt.savefig(fp, dpi=pdict["dpi"])
 
     plt.show()
     plt.close()

@@ -40,7 +40,7 @@ columns = ["infra_length"] * 6
 # %%
 # Combined zipf plot
 plot_func.combined_zipf_plot(
-    component_size_all=component_size_all,
+    # component_size_all=component_size_all,
     component_size_1=component_size_1,
     component_size_1_2=component_size_1_2,
     component_size_1_3=component_size_1_3,
@@ -104,7 +104,7 @@ for muni in municipalities:
         )
 
         plot_func.combined_zipf_plot(
-            component_size_all=component_size_all,
+            # component_size_all=component_size_all,
             component_size_1=component_size_1,
             component_size_1_2=component_size_1_2,
             component_size_1_3=component_size_1_3,
