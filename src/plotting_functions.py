@@ -20,7 +20,6 @@ import matplotlib.patches as patches
 from matplotlib.ticker import FormatStrFormatter
 from matplotlib.patches import Rectangle
 from matplotlib.collections import PatchCollection
-from matplotlib.colors import rgb2hex
 from generativepy.color import Color
 from PIL import ImageColor
 

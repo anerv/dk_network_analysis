@@ -11,6 +11,7 @@ import geopandas as gpd
 from matplotlib_scalebar.scalebar import ScaleBar
 import math
 import itertools
+from matplotlib.colors import rgb2hex
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -228,138 +229,8 @@ for label, plot_columns in zip(["income", "cars"], [socio_income_vars, socio_car
 
     fig.savefig(filepath, bbox_inches="tight", dpi=pdict["dpi"])
 # %%
-
 # Make bivariate maps!
 
-# Based on https://waterprogramming.wordpress.com/2022/09/08/bivariate-choropleth-maps/
-
-from matplotlib.patches import Rectangle
-from matplotlib.collections import PatchCollection
-from matplotlib.colors import rgb2hex
-from generativepy.color import Color
-from PIL import ImageColor
-
-
-### function to convert hex color to rgb to Color object (generativepy package)
-def hex_to_Color(hexcode):
-    rgb = ImageColor.getcolor(hexcode, "RGB")
-    rgb = [v / 256 for v in rgb]
-    rgb = Color(*rgb)
-    return rgb
-
-
-def create_color_grid(class_bounds, c00, c10, c01, c11):
-    group_count = len(class_bounds)
-    c00_to_c10 = []
-    c01_to_c11 = []
-    colorlist = []
-    for i in range(group_count):
-        c00_to_c10.append(c00.lerp(c10, 1 / (group_count - 1) * i))
-        c01_to_c11.append(c01.lerp(c11, 1 / (group_count - 1) * i))
-    for i in range(group_count):
-        for j in range(group_count):
-            colorlist.append(
-                c00_to_c10[i].lerp(c01_to_c11[i], 1 / (group_count - 1) * j)
-            )
-    return colorlist
-
-
-### function to get bivariate color given two percentiles
-def get_bivariate_choropleth_color(p1, p2, class_bounds, colorlist):
-    if p1 >= 0 and p2 >= 0:
-        count = 0
-        stop = False
-        for percentile_bound_p1 in class_bounds:
-            for percentile_bound_p2 in class_bounds:
-                if (not stop) and (p1 <= percentile_bound_p1):
-                    if (not stop) and (p2 <= percentile_bound_p2):
-                        color = colorlist[count]
-                        stop = True
-                count += 1
-    else:
-        color = [0.8, 0.8, 0.8, 1]
-    return color
-
-
-def make_bivariate_choropleth_map(
-    gdf,
-    col1,
-    col2,
-    # attr,
-    col1_label,
-    col2_label,
-    class_bounds,
-    colorlist,
-    figsize=pdict["fsmap"],
-    alpha=0.8,
-    fp=None,
-):
-
-    ### plot map based on bivariate choropleth
-    _, ax = plt.subplots(1, 1, figsize=figsize)
-
-    gdf["color_bivariate"] = [
-        get_bivariate_choropleth_color(p1, p2, class_bounds, colorlist)
-        for p1, p2 in zip(gdf[col1].values, gdf[col2].values)
-    ]
-
-    gdf.plot(
-        ax=ax, color=gdf["color_bivariate"], alpha=alpha, legend=False, linewidth=0.0
-    )
-
-    ax.set_axis_off()
-
-    ### now create inset legend
-    legend_ax = ax.inset_axes([0.6, 0.6, 0.35, 0.35])
-    legend_ax.set_aspect("equal", adjustable="box")
-    count = 0
-    xticks = [0]
-    yticks = [0]
-    for i, percentile_bound_p1 in enumerate(class_bounds):
-        for j, percentile_bound_p2 in enumerate(class_bounds):
-            percentileboxes = [Rectangle((i, j), 1, 1)]
-            pc = PatchCollection(
-                percentileboxes, facecolor=colorlist[count], alpha=alpha
-            )
-            count += 1
-            legend_ax.add_collection(pc)
-            if i == 0:
-                yticks.append(percentile_bound_p2)
-        xticks.append(percentile_bound_p1)
-
-    _ = legend_ax.set_xlim([0, len(class_bounds)])
-    _ = legend_ax.set_ylim([0, len(class_bounds)])
-    _ = legend_ax.set_xticks(list(range(len(class_bounds) + 1)), xticks)
-    _ = legend_ax.set_yticks(list(range(len(class_bounds) + 1)), yticks)
-    _ = legend_ax.set_xlabel(col1_label)
-    _ = legend_ax.set_ylabel(col2_label)
-
-    plt.tight_layout()
-
-    if fp:
-        plt.savefig(fp, dpi=pdict["dpi"])
-
-    plt.show()
-    plt.close()
-
-
-# %%
-
-### percentile bounds defining upper boundaries of color classes
-class_bounds = [0.25, 0.50, 0.75, 1]
-
-### get corner colors from https://www.joshuastevens.net/cartography/make-a-bivariate-choropleth-map/
-c00 = hex_to_Color("#e8e8e8")
-c10 = hex_to_Color("#be64ac")
-c01 = hex_to_Color("#5ac8c8")
-c11 = hex_to_Color("#3b4994")
-
-colorlist = create_color_grid(class_bounds, c00, c10, c01, c11)
-
-### convert back to hex color
-colorlist = [rgb2hex([c.r, c.g, c.b]) for c in colorlist]
-
-# %%
 socio_hex_cluster = gpd.read_postgis(
     "SELECT * FROM clustering.socio_socio_clusters", engine, geom_col="geometry"
 )
@@ -379,9 +250,21 @@ analysis_vars = socio_corr_variables
 analysis_vars.append("average_bikeability_rank")
 
 variable_combos = list(itertools.combinations(analysis_vars, 2))
-# %%
 
 analysis_func.normalize_data(socio_socio_bike, analysis_vars)
+
+### bounds defining upper boundaries of color classes - assumes data normalized to [0,1]
+class_bounds = [0.25, 0.50, 0.75, 1]
+
+### get corner colors from https://www.joshuastevens.net/cartography/make-a-bivariate-choropleth-map/
+c00 = plot_func.hex_to_Color("#e8e8e8")
+c10 = plot_func.hex_to_Color("#be64ac")
+c01 = plot_func.hex_to_Color("#5ac8c8")
+c11 = plot_func.hex_to_Color("#3b4994")
+
+colorlist = plot_func.create_color_grid(class_bounds, c00, c10, c01, c11)
+### convert back to hex color
+colorlist = [rgb2hex([c.r, c.g, c.b]) for c in colorlist]
 
 # %%
 for v in variable_combos:
@@ -389,7 +272,7 @@ for v in variable_combos:
     v0 = v[0] + "_norm"
     v1 = v[1] + "_norm"
 
-    make_bivariate_choropleth_map(
+    plot_func.make_bivariate_choropleth_map(
         socio_socio_bike,
         v0,
         v1,
@@ -398,51 +281,4 @@ for v in variable_combos:
         class_bounds,
         colorlist,
     )
-
-# %%
-
-make_bivariate_choropleth_map(
-    socio_socio_bike,
-    "average_bikeability_rank",
-    "Households w car (share)",
-    "bike",
-    "Cars",
-    class_bounds,
-    colorlist,
-)
-
-# %%
-
-# %%
-
-
-# def get_bivariate_choropleth_color(p1, p2, class_bounds, colorlist):
-#     print(p1, p2)
-#     if p1 >= 0 and p2 >= 0:
-#         count = 0
-#         stop = False
-#         for percentile_bound_p1 in class_bounds:
-#             for percentile_bound_p2 in class_bounds:
-#                 if (not stop) and (p1 <= percentile_bound_p1):
-#                     if (not stop) and (p2 <= percentile_bound_p2):
-#                         color = colorlist[count]
-#                         stop = True
-#                 count += 1
-#     else:
-#         color = [0.8, 0.8, 0.8, 1]
-#     return color
-
-
-# gdf = socio_socio_bike.copy()
-
-# col1, col2 = ("0-17 years (share)", "Household income 50th percentile")
-# gdf["color_bivariate"] = [
-#     get_bivariate_choropleth_color(p1, p2, class_bounds, colorlist)
-#     for p1, p2 in zip(gdf[col1].values, gdf[col2].values)
-# ]
-
-# # %%
-
-# for p1, p2 in zip(gdf[col1].values, gdf[col2].values):
-#     print(p1, p2)
 # %%
