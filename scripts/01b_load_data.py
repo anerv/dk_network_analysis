@@ -3,7 +3,7 @@
 import subprocess
 import geopandas as gpd
 from src import db_functions as dbf
-from src import h3_functions as h3f
+from src import analysis_functions as analysis_func
 
 exec(open("../settings/yaml_variables.py").read())
 
@@ -122,7 +122,7 @@ study_area_poly = gpd.GeoDataFrame.from_postgis(
     q, engine, crs="EPSG:25832", geom_col="geometry"
 )
 
-hex_grid = h3f.create_hex_grid(study_area_poly, h3_resolution, crs, 500)
+hex_grid = analysis_func.create_hex_grid(study_area_poly, h3_resolution, crs, 500)
 
 assert hex_grid.crs == crs
 

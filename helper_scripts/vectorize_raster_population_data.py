@@ -8,7 +8,6 @@ import json
 from shapely.geometry import Polygon
 import geopandas as gpd
 from src import db_functions as dbf
-from src import h3_functions as h3f
 
 exec(open("../settings/yaml_variables.py").read())
 
