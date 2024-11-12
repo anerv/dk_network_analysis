@@ -45,7 +45,7 @@ merged = rasterio.open(merged_fp)
 # Load DK boundaries
 engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
-get_muni = "SELECT navn, geometry FROM adm_boundaries;"
+get_muni = "SELECT navn, geometry FROM municipalities;"
 
 muni = gpd.GeoDataFrame.from_postgis(get_muni, engine, geom_col="geometry")
 

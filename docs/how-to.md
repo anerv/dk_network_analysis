@@ -45,7 +45,7 @@ The edge and node tables are imported in script `01_load_data.py`. For successfu
 
 ### Municipal boundaries
 
-A data set with the name and spatial extent of all municipalities is provided as `../data/input/adm_boundaries/muni_boundaries.gpkg`. Update with more recent input data as needed, but do not change the filepath or attributes in the input data set.
+A data set with the name and spatial extent of all municipalities is provided as `../data/input/municipalities/muni_boundaries.gpkg`. Update with more recent input data as needed, but do not change the filepath or attributes in the input data set.
 
 ### Socio-economic data
 

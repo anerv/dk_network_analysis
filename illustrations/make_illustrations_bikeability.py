@@ -712,7 +712,7 @@ else:
 
 # %%
 
-total_area = "SELECT SUM(ST_Area(geometry)) / 1000000 FROM adm_boundaries;"
+total_area = "SELECT SUM(ST_Area(geometry)) / 1000000 FROM municipalities;"
 urban_area = "SELECT SUM(ST_Area(geometry)) / 1000000 FROM urban_areas;"
 
 total_area = dbf.run_query_pg(total_area, connection)[0][0]

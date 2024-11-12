@@ -35,7 +35,7 @@ SELECT
     mu.geometry
 FROM
     component_count co
-    JOIN adm_boundaries mu ON co.municipality = mu.navn;
+    JOIN municipalities mu ON co.municipality = mu.navn;
 
 -- JOIN SPLIT EDGES TO COMPONENT EDGES
 CREATE TABLE fragmentation.socio_component_edges AS

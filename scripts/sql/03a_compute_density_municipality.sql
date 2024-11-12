@@ -115,17 +115,17 @@ SELECT
     lts_6.lts_6_length,
     lts_7.lts_7_length,
     total_car.total_car_length,
-    adm_boundaries.geometry
+    municipalities.geometry
 FROM
-    adm_boundaries
-    LEFT JOIN lts_1 ON adm_boundaries.navn = lts_1.municipality
-    LEFT JOIN lts_2 ON adm_boundaries.navn = lts_2.municipality
-    LEFT JOIN lts_3 ON adm_boundaries.navn = lts_3.municipality
-    LEFT JOIN lts_4 ON adm_boundaries.navn = lts_4.municipality
-    LEFT JOIN lts_5 ON adm_boundaries.navn = lts_5.municipality
-    LEFT JOIN lts_6 ON adm_boundaries.navn = lts_6.municipality
-    LEFT JOIN lts_7 ON adm_boundaries.navn = lts_7.municipality
-    LEFT JOIN total_car ON adm_boundaries.navn = total_car.municipality;
+    municipalities
+    LEFT JOIN lts_1 ON municipalities.navn = lts_1.municipality
+    LEFT JOIN lts_2 ON municipalities.navn = lts_2.municipality
+    LEFT JOIN lts_3 ON municipalities.navn = lts_3.municipality
+    LEFT JOIN lts_4 ON municipalities.navn = lts_4.municipality
+    LEFT JOIN lts_5 ON municipalities.navn = lts_5.municipality
+    LEFT JOIN lts_6 ON municipalities.navn = lts_6.municipality
+    LEFT JOIN lts_7 ON municipalities.navn = lts_7.municipality
+    LEFT JOIN total_car ON municipalities.navn = total_car.municipality;
 
 -- REMOVE CHRISTIANSØ
 DELETE FROM

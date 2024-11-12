@@ -60,7 +60,7 @@ if result == "error":
     print("Please fix error before rerunning and reconnect to the database")
 
 # LOAD ADM DATA
-adm = gpd.read_file(adm_fp)
+adm = gpd.read_file(muni_fp)
 
 assert adm.crs == crs
 
@@ -77,13 +77,15 @@ useful_columns = [
 
 adm = adm[useful_columns]
 
-dbf.to_postgis(geodataframe=adm, table_name="adm_boundaries", engine=engine)
+dbf.to_postgis(geodataframe=adm, table_name="municipalities", engine=engine)
 
-q_ix = "CREATE INDEX IF NOT EXISTS adm_geom_ix ON adm_boundaries USING GIST (geometry);"
+q_ix = (
+    "CREATE INDEX IF NOT EXISTS muni_geom_ix ON municipalities USING GIST (geometry);"
+)
 
 dbf.run_query_pg(q_ix, connection)
 
-q = "SELECT navn, kommunekode FROM adm_boundaries LIMIT 10;"
+q = "SELECT navn, kommunekode FROM municipalities LIMIT 10;"
 
 test = dbf.run_query_pg(q, connection)
 
@@ -116,7 +118,7 @@ if result == "error":
 
 
 # CREATE HEX GRID
-q = f"SELECT ST_Union(geometry) as geometry FROM adm_boundaries;"
+q = f"SELECT ST_Union(geometry) as geometry FROM municipalities;"
 
 study_area_poly = gpd.GeoDataFrame.from_postgis(
     q, engine, crs="EPSG:25832", geom_col="geometry"

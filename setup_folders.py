@@ -17,7 +17,7 @@ for f in data_subfolders:
 
 # Make input data subfolders
 data_subsubfolders = [
-    "adm_boundaries",
+    "municipalities",
     "population",
     "socioeconomic",
     "urban",

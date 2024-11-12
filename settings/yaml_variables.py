@@ -13,7 +13,7 @@ with open(r"../config.yml") as file:
     network_edges = parsed_yaml_file["network_edges"]
     network_nodes = parsed_yaml_file["network_nodes"]
 
-    adm_fp = parsed_yaml_file["adm_boundaries_fp"]
+    muni_fp = parsed_yaml_file["muni_boundaries_fp"]
     socio_fp = parsed_yaml_file["socio_fp"]
     urban_areas_fp = parsed_yaml_file["urban_areas_fp"]
 
