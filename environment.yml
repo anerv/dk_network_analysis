@@ -310,3 +310,4 @@ dependencies:
       - nbformat==5.10.4
       - referencing==0.34.0
       - rpds-py==0.18.0
+      - generativepy==24.4.0
