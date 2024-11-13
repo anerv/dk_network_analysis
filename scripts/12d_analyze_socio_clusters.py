@@ -123,6 +123,10 @@ socio.drop(columns=["geometry"], inplace=True)
 
 socio_socio_bike = socio_bike.merge(socio, on="id")
 
+socio_socio_bike.sort_values(
+    by=["socio_label", "average_bikeability_rank"], inplace=True
+)
+
 # %%
 # Correlation between socio variables and average bikeability rank
 
@@ -139,6 +143,7 @@ for c in socio_corr_variables:
 
 # %%
 # Share of students
+
 
 plot_func.make_barplot(
     socio_socio_bike,
@@ -169,6 +174,10 @@ socio_bike = gpd.read_postgis(
 socio = pd.read_sql("SELECT id, population, households, urban_pct FROM socio", engine)
 
 socio_socio_bike = socio_bike.merge(socio, on="id")
+
+socio_socio_bike.sort_values(
+    by=["socio_label", "average_bikeability_rank"], inplace=True
+)
 
 # %%
 # Share of population
