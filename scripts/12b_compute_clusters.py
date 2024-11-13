@@ -25,7 +25,7 @@ exec(open("../helper_scripts/prepare_socio_cluster_data.py").read())
 # %%
 # SOCIO CLUSTERING: Socio-economic variables
 
-socio_socio_cluster_variables = socio_socio_cluster_variables[7:-2]
+socio_socio_cluster_variables = socio_socio_cluster_variables[8:-2]
 
 socio_socio_cluster_variables.remove(
     "Household income 50th percentile",

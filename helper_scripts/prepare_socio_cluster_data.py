@@ -13,8 +13,5 @@ socio_socio_gdf.replace(np.nan, 0, inplace=True)
 # Define cluster variables
 socio_socio_cluster_variables = [c for c in socio_corr_variables if "w car" not in c]
 
-socio_socio_cluster_variables.remove("0-17 years (share)")
-# socio_socio_cluster_variables.remove("Urban area (%)")
 
-# socio_socio_cluster_variables.remove("Population density")
 # %%
