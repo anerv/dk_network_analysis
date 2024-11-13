@@ -184,11 +184,6 @@ for a, df in zip(aggregation_levels, density_data):
         },
     )
 
-    # df.to_csv(
-    #     fp_sum_density_relative + a + ".csv",
-    #     index=True,
-    # )
-
     print(f"At the {a} level:")
 
     display(df_summary.style.pipe(format_style_index))
@@ -236,9 +231,6 @@ for a, df in zip(aggregation_levels, density_data):
     )
 
     print(f"At the {a} level:")
-    # print(df)
-
-    # print("\n")
 
     df.to_csv(
         fp_sum_density_relative_steps + a + ".csv",

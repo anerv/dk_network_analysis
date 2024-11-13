@@ -356,6 +356,7 @@ for i in range(len(labels)):
     )
     fig.show()
 
+# %%
 # **** KDES OF LARGEST COMPONENT DISTRIBUTIONS
 
 df = hex_largest_components[largest_local_component_len_columns].melt()
@@ -460,6 +461,7 @@ rug_titles = [
 scatter_filepaths = fps_components_scatter
 rug_filepaths = fps_components_rug
 
+# Prepare data
 new_dfs = []
 
 for e, df in enumerate(dfs):

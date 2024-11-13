@@ -18,8 +18,6 @@ exec(open("../helper_scripts/read_density.py").read())
 ####### MAPS ##############################
 ###########################################
 
-# density_hex.replace(np.nan, 0, inplace=True)
-
 gdfs = [density_muni, density_socio, density_hex]
 
 all_fps = all_fps_map_density
