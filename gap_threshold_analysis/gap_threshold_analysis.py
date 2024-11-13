@@ -5,6 +5,7 @@ import geopandas as gpd
 import pandas as pd
 import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -24,7 +25,7 @@ thresholds_km = [0.01, 0.02, 0.03, 0.04, 0.05]
 
 lts_values = [1, 2, 3, 4]
 
-#%%
+# %%
 run_analysis = False
 
 if run_analysis:
@@ -43,7 +44,6 @@ if run_analysis:
 
         print(f"Step {i+1} done!")
     print("Created schema!")
-
 
     result = dbf.run_query_pg("gap_initial_components.sql", connection)
     if result == "error":
@@ -85,7 +85,6 @@ if run_analysis:
                 break
 
         print("Added new columns and dropped tables for threshold", t)
-
 
     for i, t in enumerate(thresholds):
 
@@ -219,7 +218,6 @@ if run_analysis:
 
         print(f"Created indexes for {t}")
 
-
     for i, t in enumerate(thresholds):
         for lts in lts_values:
             # --DROP gaps that form too long stretches
@@ -299,7 +297,6 @@ if run_analysis:
 
         print("Updated gap_threshold_analysis.edges table for threshold", t)
 
-
     lts_values_str = ["all", "1", "1_2", "1_3", "1_4"]
 
     for t in thresholds:
@@ -332,7 +329,9 @@ if run_analysis:
                 break
 
         for lts_str in lts_values_str:
-            drop = f"DROP TABLE IF EXISTS gap_threshold_analysis.components_{lts_str}_{t};"
+            drop = (
+                f"DROP TABLE IF EXISTS gap_threshold_analysis.components_{lts_str}_{t};"
+            )
 
             result = dbf.run_query_pg(drop, connection)
             if result == "error":
@@ -397,7 +396,6 @@ if run_analysis:
                 break
 
         print("Created components tables for threshold", t)
-
 
     for t in thresholds:
 
@@ -484,6 +482,7 @@ if run_analysis:
         print("Updated edge components for threshold", t)
 
 # %%
+# GAP COUNTS
 
 lts_list = []
 threshold_values = []
@@ -491,7 +490,7 @@ gap_count = []
 
 for t in thresholds:
 
-    threshold_values.extend([t]*(len(lts_values)))
+    threshold_values.extend([t] * (len(lts_values)))
     lts_list.extend(lts_values)
 
     for lts in lts_values:
@@ -507,38 +506,27 @@ for t in thresholds:
 
 assert len(lts_list) == len(gap_count) == len(threshold_values)
 
-gap_df = pd.DataFrame(data={"lts": lts_list, "threshold": threshold_values, "gap_count": gap_count})
-#%%
+gap_df = pd.DataFrame(
+    data={"lts": lts_list, "threshold": threshold_values, "gap_count": gap_count}
+)
+# %%
 # Group the data by threshold and lts
-grouped_data = gap_df.groupby(['threshold', 'lts']).sum().reset_index()
+grouped_data = gap_df.groupby(["threshold", "lts"]).sum().reset_index()
 #
 # Pivot the data to create a matrix for stacked bar chart
-pivot_data_gaps = grouped_data.pivot(index='threshold', columns='lts', values='gap_count')
+pivot_data_gaps = grouped_data.pivot(
+    index="threshold", columns="lts", values="gap_count"
+)
 
-# colors = list(lts_color_dict.values())
-
-# # Plot the stacked bar chart
-# pivot_data_gaps.plot(kind='bar', stacked=True, color=colors)
-
-# # Set the labels and title
-# plt.xlabel('Threshold (m)')
-# plt.ylabel('Number of identified gaps')
-# plt.title('Number of gaps by threshold and LTS')
-
-# # Move the legend to the right of the plot
-# plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-
-# # Show the plot
-# plt.show()
 # %%
-
+# Component counts
 lts_list = []
 threshold_values = []
 component_counts = []
 
 for t in thresholds:
 
-    threshold_values.extend([t]*(len(lts_values)))
+    threshold_values.extend([t] * (len(lts_values)))
     lts_list.extend(lts_values)
 
     for lts in lts_values:
@@ -548,38 +536,33 @@ for t in thresholds:
             engine,
         )
 
-        component_counts.append(components.loc[0,"count"])
+        component_counts.append(components.loc[0, "count"])
 
-        print(f"Number of components for lts {lts} and threshold {t}: {components.loc[0,"count"]:,}")
+        print(
+            f"Number of components for lts {lts} and threshold {t}: {components.loc[0,"count"]:,}"
+        )
 
 
 assert len(lts_list) == len(component_counts) == len(threshold_values)
 
-threshold_df = pd.DataFrame(data={"lts": lts_list, "threshold": threshold_values, "component_count": component_counts})
-#%%
+threshold_df = pd.DataFrame(
+    data={
+        "lts": lts_list,
+        "threshold": threshold_values,
+        "component_count": component_counts,
+    }
+)
+
 # Group the data by threshold and lts
-grouped_data = threshold_df.groupby(['threshold', 'lts']).sum().reset_index()
+grouped_data = threshold_df.groupby(["threshold", "lts"]).sum().reset_index()
 
 # Pivot the data to create a matrix for stacked bar chart
-pivot_data_components = grouped_data.pivot(index='threshold', columns='lts', values='component_count')
+pivot_data_components = grouped_data.pivot(
+    index="threshold", columns="lts", values="component_count"
+)
 
-#%%
-# Plot the stacked bar chart
 
-# pivot_data_components.plot(kind='bar', stacked=True, color=colors)
-
-# # Set the labels and title
-# plt.xlabel('Threshold (m)')
-# plt.ylabel('Number of components')
-# plt.title('Number of components by threshold and LTS')
-
-# # Move the legend to the right of the plot
-# plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-
-# # Show the plot
-# plt.show()
-
-#%%
+# %%
 
 colors = list(lts_color_dict.values())
 
@@ -588,27 +571,36 @@ fig, axes = plt.subplots(1, 2, figsize=pdict["fsbar_sub"])
 axes = axes.flatten()
 
 # Plot the stacked bar chart
-pivot_data_gaps.plot(kind='bar', stacked=True, color=colors, ax=axes[0])
+pivot_data_gaps.plot(kind="bar", stacked=True, color=colors, ax=axes[0])
 
-axes[0].set_xlabel('Threshold (m)')
-axes[0].set_ylabel('Number of identified gaps')
+axes[0].set_xlabel("Threshold (m)")
+axes[0].set_ylabel("Number of identified gaps")
 
-# Move the legend to the right of the plot
+# Move the legend to
 handles, _ = axes[0].get_legend_handles_labels()
-axes[0].legend(handles, labels_step[0:-1], loc='upper left', bbox_to_anchor=(0.01, 0.99), title="Network level", frameon=False)
-#axes[0].legend(loc='upper left', bbox_to_anchor=(0.01, 0.99), title="Network level", frameon=False)
+axes[0].legend(
+    handles,
+    labels_step[0:-1],
+    loc="upper left",
+    bbox_to_anchor=(0.01, 0.99),
+    title="Network level",
+    frameon=False,
+)
 
-pivot_data_components.plot(kind='bar', stacked=True, color=colors, ax=axes[1], legend=False)
+pivot_data_components.plot(
+    kind="bar", stacked=True, color=colors, ax=axes[1], legend=False
+)
 
 # Set the labels and title
-axes[1].set_xlabel('Threshold (m)')
-axes[1].set_ylabel('Number of components')
+axes[1].set_xlabel("Threshold (m)")
+axes[1].set_ylabel("Number of components")
+
+sns.despine()
 
 plt.savefig(f"gap_threshold_analysis.png", dpi=300, bbox_inches="tight")
 
-# Show the plot
 plt.show()
 
-#%%
+
 connection.close()
 # %%
