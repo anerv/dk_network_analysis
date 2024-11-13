@@ -8,13 +8,12 @@ import matplotlib_inline.backend_inline
 
 pdict = {
     # colormaps for grid cell plots
-    "dens": "viridis",  # "YlGnBu",  # "PuRd",  # "viridis_r",  #  #  # "BuPu",  # "winter_r",  # "viridis_r",  # "PuBu",
-    "reach": "YlGnBu",  # "PuBu", "PuBuGn",
-    "dens_rel": "PuRd",  # "pink",  # "cividis",  # "PuRd",  # "Blues",  # Positive values
-    "frag": "viridis",  # "PuRd",  # "pink",  # "Reds",  # Negative/Missing/Unmatched values
-    "largest_comp": "viridis_r",  # "YlGnBu"
-    # "diff": "RdBu",  # for osm-ref difference plots (alternatives: "PiYG", "PRGn", "PuOr")
-    "cat": "Set2",  # "colorblind",  # for categorical plots
+    "dens": "viridis",
+    "reach": "YlGnBu",
+    "dens_rel": "PuRd",
+    "frag": "viridis",
+    "largest_comp": "viridis_r",
+    "cat": "Set2",  # for categorical plots
     # alpha (transparency) values (alternatives: PuRd, RdPu, PbBuGn)
     "alpha": 0.8,
     "alpha_nodata": 0.7,  # for no data patches
@@ -23,14 +22,11 @@ pdict = {
     # GLOBAL SETTINGS FOR PLOTS
     "dpi": 300,  # resolution
     "plot_res": "low",  # "high" for exporting to svg, "low" for png
-    # matplotlib figure size for map plots of study area
+    # matplotlib figure size for map plots of entire study area
     "fsmap": (13, 7.3125),
     # size for bar plots
     "fsbar": (8, 8),
     "fsbar_sub": (16, 8),
-    # "fsbar_small": (4, 3.5),
-    # "fsbar_short": (6, 3),
-    # "fsbar_sub": (4, 3),  # size per subplot
     "map_attr": "OSM Contributors, GeoDanmark",
     "background_color": None,  # "#e0ecf4",
     "legend_fs": 10,
@@ -67,7 +63,6 @@ import contextily as cx
 
 cx_tile_1 = cx.providers.CartoDB.Voyager
 cx_tile_2 = cx.providers.CartoDB.PositronNoLabels  # CartoDB.DarkMatterNoLabels
-
 
 # Classification scheme for visualizations of results
 scheme = "fisherjenks"
@@ -124,7 +119,6 @@ lts_color_dict = {
     "total": "#151515",
 }
 
-
 bikeability_cluster_color_dict_labels = {
     "1: High stress": lts_color_dict["car"],
     "2: Local low stress connectivity": lts_color_dict["4"],
@@ -132,7 +126,6 @@ bikeability_cluster_color_dict_labels = {
     "4: High bikeability": lts_color_dict["2"],
     "5: Highest bikeability and high density": lts_color_dict["1"],
 }
-
 
 bikeability_cluster_color_dict = {
     "1": bikeability_cluster_color_dict_labels["1: High stress"],
@@ -145,20 +138,6 @@ bikeability_cluster_color_dict = {
 }
 
 
-# socio_cluster_colors_dict = {
-#     "1: High income - high car": "#99DDFF",
-#     "2: Highest income - high car": "#77AADD",
-#     "3: Low income - lowest car - many students": "#EE8866",
-#     "4: Medium income - medium car": "#44BB99",
-#     "5: Medium income - low car": "#FFAABB",
-# }
-# socio_cluster_colors_dict = {
-#     "1: Highest income - high car": "#77AADD",
-#     "2: High income - high car": "#99DDFF",
-#     "3: Medium income - medium car": "#44BB99",
-#     "4: Medium income - low car": "#FFAABB",
-#     "5: Low income - lowest car - many students": "#EE8866",
-# }
 socio_cluster_colors_dict = {
     "1: High income - 2 cars": "#77AADD",  # light blue
     "2: Very high income - 2 cars": "#99DDFF",  # light cyan

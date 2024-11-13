@@ -20,19 +20,6 @@ hex_gdf.replace(np.nan, 0, inplace=True)
 selected_reach_comp_columns = [r for r in reach_compare_columns if "5_10" not in r]
 
 # Define cluster variables
-# hex_network_cluster_variables_org = (
-#     density_columns
-#     # + density_steps_columns[1:4]
-#     + length_relative_columns
-#     # + component_count_columns
-#     # component_per_km_columns
-#     + largest_local_component_len_columns
-#     + reach_columns
-#     + reach_compare_columns
-#     # + ["urban_pct"]
-# )
-
-# Define cluster variables
 hex_network_cluster_variables_org = (
     density_columns
     # + length_relative_columns

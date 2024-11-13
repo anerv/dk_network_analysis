@@ -12,8 +12,6 @@ socio_density = gpd.read_postgis(
     "SELECT * FROM density.density_socio", engine, geom_col="geometry"
 )
 
-# socio_density = socio_density[socio_density.total_network_length > 0]
-
 # Read socio comp count
 socio_components = gpd.read_postgis(
     "SELECT * FROM fragmentation.component_length_socio;", engine, geom_col="geometry"
