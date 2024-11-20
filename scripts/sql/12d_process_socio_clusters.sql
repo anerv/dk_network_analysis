@@ -240,3 +240,5 @@ DROP TABLE IF EXISTS clustering.clipped_socio_clusters;
 DROP TABLE IF EXISTS clustering.grouped_intersection;
 
 DROP TABLE IF EXISTS clustering.weighted_bikeability;
+
+DROP TABLE IF EXISTS clustering.hex_socio_intersection;
