@@ -10,6 +10,7 @@ import pandas as pd
 from IPython.display import display
 from pysal.explore import inequality
 from inequality.gini import Gini_Spatial
+import seaborn as sns
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -22,10 +23,166 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 # %%
-# Prepare data
+# TODO: Compute Regular Gini and Theil for cummulative low stress vs. cummulative people (geobook)
 
+# TODO: Compute spatial gini for lts density and bikeability at hex and socio level
+
+# TODO: Compute Concentration index (order by income or car ownership) (see karner et al 2024)
+
+# %%
+# Prepare data
 exec(open("../helper_scripts/prepare_socio_cluster_data.py").read())
 
+socio_pop = pd.read_sql("SELECT id, population, households FROM socio;", engine)
+
+density_socio = pd.read_sql("SELECT * FROM density.density_socio;", engine)
+density_socio.drop(columns=["geometry"], inplace=True)
+
+socio_clusters = gpd.GeoDataFrame.from_postgis(
+    "SELECT * FROM clustering.socio_socio_clusters;", engine, geom_col="geometry"
+)
+
+socio_density = socio.merge(density_socio, on="id", how="left")
+
+socio_density = socio_density.merge(socio_pop, on="id", how="left")
+
+assert len(socio_density[socio_density["total_network_length"].isna()]) == 0
+assert len(socio_density[socio_density["population"].isna()]) == 0
+
+
+# %%
+def lorenz(y):
+    y = np.asarray(y)
+    sorted_y = np.sort(y)
+    y_shares = (sorted_y / sorted_y.sum()).cumsum()
+    N = y.shape[0]
+
+    pop_shares = np.arange(1, N + 1) / N
+    return pop_shares, y_shares
+
+
+def plot_lorenz(
+    cumulative_share,
+    share_of_population,
+    x_label,
+    y_label,
+    figsize=(6, 6),
+):
+
+    f, ax = plt.subplots(figsize=figsize)
+
+    ax.plot(share_of_population, cumulative_share, label="Lorenz Curve")
+    # Plot line of perfect equality
+    ax.plot((0, 1), (0, 1), color="r", label="Perfect Equality")
+    # Label horizontal axis
+    ax.set_xlabel(f"Share of {x_label}")
+    # Label vertical axis
+    ax.set_ylabel(f"Share of {y_label}")
+    # Add legend
+    ax.legend()
+
+    plt.legend(frameon=False)
+
+    sns.despine()
+
+    plt.show()
+
+    plt.close()
+
+
+def compute_cumulative_shares(values):
+
+    shares = values.sort_values() / values.sum()
+    return shares.cumsum()
+
+
+def gini_by_col(column):
+    return inequality.gini.Gini(column.values).g
+
+
+# %%
+# LORENZ CURVES FOR NETWORK LENGTHS PER PERSON
+
+socio_density["low_stress_per_person"] = (
+    socio_density["lts_1_2_length"] / socio_density["population"]
+)
+
+socio_density["high_stress_per_person"] = (
+    socio_density["lts_3_length"] + socio_density["lts_4_length"]
+) / socio_density["population"]
+
+socio_density["network_per_person"] = (
+    socio_density["total_network_length"] / socio_density["population"]
+)
+
+labels = [
+    "low stress infrastructure",
+    "high stress infrastructure",
+    "road network",
+    "lts 1 density",
+    "lts ≤2 density",
+]
+inequality_columns = [
+    "low_stress_per_person",
+    "high_stress_per_person",
+    "network_per_person",
+    "lts_1_dens",
+    "lts_1_2_dens",
+]
+
+for i, c in enumerate(inequality_columns):
+
+    cumulative_share = compute_cumulative_shares(socio_density[c])
+
+    pop_shares, y_shares = lorenz(cumulative_share)
+
+    plot_lorenz(
+        cumulative_share=cumulative_share,
+        share_of_population=pop_shares,
+        x_label="population",
+        y_label=labels[i],
+    )
+
+# %%
+# Compute gini
+
+
+def theil(column):
+    return inequality.theil.Theil(column.values).T
+
+
+def gini_spatial_by_column(values, weights):
+    gs = Gini_Spatial(values, weights)
+    denom = 2 * values.mean() * weights.n**2
+    near_diffs = gs.wg / denom
+    far_diffs = gs.wcg / denom
+    out = pd.Series(
+        {
+            "gini": gs.g,
+            "near_diffs": near_diffs,
+            "far_diffs": far_diffs,
+            "p_sim": gs.p_sim,
+        }
+    )
+    return out
+
+
+inequalities = (
+    socio_density[inequality_columns].apply(gini_by_col, axis=0).to_frame("gini")
+)
+
+inequalities["theil"] = socio_density[inequality_columns].apply(theil, axis=0)
+
+# %%
+
+# 1. Compute theil at hex level
+# 2. Assign socio to hexes
+# 3. Compute theil again, looking at within and between inequality
+
+# Repeat for socio but using different groupings (e.g. rural vs urban, municipality, etc.)
+
+# %%
+## ************************** OLD CODE ************************** ##
 # generate socio reach comparison columns
 exec(open("../helper_scripts/generate_socio_reach_columns.py").read())
 
