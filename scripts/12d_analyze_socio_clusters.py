@@ -144,7 +144,6 @@ for c in socio_corr_variables:
 # %%
 # Share of students
 
-
 plot_func.make_barplot(
     socio_socio_bike,
     "socio_label",
@@ -162,7 +161,6 @@ plot_func.make_stripplot(
     list(socio_cluster_colors_dict.values()),
     xlabel="Share of students",
 )
-
 
 # %%
 # Share of population and pct urban areas in each socio cluster
