@@ -31,6 +31,33 @@ exec(open("../settings/plotting.py").read())
 # Gini functions based on https://geographicdata.science/book/notebooks/09_spatial_inequality.html
 
 
+def plot_lorenz(
+    cumulative_share,
+    share_of_population,
+    x_label,
+    y_label,
+    figsize=(6, 6),
+):
+
+    _, ax = plt.subplots(figsize=figsize)
+
+    ax.plot(share_of_population, cumulative_share, label="Lorenz Curve")
+
+    ax.plot((0, 1), (0, 1), color="r", label="Perfect Equality")
+
+    ax.set_xlabel(f"Share of {x_label}")
+
+    ax.set_ylabel(f"Share of {y_label}")
+
+    ax.legend(frameon=False)
+
+    sns.despine()
+
+    plt.show()
+
+    plt.close()
+
+
 def plot_components_zoom(
     gdf,
     component_col,

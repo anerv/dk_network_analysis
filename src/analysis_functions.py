@@ -23,6 +23,47 @@ import h3
 # Gini functions from  https://geographicdata.science/book/notebooks/09_spatial_inequality.html
 
 
+def lorenz(y):
+    y = np.asarray(y)
+    sorted_y = np.sort(y)
+    y_shares = (sorted_y / sorted_y.sum()).cumsum()
+    N = y.shape[0]
+
+    pop_shares = np.arange(1, N + 1) / N
+    return pop_shares, y_shares
+
+
+def compute_cumulative_shares(values):
+
+    shares = values.sort_values() / values.sum()
+    return shares.cumsum()
+
+
+def gini_by_col(column):
+    return inequality.gini.Gini(column.values).g
+
+
+def compute_theil(column):
+    return inequality.theil.Theil(column.values).T
+
+
+def gini_spatial_by_column(values, weights):
+
+    gs = Gini_Spatial(values, weights)
+    denom = 2 * values.mean() * weights.n**2
+    near_diffs = gs.wg / denom
+    far_diffs = gs.wcg / denom
+    out = pd.Series(
+        {
+            "gini": gs.g,
+            "near_diffs": near_diffs,
+            "far_diffs": far_diffs,
+            "p_sim": gs.p_sim,
+        }
+    )
+    return out
+
+
 def spatial_weights_combined(gdf, id_column, k=3, silence_warnings=True):
 
     w_queen = compute_spatial_weights(
