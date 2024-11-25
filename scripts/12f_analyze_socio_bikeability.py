@@ -54,7 +54,7 @@ display(socio_socio[corr_columns])
 
 # %%
 
-preprocess = True
+preprocess = False
 
 if preprocess:
 
@@ -110,6 +110,11 @@ for s in socio_corr_variables[7:-2]:
     plt.xticks(rotation=90)
 
     sns.despine(left=True)
+
+    s_fp = s.replace(" ", "_")
+    plt.savefig(
+        fp_cluster_plots_base + f"{s_fp}_hex_bikeability_boxplot.png", dpi=pdict["dpi"]
+    )
 
     plt.show()
 
