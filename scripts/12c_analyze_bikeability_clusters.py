@@ -21,7 +21,7 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
 # %%
-preprocess = True
+preprocess = False
 
 if preprocess:
 
@@ -159,38 +159,14 @@ display(cluster_stats[plot_cols].style.pipe(format_style_index))
 
 cluster_stats["cluster_no_str"] = cluster_stats.kmeans_net.astype(int).astype(str)
 
+cluster_stats.to_csv(fp_cluster_data_base + "hex_cluster_stats.csv", index=True)
+
 # %%
-# cluster_stats.sort_values("sort_column", inplace=True)
-# colors = [bikeability_cluster_color_dict_labels[k] for k in cluster_stats.index]
+# Make plot with both area and population
+
 colors = list(bikeability_cluster_color_dict_labels.values())
 cmap = plot_func.color_list_to_cmap(colors)
 
-for i, c in enumerate(plot_cols):
-
-    plt.figure(figsize=pdict["fsbar"])
-    sns.barplot(
-        x=cluster_stats.cluster_no_str,
-        y=cluster_stats[c],
-        hue=cluster_stats.cluster_no_str,
-        palette=colors,
-        width=0.4,
-        estimator=sum,
-    )
-    # plt.xticks(rotation=90)
-    plt.xlabel("")
-    plt.ylabel(y_labels[i])
-
-    plt.tick_params(axis="both", which="major", labelsize=pdict["fs_subplot"])
-
-    sns.despine()
-
-    plt.savefig(fp_cluster_plots_base + f"hex_cluster_bar_{c}.png", dpi=pdict["dpi"])
-
-    plt.show()
-
-cluster_stats.to_csv(fp_cluster_data_base + "hex_cluster_stats.csv", index=True)
-# %%
-# Make plot with both area and population
 fig, axes = plt.subplots(1, 2, figsize=pdict["fsbar_sub"])
 
 axes = axes.flatten()
