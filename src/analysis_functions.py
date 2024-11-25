@@ -23,6 +23,24 @@ import h3
 # Gini functions from  https://geographicdata.science/book/notebooks/09_spatial_inequality.html
 
 
+def classify_urban_rural(x):
+
+    if x == 100:
+        return "completely urban"
+
+    elif x >= 75:
+        return "very urban"
+
+    elif x >= 50:
+        return "mostly urban"
+
+    elif x >= 25:
+        return "slightly urban"
+
+    else:
+        return "rural"
+
+
 def lorenz(y):
     y = np.asarray(y)
     sorted_y = np.sort(y)
