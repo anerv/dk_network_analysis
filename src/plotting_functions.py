@@ -86,6 +86,8 @@ def plot_concentration_curves(
 
     plt.show()
 
+    plt.close()
+
 
 def plot_lorenz(
     cumulative_share,
