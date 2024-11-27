@@ -31,6 +31,62 @@ exec(open("../settings/plotting.py").read())
 # Gini functions based on https://geographicdata.science/book/notebooks/09_spatial_inequality.html
 
 
+def plot_concentration_curves(
+    data,
+    opportunity,
+    population,
+    income,
+    income_label,
+    oppportunity_label,
+    opportunity_color="purple",
+    fp=None,
+):
+    """
+    Plot cumulative share of infrastructure vs. cumulative share of population ordered by income.
+
+    Parameters:
+    - data (pd.DataFrame): The dataset.
+    - opportunity (str): Column name representing the opportunity measure (e.g. access to low stress infrastructure).
+    - population (str): Column name representing the population.
+    - income (str): Column name representing socioeconic variable (e.g. income).
+    - title (str): Title for the plot.
+    """
+    # Sort data by income
+    data = data.sort_values(by=income)
+
+    # Calculate cumulative shares
+    data["pop_share"] = data[population] / data[population].sum()
+    data["cum_pop_share"] = data["pop_share"].cumsum()
+
+    data["opp_share"] = data[opportunity] / data[opportunity].sum()
+    data["cum_opp_share"] = data["opp_share"].cumsum()
+
+    # Plot
+    plt.figure(figsize=pdict["fsbar"])
+    plt.plot(
+        data["cum_pop_share"],
+        data["cum_opp_share"],
+        label=opportunity,
+        color=opportunity_color,
+    )
+    plt.plot([0, 1], [0, 1], linestyle="--", color="grey", label="Perfect equality")
+    plt.xlabel(f"Cumulative share of population - ordered by {income_label}")
+    plt.ylabel(f"Cumulative share of {oppportunity_label}")
+
+    # UPDATE legend label for opportunity:
+    handles, labels = plt.gca().get_legend_handles_labels()
+    labels[0] = oppportunity_label
+    plt.legend(handles, labels, frameon=False)
+    plt.grid()
+    sns.despine()
+    plt.tight_layout()
+
+    if fp:
+        plt.savefig(fp, dpi=pdict["dpi"])
+
+    plt.show()
+
+
 def plot_lorenz(
     cumulative_share,
     share_of_population,
