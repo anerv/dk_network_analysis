@@ -38,10 +38,10 @@ assert len(hexgrid == len(hex_density))
 hexgrid.fillna(0, inplace=True)
 
 labels_hex = [
-    "lts 1 density",
-    "lts ≤2 density",
-    "lts ≤3 density",
-    "lts ≤4 density",
+    "LTS 1 density",
+    "LTS ≤2 density",
+    "LTS ≤3 density",
+    "LTS ≤4 density",
     "total network density",
     "bikeability rank",
 ]
