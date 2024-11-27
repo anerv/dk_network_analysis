@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 from IPython.display import display
 from pysal.explore import inequality
+import seaborn as sns
 
 # from pysal.explore import inequality
 # from inequality.gini import Gini_Spatial
@@ -51,8 +52,22 @@ assert len(hexgrid == len(hex_density))
 
 hexgrid.fillna(0, inplace=True)
 
-labels_hex = ["lts 1 density", "lts ≤2 density", "bikeability rank"]
-inequality_columns_hex = ["lts_1_dens", "lts_1_2_dens", "kmeans_net"]
+labels_hex = [
+    "lts 1 length",
+    "lts ≤2 length",
+    "lts ≤3 length",
+    "lts ≤4 length",
+    "total network length",
+    "bikeability rank",
+]
+inequality_columns_hex = [
+    "lts_1_length",
+    "lts_1_2_length",
+    "lts_1_3_length",
+    "lts_1_4_length",
+    "total_network_length",
+    "kmeans_net",
+]
 
 # %%
 
@@ -84,34 +99,41 @@ assert len(socio_gdf[socio_gdf["total_network_length"].isna()]) == 0
 assert len(socio_gdf[socio_gdf["population"].isna()]) == 0
 assert len(socio_gdf) == len(socio_density) == len(socio_clusters)
 
+# socio_gdf["low_stress_per_person"] = (
+#     socio_gdf["lts_1_2_length"] / socio_gdf["population"]
+# )
+
+# socio_gdf["high_stress_per_person"] = (
+#     socio_gdf["lts_3_length"] + socio_gdf["lts_4_length"]
+# ) / socio_density["population"]
+
+# socio_gdf["network_per_person"] = (
+#     socio_gdf["total_network_length"] / socio_gdf["population"]
+# )
 # %%
-socio_gdf["low_stress_per_person"] = (
-    socio_gdf["lts_1_2_length"] / socio_gdf["population"]
-)
-
-socio_gdf["high_stress_per_person"] = (
-    socio_gdf["lts_3_length"] + socio_gdf["lts_4_length"]
-) / socio_density["population"]
-
-socio_gdf["network_per_person"] = (
-    socio_gdf["total_network_length"] / socio_gdf["population"]
-)
-
-# %%
-
 labels_socio = [
-    "low stress infrastructure per person",
-    "high stress infrastructure per person",
-    "road network",
-    "lts 1 density",
-    "lts ≤2 density",
+    # "low stress infrastructure per person",
+    # "high stress infrastructure per person",
+    # "road network",
+    # "lts 1 density",
+    # "lts ≤2 density",
+    "lts 1 length",
+    "lts ≤2 length",
+    "lts ≤3 length",
+    "lts ≤4 length",
+    "total network length",
 ]
 inequality_columns_socio = [
-    "low_stress_per_person",
-    "high_stress_per_person",
-    "network_per_person",
-    "lts_1_dens",
-    "lts_1_2_dens",
+    # "low_stress_per_person",
+    # "high_stress_per_person",
+    # "network_per_person",
+    # "lts_1_dens",
+    # "lts_1_2_dens",
+    "lts_1_length",
+    "lts_1_2_length",
+    "lts_1_3_length",
+    "lts_1_4_length",
+    "total_network_length",
 ]
 # %%
 ############## LORENZ CURVES ##############
@@ -148,6 +170,8 @@ inequalities_socio["theil"] = socio_gdf[inequality_columns_socio].apply(
 
 display(inequalities_socio)
 
+# NOTE: Use this to say that even though inequality exists for the entire road network, it is larger for low stress!
+
 
 # %%
 
@@ -172,6 +196,13 @@ for c, l in zip(
         inequalities_socio[f"theil_between_{l}"] / inequalities_socio["theil"]
     )
 
+    theil_ds = inequality.theil.TheilDSim(
+        socio_gdf[inequality_columns_socio].values, socio_gdf[c], 999
+    )
+
+    inequalities_socio[f"theil_psim_{l}"] = theil_ds.bg_pvalue
+
+
 display(inequalities_socio)
 
 # %%
@@ -183,7 +214,7 @@ display(inequalities_socio)
 # """
 
 w_socio = weights.contiguity.Queen.from_dataframe(
-    socio_density,
+    socio_gdf,
     use_index=False,
 )
 
@@ -191,7 +222,7 @@ w_socio = weights.contiguity.Queen.from_dataframe(
 w_socio.transform = "B"
 
 spatial_gini_results_socio = (
-    socio_density[inequality_columns_socio]
+    socio_gdf[inequality_columns_socio]
     .apply(analysis_func.gini_spatial_by_column, weights=w_socio)
     .T
 )
@@ -223,7 +254,7 @@ display(spatial_gini_results_hex)
 # Theil at hex level
 
 # join socio id to hexes
-socio_geoms = socio_density[["id", "geometry"]]
+socio_geoms = socio_gdf[["id", "geometry"]]
 
 hexgrid_centroids = hexgrid.copy()
 hexgrid_centroids["geometry"] = hexgrid["geometry"].apply(lambda x: x.centroid)
@@ -264,8 +295,9 @@ inequalities_hex["theil_between_share"] = (
     inequalities_hex["theil_between"] / inequalities_hex["theil"]
 )
 
-# %%
 display(inequalities_hex)
+
+# NOTE: Use this to say that there still is a lot of inequality within the same socio group
 
 # %%
 
@@ -274,3 +306,200 @@ theil_ds = inequality.theil.TheilDSim(
 )
 
 # %%
+
+# Compute CCI for inequity columns - rank by income and car ownership
+
+
+def concentration_index(
+    data,
+    opportunity,
+    population,
+    income,
+):
+    # Based on/copied from https://github.com/ipeaGIT/accessibility/blob/main/R/concentration_index.R
+
+    """
+    Calculate the concentration index.
+
+    Parameters:
+    - data (pd.DataFrame): The dataset.
+    - opportunity (str): Column name representing the opportunity measure (e.g. access to low stress infrastructure).
+    - population (str): Column name representing the population.
+    - socioeconomic (str): Column name representing socioeconic variable (e.g. income).
+
+    Returns:
+    - pd.DataFrame: Results with concentration index calculations by group.
+    """
+
+    assert isinstance(opportunity, str), "'opportunity' must be a string."
+    assert isinstance(population, str), "'population' must be a string."
+    assert isinstance(income, str), "'income' must be a string."
+
+    # Sort data by income and group_by columns
+    sort_cols = [income]
+    data = data.sort_values(by=sort_cols)
+
+    # Fractional rank calculation (based on Equation 4 of the referenced paper)
+    def calculate_fractional_rank(df):
+        df["pop_share"] = df[population] / df[population].sum()
+        df["fractional_rank"] = (
+            df["pop_share"].cumsum().shift(fill_value=0) + df["pop_share"] / 2
+        )
+        return df
+
+    data = calculate_fractional_rank(data)
+
+    # Calculate average accessibility
+    def calculate_avg_access(df):
+        avg_access = np.average(df[opportunity], weights=df[population])
+        df["avg_access"] = avg_access
+        df["diff_from_avg"] = df[opportunity] - avg_access
+        return df
+
+    data = calculate_avg_access(data)
+
+    # Contribution to total calculation
+    data["cont_to_total"] = (
+        (data["fractional_rank"] - 0.5)
+        * data["diff_from_avg"]
+        * data["pop_share"]
+        / data["avg_access"]
+    )
+
+    # If no rows and no grouping, return empty result
+    if data.empty:
+        return pd.DataFrame(columns=["concentration_index"])
+
+    # Calculate the concentration index
+
+    # Handle corrected type
+    def add_correction_factor(df):
+        upper = df[opportunity].max()
+        lower = df[opportunity].min()
+        avg_access = df["avg_access"].iloc[0]  # Same within group
+        correction_factor = 4 * avg_access / (upper - lower) if upper != lower else 0
+        df["correction_factor"] = correction_factor
+        return df
+
+    data = add_correction_factor(data)
+
+    data["cont_to_total_corrected"] = data["cont_to_total"] * data["correction_factor"]
+
+    concentration_index_value = 2 * data["cont_to_total_corrected"].sum()
+    result = pd.DataFrame({"concentration_index": [concentration_index_value]})
+
+    return result  # , data
+
+
+def concentr(x, y, w=None):
+    if w is None:
+        w = np.ones(len(x))
+
+    # Ensure x, y, and w are numpy arrays
+    x = np.array(x)
+    y = np.array(y)
+    w = np.array(w)
+
+    # Complete cases: valid values for x, y, and w
+    complete = (np.isfinite(x) & np.isfinite(y) & np.isfinite(w)) & (x >= 0) & (y >= 0)
+    x_c = x[complete]
+    y_c = y[complete]
+    w_c = w[complete]
+
+    # Order by y values
+    o = np.argsort(y_c)
+    x_o = x_c[o]
+    y_o = y_c[o]
+    w_o = w_c[o]
+
+    # Cumulative sums for x and weights
+    x_cum = np.concatenate(([0], np.cumsum((x_o * w_o) / np.sum(x_o * w_o))))
+    w_cum = np.concatenate(([0], np.cumsum(w_o / np.sum(w_o))))
+
+    b = x_cum[:-1]
+    B = x_cum[1:]
+    h = np.diff(w_cum)
+
+    # Calculate area under the concentration curve
+    area_under_concentrationCurve = np.sum(((B + b) * h) / 2)
+
+    return 1 - 2 * area_under_concentrationCurve
+
+
+# %%
+test = concentr(
+    socio_gdf["lts_1_dens"],
+    socio_gdf["Income 750k+ (share)"],
+    socio_gdf["population"],
+)
+
+test2 = concentration_index(
+    socio_gdf,
+    "lts_1_dens",
+    "population",
+    "Income 750k+ (share)",
+)
+
+# %%
+
+socio_gdf["household_low_income_share"] = (
+    socio_gdf["Income under 150k (share)"]
+    + socio_gdf["Income 150-200k (share)"]
+    + socio_gdf["Income 200-300k (share)"]
+)
+socio_gdf["household_medium_income_share"] = (
+    socio_gdf["Income 300-400k (share)"] + socio_gdf["Income 400-500k (share)"]
+)
+socio_gdf["household_high_income_share"] = (
+    socio_gdf["Income 500-750k (share)"] + socio_gdf["Income 750k+ (share)"]
+)
+
+rank_columns = [
+    "household_low_income_share",
+    "household_medium_income_share",
+    "household_high_income_share",
+    "Household income 50th percentile",
+    "Households w car (share)",
+    "Population density",
+]
+
+# %%
+
+for socioeconomic_column in rank_columns:
+
+    for analysis_column in inequality_columns_socio[:1]:
+
+        cci = concentration_index(
+            data=socio_gdf,
+            opportunity=analysis_column,
+            population="population",
+            income=socioeconomic_column,
+        )
+
+        print(
+            f"The CCI for {analysis_column}, ranked by {socioeconomic_column}, is {cci.loc[0,"concentration_index"]:.4f}"
+        )
+
+# %%
+
+# TODO: Implement for various variables!
+
+plot_func.plot_concentration_curves(
+    socio_gdf,
+    "lts_1_dens",
+    "population",
+    "Income 750k+ (share)",
+    income_label="share of high income households",
+    oppportunity_label="low stress infrastructure",
+    # "Households no car (share)",
+)
+
+# NOTE: Should use density instead of length for this step? Does not normalize by population
+
+# TODO: How is population used? Does it make normalizing by population redundant?
+# TODO: Check results!
+
+# TODO: Check interpretation - meaning of negative vs. positive values
+
+# TODO: Test for differences in results between the two methods
+# TODO: get chatten to explain differences in functions
