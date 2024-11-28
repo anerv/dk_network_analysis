@@ -27,5 +27,5 @@ socio["Income under 150k (%)"] = (
 )
 
 # %%
-display(socio[socio_corr_variables].describe())
+display(socio[socio_corr_variables].describe().T)
 # %%
