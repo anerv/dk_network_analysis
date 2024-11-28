@@ -147,7 +147,7 @@ for c in socio_corr_variables:
 plot_func.make_barplot(
     socio_socio_bike,
     "socio_label",
-    "Students (share)",
+    "Students (%)",
     "socio_label",
     list(socio_cluster_colors_dict.values()),
     xlabel="",
@@ -155,7 +155,7 @@ plot_func.make_barplot(
 
 plot_func.make_stripplot(
     socio_socio_bike,
-    "Students (share)",
+    "Students (%)",
     "socio_label",
     "socio_label",
     list(socio_cluster_colors_dict.values()),

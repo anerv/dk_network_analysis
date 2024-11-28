@@ -71,87 +71,87 @@ rename_dict = {
 pop.rename(columns=rename_dict, inplace=True)
 
 # %%
-pop["-17_share"] = pop["-17"] / pop.population * 100
-pop["18-29_share"] = pop["18-29"] / pop.population * 100
-pop["30-39_share"] = pop["30-39"] / pop.population * 100
-pop["40-49_share"] = pop["40-49"] / pop.population * 100
-pop["50-59_share"] = pop["50-59"] / pop.population * 100
-pop["60-69_share"] = pop["60-69"] / pop.population * 100
-pop["70-_share"] = pop["70-"] / pop.population * 100
+pop["-17_pct"] = pop["-17"] / pop.population * 100
+pop["18-29_pct"] = pop["18-29"] / pop.population * 100
+pop["30-39_pct"] = pop["30-39"] / pop.population * 100
+pop["40-49_pct"] = pop["40-49"] / pop.population * 100
+pop["50-59_pct"] = pop["50-59"] / pop.population * 100
+pop["60-69_pct"] = pop["60-69"] / pop.population * 100
+pop["70-_pct"] = pop["70-"] / pop.population * 100
 
-pop["total_share"] = pop[
+pop["total_pct"] = pop[
     [
-        "-17_share",
-        "18-29_share",
-        "30-39_share",
-        "40-49_share",
-        "50-59_share",
-        "60-69_share",
-        "70-_share",
+        "-17_pct",
+        "18-29_pct",
+        "30-39_pct",
+        "40-49_pct",
+        "50-59_pct",
+        "60-69_pct",
+        "70-_pct",
     ]
 ].sum(axis=1)
 
-assert round(pop["total_share"].max(), 0) == 100
-pop.drop("total_share", axis=1, inplace=True)
+assert round(pop["total_pct"].max(), 0) == 100
+pop.drop("total_pct", axis=1, inplace=True)
 
-pop["student_share"] = pop.students / pop.population * 100
-assert pop.student_share.max() <= 100
-pop["student_share"] = pop.student_share.fillna(0)
+pop["student_pct"] = pop.students / pop.population * 100
+assert pop.student_pct.max() <= 100
+pop["student_pct"] = pop.student_pct.fillna(0)
 
 # %%
-pop["households_income_under_100k_share"] = (
+pop["households_income_under_100k_pct"] = (
     pop.households_income_under_100k / pop.households * 100
 )
-pop["households_income_100_150k_share"] = (
+pop["households_income_100_150k_pct"] = (
     pop.households_income_100k_150k / pop.households * 100
 )
-pop["households_income_150_200k_share"] = (
+pop["households_income_150_200k_pct"] = (
     pop.households_income_150k_200k / pop.households * 100
 )
-pop["households_income_200_300k_share"] = (
+pop["households_income_200_300k_pct"] = (
     pop.households_income_200k_300k / pop.households * 100
 )
-pop["households_income_300_400k_share"] = (
+pop["households_income_300_400k_pct"] = (
     pop.households_income_300k_400k / pop.households * 100
 )
-pop["households_income_400_500k_share"] = (
+pop["households_income_400_500k_pct"] = (
     pop.households_income_400k_500k / pop.households * 100
 )
-pop["households_income_500_750k_share"] = (
+pop["households_income_500_750k_pct"] = (
     pop.households_income_500k_750k / pop.households * 100
 )
-pop["households_income_750k_share"] = pop.households_income_750k_ / pop.households * 100
-pop["households_with_car_share"] = (
+pop["households_income_750k_pct"] = pop.households_income_750k_ / pop.households * 100
+pop["households_with_car_pct"] = (
     (pop.households_with_1_car + pop.households_with_2_cars) / pop.households * 100
 )
-pop["households_1car_share"] = pop.households_with_1_car / pop.households * 100
-pop["households_2cars_share"] = pop.households_with_2_cars / pop.households * 100
-pop["households_nocar_share"] = pop.households_without_car / pop.households * 100
+pop["households_1car_pct"] = pop.households_with_1_car / pop.households * 100
+pop["households_2cars_pct"] = pop.households_with_2_cars / pop.households * 100
+pop["households_nocar_pct"] = pop.households_without_car / pop.households * 100
 
 # %%
 
 keep_columns = [
     "ValgstedId",
-    "-17_share",
-    "18-29_share",
-    "30-39_share",
-    "40-49_share",
-    "50-59_share",
-    "60-69_share",
-    "70-_share",
-    "student_share",
-    "households_income_under_100k_share",
-    "households_income_100_150k_share",
-    "households_income_150_200k_share",
-    "households_income_200_300k_share",
-    "households_income_300_400k_share",
-    "households_income_400_500k_share",
-    "households_income_500_750k_share",
-    "households_income_750k_share",
-    "households_with_car_share",
-    "households_1car_share",
-    "households_2cars_share",
-    "households_nocar_share",
+    "-17_pct",
+    "18-29_pct",
+    "30-39_pct",
+    "40-49_pct",
+    "50-59_pct",
+    "60-69_pct",
+    "70-_pct",
+    "student_pct",
+    "households_income_under_100k_pct",
+    "households_income_100_150k_pct",
+    "households_income_150_200k_pct",
+    "households_income_200_300k_pct",
+    "households_income_300_400k_pct",
+    "households_income_400_500k_pct",
+    "households_income_500_750k_pct",
+    "households_income_750k_pct",
+    "households_with_car_pct",
+    "households_1car_pct",
+    "households_2cars_pct",
+    "households_nocar_pct",
 ]
 
 keep_columns.extend(list(rename_dict.values()))

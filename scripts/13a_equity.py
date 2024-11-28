@@ -84,16 +84,16 @@ assert len(socio_gdf[socio_gdf["total_network_length"].isna()]) == 0
 assert len(socio_gdf[socio_gdf["population"].isna()]) == 0
 assert len(socio_gdf) == len(socio_density) == len(socio_clusters)
 
-socio_gdf["household_low_income_share"] = (
-    socio_gdf["Income under 150k (share)"]
-    + socio_gdf["Income 150-200k (share)"]
-    + socio_gdf["Income 200-300k (share)"]
+socio_gdf["household_low_income_pct"] = (
+    socio_gdf["Income under 150k (%)"]
+    + socio_gdf["Income 150-200k (%)"]
+    + socio_gdf["Income 200-300k (%)"]
 )
-socio_gdf["household_medium_income_share"] = (
-    socio_gdf["Income 300-400k (share)"] + socio_gdf["Income 400-500k (share)"]
+socio_gdf["household_medium_income_pct"] = (
+    socio_gdf["Income 300-400k (%)"] + socio_gdf["Income 400-500k (%)"]
 )
-socio_gdf["household_high_income_share"] = (
-    socio_gdf["Income 500-750k (share)"] + socio_gdf["Income 750k+ (share)"]
+socio_gdf["household_high_income_pct"] = (
+    socio_gdf["Income 500-750k (%)"] + socio_gdf["Income 750k+ (%)"]
 )
 
 # socio_gdf["low_stress_per_person"] = (
@@ -313,18 +313,18 @@ if check_significance:
 # https://github.com/ipeaGIT/accessibility/blob/HEAD/R/concentration_index.R
 
 rank_columns = [
-    "household_low_income_share",
-    "household_medium_income_share",
-    "household_high_income_share",
+    "household_low_income_pct",
+    "household_medium_income_pct",
+    "household_high_income_pct",
     "Household income 50th percentile",
-    "Households w car (share)",
-    "Households no car (share)",
+    "Households w car (%)",
+    "Households no car (%)",
 ]
 
 rank_labels = [
-    "low income share",
-    "medium income share",
-    "high income share",
+    "low income %",
+    "medium income %",
+    "high income %",
     "income 50th percentile",
     "households with car",
     "households without car",
@@ -369,7 +369,7 @@ for e, socioeconomic_column in enumerate(rank_columns):
             socio_gdf,
             analysis_column,
             "population",
-            "Households w car (share)",
+            "Households w car (%)",
             income_label=rank_labels[e],
             oppportunity_label=labels_socio[i],
         )

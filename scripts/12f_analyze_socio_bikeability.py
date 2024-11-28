@@ -69,7 +69,7 @@ if preprocess:
 # Get hex bikeability clusters with socio data
 pop_keys = list(population_rename_dict.keys())
 pop_keys = pop_keys[7:22]
-pop_keys.remove("households_income_under_150k_share")
+pop_keys.remove("households_income_under_150k_pct")
 
 population_keys_string = ", ".join(pop_keys)
 
@@ -78,9 +78,9 @@ hex_bike_socio = pd.read_sql(
     engine,
 )
 
-hex_bike_socio["households_income_under_150k_share"] = (
-    hex_bike_socio.households_income_under_100k_share
-    + hex_bike_socio.households_income_100_150k_share
+hex_bike_socio["households_income_under_150k_pct"] = (
+    hex_bike_socio.households_income_under_100k_pct
+    + hex_bike_socio.households_income_100_150k_pct
 )
 
 hex_bike_socio.rename(columns=population_rename_dict, inplace=True)

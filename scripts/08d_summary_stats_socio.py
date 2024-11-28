@@ -22,8 +22,8 @@ socio = pd.read_sql("SELECT * FROM socio", con=engine)
 
 socio.rename(population_rename_dict, inplace=True, axis=1)
 
-socio["Income under 150k (share)"] = (
-    socio["Income under 100k (share)"] + socio["Income 100-150k (share)"]
+socio["Income under 150k (%)"] = (
+    socio["Income under 100k (%)"] + socio["Income 100-150k (%)"]
 )
 
 # %%

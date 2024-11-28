@@ -251,13 +251,13 @@ socio_socio_bike = socio_hex_cluster.merge(socio, on="id")
 
 analysis_vars = [
     "Household income 50th percentile",
-    "Household low income (share)",
-    "Household medium income (share)",
-    "Household high income (share)",
-    "Households w car (share)",
-    "Households 1 car (share)",
-    "Households 2 cars (share)",
-    "Households no car (share)",
+    "Household low income (%)",
+    "Household medium income (%)",
+    "Household high income (%)",
+    "Households w car (%)",
+    "Households 1 car (%)",
+    "Households 2 cars (%)",
+    "Households no car (%)",
     "Population density",
     "Urban area (%)",
     "Average bikeability rank",
@@ -267,18 +267,16 @@ socio_socio_bike.rename(
     columns={"average_bikeability_rank": "Average bikeability rank"}, inplace=True
 )
 
-socio_socio_bike["Household low income (share)"] = (
-    socio_socio_bike["Income under 150k (share)"]
-    + socio_socio_bike["Income 150-200k (share)"]
-    + socio_socio_bike["Income 200-300k (share)"]
+socio_socio_bike["Household low income (%)"] = (
+    socio_socio_bike["Income under 150k (%)"]
+    + socio_socio_bike["Income 150-200k (%)"]
+    + socio_socio_bike["Income 200-300k (%)"]
 )
-socio_socio_bike["Household medium income (share)"] = (
-    socio_socio_bike["Income 300-400k (share)"]
-    + socio_socio_bike["Income 400-500k (share)"]
+socio_socio_bike["Household medium income (%)"] = (
+    socio_socio_bike["Income 300-400k (%)"] + socio_socio_bike["Income 400-500k (%)"]
 )
-socio_socio_bike["Household high income (share)"] = (
-    socio_socio_bike["Income 500-750k (share)"]
-    + socio_socio_bike["Income 750k+ (share)"]
+socio_socio_bike["Household high income (%)"] = (
+    socio_socio_bike["Income 500-750k (%)"] + socio_socio_bike["Income 750k+ (%)"]
 )
 
 variable_combos = list(itertools.combinations(analysis_vars, 2))

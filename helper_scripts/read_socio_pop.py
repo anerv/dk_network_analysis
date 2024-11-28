@@ -10,9 +10,8 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 socio = gpd.read_postgis("SELECT * FROM socio", engine, geom_col="geometry")
 
-socio["households_income_under_150k_share"] = (
-    socio["households_income_under_100k_share"]
-    + socio["households_income_100_150k_share"]
+socio["households_income_under_150k_pct"] = (
+    socio["households_income_under_100k_pct"] + socio["households_income_100_150k_pct"]
 )
 
 socio.rename(columns=population_rename_dict, inplace=True)
