@@ -312,5 +312,6 @@ for v in variable_combos:
         v[1],
         class_bounds,
         colorlist,
+        fp=f"socio_bivariate_{v[0]}_{v[1]}.png",
     )
 # %%
