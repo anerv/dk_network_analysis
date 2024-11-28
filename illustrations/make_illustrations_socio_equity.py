@@ -41,7 +41,7 @@ fig, ax = plt.subplots(figsize=pdict["fsmap"])
 socio_gdf.plot(
     ax=ax,
     scheme="quantiles",  # "natural_breaks",
-    k=4,
+    k=7,
     column="population_density",
     cmap="cividis",
     linewidth=0.0,
