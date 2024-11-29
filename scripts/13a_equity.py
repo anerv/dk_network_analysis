@@ -114,11 +114,11 @@ labels_socio = [
     "lts ≤3 density",
     "lts ≤4 density",
     "total network density",
-    "lts 1 length",
-    "lts ≤2 length",
-    "lts ≤3 length",
-    "lts ≤4 length",
-    "total network length",
+    # "lts 1 length",
+    # "lts ≤2 length",
+    # "lts ≤3 length",
+    # "lts ≤4 length",
+    # "total network length",
 ]
 inequality_columns_socio = [
     "lts_1_dens",
@@ -126,11 +126,11 @@ inequality_columns_socio = [
     "lts_1_3_dens",
     "lts_1_4_dens",
     "total_network_dens",
-    "lts_1_length",
-    "lts_1_2_length",
-    "lts_1_3_length",
-    "lts_1_4_length",
-    "total_network_length",
+    # "lts_1_length",
+    # "lts_1_2_length",
+    # "lts_1_3_length",
+    # "lts_1_4_length",
+    # "total_network_length",
 ]
 # %%
 ############## LORENZ CURVES ##############
@@ -317,6 +317,7 @@ rank_columns = [
     "household_medium_income_pct",
     "household_high_income_pct",
     "Household income 50th percentile",
+    "Household income 80th percentile",
     "Households w car (%)",
     "Households no car (%)",
 ]
@@ -326,39 +327,44 @@ rank_labels = [
     "medium income %",
     "high income %",
     "income 50th percentile",
+    "income 80th percentile",
     "households with car",
     "households without car",
 ]
 
-for socioeconomic_column in rank_columns:
+analysis_columns = []
+ranking_columns = []
+cci_results = []
 
-    print(socioeconomic_column)
+for socioeconomic_column in rank_columns:
 
     for analysis_column in inequality_columns_socio:
 
-        print(analysis_column)
-
-        cci1 = analysis_func.concentration_index(
+        cci = analysis_func.concentration_index(
             data=socio_gdf,
             opportunity=analysis_column,
             population="population",
             income=socioeconomic_column,
         )
 
-        print(f"Using concentration_index function: {cci1:.4f}")
+        analysis_columns.append(analysis_column)
+        ranking_columns.append(socioeconomic_column)
+        cci_results.append(cci)
 
-        # print(
-        #     f"The CCI for {analysis_column}, ranked by {socioeconomic_column}, is {cci1:.4f}"
+        # cci2 = analysis_func.concentr(
+        #     socio_gdf[analysis_column],
+        #     socio_gdf[socioeconomic_column],
+        #     socio_gdf["population"],
         # )
 
-        cci2 = analysis_func.concentr(
-            socio_gdf[analysis_column],
-            socio_gdf[socioeconomic_column],
-            socio_gdf["population"],
-        )
 
-        print(f"Using concentr function: {cci2:.4f}")
-
+cci_df = pd.DataFrame(
+    {
+        "analysis_column": analysis_columns,
+        "ranking_column": ranking_columns,
+        "cci": cci_results,
+    }
+)
 # %%
 
 for e, socioeconomic_column in enumerate(rank_columns):
@@ -377,15 +383,10 @@ for e, socioeconomic_column in enumerate(rank_columns):
 # NOTE: Should use density instead of length for this step?? Does not normalize by population
 
 # %%
-# TODO: How is population used? Does it make normalizing by population redundant?
+
 # TODO: Check results!
 
-
-# TODO: Test for differences in results between the two methods
-# TODO: get chatten to explain differences in functions
-
-# TODO: Think about absolute length vs. density - check by making some simple correlation plots
-
+# TODO: Examine and identify outlier areas!
 # %%
 
 
