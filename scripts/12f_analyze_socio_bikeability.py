@@ -54,7 +54,7 @@ display(socio_socio[corr_columns])
 
 # %%
 
-preprocess = False
+preprocess = True
 
 if preprocess:
 
@@ -68,7 +68,7 @@ if preprocess:
 # %%
 # Get hex bikeability clusters with socio data
 pop_keys = list(population_rename_dict.keys())
-pop_keys = pop_keys[7:22]
+pop_keys = pop_keys[7:23]
 pop_keys.remove("households_income_under_150k_pct")
 
 population_keys_string = ", ".join(pop_keys)
