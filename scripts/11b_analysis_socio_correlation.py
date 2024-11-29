@@ -33,31 +33,38 @@ plot_func.plot_correlation(
 display(socio[socio_corr_variables].corr().style.background_gradient(cmap="coolwarm"))
 display(socio[socio_corr_variables].describe())
 
-# %%
-# Just income and car ownership
-plot_func.plot_correlation(
-    socio,
-    socio_corr_variables[7:21],
-    # pair_plot_x_log=True,
-    # pair_plot_y_log=True,
-    # heatmap_fp=fp_socio_vars_heatmap,
-    # pairplot_fp=fp_socio_vars_pairplot,
-)
-display(socio[socio_corr_variables].corr().style.background_gradient(cmap="coolwarm"))
-display(socio[socio_corr_variables].describe())
 
 # %%
 # Just income
+socio_vars = socio_corr_variables[7:17]
 plot_func.plot_correlation(
     socio,
-    socio_corr_variables[7:17],
+    socio_vars,
     # pair_plot_x_log=True,
     # pair_plot_y_log=True,
     # heatmap_fp=fp_socio_vars_heatmap,
     # pairplot_fp=fp_socio_vars_pairplot,
 )
-display(socio[socio_corr_variables].corr().style.background_gradient(cmap="coolwarm"))
-display(socio[socio_corr_variables].describe())
+display(socio[socio_vars].corr().style.background_gradient(cmap="coolwarm"))
+display(socio[socio_vars].describe())
+# %%
+# Just income and cars
+
+socio_vars = (
+    socio_corr_variables[8:15] + socio_corr_variables[17:-2]
+)  # socio_corr_variables[7:17]
+plot_func.plot_correlation(
+    socio,
+    socio_vars,
+    pair_plot_x_log=True,
+    pair_plot_y_log=True,
+    # heatmap_fp=fp_socio_vars_heatmap,
+    pairplot_fp="../results/correlation/socio/pairplot_socio_vars_income_cars.png",
+)
+display(socio[socio_vars].corr().style.background_gradient(cmap="coolwarm"))
+display(socio[socio_vars].describe())
+
+
 # %%
 # Just income, urban, pop
 
@@ -70,20 +77,21 @@ plot_func.plot_correlation(
     # heatmap_fp=fp_socio_vars_heatmap,
     # pairplot_fp=fp_socio_vars_pairplot,
 )
-display(socio[socio_corr_variables].corr().style.background_gradient(cmap="coolwarm"))
-display(socio[socio_corr_variables].describe())
+display(socio[socio_vars].corr().style.background_gradient(cmap="coolwarm"))
+display(socio[socio_vars].describe())
 
 # %%
 # Car, urban, pop
+socio_vars = socio_corr_variables[17:]
 plot_func.plot_correlation(
     socio,
-    socio_corr_variables[17:],
+    socio_vars,
     pair_plot_x_log=True,
     pair_plot_y_log=True,
     # heatmap_fp=fp_socio_vars_heatmap,
     # pairplot_fp=fp_socio_vars_pairplot,
 )
-display(socio[socio_corr_variables].corr().style.background_gradient(cmap="coolwarm"))
-display(socio[socio_corr_variables].describe())
+display(socio[socio_vars].corr().style.background_gradient(cmap="coolwarm"))
+display(socio[socio_vars].describe())
 
 # %%
