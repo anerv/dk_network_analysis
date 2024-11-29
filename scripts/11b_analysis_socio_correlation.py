@@ -56,8 +56,8 @@ socio_vars = (
 plot_func.plot_correlation(
     socio,
     socio_vars,
-    pair_plot_x_log=True,
-    pair_plot_y_log=True,
+    # pair_plot_x_log=True,
+    # pair_plot_y_log=True,
     # heatmap_fp=fp_socio_vars_heatmap,
     pairplot_fp="../results/correlation/socio/pairplot_socio_vars_income_cars.png",
 )
