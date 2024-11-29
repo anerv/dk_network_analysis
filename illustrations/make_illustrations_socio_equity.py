@@ -175,7 +175,6 @@ else:
 
 exec(open("../helper_scripts/read_socio_pop.py").read())
 
-# %%
 plot_res = "low"
 
 for label, plot_columns in zip(["income", "cars"], [socio_income_vars, socio_car_vars]):
@@ -251,6 +250,7 @@ socio_socio_bike = socio_hex_cluster.merge(socio, on="id")
 
 analysis_vars = [
     "Household income 50th percentile",
+    "Household income 80th percentile",
     "Household low income (%)",
     "Household medium income (%)",
     "Household high income (%)",

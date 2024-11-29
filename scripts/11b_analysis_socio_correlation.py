@@ -37,7 +37,7 @@ display(socio[socio_corr_variables].describe())
 # Just income and car ownership
 plot_func.plot_correlation(
     socio,
-    socio_corr_variables[7:20],
+    socio_corr_variables[7:21],
     # pair_plot_x_log=True,
     # pair_plot_y_log=True,
     # heatmap_fp=fp_socio_vars_heatmap,
@@ -50,7 +50,7 @@ display(socio[socio_corr_variables].describe())
 # Just income
 plot_func.plot_correlation(
     socio,
-    socio_corr_variables[7:15],
+    socio_corr_variables[7:17],
     # pair_plot_x_log=True,
     # pair_plot_y_log=True,
     # heatmap_fp=fp_socio_vars_heatmap,
@@ -61,7 +61,7 @@ display(socio[socio_corr_variables].describe())
 # %%
 # Just income, urban, pop
 
-socio_vars = socio_corr_variables[7:15] + socio_corr_variables[-2:]
+socio_vars = socio_corr_variables[7:17] + socio_corr_variables[-2:]
 plot_func.plot_correlation(
     socio,
     socio_vars,
@@ -77,7 +77,7 @@ display(socio[socio_corr_variables].describe())
 # Car, urban, pop
 plot_func.plot_correlation(
     socio,
-    socio_corr_variables[16:],
+    socio_corr_variables[17:],
     pair_plot_x_log=True,
     pair_plot_y_log=True,
     # heatmap_fp=fp_socio_vars_heatmap,

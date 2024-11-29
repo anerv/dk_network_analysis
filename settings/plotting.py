@@ -362,6 +362,7 @@ population_rename_dict = {
     "households_2cars_pct": "Households 2 cars (%)",
     "households_nocar_pct": "Households no car (%)",
     "households_income_50_percentile": "Household income 50th percentile",
+    "households_income_80_percentile": "Household income 80th percentile",
     "population_density": "Population density",
     "urban_pct": "Urban area (%)",
 }
@@ -386,6 +387,7 @@ socio_corr_variables = [
     "Income 500-750k (%)",
     "Income 750k+ (%)",
     "Household income 50th percentile",
+    "Household income 80th percentile",
     "Households w car (%)",
     "Households 1 car (%)",
     "Households 2 cars (%)",
@@ -395,10 +397,10 @@ socio_corr_variables = [
 ]
 
 socio_age_vars = socio_corr_variables[:7]
-socio_income_vars = socio_corr_variables[7:16]
-socio_car_vars = socio_corr_variables[16:20]
-socio_urban_pop_vars = socio_corr_variables[20:]
-socio_car_pop = socio_corr_variables[16:]
+socio_income_vars = socio_corr_variables[7:17]
+socio_car_vars = socio_corr_variables[17:21]
+socio_urban_pop_vars = socio_corr_variables[21:]
+socio_car_pop = socio_corr_variables[17:]
 
 plotly_labels = {
     "lts_1_dens": "LTS 1 density (km/sqkm)",
