@@ -28,4 +28,19 @@ socio["Income under 150k (%)"] = (
 
 # %%
 display(socio[socio_corr_variables].describe().T)
+
+# %%
+socio_vars = socio_corr_variables[8:15] + socio_corr_variables[18:21]
+
+# %%
+
+summary_stats = socio[socio_vars].describe().T
+summary_stats["median"] = socio[socio_vars].median()
+summary_stats = summary_stats[["count", "min", "mean", "median", "max"]]
+display(summary_stats)
+
+# %%
+
+# %%
+
 # %%
