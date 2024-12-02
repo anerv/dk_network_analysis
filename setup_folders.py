@@ -42,6 +42,7 @@ results_subfolders = [
     "summary_stats",
     "spatial_autocorrelation",
     "clustering",
+    "equity",
 ]
 
 for f in results_subfolders:
@@ -61,13 +62,18 @@ for f in results_subfolders[:5]:
             print("Successfully created folder: results/" + f + "/" + a)
 
 # make subfolders for clustering results
-clustering_subfolders = ["plots", "maps", "data"]
+cluster_equity_subfolders = ["plots", "maps", "data"]
 
-for f in clustering_subfolders:
+for f in cluster_equity_subfolders:
     if not os.path.exists("results/clustering/" + f):
         os.mkdir("results/clustering/" + f)
 
         print("Successfully created folder: results/clustering/" + f)
+
+    if not os.path.exists("results/equity/" + f):
+        os.mkdir("results/equity/" + f)
+
+        print("Successfully created folder: results/equity/" + f)
 
 
 result_type_subfolders = ["density", "fragmentation", "reach"]
@@ -110,10 +116,3 @@ if not os.path.exists(fp):
     os.mkdir(fp)
 
     print("Successfully created folder: " + fp)
-
-
-# # make illustration folder
-# if not os.path.exists("illustrations"):
-#     os.mkdir("illustrations")
-
-#     print("Successfully created folder: illustrations")
