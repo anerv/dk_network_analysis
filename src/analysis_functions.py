@@ -104,43 +104,43 @@ def concentration_index(
     return concentration_index_value
 
 
-def concentr(opportunity, income, population):
+# def concentr(opportunity, income, population):
 
-    # From https://github.com/aakarner/transit-equity-methods/blob/f30ab26a03f411d99c78d79e454dc182f9491356/00-inequality-measures.R
+#     # From https://github.com/aakarner/transit-equity-methods/blob/f30ab26a03f411d99c78d79e454dc182f9491356/00-inequality-measures.R
 
-    # Ensure opportunity, income, and population are numpy arrays
-    opportunity = np.array(opportunity)
-    income = np.array(income)
-    population = np.array(population)
+#     # Ensure opportunity, income, and population are numpy arrays
+#     opportunity = np.array(opportunity)
+#     income = np.array(income)
+#     population = np.array(population)
 
-    # Complete cases: valid values for opportunity, income, and population
-    complete = (
-        (np.isfinite(opportunity) & np.isfinite(income) & np.isfinite(population))
-        & (opportunity >= 0)
-        & (income >= 0)
-    )
-    x_c = opportunity[complete]
-    y_c = income[complete]
-    w_c = population[complete]
+#     # Complete cases: valid values for opportunity, income, and population
+#     complete = (
+#         (np.isfinite(opportunity) & np.isfinite(income) & np.isfinite(population))
+#         & (opportunity >= 0)
+#         & (income >= 0)
+#     )
+#     x_c = opportunity[complete]
+#     y_c = income[complete]
+#     w_c = population[complete]
 
-    # Order by income values
-    o = np.argsort(y_c)
-    x_o = x_c[o]
-    y_o = y_c[o]
-    w_o = w_c[o]
+#     # Order by income values
+#     o = np.argsort(y_c)
+#     x_o = x_c[o]
+#     y_o = y_c[o]
+#     w_o = w_c[o]
 
-    # Cumulative sums for opportunity and weights
-    x_cum = np.concatenate(([0], np.cumsum((x_o * w_o) / np.sum(x_o * w_o))))
-    w_cum = np.concatenate(([0], np.cumsum(w_o / np.sum(w_o))))
+#     # Cumulative sums for opportunity and weights
+#     x_cum = np.concatenate(([0], np.cumsum((x_o * w_o) / np.sum(x_o * w_o))))
+#     w_cum = np.concatenate(([0], np.cumsum(w_o / np.sum(w_o))))
 
-    b = x_cum[:-1]
-    B = x_cum[1:]
-    h = np.diff(w_cum)
+#     b = x_cum[:-1]
+#     B = x_cum[1:]
+#     h = np.diff(w_cum)
 
-    # Calculate area under the concentration curve
-    area_under_concentrationCurve = np.sum(((B + b) * h) / 2)
+#     # Calculate area under the concentration curve
+#     area_under_concentrationCurve = np.sum(((B + b) * h) / 2)
 
-    return 1 - 2 * area_under_concentrationCurve
+#     return 1 - 2 * area_under_concentrationCurve
 
 
 def classify_urban_rural(x):
