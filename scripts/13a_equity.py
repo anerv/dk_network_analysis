@@ -43,6 +43,11 @@ labels_hex = [
     "LTS ≤3 density",
     "LTS ≤4 density",
     "total network density",
+    "LTS 1 infrastructure",
+    "LTS ≤2 infrastructure",
+    "LTS ≤3 infrastructure",
+    "LTS ≤4 infrastructure",
+    "total network infrastructure",
     "bikeability rank",
 ]
 inequality_columns_hex = [
@@ -51,6 +56,11 @@ inequality_columns_hex = [
     "lts_1_3_dens",
     "lts_1_4_dens",
     "total_network_dens",
+    "lts_1_length",
+    "lts_1_2_length",
+    "lts_1_3_length",
+    "lts_1_4_length",
+    "total_network_length",
     "kmeans_net",
 ]
 
@@ -96,29 +106,18 @@ socio_gdf["household_high_income_pct"] = (
     socio_gdf["Income 500-750k (%)"] + socio_gdf["Income 750k+ (%)"]
 )
 
-# socio_gdf["low_stress_per_person"] = (
-#     socio_gdf["lts_1_2_length"] / socio_gdf["population"]
-# )
 
-# socio_gdf["high_stress_per_person"] = (
-#     socio_gdf["lts_3_length"] + socio_gdf["lts_4_length"]
-# ) / socio_density["population"]
-
-# socio_gdf["network_per_person"] = (
-#     socio_gdf["total_network_length"] / socio_gdf["population"]
-# )
-# %%
 labels_socio = [
-    "lts 1 density",
-    "lts ≤2 density",
-    "lts ≤3 density",
-    "lts ≤4 density",
+    "LTS 1 density",
+    "LTS ≤2 density",
+    "LTS ≤3 density",
+    "LTS ≤4 density",
     "total network density",
-    # "lts 1 length",
-    # "lts ≤2 length",
-    # "lts ≤3 length",
-    # "lts ≤4 length",
-    # "total network length",
+    "LTS 1 infrastructure",
+    "LTS ≤2 infrastructure",
+    "LTS ≤3 infrastructure",
+    "LTS ≤4 infrastructure",
+    "total network infrastructure",
 ]
 inequality_columns_socio = [
     "lts_1_dens",
@@ -126,11 +125,11 @@ inequality_columns_socio = [
     "lts_1_3_dens",
     "lts_1_4_dens",
     "total_network_dens",
-    # "lts_1_length",
-    # "lts_1_2_length",
-    # "lts_1_3_length",
-    # "lts_1_4_length",
-    # "total_network_length",
+    "lts_1_length",
+    "lts_1_2_length",
+    "lts_1_3_length",
+    "lts_1_4_length",
+    "total_network_length",
 ]
 # %%
 ############## LORENZ CURVES ##############
@@ -146,6 +145,7 @@ for i, c in enumerate(inequality_columns_socio):
         share_of_population=pop_shares,
         x_label="population",
         y_label=labels_socio[i],
+        fp=f"../results/equity/plots/lorenz_{c}.png",
     )
 
 # %%
@@ -201,6 +201,11 @@ for c, l in zip(
 
 
 display(inequalities_socio)
+
+"""
+The within regions term is a weighted average of inequality between economies belonging to the same region
+
+"""
 
 # %%
 ########## SPATIAL GINI ##########
@@ -319,6 +324,8 @@ rank_columns = [
     "Household income 50th percentile",
     "Household income 80th percentile",
     "Households w car (%)",
+    "Households 1 car (%)",
+    "Households 2 cars (%)",
     "Households no car (%)",
 ]
 
@@ -328,8 +335,10 @@ rank_labels = [
     "high income %",
     "income 50th percentile",
     "income 80th percentile",
-    "households with car",
-    "households without car",
+    "households with car (%)",
+    "households with 1 car (%)",
+    "households with 2 cars (%)",
+    "households without car (%)",
 ]
 
 analysis_columns = []
@@ -365,6 +374,8 @@ cci_df = pd.DataFrame(
         "cci": cci_results,
     }
 )
+
+display(cci_df)
 # %%
 
 for e, socioeconomic_column in enumerate(rank_columns):
@@ -372,10 +383,10 @@ for e, socioeconomic_column in enumerate(rank_columns):
     for i, analysis_column in enumerate(inequality_columns_socio):
 
         plot_func.plot_concentration_curves(
-            socio_gdf,
-            analysis_column,
-            "population",
-            "Households w car (%)",
+            data=socio_gdf,
+            opportunity=analysis_column,
+            population="population",
+            income=socioeconomic_column,
             income_label=rank_labels[e],
             oppportunity_label=labels_socio[i],
         )
@@ -384,10 +395,7 @@ for e, socioeconomic_column in enumerate(rank_columns):
 
 # %%
 
-# TODO: Check results!
 
 # TODO: Examine and identify outlier areas!
-# %%
-
-
+#
 # %%
