@@ -7,6 +7,8 @@ import pandas as pd
 from IPython.display import display
 from pysal.explore import inequality
 from pysal.lib import weights
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -443,11 +445,48 @@ for e, socioeconomic_column in enumerate(rank_columns):
 
 # NOTE: Should use density instead of length for this step?? Does not normalize by population
 
+
+# %%
+
+# Make subplots for each rank column
+
+for e, socioeconomic_column in enumerate(rank_columns):
+
+    fp = f"../results/equity/plots/concentration_curve_subplots_{socioeconomic_column}.png"
+
+    fig, axes = plt.subplots(2, 4, figsize=(15, 8))
+
+    axes = axes.flatten()
+
+    for i, analysis_column in enumerate(inequality_columns_socio):
+
+        plot_func.plot_concentration_curves_subplots(
+            ax=axes[i],
+            data=socio_gdf,
+            opportunity=analysis_column,
+            population="population",
+            income=socioeconomic_column,
+            income_label=rank_labels[e],
+            oppportunity_label=labels_socio[i],
+        )
+
+    plt.suptitle(f"Concentration curves for {rank_labels[e]}")
+    sns.despine()
+
+    plt.tight_layout()
+
+    if fp:
+        plt.savefig(fp, dpi=pdict["dpi"])
+
+    plt.show()
+
+    plt.close()
+
+
 # %%
 
 
 # %%
-
 # TODO: Examine and identify outlier areas!
 #
 # %%
