@@ -42,7 +42,7 @@ labels_hex = [
     "LTS ≤2 density",
     "LTS ≤3 density",
     "LTS ≤4 density",
-    "total network density",
+    # "total network density",
     "LTS 1 infrastructure",
     "LTS ≤2 infrastructure",
     "LTS ≤3 infrastructure",
@@ -55,12 +55,12 @@ inequality_columns_hex = [
     "lts_1_2_dens",
     "lts_1_3_dens",
     "lts_1_4_dens",
-    "total_network_dens",
+    # "total_network_dens",
     "lts_1_length",
     "lts_1_2_length",
     "lts_1_3_length",
     "lts_1_4_length",
-    "total_network_length",
+    # "total_network_length",
     "kmeans_net",
 ]
 
@@ -112,24 +112,24 @@ labels_socio = [
     "LTS ≤2 density",
     "LTS ≤3 density",
     "LTS ≤4 density",
-    "total network density",
+    # "total network density",
     "LTS 1 infrastructure",
     "LTS ≤2 infrastructure",
     "LTS ≤3 infrastructure",
     "LTS ≤4 infrastructure",
-    "total network infrastructure",
+    # "total network infrastructure",
 ]
 inequality_columns_socio = [
     "lts_1_dens",
     "lts_1_2_dens",
     "lts_1_3_dens",
     "lts_1_4_dens",
-    "total_network_dens",
+    # "total_network_dens",
     "lts_1_length",
     "lts_1_2_length",
     "lts_1_3_length",
     "lts_1_4_length",
-    "total_network_length",
+    # "total_network_length",
 ]
 # %%
 ############## LORENZ CURVES ##############
@@ -169,7 +169,6 @@ display(inequalities_socio)
 
 # NOTE: Use this to say that even though inequality exists for the entire road network, it is larger for low stress!
 
-
 # %%
 
 socio_gdf["urban_rural"] = socio_gdf["Urban area (%)"].apply(
@@ -202,6 +201,8 @@ for c, l in zip(
 
 display(inequalities_socio)
 
+inequalities_socio.to_csv("../results/equity/data/inequalities_socio.csv")
+
 """
 The within regions term is a weighted average of inequality between economies belonging to the same region
 
@@ -232,6 +233,8 @@ spatial_gini_results_socio = (
 spatial_gini_results_socio.index.name = "socio variable"
 display(spatial_gini_results_socio)
 
+spatial_gini_results_socio.to_csv("../results/equity/data/spatial_gini_socio.csv")
+
 # %%
 
 # Compute spatial gini for lts density at hex level
@@ -251,6 +254,8 @@ spatial_gini_results_hex = (
 
 spatial_gini_results_hex.index.name = "hex variable"
 display(spatial_gini_results_hex)
+
+spatial_gini_results_hex.to_csv("../results/equity/data/spatial_gini_hex.csv")
 
 # %%
 # Theil at hex level
@@ -310,6 +315,7 @@ if check_significance:
         hexjoin[inequality_columns_hex].values, hexjoin.socio_id, 999
     )
 
+inequalities_hex.to_csv("../results/equity/data/theil_index_hex_socio.csv")
 # %%
 
 # Compute CCI for inequity columns - rank by income and car ownership
@@ -376,6 +382,50 @@ cci_df = pd.DataFrame(
 )
 
 display(cci_df)
+
+cci_df.to_csv("../results/equity/data/cci_results.csv", index=False)
+
+# %%
+# Make tables for the report
+
+cci_subset = cci_df.loc[
+    cci_df.ranking_column.isin(
+        [
+            "household_low_income_pct",
+            "household_medium_income_pct",
+            "household_high_income_pct",
+            "Households w car (%)",
+            "Households no car (%)",
+        ]
+    )
+]
+
+# Restructure cci_subset
+cci_pivot = cci_subset.pivot(
+    index="ranking_column", columns="analysis_column", values="cci"
+).rename_axis(index=None, columns=None)
+
+
+# # %%
+# cci_pivot.reset_index(inplace=True)
+
+# cci_pivot.set_index("ranking_column", inplace=True)
+
+cci_pivot = cci_pivot[inequality_columns_socio]
+
+cci_values = cci_pivot.reindex(
+    [
+        "household_low_income_pct",
+        "household_medium_income_pct",
+        "household_high_income_pct",
+        "Households w car (%)",
+        "Households no car (%)",
+    ]
+)
+display(cci_values)
+
+cci_values.to_csv("../results/equity/data/cci_subset.csv")
+
 # %%
 
 for e, socioeconomic_column in enumerate(rank_columns):
@@ -395,6 +445,8 @@ for e, socioeconomic_column in enumerate(rank_columns):
 
 # %%
 
+
+# %%
 
 # TODO: Examine and identify outlier areas!
 #
