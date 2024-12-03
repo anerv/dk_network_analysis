@@ -68,14 +68,17 @@ def plot_concentration_curves(
         data["cum_opp_share"],
         label=opportunity,
         color=opportunity_color,
+        linewidth=2,
     )
-    plt.plot([0, 1], [0, 1], linestyle="--", color="grey", label="Perfect equality")
+    plt.plot([0, 1], [0, 1], linestyle="--", color="black", label="Perfect equality")
     plt.xlabel(f"Cumulative share of population - ordered by {income_label}")
     plt.ylabel(f"Cumulative share of {oppportunity_label}")
 
     # UPDATE legend label for opportunity:
     handles, labels = plt.gca().get_legend_handles_labels()
-    labels[0] = oppportunity_label
+    labels[0] = (
+        oppportunity_label[0].capitalize() + oppportunity_label[1:]
+    )  # oppportunity_label.capitalize()
     plt.legend(handles, labels, frameon=False)
     plt.grid()
     sns.despine()
@@ -95,24 +98,32 @@ def plot_lorenz(
     x_label,
     y_label,
     figsize=(6, 6),
+    fp=None,
 ):
 
     _, ax = plt.subplots(figsize=figsize)
 
-    ax.plot(share_of_population, cumulative_share, label="Lorenz Curve")
+    ax.plot(
+        share_of_population, cumulative_share, color="#009988", label="Lorenz Curve"
+    )
 
-    ax.plot((0, 1), (0, 1), color="r", label="Perfect Equality")
+    ax.plot((0, 1), (0, 1), color="#882255", label="Perfect Equality")
 
-    ax.set_xlabel(f"Share of {x_label}")
+    ax.set_xlabel(f"Cumulative share of {x_label}")
 
-    ax.set_ylabel(f"Share of {y_label}")
+    ax.set_ylabel(f"Cumulative share of {y_label}")
 
     ax.legend(frameon=False)
 
     sns.despine()
 
-    plt.show()
+    plt.tight_layout()
 
+    if fp:
+
+        plt.savefig(fp, dpi=pdict["dpi"])
+
+    plt.show()
     plt.close()
 
 
@@ -461,99 +472,6 @@ def plot_significant_lisa_clusters_all(
 
     if fp:
         fig.savefig(fp, bbox_inches="tight", dpi=dpi)
-
-
-# def make_gini_plot(gdf, column, fp):
-#     """
-#     Generate a Gini plot to visualize the Lorenz curve for a given column in a GeoDataFrame.
-
-#     Parameters:
-#     gdf (GeoDataFrame): The GeoDataFrame containing the data.
-#     column (str): The column name to plot.
-#     fp (str): The file path to save the plot.
-
-#     Returns:
-#     None
-#     """
-
-#     n = len(gdf)
-#     share_of_areas = np.arange(1, n + 1) / n
-
-#     values = gdf[column].sort_values()
-
-#     shares = values / values.sum()
-#     cumulative_share = shares.cumsum()
-#     # Generate figure with one axis
-#     f, ax = plt.subplots(figsize=(5, 5))
-#     # Plot Lorenz Curve
-#     ax.plot(share_of_areas, cumulative_share, label="Lorenz Curve")
-#     # Plot line of perfect equality
-#     ax.plot((0, 1), (0, 1), color="r", label="Perfect Equality")
-#     # Label horizontal axis
-#     ax.set_xlabel("Share of areas")
-#     # Label vertical axis
-#     ax.set_ylabel("Share of value")
-#     # Add legend
-#     ax.legend()
-#     ax.set_title(f"Lorenz Curve for: {column}").set_fontsize(10)
-
-#     plt.savefig(fp)
-#     plt.show()
-
-
-# def plot_labels(gdf, label_col, cmap=pdict["cat"]):
-#     """
-#     Plot labels on a GeoDataFrame.
-
-#     Parameters:
-#     gdf (GeoDataFrame): The GeoDataFrame containing the data to be plotted.
-#     label_col (str): The column name in the GeoDataFrame that contains the labels.
-#     cmap (str or Colormap, optional): The colormap to be used for plotting. Defaults to pdict["cat"].
-
-#     Returns:
-#     None
-#     """
-
-#     fig, ax = plt.subplots(1, 1, figsize=pdict["fsmap"])
-#     ax.set_axis_off()
-#     gdf.plot(
-#         column=label_col,
-#         categorical=True,
-#         legend=True,
-#         legend_kwds={"bbox_to_anchor": (1.3, 1), "frameon": False},
-#         ax=ax,
-#         cmap=cmap,
-#         linewidth=0.1,
-#     )
-
-#     plt.tight_layout()
-
-#     return fig
-
-
-# def plot_rank(gdf, label_col, cmap="viridis"):
-#     """
-#     Plot the rank of a GeoDataFrame.
-
-#     Parameters:
-#     gdf (GeoDataFrame): The GeoDataFrame containing the data to be plotted.
-#     label_col (str): The column name in the GeoDataFrame to be used for labeling.
-#     cmap (str, optional): The colormap to be used for the plot. Defaults to "viridis".
-
-#     Returns:
-#     None
-#     """
-
-#     _, ax = plt.subplots(1, 1, figsize=pdict["fsmap"])
-#     ax.set_axis_off()
-#     gdf.plot(
-#         column=label_col,
-#         legend=True,
-#         ax=ax,
-#         cmap=cmap,
-#         linewidth=0.1,
-#     )
-#     plt.tight_layout()
 
 
 def color_list_to_cmap(color_list):
