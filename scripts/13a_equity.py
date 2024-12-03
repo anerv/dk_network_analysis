@@ -383,7 +383,6 @@ cci_df = pd.DataFrame(
     }
 )
 
-display(cci_df)
 
 cci_df.to_csv("../results/equity/data/cci_results.csv", index=False)
 
@@ -406,12 +405,6 @@ cci_subset = cci_df.loc[
 cci_pivot = cci_subset.pivot(
     index="ranking_column", columns="analysis_column", values="cci"
 ).rename_axis(index=None, columns=None)
-
-
-# # %%
-# cci_pivot.reset_index(inplace=True)
-
-# cci_pivot.set_index("ranking_column", inplace=True)
 
 cci_pivot = cci_pivot[inequality_columns_socio]
 
@@ -466,7 +459,7 @@ for e, socioeconomic_column in enumerate(rank_columns):
             opportunity=analysis_column,
             population="population",
             income=socioeconomic_column,
-            income_label=rank_labels[e],
+            # income_label=rank_labels[e],
             oppportunity_label=labels_socio[i],
         )
 
