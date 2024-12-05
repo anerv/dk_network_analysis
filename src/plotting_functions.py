@@ -31,6 +31,68 @@ exec(open("../settings/plotting.py").read())
 # Gini functions based on https://geographicdata.science/book/notebooks/09_spatial_inequality.html
 
 
+def plot_concentration_curves_combined(
+    ax,
+    data,
+    opportunities,
+    population,
+    income,
+    oppportunity_labels,
+    general_opportunity_label,
+    opportunity_colors,
+):
+    """
+    Plot cumulative share of infrastructure vs. cumulative share of population ordered by income.
+
+    Parameters:
+    - data (pd.DataFrame): The dataset.
+    - opportunity (str): Column name representing the opportunity measure (e.g. access to low stress infrastructure).
+    - population (str): Column name representing the population.
+    - income (str): Column name representing socioeconic variable (e.g. income).
+    - title (str): Title for the plot.
+    """
+    # Sort data by income
+    data = data.sort_values(by=income)
+
+    # Calculate cumulative shares
+    data["pop_share"] = data[population] / data[population].sum()
+    data["cum_pop_share"] = data["pop_share"].cumsum()
+
+    for i, opportunity in enumerate(opportunities):
+
+        data[f"opp_share_{i}"] = data[opportunity] / data[opportunity].sum()
+        data[f"cum_opp_share_{i}"] = data[f"opp_share_{i}"].cumsum()
+
+        # Plot
+        ax.plot(
+            data["cum_pop_share"],
+            data[f"cum_opp_share_{i}"],
+            label=oppportunity_labels[i],
+            color=opportunity_colors[i],
+            linewidth=2,
+        )
+
+    ax.plot(
+        [0, 1],
+        [0, 1],
+        linestyle="--",
+        color="black",
+        label="Perfect equality",
+    )
+    ax.set_xlabel(f"Cumulative share of population")
+    ax.set_ylabel(f"Cumulative share of {general_opportunity_label}")
+
+    # UPDATE legend label for opportunity:
+    handles, labels = ax.get_legend_handles_labels()
+
+    for i, oppportunity_label in enumerate(oppportunity_labels):
+
+        labels[i] = (
+            oppportunity_label[0].capitalize() + oppportunity_label[1:]
+        )  # oppportunity_label.capitalize()
+        ax.legend(handles, labels, frameon=False)
+
+
 def plot_concentration_curves_subplots(
     ax,
     data,
@@ -38,7 +100,7 @@ def plot_concentration_curves_subplots(
     population,
     income,
     oppportunity_label,
-    opportunity_color="purple",
+    opportunity_color="#882255",
 ):
     """
     Plot cumulative share of infrastructure vs. cumulative share of population ordered by income.
@@ -93,7 +155,7 @@ def plot_concentration_curves(
     income,
     income_label,
     oppportunity_label,
-    opportunity_color="purple",
+    opportunity_color="#882255",
     fp=None,
 ):
     """
@@ -159,10 +221,10 @@ def plot_lorenz(
     _, ax = plt.subplots(figsize=figsize)
 
     ax.plot(
-        share_of_population, cumulative_share, color="#009988", label="Lorenz Curve"
+        share_of_population, cumulative_share, color="#882255", label="Lorenz Curve"
     )
 
-    ax.plot((0, 1), (0, 1), color="#882255", label="Perfect Equality")
+    ax.plot((0, 1), (0, 1), color="black", linestyle="--", label="Perfect Equality")
 
     ax.set_xlabel(f"Cumulative share of {x_label}")
 
