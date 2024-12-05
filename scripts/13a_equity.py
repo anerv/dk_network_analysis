@@ -45,11 +45,11 @@ labels_hex = [
     "LTS ≤3 density",
     "LTS ≤4 density",
     # "total network density",
-    "LTS 1 infrastructure",
-    "LTS ≤2 infrastructure",
-    "LTS ≤3 infrastructure",
-    "LTS ≤4 infrastructure",
-    "total network infrastructure",
+    "LTS 1 length",
+    "LTS ≤2 length",
+    "LTS ≤3 length",
+    "LTS ≤4 length",
+    "total network length",
     "bikeability rank",
 ]
 inequality_columns_hex = [
@@ -115,11 +115,11 @@ labels_socio = [
     "LTS ≤3 density",
     "LTS ≤4 density",
     # "total network density",
-    "LTS 1 infrastructure",
-    "LTS ≤2 infrastructure",
-    "LTS ≤3 infrastructure",
-    "LTS ≤4 infrastructure",
-    # "total network infrastructure",
+    "LTS 1 length",
+    "LTS ≤2 length",
+    "LTS ≤3 length",
+    "LTS ≤4 length",
+    # "total network length",
 ]
 inequality_columns_socio = [
     "lts_1_dens",
@@ -346,7 +346,7 @@ rank_labels = [
     "households with car (%)",
     "households with 1 car (%)",
     "households with 2 cars (%)",
-    "households without car (%)",
+    "households no car (%)",
 ]
 
 analysis_columns = []
@@ -396,25 +396,28 @@ cci_subset = cci_df.loc[
             "household_medium_income_pct",
             "household_high_income_pct",
             "Households w car (%)",
-            "Households no car (%)",
+            "Households 1 car (%)",
+            "Households 2 cars (%)",
         ]
     )
 ]
 
+# %%
 # Restructure cci_subset
 cci_pivot = cci_subset.pivot(
     index="ranking_column", columns="analysis_column", values="cci"
 ).rename_axis(index=None, columns=None)
 
 cci_pivot = cci_pivot[inequality_columns_socio]
-
+# %%
 cci_values = cci_pivot.reindex(
     [
         "household_low_income_pct",
         "household_medium_income_pct",
         "household_high_income_pct",
         "Households w car (%)",
-        "Households no car (%)",
+        "Households 1 car (%)",
+        "Households 2 cars (%)",
     ]
 )
 display(cci_values)
@@ -477,7 +480,56 @@ for e, socioeconomic_column in enumerate(rank_columns):
 
 
 # %%
+density_columns = ["lts_1_dens", "lts_1_2_dens", "lts_1_3_dens", "lts_1_4_dens"]
+length_columns = ["lts_1_length", "lts_1_2_length", "lts_1_3_length", "lts_1_4_length"]
+general_labels = ["LTS 1", "LTS 2", "LTS 3", "LTS 4"]
 
+
+labels_dens = [
+    "LTS 1 density",
+    "LTS ≤2 density",
+    "LTS ≤3 density",
+    "LTS ≤4 density",
+]
+
+labels_length = [
+    "LTS 1 length",
+    "LTS ≤2 length",
+    "LTS ≤3 length",
+    "LTS ≤4 length",
+]
+
+for e, socioeconomic_column in enumerate(rank_columns):
+
+    fp = f"../results/equity/plots/concentration_curve_subplots_combined_{socioeconomic_column}.png"
+
+    fig, axes = plt.subplots(1, len(density_columns), figsize=(20, 6))
+
+    axes = axes.flatten()
+
+    for i, (dens_col, len_col) in enumerate(zip(density_columns, length_columns)):
+
+        plot_func.plot_concentration_curves_combined(
+            ax=axes[i],
+            data=socio_gdf,
+            opportunities=[dens_col, len_col],
+            population="population",
+            income=socioeconomic_column,
+            oppportunity_labels=[labels_dens[i], labels_length[i]],
+            general_opportunity_label=f"{general_labels[i]} infrastructure",
+            opportunity_colors=["#882255", "#009988"],
+        )
+
+    sns.despine()
+
+    plt.tight_layout()
+
+    if fp:
+        plt.savefig(fp, dpi=pdict["dpi"])
+
+    plt.show()
+
+    plt.close()
 
 # %%
 # TODO: Examine and identify outlier areas!
