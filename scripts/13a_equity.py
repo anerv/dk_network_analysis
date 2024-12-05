@@ -108,6 +108,11 @@ socio_gdf["household_high_income_pct"] = (
     socio_gdf["Income 500-750k (%)"] + socio_gdf["Income 750k+ (%)"]
 )
 
+socio_gdf["lts_1_per_capita"] = socio_gdf["lts_1_dens"] / socio_gdf["population"]
+socio_gdf["lts_1_2_per_capita"] = socio_gdf["lts_1_2_dens"] / socio_gdf["population"]
+socio_gdf["lts_1_3_per_capita"] = socio_gdf["lts_1_3_dens"] / socio_gdf["population"]
+socio_gdf["lts_1_4_per_capita"] = socio_gdf["lts_1_4_dens"] / socio_gdf["population"]
+
 
 labels_socio = [
     "LTS 1 density",
@@ -119,6 +124,10 @@ labels_socio = [
     "LTS ≤2 length",
     "LTS ≤3 length",
     "LTS ≤4 length",
+    "LTS 1 per capita",
+    "LTS ≤2 per capita",
+    "LTS ≤3 per capita",
+    "LTS ≤4 per capita",
     # "total network length",
 ]
 inequality_columns_socio = [
@@ -131,6 +140,10 @@ inequality_columns_socio = [
     "lts_1_2_length",
     "lts_1_3_length",
     "lts_1_4_length",
+    "lts_1_per_capita",
+    "lts_1_2_per_capita",
+    "lts_1_3_per_capita",
+    "lts_1_4_per_capita",
     # "total_network_length",
 ]
 # %%
@@ -357,22 +370,22 @@ for socioeconomic_column in rank_columns:
 
     for analysis_column in inequality_columns_socio:
 
-        cci = analysis_func.concentration_index(
-            data=socio_gdf,
-            opportunity=analysis_column,
-            population="population",
-            income=socioeconomic_column,
+        # cci = analysis_func.concentration_index(
+        #     data=socio_gdf,
+        #     opportunity=analysis_column,
+        #     population="population",
+        #     income=socioeconomic_column,
+        # )
+
+        cci = analysis_func.concentr(
+            socio_gdf[analysis_column],
+            socio_gdf[socioeconomic_column],
+            socio_gdf["population"],
         )
 
         analysis_columns.append(analysis_column)
         ranking_columns.append(socioeconomic_column)
         cci_results.append(cci)
-
-        # cci2 = analysis_func.concentr(
-        #     socio_gdf[analysis_column],
-        #     socio_gdf[socioeconomic_column],
-        #     socio_gdf["population"],
-        # )
 
 
 cci_df = pd.DataFrame(
@@ -396,8 +409,8 @@ cci_subset = cci_df.loc[
             "household_medium_income_pct",
             "household_high_income_pct",
             "Households w car (%)",
-            "Households 1 car (%)",
-            "Households 2 cars (%)",
+            # "Households 1 car (%)",
+            # "Households 2 cars (%)",
         ]
     )
 ]
@@ -416,8 +429,8 @@ cci_values = cci_pivot.reindex(
         "household_medium_income_pct",
         "household_high_income_pct",
         "Households w car (%)",
-        "Households 1 car (%)",
-        "Households 2 cars (%)",
+        # "Households 1 car (%)",
+        # "Households 2 cars (%)",
     ]
 )
 display(cci_values)
@@ -450,7 +463,7 @@ for e, socioeconomic_column in enumerate(rank_columns):
 
     fp = f"../results/equity/plots/concentration_curve_subplots_{socioeconomic_column}.png"
 
-    fig, axes = plt.subplots(2, 4, figsize=(15, 8))
+    fig, axes = plt.subplots(3, 4, figsize=(15, 12))
 
     axes = axes.flatten()
 
@@ -482,6 +495,12 @@ for e, socioeconomic_column in enumerate(rank_columns):
 # %%
 density_columns = ["lts_1_dens", "lts_1_2_dens", "lts_1_3_dens", "lts_1_4_dens"]
 length_columns = ["lts_1_length", "lts_1_2_length", "lts_1_3_length", "lts_1_4_length"]
+per_capita_columns = [
+    "lts_1_per_capita",
+    "lts_1_2_per_capita",
+    "lts_1_3_per_capita",
+    "lts_1_4_per_capita",
+]
 general_labels = ["LTS 1", "LTS 2", "LTS 3", "LTS 4"]
 
 
@@ -499,6 +518,13 @@ labels_length = [
     "LTS ≤4 length",
 ]
 
+labels_capita = [
+    "LTS 1 per capita",
+    "LTS ≤2 per capita",
+    "LTS ≤3 per capita",
+    "LTS ≤4 per capita",
+]
+
 for e, socioeconomic_column in enumerate(rank_columns):
 
     fp = f"../results/equity/plots/concentration_curve_subplots_combined_{socioeconomic_column}.png"
@@ -507,20 +533,24 @@ for e, socioeconomic_column in enumerate(rank_columns):
 
     axes = axes.flatten()
 
-    for i, (dens_col, len_col) in enumerate(zip(density_columns, length_columns)):
+    for i, (dens_col, len_col, cap_col) in enumerate(
+        zip(density_columns, length_columns, per_capita_columns)
+    ):
 
         plot_func.plot_concentration_curves_combined(
             ax=axes[i],
             data=socio_gdf,
-            opportunities=[dens_col, len_col],
+            opportunities=[dens_col, len_col, cap_col],
             population="population",
             income=socioeconomic_column,
-            oppportunity_labels=[labels_dens[i], labels_length[i]],
+            oppportunity_labels=[labels_dens[i], labels_length[i], labels_capita[i]],
             general_opportunity_label=f"{general_labels[i]} infrastructure",
-            opportunity_colors=["#882255", "#009988"],
+            opportunity_colors=["#882255", "#009988", "#EE7733"],
         )
 
     sns.despine()
+
+    plt.suptitle(f"Concentration curves for {rank_labels[e]}")
 
     plt.tight_layout()
 
