@@ -47,9 +47,9 @@ k_labels = analysis_func.run_kmeans(k, socio_socio_scaled)
 
 socio_socio_gdf[kmeans_col] = k_labels
 
-fp_map = fp_cluster_maps_base + f"socio_socio_map_{kmeans_col}.png"
-fp_size = fp_cluster_plots_base + f"socio_socio_size_{kmeans_col}.png"
-fp_kde = fp_cluster_plots_base + f"socio_socio_kde_{kmeans_col}.png"
+fp_map = fp_cluster_maps_base + f"socio_socio_map_{kmeans_col}_test.png"
+fp_size = fp_cluster_plots_base + f"socio_socio_size_{kmeans_col}_test.png"
+fp_kde = fp_cluster_plots_base + f"socio_socio_kde_{kmeans_col}_test.png"
 
 analysis_func.examine_cluster_results(
     socio_socio_gdf,
@@ -69,9 +69,9 @@ hier_labels = analysis_func.run_agg_clustering(socio_socio_scaled, "ward", k)
 
 socio_socio_gdf[hier_col] = hier_labels
 
-fp_map = fp_cluster_maps_base + f"socio_socio_map_{hier_col}.png"
-fp_size = fp_cluster_plots_base + f"socio_socio_size_{hier_col}.png"
-fp_kde = fp_cluster_plots_base + f"socio_socio_kde_{hier_col}.png"
+fp_map = fp_cluster_maps_base + f"socio_socio_map_{hier_col}_test.png"
+fp_size = fp_cluster_plots_base + f"socio_socio_size_{hier_col}_test.png"
+fp_kde = fp_cluster_plots_base + f"socio_socio_kde_{hier_col}_test.png"
 
 analysis_func.examine_cluster_results(
     socio_socio_gdf,
@@ -95,9 +95,9 @@ reg_labels = analysis_func.run_regionalization(socio_socio_scaled, w, k)
 socio_socio_gdf[reg_col] = reg_labels
 
 
-fp_map = fp_cluster_maps_base + f"socio_socio_map_{reg_col}.png"
-fp_size = fp_cluster_plots_base + f"socio_socio_size_{reg_col}.png"
-fp_kde = fp_cluster_plots_base + f"socio_socio_kde_{reg_col}.png"
+fp_map = fp_cluster_maps_base + f"socio_socio_map_{reg_col}_test.png"
+fp_size = fp_cluster_plots_base + f"socio_socio_size_{reg_col}_test.png"
+fp_kde = fp_cluster_plots_base + f"socio_socio_kde_{reg_col}_test.png"
 
 analysis_func.examine_cluster_results(
     socio_socio_gdf,
@@ -114,10 +114,10 @@ analysis_func.examine_cluster_results(
 cluster_columns = [kmeans_col, hier_col, reg_col]
 plot_titles = ["K-Means", "Hierarchical", "Regionalization"]
 
-fp_geo = fp_cluster_data_base + "socio_socio_geo.csv"
-fp_feature = fp_cluster_data_base + "socio_socio_feature.csv"
-fp_similarity = fp_cluster_data_base + "socio_socio_similarity.csv"
-fp_map = fp_cluster_maps_base + "socio_socio_all_clusters_map.png"
+fp_geo = fp_cluster_data_base + "socio_socio_geo_test.csv"
+fp_feature = fp_cluster_data_base + "socio_socio_feature_test.csv"
+fp_similarity = fp_cluster_data_base + "socio_socio_similarity_test.csv"
+fp_map = fp_cluster_maps_base + "socio_socio_all_clusters_map_test.png"
 
 analysis_func.compare_clustering(
     socio_socio_gdf,
@@ -157,9 +157,9 @@ k_labels = analysis_func.run_kmeans(k, hex_scaled)
 
 hex_gdf[kmeans_col] = k_labels
 
-fp_map = fp_cluster_maps_base + f"hex_net_map_{kmeans_col}.png"
-fp_size = fp_cluster_plots_base + f"hex_net_size_{kmeans_col}.png"
-fp_kde = fp_cluster_plots_base + f"hex_net_kde_{kmeans_col}.png"
+fp_map = fp_cluster_maps_base + f"hex_net_map_{kmeans_col}_test.png"
+fp_size = fp_cluster_plots_base + f"hex_net_size_{kmeans_col}_test.png"
+fp_kde = fp_cluster_plots_base + f"hex_net_kde_{kmeans_col}_test.png"
 
 analysis_func.examine_cluster_results(
     hex_gdf,
@@ -173,21 +173,6 @@ analysis_func.examine_cluster_results(
 )
 
 
-# ##### Hierarchical clustering #######
-# hier_col = f"hier_{k}"
-
-# hier_labels = analysis_func.run_agg_clustering(hex_scaled, "ward", k)
-
-# hex_gdf[hier_col] = hier_labels
-
-# fp_map = fp_cluster_maps_base + f"hex_net_map_{hier_col}.png"
-# fp_size = fp_cluster_plots_base + f"hex_net_size_{hier_col}.png"
-# fp_kde = fp_cluster_plots_base + f"hex_net_kde_{hier_col}.png"
-
-# analysis_func.examine_cluster_results(
-#     hex_gdf, hier_col, hex_cluster_variables, fp_map, fp_size, fp_kde
-# )
-
 ##### Regionalization #######
 
 reg_col = f"reg_{k}"
@@ -196,9 +181,9 @@ w = analysis_func.spatial_weights_combined(hex_gdf, id_columns[2], k)
 
 reg_labels = analysis_func.run_regionalization(hex_scaled, w, k)
 
-fp_map = fp_cluster_maps_base + f"hex_net_map_{reg_col}.png"
-fp_size = fp_cluster_plots_base + f"hex_net_size_{reg_col}.png"
-fp_kde = fp_cluster_plots_base + f"hex_net_kde_{reg_col}.png"
+fp_map = fp_cluster_maps_base + f"hex_net_map_{reg_col}_test.png"
+fp_size = fp_cluster_plots_base + f"hex_net_size_{reg_col}_test.png"
+fp_kde = fp_cluster_plots_base + f"hex_net_kde_{reg_col}_test.png"
 
 hex_gdf[reg_col] = reg_labels
 
@@ -217,10 +202,10 @@ analysis_func.examine_cluster_results(
 cluster_columns = [kmeans_col, reg_col]
 plot_titles = ["K-Means", "Regionalization"]
 
-fp_geo = fp_cluster_data_base + "hex_geo.csv"
-fp_feature = fp_cluster_data_base + "hex_feature.csv"
-fp_similarity = fp_cluster_data_base + "hex_similarity.csv"
-fp_map = fp_cluster_maps_base + "hex_all_clusters_map.png"
+fp_geo = fp_cluster_data_base + "hex_geo_test.csv"
+fp_feature = fp_cluster_data_base + "hex_feature_test.csv"
+fp_similarity = fp_cluster_data_base + "hex_similarity_test.csv"
+fp_map = fp_cluster_maps_base + "hex_all_clusters_map_test.png"
 
 analysis_func.compare_clustering(
     hex_gdf,
