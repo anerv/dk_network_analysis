@@ -76,17 +76,10 @@ merged_df["lcc_share"] = (
 
 display(merged_df.style.pipe(format_style_no_index))
 
-sns.scatterplot(
-    data=merged_df,
-    x="length (km)",
-    y="component count",
-    hue="network_type",
-    palette=lts_color_dict.values(),
-)
+merged_df.to_csv("../results/summary_stats/component_length_lcc.csv", index=False)
 
 # %%
 
-# Create a figure and primary axis
 fig, ax1 = plt.subplots(figsize=pdict["fsbar"])
 
 colors = {}
