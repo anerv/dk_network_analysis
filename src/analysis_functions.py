@@ -105,8 +105,18 @@ def concentration_index(
 
 
 def concentr(opportunity, income, population):
+    """
+    Calculate the Concentration Index (CCI) for given opportunity, income, and population data.
+    From https://github.com/aakarner/transit-equity-methods/blob/f30ab26a03f411d99c78d79e454dc182f9491356/00-inequality-measures.R
 
-    # From https://github.com/aakarner/transit-equity-methods/blob/f30ab26a03f411d99c78d79e454dc182f9491356/00-inequality-measures.R
+    Parameters:
+    opportunity (pd.Series): The opportunity variable (e.g., access to infrastructure).
+    income (pd.Series): The income variable used for ranking.
+    population (pd.Series): The population variable used for weighting.
+
+    Returns:
+    float: The calculated Concentration Index (CCI).
+    """
 
     # Ensure opportunity, income, and population are numpy arrays
     opportunity = np.array(opportunity)
