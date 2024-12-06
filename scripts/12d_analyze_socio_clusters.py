@@ -72,10 +72,6 @@ sns.despine(left=True)
 # turn off legend
 ax.get_legend().remove()
 
-# handles, labels = ax.get_legend_handles_labels()
-# labels = list(bikeability_cluster_color_dict_labels.keys())
-# plt.legend(handles, labels, bbox_to_anchor=(1.05, 1), loc="upper left", frameon=False)
-
 # Show plot
 plt.tight_layout()
 plt.savefig(fp_cluster_plots_base + "socio_clusters_proportions.png", dpi=pdict["dpi"])
@@ -197,12 +193,17 @@ sns.barplot(
 ax.set_xlabel("")
 ax.set_ylabel("Population (mill.)")
 plt.xticks(rotation=45, ha="right")
-plt.yticks([0, 1200000])
-labels = ["0", "1.2"]
-ax.set_yticklabels(labels)
+plt.yticks([])  # [0, 1200000]
 ax.tick_params(axis="both", which="major", labelsize=pdict["fontsize"])
 
 sns.despine(left=True, bottom=True)
+
+for container in ax.containers:
+    labels = [label.get_height() for label in container]
+    labels_millions = [f"{label/1e6:.1f}" for label in labels]
+    ax.bar_label(
+        container, labels=labels_millions, label_type="edge", fontsize=pdict["fontsize"]
+    )
 
 plt.tight_layout()
 
@@ -252,13 +253,27 @@ ax.bar(
     hatch="//",
     label="Non-urban area",
 )
+
+for i, ix in enumerate(socio_grouped.index):
+    total_area = (
+        socio_grouped.loc[ix, "urban_area"] + socio_grouped.loc[ix, "non_urban_area"]
+    )
+    ax.text(
+        i,
+        total_area,
+        f"{total_area:,.0f}",  # / 1e6:.1f
+        ha="center",
+        va="bottom",
+        fontsize=pdict["fontsize"],
+    )
+
 ax.set_xticks(x)
 ax.set_xticklabels(socio_grouped.index)
 plt.xticks(rotation=45, ha="right")
 ax.set_xlabel("")
 ax.set_ylabel("Area (km²)")
 ax.tick_params(axis="both", which="major")
-ax.set_yticks([0, 15000])
+ax.set_yticks([])  # [0, 15000]
 ax.get_yaxis().set_major_formatter(
     mpl.ticker.FuncFormatter(lambda x, p: format(int(x), ","))
 )
