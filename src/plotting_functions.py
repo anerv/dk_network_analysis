@@ -244,6 +244,27 @@ def plot_lorenz(
     plt.close()
 
 
+def plot_lorenz_combined(
+    ax,
+    cumulative_share,
+    share_of_population,
+    x_label,
+    y_label,
+    color="#882255",
+):
+    ax.plot(share_of_population, cumulative_share, color=color, label="Lorenz Curve")
+
+    ax.plot((0, 1), (0, 1), color="black", linestyle="--", label="Perfect Equality")
+
+    ax.set_xlabel(f"Cumulative share of {x_label}")
+
+    ax.set_ylabel(f"Cumulative share of {y_label}")
+
+    sns.despine(bottom=True, left=True)
+
+    ax.legend(frameon=False)
+
+
 def plot_components_zoom(
     gdf,
     component_col,

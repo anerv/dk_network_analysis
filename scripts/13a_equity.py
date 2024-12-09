@@ -164,6 +164,37 @@ for i, c in enumerate(inequality_columns_socio):
     )
 
 # %%
+# Combine all lorenz curves into one plot
+fp = "../results/equity/plots/lorenz_combined.png"
+
+fig, axes = plt.subplots(2, 4, figsize=(18, 10))
+
+axes = axes.flatten()
+
+for i, c in enumerate(inequality_columns_socio[0:8]):
+
+    cumulative_share = analysis_func.compute_cumulative_shares(socio_gdf[c])
+
+    pop_shares, y_shares = analysis_func.lorenz(cumulative_share)
+
+    plot_func.plot_lorenz_combined(
+        ax=axes[i],
+        cumulative_share=cumulative_share,
+        share_of_population=pop_shares,
+        x_label="population",
+        y_label=labels_socio[i],
+    )
+
+plt.tight_layout()
+
+if fp:
+    plt.savefig(fp, dpi=pdict["dpi"])
+
+plt.show()
+
+plt.close()
+
+# %%
 ############## GINI ##############
 
 inequalities_socio = (
