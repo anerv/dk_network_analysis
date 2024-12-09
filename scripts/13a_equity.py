@@ -370,18 +370,18 @@ for socioeconomic_column in rank_columns:
 
     for analysis_column in inequality_columns_socio:
 
-        # cci = analysis_func.concentration_index(
-        #     data=socio_gdf,
-        #     opportunity=analysis_column,
-        #     population="population",
-        #     income=socioeconomic_column,
-        # )
-
-        cci = analysis_func.concentr(
-            socio_gdf[analysis_column],
-            socio_gdf[socioeconomic_column],
-            socio_gdf["population"],
+        cci = analysis_func.corrected_concentration_index(
+            data=socio_gdf,
+            opportunity=analysis_column,
+            population="population",
+            income=socioeconomic_column,
         )
+
+        # cci = analysis_func.concentr(
+        #     socio_gdf[analysis_column],
+        #     socio_gdf[socioeconomic_column],
+        #     socio_gdf["population"],
+        # )
 
         analysis_columns.append(analysis_column)
         ranking_columns.append(socioeconomic_column)
