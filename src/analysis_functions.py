@@ -25,8 +25,7 @@ import h3
 
 def corrected_concentration_index(data, opportunity, population, income):
     """
-    Calculate the Corrected Concentration Index (CCI) using the updated weight formula:
-    w_i = r_i - [(n+1)/2]
+    Calculate the Corrected Concentration Index (CCI) (based on equations in Karner et al. 2024)
 
     Parameters:
     - data (pd.DataFrame): The dataset.
