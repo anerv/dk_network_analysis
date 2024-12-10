@@ -23,85 +23,130 @@ import h3
 # Gini functions from  https://geographicdata.science/book/notebooks/09_spatial_inequality.html
 
 
-def corrected_concentration_index(
-    data,
-    opportunity,
-    population,
-    income,
-):
-    # Based on https://github.com/ipeaGIT/accessibility/blob/main/R/concentration_index.R
-
+def corrected_concentration_index(data, opportunity, population, income):
     """
-    Calculate the concentration index.
+    Calculate the Corrected Concentration Index (CCI) using the updated weight formula:
+    w_i = r_i - [(n+1)/2]
 
     Parameters:
     - data (pd.DataFrame): The dataset.
-    - opportunity (str): Column name representing the opportunity measure (e.g. access to low stress infrastructure).
+    - opportunity (str): Column name representing the opportunity measure (e.g., access to low-stress infrastructure).
     - population (str): Column name representing the population.
-    - socioeconomic (str): Column name representing socioeconic variable (e.g. income).
+    - income (str): Column name representing the socioeconomic variable (e.g., income).
 
     Returns:
-    - pd.DataFrame: Results with concentration index calculations by group.
+    - float: The Corrected Concentration Index (CCI).
     """
-
     assert isinstance(opportunity, str), "'opportunity' must be a string."
     assert isinstance(population, str), "'population' must be a string."
     assert isinstance(income, str), "'income' must be a string."
 
-    # Sort data by income and group_by columns
-    sort_cols = [income]
-    data = data.sort_values(by=sort_cols)
+    # Sort the data by the income column
+    data = data.sort_values(by=income).reset_index(drop=True)
 
-    # Fractional rank calculation (based on Equation 4 of the referenced paper)
-    def calculate_fractional_rank(df):
-        df["pop_share"] = df[population] / df[population].sum()
-        df["fractional_rank"] = (
-            df["pop_share"].cumsum().shift(fill_value=0) + df["pop_share"] / 2
+    # Number of individuals (n)
+    n = len(data)
+
+    # Assign ranks (r_i)
+    data["rank"] = range(1, n + 1)  # r_i
+
+    # Calculate weights (w_i)
+    data["weight"] = data["rank"] - (n + 1) / 2
+
+    # Calculate the upper (m_x) and lower (n_x) bounds of the opportunity measure
+    m_x = data[opportunity].max()
+    n_x = data[opportunity].min()
+    if m_x == n_x:
+        raise ValueError(
+            "Upper and lower bounds of the opportunity measure are equal. CCI cannot be calculated."
         )
-        return df
 
-    data = calculate_fractional_rank(data)
+    # Apply the CCI formula
+    data["weighted_opportunity"] = data[opportunity] * data["weight"]
+    cci = (8 / (n**2 * (m_x - n_x))) * data["weighted_opportunity"].sum()
 
-    # Calculate average accessibility
-    def calculate_avg_access(df):
-        avg_access = np.average(df[opportunity], weights=df[population])
-        df["avg_access"] = avg_access
-        df["diff_from_avg"] = df[opportunity] - avg_access
-        return df
+    return cci
 
-    data = calculate_avg_access(data)
 
-    # Contribution to total calculation
-    data["cont_to_total"] = (
-        (data["fractional_rank"] - 0.5)
-        * data["diff_from_avg"]
-        * data["pop_share"]
-        / data["avg_access"]
-    )
+# def corrected_concentration_index(
+#     data,
+#     opportunity,
+#     population,
+#     income,
+# ):
+#     # Based on https://github.com/ipeaGIT/accessibility/blob/main/R/concentration_index.R
 
-    # If no rows and no grouping, return empty result
-    if data.empty:
-        return pd.DataFrame(columns=["concentration_index"])
+#     """
+#     Calculate the concentration index.
 
-    # Calculate the concentration index
+#     Parameters:
+#     - data (pd.DataFrame): The dataset.
+#     - opportunity (str): Column name representing the opportunity measure (e.g. access to low stress infrastructure).
+#     - population (str): Column name representing the population.
+#     - socioeconomic (str): Column name representing socioeconic variable (e.g. income).
 
-    # Handle corrected type
-    def add_correction_factor(df):
-        upper = df[opportunity].max()
-        lower = df[opportunity].min()
-        avg_access = df["avg_access"].iloc[0]  # Same within group
-        correction_factor = 4 * avg_access / (upper - lower) if upper != lower else 0
-        df["correction_factor"] = correction_factor
-        return df
+#     Returns:
+#     - pd.DataFrame: Results with concentration index calculations by group.
+#     """
 
-    data = add_correction_factor(data)
+#     assert isinstance(opportunity, str), "'opportunity' must be a string."
+#     assert isinstance(population, str), "'population' must be a string."
+#     assert isinstance(income, str), "'income' must be a string."
 
-    data["cont_to_total_corrected"] = data["cont_to_total"] * data["correction_factor"]
+#     # Sort data by income and group_by columns
+#     sort_cols = [income]
+#     data = data.sort_values(by=sort_cols)
 
-    concentration_index_value = 2 * data["cont_to_total_corrected"].sum()
-    # result = pd.DataFrame({"concentration_index": [concentration_index_value]})
+#     # Fractional rank calculation (based on Equation 4 of the referenced paper)
+#     def calculate_fractional_rank(df):
+#         df["pop_share"] = df[population] / df[population].sum()
+#         df["fractional_rank"] = (
+#             df["pop_share"].cumsum().shift(fill_value=0) + df["pop_share"] / 2
+#         )
+#         return df
 
-    return concentration_index_value
+#     data = calculate_fractional_rank(data)
+
+#     # Calculate average accessibility
+#     def calculate_avg_access(df):
+#         avg_access = np.average(df[opportunity], weights=df[population])
+#         df["avg_access"] = avg_access
+#         df["diff_from_avg"] = df[opportunity] - avg_access
+#         return df
+
+#     data = calculate_avg_access(data)
+
+#     # Contribution to total calculation
+#     data["cont_to_total"] = (
+#         (data["fractional_rank"] - 0.5)
+#         * data["diff_from_avg"]
+#         * data["pop_share"]
+#         / data["avg_access"]
+#     )
+
+#     # If no rows and no grouping, return empty result
+#     if data.empty:
+#         return pd.DataFrame(columns=["concentration_index"])
+
+#     # Calculate the concentration index
+
+#     # Handle corrected type
+#     def add_correction_factor(df):
+#         upper = df[opportunity].max()
+#         lower = df[opportunity].min()
+#         avg_access = df["avg_access"].iloc[0]  # Same within group
+#         correction_factor = 4 * avg_access / (upper - lower) if upper != lower else 0
+#         df["correction_factor"] = correction_factor
+#         return df
+
+#     data = add_correction_factor(data)
+
+#     data["cont_to_total_corrected"] = data["cont_to_total"] * data["correction_factor"]
+
+#     concentration_index_value = 2 * data["cont_to_total_corrected"].sum()
+#     # result = pd.DataFrame({"concentration_index": [concentration_index_value]})
+
+#     return concentration_index_value
 
 
 # def concentr(opportunity, income, population):
