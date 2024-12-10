@@ -173,6 +173,8 @@ axes = axes.flatten()
 
 for i, c in enumerate(inequality_columns_socio[0:8]):
 
+    axes[i].set_aspect(1)
+
     cumulative_share = analysis_func.compute_cumulative_shares(socio_gdf[c])
 
     pop_shares, y_shares = analysis_func.lorenz(cumulative_share)
@@ -499,6 +501,8 @@ for e, socioeconomic_column in enumerate(rank_columns):
 
     for i, analysis_column in enumerate(inequality_columns_socio):
 
+        axes[i].set_aspect(1)
+
         plot_func.plot_concentration_curves_subplots(
             ax=axes[i],
             data=socio_gdf,
@@ -562,6 +566,8 @@ for e, socioeconomic_column in enumerate(rank_columns):
     fig, axes = plt.subplots(1, len(density_columns), figsize=(20, 6))
 
     axes = axes.flatten()
+
+    axes[i].set_aspect(1)
 
     for i, (dens_col, len_col, cap_col) in enumerate(
         zip(density_columns, length_columns, per_capita_columns)
