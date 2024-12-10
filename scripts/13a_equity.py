@@ -364,6 +364,7 @@ if check_significance:
 inequalities_hex.to_csv("../results/equity/data/theil_index_hex_socio.csv")
 # %%
 
+
 # Compute CCI for inequity columns - rank by income and car ownership
 
 # CCI: "Negative values indicate that inequalities favor the poor, while positive values indicate a pro-rich bias"
@@ -407,7 +408,6 @@ for socioeconomic_column in rank_columns:
             population="population",
             income=socioeconomic_column,
         )
-
         # cci = analysis_func.concentr(
         #     socio_gdf[analysis_column],
         #     socio_gdf[socioeconomic_column],
@@ -426,7 +426,6 @@ cci_df = pd.DataFrame(
         "cci": cci_results,
     }
 )
-
 
 cci_df.to_csv("../results/equity/data/cci_results.csv", index=False)
 
@@ -595,4 +594,9 @@ for e, socioeconomic_column in enumerate(rank_columns):
 # %%
 # TODO: Examine and identify outlier areas!
 #
+# %%
+import pandas as pd
+import numpy as np
+
+
 # %%
