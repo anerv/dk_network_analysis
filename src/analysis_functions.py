@@ -907,3 +907,66 @@ def create_hex_grid(polygon_gdf, hex_resolution, crs, buffer_dist):
     grid["grid_id"] = grid.hex_id
 
     return grid
+
+
+def clean_labels(s):
+
+    s = s.replace(" ", "_")
+    s = s.replace(":", "_")
+    s = s.replace("/", "_")
+    s = s.replace("-", "_")
+    s = s.replace("__", "_")
+
+
+def label_above_below_mean(gdf, socio_column, bikeability_column):
+
+    socio_cluster_values = gdf[socio_column].unique()
+    socio_cluster_values.sort()
+
+    gdf["above_mean"] = False
+    gdf["below_mean"] = False
+
+    for socio_label in socio_cluster_values:
+
+        mean = gdf.loc[gdf[socio_column] == socio_label][bikeability_column].mean()
+        std_dev = gdf.loc[gdf[socio_column] == socio_label][bikeability_column].std()
+
+        gdf.loc[
+            (gdf[socio_column] == socio_label)
+            & (gdf[bikeability_column] > mean + std_dev),
+            "above_mean",
+        ] = True
+
+        gdf.loc[
+            (gdf[socio_column] == socio_label)
+            & (gdf[bikeability_column] < mean - std_dev),
+            "below_mean",
+        ] = True
+
+    return gdf
+
+
+def export_outliers(
+    gdf,
+    socio_label,
+    fp_above,
+    fp_below,
+    socio_column="socio_label",
+    bikeability_column="average_bikeability_rank",
+):
+
+    mean = gdf.loc[gdf[socio_column] == socio_label][bikeability_column].mean()
+    std_dev = gdf.loc[gdf[socio_column] == socio_label][bikeability_column].std()
+
+    below_mean = gdf[gdf[socio_column] == socio_label].loc[
+        gdf[bikeability_column] < mean - std_dev
+    ]
+
+    above_mean = gdf[gdf[socio_column] == socio_label].loc[
+        gdf[bikeability_column] > mean + std_dev
+    ]
+    if len(below_mean) > 0:
+        below_mean.to_file(fp_below)
+
+    if len(above_mean) > 0:
+        above_mean.to_file(fp_above)

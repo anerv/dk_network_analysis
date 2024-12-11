@@ -22,6 +22,7 @@ from matplotlib.patches import Rectangle
 from matplotlib.collections import PatchCollection
 from generativepy.color import Color
 from PIL import ImageColor
+from src import analysis_functions as analysis_func
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -29,6 +30,164 @@ exec(open("../settings/plotting.py").read())
 # Clustering functions based on https://geographicdata.science/book/notebooks/10_clustering_and_regionalization.html#
 
 # Gini functions based on https://geographicdata.science/book/notebooks/09_spatial_inequality.html
+
+
+def plot_above_below_mean(
+    gdf,
+    socio_label,
+    socio_column="socio_label",
+    bikeability_column="average_bikeability_rank",
+    fp=None,
+):
+
+    mean = gdf.loc[gdf[socio_column] == socio_label][bikeability_column].mean()
+    std_dev = gdf.loc[gdf[socio_column] == socio_label][bikeability_column].std()
+
+    _, axes = plt.subplots(1, 2, figsize=(10, 5))
+
+    axes = axes.flatten()
+
+    below_mean = gdf[gdf[socio_column] == socio_label].loc[
+        gdf[bikeability_column] < mean - std_dev
+    ]
+
+    above_mean = gdf[gdf[socio_column] == socio_label].loc[
+        gdf[bikeability_column] > mean + std_dev
+    ]
+
+    if len(below_mean) > 0:
+
+        gdf.plot(ax=axes[0], color="lightgrey", alpha=0.5, linewidth=0.1)
+
+        below_mean.plot(ax=axes[0], color="blue", linewidth=0.1)
+
+        axes[0].axis("off")
+
+        axes[0].title.set_text(f"Areas 1 std dev below mean")
+
+    elif len(below_mean) == 0:
+        axes[0].axis("off")
+
+    if len(above_mean) > 0:
+
+        gdf.plot(ax=axes[1], color="lightgrey", alpha=0.5, linewidth=0.1)
+
+        above_mean.plot(ax=axes[1], color="red", linewidth=0.1)
+
+        axes[1].title.set_text(f"Areas 1 std dev above mean")
+
+        axes[1].axis("off")
+
+    elif len(above_mean) == 0:
+        axes[1].axis("off")
+
+    plt.tight_layout()
+
+    plt.suptitle(f"{socio_label}")
+
+    if fp:
+        plt.savefig(fp, dpi=pdict["dpi"])
+
+    plt.show()
+
+
+def make_combined_outlier_plot(
+    input_gdf, socio_column, bikeability_column, color_dict, fp=None
+):
+
+    gdf = input_gdf.copy()
+
+    gdf = analysis_func.label_above_below_mean(
+        gdf,
+        socio_column,
+        bikeability_column,
+    )
+
+    # socio_cluster_values = gdf[socio_column].unique()
+    # socio_cluster_values.sort()
+
+    # gdf["above_mean"] = None
+    # gdf["below_mean"] = None
+
+    # for socio_label in socio_cluster_values:
+
+    #     mean = gdf.loc[gdf[socio_column] == socio_label][bikeability_column].mean()
+    #     std_dev = gdf.loc[gdf[socio_column] == socio_label][bikeability_column].std()
+
+    #     gdf.loc[
+    #         (gdf[socio_column] == socio_label)
+    #         & (gdf[bikeability_column] > mean + std_dev),
+    #         "above_mean",
+    #     ] = True
+
+    #     gdf.loc[
+    #         (gdf[socio_column] == socio_label)
+    #         & (gdf[bikeability_column] < mean - std_dev),
+    #         "below_mean",
+    #     ] = True
+
+    active_labels = list(gdf.loc[gdf["above_mean"] == True][socio_column].unique())
+    active_labels.sort()
+    colors = [color_dict[l] for l in active_labels]
+    cmap = color_list_to_cmap(colors)
+
+    _, axes = plt.subplots(1, 2, figsize=pdict["fsmap"])
+
+    axes = axes.flatten()
+    ax_above = axes[0]
+    ax_below = axes[1]
+
+    gdf.plot(ax=ax_above, color="lightgrey", alpha=0.5, linewidth=0.0)
+
+    gdf[gdf["above_mean"] == True].plot(
+        categorical=True,
+        ax=ax_above,
+        column=socio_column,
+        linewidth=0.0,
+        legend=True,
+        legend_kwds={"frameon": False},
+        cmap=cmap,
+    )
+
+    ax_above.set_axis_off()
+
+    active_labels = list(gdf.loc[gdf["below_mean"] == True][socio_column].unique())
+    active_labels.sort()
+    colors = [color_dict[l] for l in active_labels]
+    cmap = color_list_to_cmap(colors)
+
+    gdf.plot(ax=ax_below, color="lightgrey", alpha=0.5, linewidth=0.0)
+
+    gdf[gdf["below_mean"] == True].plot(
+        categorical=True,
+        ax=ax_below,
+        column=socio_column,
+        linewidth=0.0,
+        legend=True,
+        legend_kwds={"frameon": False},
+        cmap=cmap,
+    )
+    ax_below.set_axis_off()
+
+    ax_above.add_artist(
+        ScaleBar(
+            dx=1,
+            units="m",
+            dimension="si-length",
+            length_fraction=0.15,
+            width_fraction=0.002,
+            location="lower left",
+            box_alpha=0.5,
+            font_properties={"size": pdict["map_legend_fs"]},
+        )
+    )
+
+    plt.tight_layout()
+
+    if fp:
+        plt.savefig(fp, dpi=pdict["dpi"])
+
+    plt.show()
 
 
 def plot_concentration_curves_combined(
@@ -1716,12 +1875,7 @@ def make_stripplot(
 
     plt.figure(figsize=pdict["fsbar"])
     sns.stripplot(
-        data=data,
-        x=x,
-        y=y,
-        hue=hue_col,
-        palette=palette,
-        legend=legend,
+        data=data, x=x, y=y, hue=hue_col, palette=palette, legend=legend, jitter=True
     )
 
     plt.xlabel(xlabel)
