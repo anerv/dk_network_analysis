@@ -30,6 +30,9 @@ socio_socio_cluster_variables = socio_socio_cluster_variables[8:-2]
 socio_socio_cluster_variables.remove(
     "Household income 50th percentile",
 )
+socio_socio_cluster_variables.remove(
+    "Household income 80th percentile",
+)
 
 # Use robust_scale to norm cluster variables
 socio_socio_scaled = robust_scale(socio_socio_gdf[socio_socio_cluster_variables])
