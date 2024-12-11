@@ -215,11 +215,6 @@ plot_func.make_combined_outlier_plot(
 )
 
 # %%
-# TODO: For each socio cluster, make a scatter plot plotting the value of all members of that cluster for all socio variables.
-# Plot non-outlier members in one color, and outliers in another color.
-
-# %%
-
 
 socio_socio = analysis_func.label_above_below_mean(
     socio_socio, "socio_label", "average_bikeability_rank"
@@ -291,6 +286,10 @@ for socio_label in socio_cluster_values:
     handles, labels = ax.get_legend_handles_labels()
     by_label = dict(zip(labels, handles))
     plt.legend(by_label.values(), by_label.keys(), frameon=False)
+
+    plt.savefig(
+        "../results/equity/plots/stripplot_outlier_analysis_" + f"{socio_label_fp}.png"
+    )
     plt.show()
 
 # %%
