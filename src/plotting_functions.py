@@ -32,6 +32,74 @@ exec(open("../settings/plotting.py").read())
 # Gini functions based on https://geographicdata.science/book/notebooks/09_spatial_inequality.html
 
 
+def plot_outliers_zoom(
+    gdf_outliers,
+    gdf_background,
+    cmap,
+    xmin,
+    xmax,
+    ymin,
+    ymax,
+    cluster_label="socio_label",
+    background_color="lightgrey",
+    attr=None,
+    plot_title=None,
+    filepath=None,
+    bbox_to_anchor=(0.99, 1),
+):
+
+    fig, ax = plt.subplots(figsize=pdict["fsmap"])
+
+    gdf_background.plot(ax=ax, color=background_color, alpha=0.5, linewidth=0.0)
+
+    gdf_outliers.plot(
+        ax=ax,
+        column=cluster_label,
+        cmap=cmap,
+        legend=True,
+        legend_kwds={
+            "frameon": False,
+            "bbox_to_anchor": bbox_to_anchor,
+            "loc": "upper left",
+            "fontsize": pdict["map_legend_fs"],
+        },
+        linewidth=0.0,
+    )
+
+    ax.set_axis_off()
+
+    if attr is not None:
+        cx.add_attribution(ax=ax, text="(C) " + attr, font_size=pdict["map_legend_fs"])
+        txt = ax.texts[-1]
+        txt.set_position([0.99, 0.012])
+        txt.set_ha("right")
+        txt.set_va("bottom")
+
+    ax.add_artist(
+        ScaleBar(
+            dx=1,
+            units="m",
+            dimension="si-length",
+            length_fraction=0.15,
+            width_fraction=0.002,
+            location="lower left",
+            box_alpha=0.5,
+            font_properties={"size": pdict["map_legend_fs"]},
+        )
+    )
+
+    ax.axis([xmin, xmax, ymin, ymax])
+
+    if plot_title is not None:
+        ax.set_title(plot_title, fontsize=pdict["map_title_fs"])
+
+    if filepath is not None:
+        fig.savefig(filepath, dpi=pdict["dpi"])
+
+    plt.show()
+    plt.close()
+
+
 def plot_above_below_mean(
     gdf,
     socio_label,
