@@ -277,22 +277,20 @@ for socio_label in socio_cluster_values:
         color="#009988",
         label="Outlier below mean",
     )
-    plt.xticks(rotation=90)
-    plt.title(f"{socio_label}")
+    plt.xticks(rotation=90, fontsize=pdict["fs_subplot"])
+    plt.title(f"{socio_label}", fontsize=pdict["title_fs"])
     plt.xlabel("")
     plt.ylabel("")
 
     sns.despine(left=True)
     handles, labels = ax.get_legend_handles_labels()
     by_label = dict(zip(labels, handles))
-    plt.legend(by_label.values(), by_label.keys(), frameon=False)
-
-    plt.savefig(
-        "../results/equity/plots/stripplot_outlier_analysis_" + f"{socio_label_fp}.png"
+    plt.legend(
+        by_label.values(), by_label.keys(), frameon=False, fontsize=pdict["fs_subplot"]
     )
+
+    s = analysis_func.clean_labels(socio_label)
+    plt.savefig("../results/equity/plots/stripplot_outlier_analysis_" + f"{s}.png")
     plt.show()
-
-# %%
-
 
 # %%
