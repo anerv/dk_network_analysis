@@ -294,3 +294,63 @@ for socio_label in socio_cluster_values:
     plt.show()
 
 # %%
+
+socio_socio = analysis_func.label_above_below_mean(
+    socio_socio, "socio_label", "average_bikeability_rank"
+)
+
+socio_outliers_below = socio_socio[
+    (socio_socio.below_mean == True) & (socio_socio.kmeans_socio.isin([5]))  # 6, 7
+]
+
+socio_outliers_above = socio_socio[
+    (socio_socio.above_mean == True) & (socio_socio.kmeans_socio.isin([1, 2, 3, 4, 5]))
+]
+
+active_labels_below = list(socio_outliers_below["socio_label"].unique())
+active_labels_below.sort()
+colors_below = [socio_cluster_colors_dict[l] for l in active_labels_below]
+cmap_below = plot_func.color_list_to_cmap(colors_below)
+
+active_labels_above = list(socio_outliers_above["socio_label"].unique())
+active_labels_above.sort()
+colors_above = [socio_cluster_colors_dict[l] for l in active_labels_above]
+cmap_above = plot_func.color_list_to_cmap(colors_above)
+
+# %%
+
+xmin, ymin = 705086, 6163309  # 708757, 6164597
+xmax, ymax = (
+    737729,
+    6190758,
+)  # 739359, 6188364
+
+plot_func.plot_outliers_zoom(
+    socio_outliers_above,
+    socio_socio,
+    cmap_above,
+    xmin,
+    xmax,
+    ymin,
+    ymax,
+    filepath="../results/equity/maps/outliers_above_mean_zoom.png",
+    bbox_to_anchor=(0.65, 0.99),
+)
+
+# %%
+xmin, ymin = 626468, 6052735
+xmax, ymax = 677547, 6094376
+
+plot_func.plot_outliers_zoom(
+    socio_outliers_below,
+    socio_socio,
+    cmap_below,
+    xmin,
+    xmax,
+    ymin,
+    ymax,
+    filepath="../results/equity/maps/outliers_below_mean_zoom.png",
+    bbox_to_anchor=(0.1, 0.07),
+)
+
+# %%
