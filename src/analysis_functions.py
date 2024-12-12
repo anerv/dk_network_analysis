@@ -917,6 +917,8 @@ def clean_labels(s):
     s = s.replace("-", "_")
     s = s.replace("__", "_")
 
+    return s
+
 
 def label_above_below_mean(gdf, socio_column, bikeability_column):
 
