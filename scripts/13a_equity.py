@@ -484,9 +484,6 @@ for e, socioeconomic_column in enumerate(rank_columns):
             oppportunity_label=labels_socio[i],
         )
 
-# NOTE: Should use density instead of length for this step?? Does not normalize by population
-
-
 # %%
 
 # Make subplots for each rank column
@@ -567,11 +564,10 @@ for e, socioeconomic_column in enumerate(rank_columns):
 
     axes = axes.flatten()
 
-    axes[i].set_aspect(1)
-
     for i, (dens_col, len_col, cap_col) in enumerate(
         zip(density_columns, length_columns, per_capita_columns)
     ):
+        axes[i].set_aspect(1)
 
         plot_func.plot_concentration_curves_combined(
             ax=axes[i],
@@ -598,11 +594,50 @@ for e, socioeconomic_column in enumerate(rank_columns):
     plt.close()
 
 # %%
-# TODO: Examine and identify outlier areas!
-#
-# %%
-import pandas as pd
-import numpy as np
 
+fp = f"../results/equity/plots/concentration_curves_combined_lts1.png"
+
+rank_columns_subset = [
+    "household_low_income_pct",
+    "household_medium_income_pct",
+    "household_high_income_pct",
+    "Households w car (%)",
+]
+
+fig, axes = plt.subplots(1, len(rank_columns_subset), figsize=(20, 5))
+
+axes = axes.flatten()
+
+for e, socioeconomic_column in enumerate(rank_columns_subset):
+
+    axes[e].set_aspect(1)
+
+    plot_func.plot_concentration_curves_combined(
+        ax=axes[e],
+        data=socio_gdf,
+        opportunities=[
+            density_columns[0],
+            length_columns[0],
+            per_capita_columns[0],
+        ],
+        population="population",
+        income=socioeconomic_column,
+        oppportunity_labels=[labels_dens[0], labels_length[0], labels_capita[0]],
+        general_opportunity_label=f"{general_labels[i]} infrastructure",
+        opportunity_colors=["#882255", "#009988", "#EE7733"],
+    )
+
+sns.despine()
+
+plt.suptitle(f"Concentration curves for LTS 1")
+
+plt.tight_layout()
+
+if fp:
+    plt.savefig(fp, dpi=pdict["dpi"])
+
+plt.show()
+
+plt.close()
 
 # %%
