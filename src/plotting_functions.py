@@ -63,7 +63,7 @@ def plot_outliers_zoom(
             "loc": "upper left",
             "fontsize": pdict["map_legend_fs"],
         },
-        linewidth=0.0,
+        linewidth=0.3,
     )
 
     ax.set_axis_off()
