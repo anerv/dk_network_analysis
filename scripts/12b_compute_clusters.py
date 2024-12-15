@@ -136,7 +136,7 @@ cmap = plot_func.color_list_to_cmap(colors)
 
 fp = fp_cluster_maps_base + "socio_cluster_map.png"
 plot_func.make_cluster_map(
-    socio_socio_gdf, "socio_label", cmap, fp, attr="Statistics Denmark"
+    socio_socio_gdf, "socio_label", cmap, fp, attr="Statistics Denmark", fontsize=12
 )
 
 # %%
@@ -245,7 +245,7 @@ plot_func.make_cluster_map(hex_gdf, "kmeans_net", cmap, fp)
 
 # Labels
 fp = fp_cluster_maps_base + "hex_cluster_map_labels.png"
-plot_func.make_cluster_map(hex_gdf, "cluster_label", cmap, fp)
+plot_func.make_cluster_map(hex_gdf, "cluster_label", cmap, fp, fontsize=12)
 
 # Make zoomed cluster map
 fp = fp_cluster_maps_base + "hex_cluster_map_zoom.png"

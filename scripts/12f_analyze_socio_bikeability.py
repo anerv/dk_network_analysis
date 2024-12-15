@@ -223,6 +223,8 @@ socio_socio = analysis_func.label_above_below_mean(
 socio_cluster_values = socio_socio.socio_label.unique()
 socio_cluster_values.sort()
 
+fontsize = 14
+
 for socio_label in socio_cluster_values:
 
     this_cluster = socio_socio[
@@ -277,17 +279,16 @@ for socio_label in socio_cluster_values:
         color="#009988",
         label="Outlier below mean",
     )
-    plt.xticks(rotation=90, fontsize=pdict["fs_subplot"])
-    plt.title(f"{socio_label}", fontsize=pdict["title_fs"])
+    plt.xticks(rotation=90, fontsize=fontsize)
+    plt.title(f"{socio_label}", fontsize=fontsize)
     plt.xlabel("")
     plt.ylabel("")
+    ax.tick_params(axis="both", which="major", labelsize=fontsize)
 
     sns.despine(left=True)
     handles, labels = ax.get_legend_handles_labels()
     by_label = dict(zip(labels, handles))
-    plt.legend(
-        by_label.values(), by_label.keys(), frameon=False, fontsize=pdict["fs_subplot"]
-    )
+    plt.legend(by_label.values(), by_label.keys(), frameon=False, fontsize=fontsize)
 
     s = analysis_func.clean_labels(socio_label)
     plt.savefig("../results/equity/plots/stripplot_outlier_analysis_" + f"{s}.png")
@@ -318,12 +319,17 @@ colors_above = [socio_cluster_colors_dict[l] for l in active_labels_above]
 cmap_above = plot_func.color_list_to_cmap(colors_above)
 
 # %%
+from shapely.geometry import Polygon
+
+squares = []
 
 xmin, ymin = 705086, 6163309  # 708757, 6164597
 xmax, ymax = (
     737729,
     6190758,
 )  # 739359, 6188364
+
+squares.append(Polygon([(xmin, ymin), (xmax, ymin), (xmax, ymax), (xmin, ymax)]))
 
 plot_func.plot_outliers_zoom(
     socio_outliers_above,
@@ -335,11 +341,14 @@ plot_func.plot_outliers_zoom(
     ymax,
     filepath="../results/equity/maps/outliers_above_mean_zoom.png",
     bbox_to_anchor=(0.65, 0.99),
+    fontsize=14,
 )
 
 # %%
 xmin, ymin = 626468, 6052735
 xmax, ymax = 677547, 6094376
+
+squares.append(Polygon([(xmin, ymin), (xmax, ymin), (xmax, ymax), (xmin, ymax)]))
 
 plot_func.plot_outliers_zoom(
     socio_outliers_below,
@@ -351,6 +360,22 @@ plot_func.plot_outliers_zoom(
     ymax,
     filepath="../results/equity/maps/outliers_below_mean_zoom.png",
     bbox_to_anchor=(0.1, 0.07),
+    fontsize=14,
 )
+
+# %%
+squares_gdf = gpd.GeoDataFrame(geometry=squares)
+
+fig, ax = plt.subplots(figsize=pdict["fsmap"])
+
+socio_socio.plot(ax=ax, color="#DDDDDD", linewidth=0.0)
+squares_gdf.plot(ax=ax, facecolor="none", edgecolor="red", linewidth=2.5)
+
+ax.set_axis_off()
+
+plt.tight_layout()
+plt.savefig("../results/equity/maps/outlier_context.png", dpi=pdict["dpi"])
+plt.show()
+plt.close()
 
 # %%

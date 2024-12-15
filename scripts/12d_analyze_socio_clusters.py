@@ -192,9 +192,9 @@ sns.barplot(
 
 ax.set_xlabel("")
 ax.set_ylabel("Population (mill.)")
-plt.xticks(rotation=45, ha="right")
+plt.xticks(rotation=45, ha="right", fontsize=pdict["fontsize"] + 2)
 plt.yticks([])  # [0, 1200000]
-ax.tick_params(axis="both", which="major", labelsize=pdict["fontsize"])
+ax.tick_params(axis="both", which="major", labelsize=pdict["fontsize"] + 2)
 
 sns.despine(left=True, bottom=True)
 
@@ -202,7 +202,10 @@ for container in ax.containers:
     labels = [label.get_height() for label in container]
     labels_millions = [f"{label/1e6:.1f}" for label in labels]
     ax.bar_label(
-        container, labels=labels_millions, label_type="edge", fontsize=pdict["fontsize"]
+        container,
+        labels=labels_millions,
+        label_type="edge",
+        fontsize=pdict["fontsize"] + 2,
     )
 
 plt.tight_layout()
@@ -264,14 +267,14 @@ for i, ix in enumerate(socio_grouped.index):
         f"{total_area:,.0f}",  # / 1e6:.1f
         ha="center",
         va="bottom",
-        fontsize=pdict["fontsize"],
+        fontsize=pdict["fontsize"] + 2,
     )
 
 ax.set_xticks(x)
 ax.set_xticklabels(socio_grouped.index)
-plt.xticks(rotation=45, ha="right")
+plt.xticks(rotation=45, ha="right", fontsize=pdict["fontsize"] + 2)
 ax.set_xlabel("")
-ax.set_ylabel("Area (km²)")
+ax.set_ylabel("Area (km²)", fontsize=pdict["fontsize"] + 2)
 ax.tick_params(axis="both", which="major")
 ax.set_yticks([])  # [0, 15000]
 ax.get_yaxis().set_major_formatter(
@@ -292,7 +295,7 @@ ax.legend(
     handles=[no_urban_patch],
     loc="upper right",
     frameon=False,
-    fontsize=pdict["fs_subplot"],
+    fontsize=pdict["fontsize"] + 2,
 )
 plt.tight_layout()
 plt.savefig(

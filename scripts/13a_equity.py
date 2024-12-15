@@ -185,6 +185,7 @@ for i, c in enumerate(inequality_columns_socio[0:8]):
         share_of_population=pop_shares,
         x_label="population",
         y_label=labels_socio[i],
+        fontsize=14,
     )
 
 plt.tight_layout()
@@ -365,7 +366,6 @@ if check_significance:
 
 inequalities_hex.to_csv("../results/equity/data/theil_index_hex_socio.csv")
 # %%
-
 
 # Compute CCI for inequity columns - rank by income and car ownership
 
@@ -578,11 +578,12 @@ for e, socioeconomic_column in enumerate(rank_columns):
             oppportunity_labels=[labels_dens[i], labels_length[i], labels_capita[i]],
             general_opportunity_label=f"{general_labels[i]} infrastructure",
             opportunity_colors=["#882255", "#009988", "#EE7733"],
+            fontsize=14,
         )
 
     sns.despine()
 
-    plt.suptitle(f"Concentration curves for {rank_labels[e]}")
+    # plt.suptitle(f"Concentration curves for {rank_labels[e]}", fontsize=14)
 
     plt.tight_layout()
 
@@ -623,13 +624,15 @@ for e, socioeconomic_column in enumerate(rank_columns_subset):
         population="population",
         income=socioeconomic_column,
         oppportunity_labels=[labels_dens[0], labels_length[0], labels_capita[0]],
-        general_opportunity_label=f"{general_labels[i]} infrastructure",
+        general_opportunity_label=f"{general_labels[0]} infrastructure",
         opportunity_colors=["#882255", "#009988", "#EE7733"],
+        fontsize=14,
     )
+
 
 sns.despine()
 
-plt.suptitle(f"Concentration curves for LTS 1")
+# plt.suptitle(f"Concentration curves for LTS 1", fontsize=14)
 
 plt.tight_layout()
 

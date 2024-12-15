@@ -46,6 +46,7 @@ def plot_outliers_zoom(
     plot_title=None,
     filepath=None,
     bbox_to_anchor=(0.99, 1),
+    fontsize=12,
 ):
 
     fig, ax = plt.subplots(figsize=pdict["fsmap"])
@@ -61,7 +62,7 @@ def plot_outliers_zoom(
             "frameon": False,
             "bbox_to_anchor": bbox_to_anchor,
             "loc": "upper left",
-            "fontsize": pdict["map_legend_fs"],
+            "fontsize": fontsize,
         },
         linewidth=0.3,
     )
@@ -69,7 +70,7 @@ def plot_outliers_zoom(
     ax.set_axis_off()
 
     if attr is not None:
-        cx.add_attribution(ax=ax, text="(C) " + attr, font_size=pdict["map_legend_fs"])
+        cx.add_attribution(ax=ax, text="(C) " + attr, font_size=fontsize)
         txt = ax.texts[-1]
         txt.set_position([0.99, 0.012])
         txt.set_ha("right")
@@ -84,7 +85,7 @@ def plot_outliers_zoom(
             width_fraction=0.002,
             location="lower left",
             box_alpha=0.5,
-            font_properties={"size": pdict["map_legend_fs"]},
+            font_properties={"size": fontsize},
         )
     )
 
@@ -160,7 +161,7 @@ def plot_above_below_mean(
 
 
 def make_combined_outlier_plot(
-    input_gdf, socio_column, bikeability_column, color_dict, fp=None
+    input_gdf, socio_column, bikeability_column, color_dict, fp=None, fontsize=12
 ):
 
     gdf = input_gdf.copy()
@@ -213,7 +214,7 @@ def make_combined_outlier_plot(
         column=socio_column,
         linewidth=0.0,
         legend=True,
-        legend_kwds={"frameon": False},
+        legend_kwds={"frameon": False, "fontsize": fontsize},
         cmap=cmap,
     )
 
@@ -232,7 +233,7 @@ def make_combined_outlier_plot(
         column=socio_column,
         linewidth=0.0,
         legend=True,
-        legend_kwds={"frameon": False},
+        legend_kwds={"frameon": False, "fontsize": fontsize},
         cmap=cmap,
     )
     ax_below.set_axis_off()
@@ -246,7 +247,7 @@ def make_combined_outlier_plot(
             width_fraction=0.002,
             location="lower left",
             box_alpha=0.5,
-            font_properties={"size": pdict["map_legend_fs"]},
+            font_properties={"size": fontsize},
         )
     )
 
@@ -267,6 +268,7 @@ def plot_concentration_curves_combined(
     oppportunity_labels,
     general_opportunity_label,
     opportunity_colors,
+    fontsize=12,
 ):
     """
     Plot cumulative share of infrastructure vs. cumulative share of population ordered by income.
@@ -306,8 +308,10 @@ def plot_concentration_curves_combined(
         color="black",
         label="Perfect equality",
     )
-    ax.set_xlabel(f"Cumulative share of population")
-    ax.set_ylabel(f"Cumulative share of {general_opportunity_label}")
+
+    ax.tick_params(axis="both", which="major", labelsize=fontsize)
+    ax.set_xlabel(f"Cumulative share of population", fontsize=fontsize)
+    ax.set_ylabel(f"Cumulative share of {general_opportunity_label}", fontsize=fontsize)
 
     # UPDATE legend label for opportunity:
     handles, labels = ax.get_legend_handles_labels()
@@ -317,7 +321,7 @@ def plot_concentration_curves_combined(
         labels[i] = (
             oppportunity_label[0].capitalize() + oppportunity_label[1:]
         )  # oppportunity_label.capitalize()
-        ax.legend(handles, labels, frameon=False)
+        ax.legend(handles, labels, frameon=False, fontsize=fontsize)
 
 
 def plot_concentration_curves_subplots(
@@ -328,6 +332,7 @@ def plot_concentration_curves_subplots(
     income,
     oppportunity_label,
     opportunity_color="#882255",
+    fontsize=12,
 ):
     """
     Plot cumulative share of infrastructure vs. cumulative share of population ordered by income.
@@ -364,15 +369,15 @@ def plot_concentration_curves_subplots(
         color="black",
         label="Perfect equality",
     )
-    ax.set_xlabel(f"Cumulative share of population")
-    ax.set_ylabel(f"Cumulative share of {oppportunity_label}")
+    ax.set_xlabel(f"Cumulative share of population", fontsize=fontsize)
+    ax.set_ylabel(f"Cumulative share of {oppportunity_label}", fontsize=fontsize)
 
     # UPDATE legend label for opportunity:
     handles, labels = ax.get_legend_handles_labels()
     labels[0] = (
         oppportunity_label[0].capitalize() + oppportunity_label[1:]
     )  # oppportunity_label.capitalize()
-    ax.legend(handles, labels, frameon=False)
+    ax.legend(handles, labels, frameon=False, fontsize=fontsize)
 
 
 def plot_concentration_curves(
@@ -443,6 +448,7 @@ def plot_lorenz(
     y_label,
     figsize=(6, 6),
     fp=None,
+    fontsize=12,
 ):
 
     _, ax = plt.subplots(figsize=figsize)
@@ -453,11 +459,11 @@ def plot_lorenz(
 
     ax.plot((0, 1), (0, 1), color="black", linestyle="--", label="Perfect Equality")
 
-    ax.set_xlabel(f"Cumulative share of {x_label}")
+    ax.set_xlabel(f"Cumulative share of {x_label}", fontsize=fontsize)
 
-    ax.set_ylabel(f"Cumulative share of {y_label}")
+    ax.set_ylabel(f"Cumulative share of {y_label}", fontsize=fontsize)
 
-    ax.legend(frameon=False)
+    ax.legend(frameon=False, fontsize=fontsize)
 
     sns.despine()
 
@@ -478,18 +484,19 @@ def plot_lorenz_combined(
     x_label,
     y_label,
     color="#882255",
+    fontsize=12,
 ):
     ax.plot(share_of_population, cumulative_share, color=color, label="Lorenz Curve")
 
     ax.plot((0, 1), (0, 1), color="black", linestyle="--", label="Perfect Equality")
 
-    ax.set_xlabel(f"Cumulative share of {x_label}")
+    ax.set_xlabel(f"Cumulative share of {x_label}", fontsize=fontsize)
 
-    ax.set_ylabel(f"Cumulative share of {y_label}")
+    ax.set_ylabel(f"Cumulative share of {y_label}", fontsize=fontsize)
 
     sns.despine(bottom=True, left=True)
 
-    ax.legend(frameon=False)
+    ax.legend(frameon=False, fontsize=fontsize)
 
 
 def plot_components_zoom(
@@ -749,7 +756,7 @@ def plot_zoom_categorical(
 
 
 def make_cluster_map(
-    gdf, plot_col, cmap, fp, add_attribution=True, attr=pdict["map_attr"]
+    gdf, plot_col, cmap, fp, add_attribution=True, attr=pdict["map_attr"], fontsize=10
 ):
 
     fig, ax = plt.subplots(1, 1, figsize=pdict["fsmap"])
@@ -758,7 +765,11 @@ def make_cluster_map(
         column=plot_col,
         categorical=True,
         legend=True,
-        legend_kwds={"frameon": False, "bbox_to_anchor": (0.99, 1), "fontsize": 9},
+        legend_kwds={
+            "frameon": False,
+            "bbox_to_anchor": (0.99, 1),
+            "fontsize": fontsize,
+        },
         ax=ax,
         cmap=cmap,
         linewidth=0.1,
@@ -770,6 +781,7 @@ def make_cluster_map(
         txt.set_position([0.99, 0.01])
         txt.set_ha("right")
         txt.set_va("bottom")
+        txt.set_fontsize(fontsize)
 
     ax.add_artist(
         ScaleBar(
@@ -780,7 +792,7 @@ def make_cluster_map(
             width_fraction=0.002,
             location="lower left",
             box_alpha=0,
-            font_properties={"size": 8},
+            font_properties={"size": fontsize},
         )
     )
 
@@ -1938,7 +1950,16 @@ def make_barplot(data, x, y, hue_col, palette, xlabel=None, fp=None):
 
 
 def make_stripplot(
-    data, x, y, hue_col, palette, legend=False, xlabel=None, xticks=None, fp=None
+    data,
+    x,
+    y,
+    hue_col,
+    palette,
+    legend=False,
+    xlabel=None,
+    xticks=None,
+    fp=None,
+    fontsize=12,
 ):
 
     plt.figure(figsize=pdict["fsbar"])
@@ -1946,11 +1967,13 @@ def make_stripplot(
         data=data, x=x, y=y, hue=hue_col, palette=palette, legend=legend, jitter=True
     )
 
-    plt.xlabel(xlabel)
+    plt.xlabel(xlabel, fontsize=fontsize)
     plt.ylabel("")
 
     if xticks:
-        plt.xticks(xticks)
+        plt.xticks(xticks, fontsize=fontsize)
+
+    plt.yticks(fontsize=fontsize)
 
     sns.despine(left=True, bottom=True)
     plt.tight_layout()
