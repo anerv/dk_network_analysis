@@ -262,7 +262,7 @@ def spatial_weights_combined(gdf, id_column, k=3, silence_warnings=True):
         gdf, id_column, "queen", silence_warnings=silence_warnings
     )
     w_knn = compute_spatial_weights(
-        gdf, id_column, w_type="knn", k=3, silence_warnings=silence_warnings
+        gdf, id_column, w_type="knn", k=k, silence_warnings=silence_warnings
     )
     w = weights.set_operations.w_union(
         w_queen, w_knn, silence_warnings=silence_warnings
