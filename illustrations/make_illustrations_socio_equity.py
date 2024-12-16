@@ -77,7 +77,7 @@ for text, new_label in zip(legend.get_texts(), new_labels):
     text.set_text(new_label)
 
 ax.set_axis_off()
-ax.set_title("Population density (people/km²)", fontsize=pdict["map_title_fs"])
+# ax.set_title("Population density (people/km²)", fontsize=pdict["map_title_fs"])
 
 ax.add_artist(
     ScaleBar(
