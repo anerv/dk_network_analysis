@@ -91,6 +91,7 @@ for e, gdf in enumerate(gdfs):
             norm_max=vmax,
             # cx_tile=cx_tile_2,
             background_color=pdict["background_color"],
+            # legend_fs=20,
         )
 
     ###### Plot relative network length #####

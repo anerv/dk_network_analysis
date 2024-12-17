@@ -1463,6 +1463,7 @@ def plot_unclassified_poly(
     plot_na=True,
     background_color=None,
     legend_kwds={"fmt": "{:.0f}"},
+    legend_fs=pdict["map_legend_fs"],
 ):
     """
     Plots an unclassified polygon based on the given parameters.
@@ -1493,7 +1494,7 @@ def plot_unclassified_poly(
 
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size="3.5%", pad="1%")
-    cax.tick_params(labelsize=pdict["map_legend_fs"])
+    cax.tick_params(labelsize=legend_fs)
 
     if use_norm is True:
 
@@ -1593,11 +1594,11 @@ def plot_unclassified_poly(
         # Creates a legend with the list of patches above.
         ax.legend(
             handles=patch_list,
-            fontsize=pdict["map_legend_fs"],
+            fontsize=legend_fs,
             loc="lower left",
             bbox_to_anchor=(0.1, -0.015),
             # title="Litologia",
-            title_fontsize=pdict["map_legend_fs"],
+            title_fontsize=legend_fs,
             frameon=False,
         )
 
@@ -1630,7 +1631,7 @@ def plot_unclassified_poly(
             width_fraction=0.002,
             location="lower left",
             box_alpha=0,
-            font_properties={"size": pdict["map_legend_fs"]},
+            font_properties={"size": legend_fs},
         )
     )
 
