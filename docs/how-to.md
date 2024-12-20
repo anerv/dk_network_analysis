@@ -36,6 +36,7 @@ The analysis makes use of 5 input data sets:
 * A polygon data set with the Danish municipal boundaries
 * A polygon data set with socio-economic data on population density, income etc.
 * A polygon data set with areas classified as urban.
+* A raster data set with a population density grid.
 
 ### Road network data
 
