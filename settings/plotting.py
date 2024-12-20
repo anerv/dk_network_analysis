@@ -21,7 +21,6 @@ pdict = {
     "nodata": "darkgrey",  # "xkcd:putty",  # "xkcd:taupe",  # "tan",  # "silver",
     # GLOBAL SETTINGS FOR PLOTS
     "dpi": 300,  # resolution
-    "plot_res": "low",  # "high" for exporting to svg, "low" for png
     # matplotlib figure size for map plots of entire study area
     "fsmap": (13, 7.3125),
     # size for bar plots
@@ -60,14 +59,6 @@ mpl.rcParams["hatch.linewidth"] = 0.5
 mpl.style.use("tableau-colorblind10")
 
 import contextily as cx
-
-cx_tile_1 = cx.providers.CartoDB.Voyager
-cx_tile_2 = cx.providers.CartoDB.PositronNoLabels  # CartoDB.DarkMatterNoLabels
-
-# Classification scheme for visualizations of results
-scheme = "fisherjenks"
-# number of classes in classification scheme
-k = 5
 
 labels = ["LTS 1", "LTS 2", "LTS 3", "LTS 4", "Car"]
 labels_all = ["LTS 1", "LTS 2", "LTS 3", "LTS 4", "Car", "Total network"]
@@ -137,7 +128,6 @@ bikeability_cluster_color_dict = {
     ],
 }
 
-
 socio_cluster_colors_dict = {
     "1: High income - 2 cars": "#77AADD",  # light blue
     "2: Very high income - 2 cars": "#99DDFF",  # light cyan
@@ -148,7 +138,6 @@ socio_cluster_colors_dict = {
     "7: Medium income - very low car": "#EE8866",  # orange
 }
 
-
 distance_color_dict = {
     "1": "#DDCC77",  # "#94CBEC",
     "2": "#999933",  # 44AA99",
@@ -156,7 +145,6 @@ distance_color_dict = {
     "10": "#44AA99",  # "#CC6677",
     "15": "#117733",  # "#882255",
 }
-
 
 component_columns = [
     "component_all",
@@ -367,7 +355,6 @@ population_rename_dict = {
     "urban_pct": "Urban area (%)",
 }
 
-
 socio_corr_variables = [
     "0-17 years (%)",
     "18-29 years (%)",
@@ -449,7 +436,6 @@ plotly_labels = {
     "car_lts_1_3_diff_pct": "Difference in network reach (%)",
     "car_lts_1_4_diff_pct": "Difference in network reach (%)",
 }
-
 
 rename_index_dict_density = {
     "lts_1_dens": "Density - LTS 1",
