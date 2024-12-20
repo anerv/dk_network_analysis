@@ -116,7 +116,7 @@ fp_socio_reach = "../results/reach_maps/socio_reach_"
 
 # Fragmentation plots
 
-fp_zipf_lts = "../results/component_plots/zipf_"
+# fp_zipf_lts = "../results/component_plots/zipf_"
 fp_zipf_combined = "../results/component_plots/combined_zipf.png"
 fp_zipf_muni = "../results/component_plots/municipal/combined_zipf_"
 
@@ -172,7 +172,7 @@ fp_summary_compare_length_components = (
     "../results/component_plots/components_vs_length.jpg"
 )
 
-fp_summary_stats_reach = "../results/summary_stats/reach_summary_stats.csv"
+fp_summmary_stats_comp_len_lcc = "../results/summary_stats/component_length_lcc.csv"
 
 fp_summary_stats_reach_diff = "../results/summary_stats/reach_diff_summary_stats.csv"
 
@@ -197,6 +197,11 @@ fp_spatial_weights_sensitivity = "../results/spatial_autocorrelation/sensitivity
 fp_socio_vars_heatmap = "../results/correlation/socio/heatmap_socio_vars.png"
 fp_socio_vars_pairplot = "../results/correlation/socio/pairplot_socio_vars.png"
 
+fp_socio_pairplot_income_cars = (
+    "../results/correlation/socio/pairplot_socio_vars_income_cars.png"
+)
+
+
 fp_socio_bikeability_heatmap = (
     "../results/correlation/socio/heatmap_socio_bikeability.png"
 )
@@ -204,16 +209,12 @@ fp_socio_bikeability_pairplot = (
     "../results/correlation/socio/pairplot_socio_bikeability.png"
 )
 
-# fp_socio_heatmap = "../results/correlation/socio/heatmap_socio_"
-# fp_socio_pairplot = "../results/correlation/socio/pairplot_socio_"
-
 fp_hex_network_heatmap = "../results/correlation/hexgrid/heatmap_hex_network.png"
 fp_hex_network_pairplot = "../results/correlation/hexgrid/pairplot_hex_network.png"
 
 fp_socio_network_heatmap = "../results/correlation/socio/heatmap_socio_network.png"
 fp_socio_network_pairplot = "../results/correlation/socio/pairplot_socio_network.png"
 
-fp_socio_pop_corr = "../results/correlation/socio/socio_pop_corr_"
 fp_hex_pop_corr = "../results/correlation/hexgrid/hex_pop_corr_"
 
 # Spatial autocorrelation
@@ -225,14 +226,6 @@ fp_spatial_auto_socio = "../results/spatial_autocorrelation/socio_pop/"
 
 
 # clustering
-# fp_cluster_map_overlay = "../results/clustering/maps/cluster_map_overlay.png"
-
-# fp_hex_network_cluster_base = "../results/clustering/hex_network_clusters_"
-
-# fp_socio_socio_cluster_base = "../results/clustering/socio_socioeconomic_clusters_"
-
-# fp_socio_network_cluster_base = "../results/clustering/socio_network_clusters_"
-
 fp_hex_network_cluster_means = (
     "../results/clustering/data/hex_network_cluster_means.csv"
 )
@@ -241,12 +234,37 @@ fp_socio_socio_cluster_means = (
     "../results/clustering/data/socio_socio_cluster_means.csv"
 )
 
-# fp_socio_net_cluster_means = (
-#     "../results/clustering/data/socio_network_cluster_means.csv"
-# )
 
 fp_cluster_plots_base = "../results/clustering/plots/"
 fp_cluster_maps_base = "../results/clustering/maps/"
 fp_cluster_data_base = "../results/clustering/data/"
 
 fp_equity = "../results/equity/"
+
+
+# Equity
+fp_equity_plots_base = "../results/equity/plots/"
+
+fp_equity_outlier_stripplot = "../results/equity/plots/stripplot_outlier_analysis_"
+
+fp_equity_lorenz_combined = "../results/equity/plots/lorenz_combined.png"
+
+fp_equity_outliers_above_zoom = "../results/equity/maps/outliers_above_mean_zoom.png"
+
+fp_equity_outliers_below_zoom = "../results/equity/maps/outliers_below_mean_zoom.png"
+fp_equity_outliers_context = "../results/equity/maps/outlier_context.png"
+fp_equity_outliers_map = "../results/equity/maps/outliers_combined.png"
+fp_equity_outliers_above = "../results/equity/data/outliers_above_mean_"
+fp_equity_outliers_below = "../results/equity/data/outliers_below_mean_"
+
+fp_inequalities_socio = "../results/equity/data/inequalities_socio.csv"
+
+fp_inequalities_socio_spatial_gini = "../results/equity/data/spatial_gini_socio.csv"
+
+fp_inequalities_hex_spatial_gini = "../results/equity/data/spatial_gini_hex.csv"
+
+fp_inequalities_theil_hex_socio = "../results/equity/data/theil_index_hex_socio.csv"
+
+fp_inequalities_cci = "../results/equity/data/cci_results.csv"
+
+fp_inequalities_cci_subset = "../results/equity/data/cci_subset.csv"

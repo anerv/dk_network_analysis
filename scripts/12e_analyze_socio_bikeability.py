@@ -200,10 +200,8 @@ for socio_label in socio_cluster_values:
     analysis_func.export_outliers(
         socio_socio,
         socio_label=socio_label,
-        fp_above="../results/equity/data/outliers_above_mean_"
-        + f"{socio_label_fp}.gpkg",
-        fp_below="../results/equity/data/outliers_below_mean_"
-        + f"{socio_label_fp}.gpkg",
+        fp_above=fp_equity_outliers_above + f"{socio_label_fp}.gpkg",
+        fp_below=fp_equity_outliers_below + f"{socio_label_fp}.gpkg",
     )
 
 plot_func.make_combined_outlier_plot(
@@ -211,8 +209,9 @@ plot_func.make_combined_outlier_plot(
     "socio_label",
     "average_bikeability_rank",
     socio_cluster_colors_dict,
-    "../results/equity/maps/outliers_combined.png",
+    fp_equity_outliers_map,
 )
+
 
 # %%
 
@@ -291,7 +290,7 @@ for socio_label in socio_cluster_values:
     plt.legend(by_label.values(), by_label.keys(), frameon=False, fontsize=fontsize)
 
     s = analysis_func.clean_labels(socio_label)
-    plt.savefig("../results/equity/plots/stripplot_outlier_analysis_" + f"{s}.png")
+    plt.savefig(fp_equity_outlier_stripplot + f"{s}.png")
     plt.show()
 
 # %%
@@ -339,7 +338,7 @@ plot_func.plot_outliers_zoom(
     xmax,
     ymin,
     ymax,
-    filepath="../results/equity/maps/outliers_above_mean_zoom.png",
+    filepath=fp_equity_outliers_above_zoom,
     bbox_to_anchor=(0.65, 0.99),
     fontsize=14,
 )
@@ -358,7 +357,7 @@ plot_func.plot_outliers_zoom(
     xmax,
     ymin,
     ymax,
-    filepath="../results/equity/maps/outliers_below_mean_zoom.png",
+    filepath=fp_equity_outliers_below_zoom,
     bbox_to_anchor=(0.1, 0.07),
     fontsize=14,
 )
@@ -374,7 +373,7 @@ squares_gdf.plot(ax=ax, facecolor="none", edgecolor="red", linewidth=2.5)
 ax.set_axis_off()
 
 plt.tight_layout()
-plt.savefig("../results/equity/maps/outlier_context.png", dpi=pdict["dpi"])
+plt.savefig(fp_equity_outliers_context, dpi=pdict["dpi"])
 plt.show()
 plt.close()
 

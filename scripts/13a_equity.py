@@ -160,12 +160,11 @@ for i, c in enumerate(inequality_columns_socio):
         share_of_population=pop_shares,
         x_label="population",
         y_label=labels_socio[i],
-        fp=f"../results/equity/plots/lorenz_{c}.png",
+        fp=fp_equity_plots_base + f"lorenz_{c}.png",
     )
 
 # %%
 # Combine all lorenz curves into one plot
-fp = "../results/equity/plots/lorenz_combined.png"
 
 fig, axes = plt.subplots(2, 4, figsize=(18, 10))
 
@@ -190,8 +189,8 @@ for i, c in enumerate(inequality_columns_socio[0:8]):
 
 plt.tight_layout()
 
-if fp:
-    plt.savefig(fp, dpi=pdict["dpi"])
+
+plt.savefig(fp_equity_lorenz_combined, dpi=pdict["dpi"])
 
 plt.show()
 
@@ -250,7 +249,7 @@ for c, l in zip(
 
 display(inequalities_socio)
 
-inequalities_socio.to_csv("../results/equity/data/inequalities_socio.csv")
+inequalities_socio.to_csv(fp_inequalities_socio)
 
 """
 The within regions term is a weighted average of inequality between economies belonging to the same region
@@ -282,7 +281,7 @@ spatial_gini_results_socio = (
 spatial_gini_results_socio.index.name = "socio variable"
 display(spatial_gini_results_socio)
 
-spatial_gini_results_socio.to_csv("../results/equity/data/spatial_gini_socio.csv")
+spatial_gini_results_socio.to_csv(fp_inequalities_socio_spatial_gini)
 
 # %%
 
@@ -304,7 +303,7 @@ spatial_gini_results_hex = (
 spatial_gini_results_hex.index.name = "hex variable"
 display(spatial_gini_results_hex)
 
-spatial_gini_results_hex.to_csv("../results/equity/data/spatial_gini_hex.csv")
+spatial_gini_results_hex.to_csv(fp_inequalities_hex_spatial_gini)
 
 # %%
 # Theil at hex level
@@ -364,7 +363,7 @@ if check_significance:
         hexjoin[inequality_columns_hex].values, hexjoin.socio_id, 999
     )
 
-inequalities_hex.to_csv("../results/equity/data/theil_index_hex_socio.csv")
+inequalities_hex.to_csv(fp_inequalities_theil_hex_socio)
 # %%
 
 # Compute CCI for inequity columns - rank by income and car ownership
@@ -429,7 +428,7 @@ cci_df = pd.DataFrame(
     }
 )
 
-cci_df.to_csv("../results/equity/data/cci_results.csv", index=False)
+cci_df.to_csv(fp_inequalities_cci, index=False)
 
 # %%
 # Make tables for the report
@@ -467,7 +466,7 @@ cci_values = cci_pivot.reindex(
 )
 display(cci_values)
 
-cci_values.to_csv("../results/equity/data/cci_subset.csv")
+cci_values.to_csv(fp_inequalities_cci_subset)
 
 # %%
 
@@ -490,7 +489,10 @@ for e, socioeconomic_column in enumerate(rank_columns):
 
 for e, socioeconomic_column in enumerate(rank_columns):
 
-    fp = f"../results/equity/plots/concentration_curve_subplots_{socioeconomic_column}.png"
+    fp = (
+        fp_equity_plots_base
+        + f"concentration_curve_subplots_{socioeconomic_column}.png"
+    )
 
     fig, axes = plt.subplots(3, 4, figsize=(15, 12))
 
@@ -558,7 +560,10 @@ labels_capita = [
 
 for e, socioeconomic_column in enumerate(rank_columns):
 
-    fp = f"../results/equity/plots/concentration_curve_subplots_combined_{socioeconomic_column}.png"
+    fp = (
+        fp_equity_plots_base
+        + f"concentration_curve_subplots_combined_{socioeconomic_column}.png"
+    )
 
     fig, axes = plt.subplots(1, len(density_columns), figsize=(20, 6))
 
@@ -596,7 +601,7 @@ for e, socioeconomic_column in enumerate(rank_columns):
 
 # %%
 
-fp = f"../results/equity/plots/concentration_curves_combined_lts1.png"
+fp = fp_equity_plots_base + f"concentration_curves_combined_lts1.png"
 
 rank_columns_subset = [
     "household_low_income_pct",

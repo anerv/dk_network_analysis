@@ -76,7 +76,7 @@ merged_df["lcc_share"] = (
 
 display(merged_df.style.pipe(format_style_no_index))
 
-merged_df.to_csv("../results/summary_stats/component_length_lcc.csv", index=False)
+merged_df.to_csv(fp_summmary_stats_comp_len_lcc, index=False)
 
 # %%
 
