@@ -172,29 +172,6 @@ def make_combined_outlier_plot(
         bikeability_column,
     )
 
-    # socio_cluster_values = gdf[socio_column].unique()
-    # socio_cluster_values.sort()
-
-    # gdf["above_mean"] = None
-    # gdf["below_mean"] = None
-
-    # for socio_label in socio_cluster_values:
-
-    #     mean = gdf.loc[gdf[socio_column] == socio_label][bikeability_column].mean()
-    #     std_dev = gdf.loc[gdf[socio_column] == socio_label][bikeability_column].std()
-
-    #     gdf.loc[
-    #         (gdf[socio_column] == socio_label)
-    #         & (gdf[bikeability_column] > mean + std_dev),
-    #         "above_mean",
-    #     ] = True
-
-    #     gdf.loc[
-    #         (gdf[socio_column] == socio_label)
-    #         & (gdf[bikeability_column] < mean - std_dev),
-    #         "below_mean",
-    #     ] = True
-
     active_labels = list(gdf.loc[gdf["above_mean"] == True][socio_column].unique())
     active_labels.sort()
     colors = [color_dict[l] for l in active_labels]
@@ -856,19 +833,6 @@ def color_list_to_cmap(color_list):
     return ListedColormap([t[1] for t in sorted(colors.items())])
 
 
-def get_hex_colors_from_colormap(colormap_name, n_colors):
-    # Get the colormap
-    colormap = plt.colormaps[colormap_name]
-
-    # Generate n_colors evenly spaced values between 0 and 1
-    values = [i / n_colors for i in range(n_colors)]
-
-    # Convert these values to hex colors
-    hex_colors = [to_hex(colormap(value)) for value in values]
-
-    return hex_colors
-
-
 def style_cluster_means(cluster_means, cmap="coolwarm"):
     """
     Apply background gradient styling to a DataFrame representing cluster means.
@@ -1258,178 +1222,157 @@ def plot_correlation(
             pp.savefig(pairplot_fp)
 
 
-def get_unique_bins(
-    gdf,
-    p,
-    scheme,
-    k,
-):
-    if scheme == "fisherjenks":
+# def plot_classified_poly(
+#     gdf,
+#     plot_col,
+#     scheme,
+#     k,
+#     plot_na,
+#     cmap,
+#     title,
+#     cx_tile=None,
+#     edgecolor="black",
+#     linewidth=0.5,
+#     fp=None,
+#     legend=True,
+#     alpha=1,
+#     figsize=pdict["fsmap"],
+#     attr=pdict["map_attr"],
+#     set_axis_off=True,
+#     plot_res=pdict["plot_res"],
+#     dpi=pdict["dpi"],
+#     classification_kwds=None,
+#     background_color=None,
+#     legend_kwds={"fmt": "{:.0f}"},
+# ):
+#     """
+#     Plots a classified polygon based on the given parameters.
 
-        test = mapclassify.FisherJenks(gdf[p], k=k)
+#     Parameters:
+#     gdf (GeoDataFrame): The GeoDataFrame containing the polygon data to be plotted.
+#     plot_col (str): The column in the GeoDataFrame to be used for coloring the polygons.
+#     scheme (str): The classification scheme to be used for coloring the polygons.
+#     k (int): The number of classes to be used for the classification.
+#     cx_tile (str): The contextily tile to be used for the basemap.
+#     plot_na (bool): If True, polygons with no data are plotted in light grey.
+#     cmap (str): The colormap to be used for coloring the polygons.
+#     title (str): The title of the plot.
+#     edgecolor (str, optional): The color of the polygon edges. Defaults to "black".
+#     fp (str, optional): The file path where the plot should be saved. If None, the plot is not saved. Defaults to None.
+#     legend (bool, optional): If True, a legend is added to the plot. Defaults to True.
+#     alpha (float, optional): The alpha level of the polygons. Defaults to 0.8.
+#     figsize (tuple, optional): The size of the figure. Defaults to (10, 10).
+#     attr (str, optional): The attribute to be used for the plot. Defaults to None.
+#     set_axis_off (bool, optional): If True, the axis is set off. Defaults to True.
+#     plot_res (str, optional): The resolution of the plot. Defaults to "low".
+#     dpi (int, optional): The resolution in dots per inch. Defaults to 300.
+#     classification_kwds (dict, optional): Additional keyword arguments for the 'user_defined' classification scheme. Defaults to None.
 
-        if len(set(test.bins)) == k:
-            return k
-        else:
-            return len(set(test.bins))
+#     Returns:
+#     None
+#     """
 
-    else:
-        print("Only Fisher Jenks is supported")
+#     fig, ax = plt.subplots(1, figsize=figsize)
 
-        return None
+#     # divider = make_axes_locatable(ax)
+#     # cax = divider.append_axes("right", size="3.5%", pad="1%")
+#     if scheme == "user_defined" and classification_kwds is not None:
+#         if plot_na:
+#             gdf.plot(
+#                 # cax=cax,
+#                 ax=ax,
+#                 column=plot_col,
+#                 scheme=scheme,
+#                 k=k,
+#                 cmap=cmap,
+#                 alpha=alpha,
+#                 edgecolor=edgecolor,
+#                 linewidth=linewidth,
+#                 legend=legend,
+#                 legend_kwds=legend_kwds,
+#                 missing_kwds={
+#                     "color": pdict["nodata"],
+#                     "label": "No data",
+#                     "alpha": pdict["alpha_nodata"],
+#                 },
+#                 classification_kwds=classification_kwds,
+#             )
+#     else:
+#         if plot_na:
+#             gdf.plot(
+#                 # cax=cax,
+#                 ax=ax,
+#                 column=plot_col,
+#                 scheme=scheme,
+#                 k=k,
+#                 cmap=cmap,
+#                 alpha=alpha,
+#                 edgecolor=edgecolor,
+#                 linewidth=linewidth,
+#                 legend=legend,
+#                 legend_kwds=legend_kwds,
+#                 missing_kwds={
+#                     "color": pdict["nodata"],
+#                     "label": "No data",
+#                     "alpha": pdict["alpha_nodata"],
+#                 },
+#             )
+#         else:
+#             gdf.plot(
+#                 # cax=cax,
+#                 ax=ax,
+#                 column=plot_col,
+#                 scheme=scheme,
+#                 k=k,
+#                 cmap=cmap,
+#                 alpha=alpha,
+#                 edgecolor=edgecolor,
+#                 linewidth=linewidth,
+#                 legend=legend,
+#                 legend_kwds=legend_kwds,
+#             )
 
+#     if cx_tile is not None:
+#         cx.add_basemap(ax=ax, crs=gdf.crs, source=cx_tile)
 
-def plot_classified_poly(
-    gdf,
-    plot_col,
-    scheme,
-    k,
-    plot_na,
-    cmap,
-    title,
-    cx_tile=None,
-    edgecolor="black",
-    linewidth=0.5,
-    fp=None,
-    legend=True,
-    alpha=1,
-    figsize=pdict["fsmap"],
-    attr=pdict["map_attr"],
-    set_axis_off=True,
-    plot_res=pdict["plot_res"],
-    dpi=pdict["dpi"],
-    classification_kwds=None,
-    background_color=None,
-    legend_kwds={"fmt": "{:.0f}"},
-):
-    """
-    Plots a classified polygon based on the given parameters.
+#     if cx_tile is None and background_color is not None:
+#         ax.set_facecolor(background_color)
 
-    Parameters:
-    gdf (GeoDataFrame): The GeoDataFrame containing the polygon data to be plotted.
-    plot_col (str): The column in the GeoDataFrame to be used for coloring the polygons.
-    scheme (str): The classification scheme to be used for coloring the polygons.
-    k (int): The number of classes to be used for the classification.
-    cx_tile (str): The contextily tile to be used for the basemap.
-    plot_na (bool): If True, polygons with no data are plotted in light grey.
-    cmap (str): The colormap to be used for coloring the polygons.
-    title (str): The title of the plot.
-    edgecolor (str, optional): The color of the polygon edges. Defaults to "black".
-    fp (str, optional): The file path where the plot should be saved. If None, the plot is not saved. Defaults to None.
-    legend (bool, optional): If True, a legend is added to the plot. Defaults to True.
-    alpha (float, optional): The alpha level of the polygons. Defaults to 0.8.
-    figsize (tuple, optional): The size of the figure. Defaults to (10, 10).
-    attr (str, optional): The attribute to be used for the plot. Defaults to None.
-    set_axis_off (bool, optional): If True, the axis is set off. Defaults to True.
-    plot_res (str, optional): The resolution of the plot. Defaults to "low".
-    dpi (int, optional): The resolution in dots per inch. Defaults to 300.
-    classification_kwds (dict, optional): Additional keyword arguments for the 'user_defined' classification scheme. Defaults to None.
+#     if set_axis_off:
+#         ax.set_axis_off()
 
-    Returns:
-    None
-    """
+#     if cx_tile is None and background_color is not None:
+#         ax.add_artist(ax.patch)
+#         ax.patch.set_zorder(-1)
 
-    fig, ax = plt.subplots(1, figsize=figsize)
+#     if attr is not None:
+#         cx.add_attribution(ax=ax, text="(C) " + attr)
+#         txt = ax.texts[-1]
+#         txt.set_position([0.99, 0.01])
+#         txt.set_ha("right")
+#         txt.set_va("bottom")
 
-    # divider = make_axes_locatable(ax)
-    # cax = divider.append_axes("right", size="3.5%", pad="1%")
-    if scheme == "user_defined" and classification_kwds is not None:
-        if plot_na:
-            gdf.plot(
-                # cax=cax,
-                ax=ax,
-                column=plot_col,
-                scheme=scheme,
-                k=k,
-                cmap=cmap,
-                alpha=alpha,
-                edgecolor=edgecolor,
-                linewidth=linewidth,
-                legend=legend,
-                legend_kwds=legend_kwds,
-                missing_kwds={
-                    "color": pdict["nodata"],
-                    "label": "No data",
-                    "alpha": pdict["alpha_nodata"],
-                },
-                classification_kwds=classification_kwds,
-            )
-    else:
-        if plot_na:
-            gdf.plot(
-                # cax=cax,
-                ax=ax,
-                column=plot_col,
-                scheme=scheme,
-                k=k,
-                cmap=cmap,
-                alpha=alpha,
-                edgecolor=edgecolor,
-                linewidth=linewidth,
-                legend=legend,
-                legend_kwds=legend_kwds,
-                missing_kwds={
-                    "color": pdict["nodata"],
-                    "label": "No data",
-                    "alpha": pdict["alpha_nodata"],
-                },
-            )
-        else:
-            gdf.plot(
-                # cax=cax,
-                ax=ax,
-                column=plot_col,
-                scheme=scheme,
-                k=k,
-                cmap=cmap,
-                alpha=alpha,
-                edgecolor=edgecolor,
-                linewidth=linewidth,
-                legend=legend,
-                legend_kwds=legend_kwds,
-            )
+#     ax.add_artist(
+#         ScaleBar(
+#             dx=1,
+#             units="m",
+#             dimension="si-length",
+#             length_fraction=0.15,
+#             width_fraction=0.002,
+#             location="lower left",
+#             box_alpha=0,
+#         )
+#     )
+#     ax.set_title(title)
 
-    if cx_tile is not None:
-        cx.add_basemap(ax=ax, crs=gdf.crs, source=cx_tile)
+#     if fp:
+#         if plot_res == "high":
+#             fig.savefig(fp + ".svg", dpi=dpi)
+#         else:
+#             fig.savefig(fp + ".png", dpi=dpi)
 
-    if cx_tile is None and background_color is not None:
-        ax.set_facecolor(background_color)
-
-    if set_axis_off:
-        ax.set_axis_off()
-
-    if cx_tile is None and background_color is not None:
-        ax.add_artist(ax.patch)
-        ax.patch.set_zorder(-1)
-
-    if attr is not None:
-        cx.add_attribution(ax=ax, text="(C) " + attr)
-        txt = ax.texts[-1]
-        txt.set_position([0.99, 0.01])
-        txt.set_ha("right")
-        txt.set_va("bottom")
-
-    ax.add_artist(
-        ScaleBar(
-            dx=1,
-            units="m",
-            dimension="si-length",
-            length_fraction=0.15,
-            width_fraction=0.002,
-            location="lower left",
-            box_alpha=0,
-        )
-    )
-    ax.set_title(title)
-
-    if fp:
-        if plot_res == "high":
-            fig.savefig(fp + ".svg", dpi=dpi)
-        else:
-            fig.savefig(fp + ".png", dpi=dpi)
-
-    plt.show()
-    plt.close()
+#     plt.show()
+#     plt.close()
 
 
 def remove_colorbar_outline(cmap, fig, cax, norm_min, norm_max):
@@ -1885,52 +1828,52 @@ def combined_zipf_plot(
     plt.close()
 
 
-def make_zipf_component_plot(df, col, label, fp=None, show=True):
-    """
-    Create a Zipf component plot.
+# def make_zipf_component_plot(df, col, label, fp=None, show=True):
+#     """
+#     Create a Zipf component plot.
 
-    Parameters:
-    - df (DataFrame): The DataFrame containing the data.
-    - col (str): The column name in the DataFrame to use for the y-values.
-    - label (str): The label to include in the plot title.
-    - fp (str, optional): The file path to save the plot image. Default is None.
-    - show (bool, optional): Whether to display the plot. Default is True.
+#     Parameters:
+#     - df (DataFrame): The DataFrame containing the data.
+#     - col (str): The column name in the DataFrame to use for the y-values.
+#     - label (str): The label to include in the plot title.
+#     - fp (str, optional): The file path to save the plot image. Default is None.
+#     - show (bool, optional): Whether to display the plot. Default is True.
 
-    Returns:
-    None
-    """
+#     Returns:
+#     None
+#     """
 
-    fig = plt.figure(figsize=pdict["fsbar"])
-    axes = fig.add_axes([0, 0, 1, 1])
+#     fig = plt.figure(figsize=pdict["fsbar"])
+#     axes = fig.add_axes([0, 0, 1, 1])
 
-    axes.set_axisbelow(True)
-    axes.grid(True, which="major", ls="dotted")
-    yvals = sorted(list(df[col]), reverse=True)
+#     axes.set_axisbelow(True)
+#     axes.grid(True, which="major", ls="dotted")
+#     yvals = sorted(list(df[col]), reverse=True)
 
-    axes.scatter(
-        x=[i + 1 for i in range(len(df))],
-        y=yvals,
-        s=18,
-        color="purple",
-    )
-    axes.set_ylim(
-        ymin=10 ** math.floor(math.log10(min(yvals))),
-        ymax=10 ** math.ceil(math.log10(max(yvals))),
-    )
-    axes.set_xscale("log")
-    axes.set_yscale("log")
+#     axes.scatter(
+#         x=[i + 1 for i in range(len(df))],
+#         y=yvals,
+#         s=18,
+#         color="purple",
+#     )
+#     axes.set_ylim(
+#         ymin=10 ** math.floor(math.log10(min(yvals))),
+#         ymax=10 ** math.ceil(math.log10(max(yvals))),
+#     )
+#     axes.set_xscale("log")
+#     axes.set_yscale("log")
 
-    axes.set_ylabel("Component length [km]")
-    axes.set_xlabel("Component rank (largest to smallest)")
-    axes.set_title(f"Component length distribution in: {label}")
+#     axes.set_ylabel("Component length [km]")
+#     axes.set_xlabel("Component rank (largest to smallest)")
+#     axes.set_title(f"Component length distribution in: {label}")
 
-    if fp:
-        plt.savefig(fp, bbox_inches="tight")
+#     if fp:
+#         plt.savefig(fp, bbox_inches="tight")
 
-    if show:
-        plt.show()
-    else:
-        plt.close()
+#     if show:
+#         plt.show()
+#     else:
+#         plt.close()
 
 
 def make_barplot(data, x, y, hue_col, palette, xlabel=None, fp=None):
@@ -2019,7 +1962,7 @@ def sns_scatter(data, x, y, hue, palette, alpha=0.7, yticks=None):
 
 
 ### function to convert hex color to rgb to Color object (generativepy package)
-def hex_to_Color(hexcode):
+def hex_to_color(hexcode):
     rgb = ImageColor.getcolor(hexcode, "RGB")
     rgb = [v / 256 for v in rgb]
     rgb = Color(*rgb)

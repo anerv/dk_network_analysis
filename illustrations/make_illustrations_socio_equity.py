@@ -287,10 +287,10 @@ analysis_func.normalize_data(socio_socio_bike, analysis_vars)
 class_bounds = [0.25, 0.50, 0.75, 1]
 
 ### get corner colors from https://www.joshuastevens.net/cartography/make-a-bivariate-choropleth-map/
-c00 = plot_func.hex_to_Color("#e8e8e8")
-c10 = plot_func.hex_to_Color("#be64ac")
-c01 = plot_func.hex_to_Color("#5ac8c8")
-c11 = plot_func.hex_to_Color("#3b4994")
+c00 = plot_func.hex_to_color("#e8e8e8")
+c10 = plot_func.hex_to_color("#be64ac")
+c01 = plot_func.hex_to_color("#5ac8c8")
+c11 = plot_func.hex_to_color("#3b4994")
 
 colorlist = plot_func.create_color_grid(class_bounds, c00, c10, c01, c11)
 ### convert back to hex color
