@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from IPython.display import display
 import seaborn as sns
+from shapely.geometry import Polygon
+
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -318,7 +320,6 @@ colors_above = [socio_cluster_colors_dict[l] for l in active_labels_above]
 cmap_above = plot_func.color_list_to_cmap(colors_above)
 
 # %%
-from shapely.geometry import Polygon
 
 squares = []
 
