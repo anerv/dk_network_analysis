@@ -14,6 +14,7 @@ from pysal.lib import weights
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 exec(open("../settings/df_styler.py").read())
+exec(open("../settings/filepaths.py").read())
 
 plot_func.set_renderer("png")
 
