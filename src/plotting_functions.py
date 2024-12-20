@@ -552,7 +552,6 @@ def plot_poly_zoom(
     use_norm=False,
     norm_min=None,
     norm_max=None,
-    plot_res=pdict["plot_res"],
     attr=pdict["map_attr"],
     plot_na=True,
     legend_kwds={"fmt": "{:.0f}"},
@@ -663,10 +662,7 @@ def plot_poly_zoom(
     ax.axis([xmin, xmax, ymin, ymax])
     ax.set_title(plot_title, fontsize=pdict["map_title_fs"])
 
-    if plot_res == "high":
-        fig.savefig(filepath + ".svg", dpi=dpi)
-    else:
-        fig.savefig(filepath + ".png", dpi=dpi)
+    fig.savefig(filepath + ".png", dpi=dpi)
 
     plt.show()
     plt.close()
@@ -1239,7 +1235,6 @@ def plot_correlation(
 #     figsize=pdict["fsmap"],
 #     attr=pdict["map_attr"],
 #     set_axis_off=True,
-#     plot_res=pdict["plot_res"],
 #     dpi=pdict["dpi"],
 #     classification_kwds=None,
 #     background_color=None,
@@ -1366,10 +1361,8 @@ def plot_correlation(
 #     ax.set_title(title)
 
 #     if fp:
-#         if plot_res == "high":
-#             fig.savefig(fp + ".svg", dpi=dpi)
-#         else:
-#             fig.savefig(fp + ".png", dpi=dpi)
+#
+#       fig.savefig(fp + ".png", dpi=dpi)
 
 #     plt.show()
 #     plt.close()
@@ -1401,7 +1394,6 @@ def plot_unclassified_poly(
     use_norm=False,
     norm_min=None,
     norm_max=None,
-    plot_res=pdict["plot_res"],
     attr=pdict["map_attr"],
     plot_na=True,
     background_color=None,
@@ -1424,7 +1416,6 @@ def plot_unclassified_poly(
     use_norm (bool, optional): If True, the colormap is normalized. Defaults to False.
     norm_min (float, optional): The minimum value for the colormap normalization. Defaults to None.
     norm_max (float, optional): The maximum value for the colormap normalization. Defaults to None.
-    plot_res (str, optional): The resolution of the plot. Defaults to "low".
     attr (str, optional): The attribute to be used for the plot. Defaults to None.
     plot_na (bool, optional): If True, polygons with no data are plotted in light grey. Defaults to True.
     """
@@ -1580,10 +1571,7 @@ def plot_unclassified_poly(
 
     ax.set_title(plot_title, fontsize=pdict["map_title_fs"])
 
-    if plot_res == "high":
-        fig.savefig(filepath + ".svg", dpi=dpi)
-    else:
-        fig.savefig(filepath + ".png", dpi=dpi)
+    fig.savefig(filepath + ".png", dpi=dpi)
 
     plt.show()
     plt.close()
