@@ -10,7 +10,6 @@ from IPython.display import display
 import seaborn as sns
 from shapely.geometry import Polygon
 
-
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 exec(open("../settings/df_styler.py").read())
@@ -48,7 +47,6 @@ bikeability_rename_dict = {
     "share_hex_cluster_5": "Share bikeability 5",
 }
 socio_socio.rename(columns=bikeability_rename_dict, inplace=True)
-
 
 socio_bikeability_cols = [c for c in socio_socio.columns if "Share bikeability" in c]
 
