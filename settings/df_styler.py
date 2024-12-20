@@ -20,7 +20,7 @@ cell_style = {"selector": "td", "props": "text-align: center; font-weight: bold;
 
 index_styler = {
     "selector": ".index_name",
-    "props": f"color:{"black"}; font-size:14px;", 
+    "props": f"color:{"black"}; font-size:14px;",
 }
 
 columns_styler = {
@@ -28,19 +28,19 @@ columns_styler = {
     "props": f"color: {"black"}; font-size:14px;",
 }
 
-pct_formatter={
-            "min_share": lambda x: f"{x:,.1f}%",
-            "mean_share": lambda x: f"{x:,.1f}%",
-            "median_share": lambda x: f"{x:,.1f}%",
-            "max_share": lambda x: f"{x:,.1f}%",
-            "std_dev (share)": lambda x: f"{x:,.1f}%",
-            "more_bike_share": lambda x: f"{x:,.1f}%",
+pct_formatter = {
+    "min_share": lambda x: f"{x:,.1f}%",
+    "mean_share": lambda x: f"{x:,.1f}%",
+    "median_share": lambda x: f"{x:,.1f}%",
+    "max_share": lambda x: f"{x:,.1f}%",
+    "std_dev (share)": lambda x: f"{x:,.1f}%",
+    "more_bike_share": lambda x: f"{x:,.1f}%",
+}
 
-        }
 
 # Make individual ones based on columns with %, and titles
 def format_style_index(styler):
-    #styler.set_caption(f"MY TITLE")
+    # styler.set_caption(f"MY TITLE")
     caption_here = caption.copy()
     caption_here["props"] += "background-color: " + "black" + ";"
     styler.format(precision=2, na_rep=" - ", thousands=",", formatter=pct_formatter)
@@ -55,8 +55,9 @@ def format_style_index(styler):
 
     return styler
 
+
 def format_style_no_index(styler):
-    #styler.set_caption(f"MY TITLE")
+    # styler.set_caption(f"MY TITLE")
     caption_here = caption.copy()
     caption_here["props"] += "background-color: " + "black" + ";"
     styler.format(precision=2, na_rep=" - ", thousands=",", formatter=pct_formatter)
@@ -65,15 +66,4 @@ def format_style_no_index(styler):
         overwrite=False,
     )
     styler.hide(axis="index")
-    return styler
-
-def format_style_neg_positive(styler):
-    caption_here = caption.copy()
-    caption_here["props"] += "background-color: " + "black" + ";"
-    styler.format(precision=2, na_rep=" - ", thousands=",", formatter=pct_formatter)
-    styler.set_table_styles(
-        [cell_hover, row_hover, columns_styler, caption_here, index_styler, cell_style],
-        overwrite=False,
-    )
-    styler.map(lambda x: f"color: {'red' if x < 0 else 'green'}")
     return styler
