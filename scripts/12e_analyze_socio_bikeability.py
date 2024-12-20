@@ -48,7 +48,7 @@ bikeability_rename_dict = {
 socio_socio.rename(columns=bikeability_rename_dict, inplace=True)
 
 
-socio_bikeability_cols = [c for c in socio_socio.columns if "share_hex_cluster" in c]
+socio_bikeability_cols = [c for c in socio_socio.columns if "Share bikeability" in c]
 
 corr_columns = socio_corr_variables[7:-2] + socio_bikeability_cols
 # %%
