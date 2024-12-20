@@ -55,7 +55,6 @@ for e, gdf in enumerate(gdfs):
             use_norm=True,
             norm_min=vmin,
             norm_max=vmax,
-            # cx_tile=cx_tile_2,
             background_color=pdict["background_color"],
         )
 
@@ -89,7 +88,6 @@ for e, gdf in enumerate(gdfs):
             use_norm=True,
             norm_min=vmin,
             norm_max=vmax,
-            # cx_tile=cx_tile_2,
             background_color=pdict["background_color"],
             # legend_fs=20,
         )
@@ -117,7 +115,6 @@ for e, gdf in enumerate(gdfs):
             use_norm=True,
             norm_min=vmin,
             norm_max=vmax,
-            # cx_tile=cx_tile_2,
             background_color=pdict["background_color"],
         )
 
