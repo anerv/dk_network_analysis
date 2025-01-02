@@ -593,7 +593,7 @@ if result == "error":
 # %%
 
 # drop preliminary tables
-for d in distances:
+for dist in distances:
     table_names = [
         f"reach.lts_1_reach_{dist}",
         f"reach.lts_2_reach_{dist}",
@@ -609,6 +609,22 @@ for d in distances:
             print("Please fix error before rerunning and reconnect to the database")
             break
 
+node_tables = [
+    "reach.nodes_all_view",
+    "reach.nodes_car_view",
+    "reach.nodes_lts_1_view",
+    "reach.nodes_lts_2_view",
+    "reach.nodes_lts_3_view",
+    "reach.nodes_lts_4_view",
+]
+for n in node_tables:
+    q = f"DROP VIEW IF EXISTS {n};"
+    result = dbf.run_query_pg(q, connection)
+    if result == "error":
+        print("Please fix error before rerunning and reconnect to the database")
+        break
+
+
 for e in edge_tables:
     q = f"DROP TABLE IF EXISTS {e};"
     result = dbf.run_query_pg(q, connection)
@@ -617,8 +633,9 @@ for e in edge_tables:
         break
 
 drop_tables = [
-    "DROP TABLE IF EXISTS segment_nodes;",
-    "DROP TABLE IF EXISTS edges_segments;",
+    "DROP TABLE IF EXISTS reach.segment_nodes;",
+    "DROP TABLE IF EXISTS reach.car_segments;",
+    "DROP TABLE IF EXISTS reach.edge_segments;",
 ]
 
 for d in drop_tables:
@@ -627,6 +644,7 @@ for d in drop_tables:
         print("Please fix error before rerunning and reconnect to the database")
         break
 
+# %%
 with open("vacuum_analyze.py") as f:
     exec(f.read())
 
