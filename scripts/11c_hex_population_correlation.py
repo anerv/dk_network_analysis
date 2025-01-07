@@ -57,6 +57,8 @@ for i, columns in enumerate(all_density_columns[:-2]):
             # palette="pink",
             ax=axes[e],
         )
+        sub_fig.legend(frameon=False, alignment="left")
+
         sub_fig.get_legend().set_title(
             "Urban area (%)", prop={"size": pdict["legend_fs"]}
         )
@@ -66,6 +68,8 @@ for i, columns in enumerate(all_density_columns[:-2]):
             xlabel="People per sqkm",
             ylabel=all_labels[i][e] + " " + axis_labels[i],
         )
+
+    sns.despine()
 
     plt.savefig(fp_hex_pop_corr + f"{subplot_titles[i]}.png")
     plt.show()
@@ -102,8 +106,13 @@ for i, columns in enumerate(all_reach_columns):
             # palette="pink",
             ax=axes[e],
         )
+        sub_fig.legend(frameon=False, alignment="left")
+
         sub_fig.get_legend().set_title(
-            "Urban area (%)", prop={"size": pdict["legend_fs"]}
+            "Urban area (%)",
+            prop={
+                "size": pdict["legend_fs"],
+            },
         )
 
         sub_fig.set(
@@ -111,6 +120,8 @@ for i, columns in enumerate(all_reach_columns):
             xlabel="People per sqkm",
             ylabel=all_labels[i][e] + " " + axis_labels[i],
         )
+
+    sns.despine()
 
     plt.savefig(fp_hex_pop_corr + f"{subplot_titles[i]}.png")
     plt.show()
