@@ -178,6 +178,8 @@ socio_socio_bike.sort_values(
 
 fig, ax = plt.subplots(figsize=pdict["fsbar"])
 
+fontsize = pdict["fontsize"] + 4
+
 sns.barplot(
     data=socio_socio_bike,
     x="socio_label",
@@ -191,10 +193,10 @@ sns.barplot(
 )
 
 ax.set_xlabel("")
-ax.set_ylabel("Population (mill.)")
-plt.xticks(rotation=45, ha="right", fontsize=pdict["fontsize"] + 2)
+ax.set_ylabel("Population (mill.)", fontsize=fontsize)
+plt.xticks(rotation=45, ha="right", fontsize=fontsize)
 plt.yticks([])  # [0, 1200000]
-ax.tick_params(axis="both", which="major", labelsize=pdict["fontsize"] + 2)
+ax.tick_params(axis="both", which="major", labelsize=fontsize)
 
 sns.despine(left=True, bottom=True)
 
@@ -205,7 +207,7 @@ for container in ax.containers:
         container,
         labels=labels_millions,
         label_type="edge",
-        fontsize=pdict["fontsize"] + 2,
+        fontsize=fontsize,
     )
 
 plt.tight_layout()
@@ -234,6 +236,8 @@ socio_grouped = (
 colors = list(socio_cluster_colors_dict.values())
 
 fig, ax = plt.subplots(figsize=pdict["fsbar"])
+
+fontsize = pdict["fontsize"] + 4
 
 bar_width = 0.4
 x = range(len(socio_grouped))
@@ -267,14 +271,14 @@ for i, ix in enumerate(socio_grouped.index):
         f"{total_area:,.0f}",  # / 1e6:.1f
         ha="center",
         va="bottom",
-        fontsize=pdict["fontsize"] + 2,
+        fontsize=fontsize,
     )
 
 ax.set_xticks(x)
 ax.set_xticklabels(socio_grouped.index)
-plt.xticks(rotation=45, ha="right", fontsize=pdict["fontsize"] + 2)
+plt.xticks(rotation=45, ha="right", fontsize=fontsize)
 ax.set_xlabel("")
-ax.set_ylabel("Area (km²)", fontsize=pdict["fontsize"] + 2)
+ax.set_ylabel("Area (km²)", fontsize=fontsize)
 ax.tick_params(axis="both", which="major")
 ax.set_yticks([])  # [0, 15000]
 ax.get_yaxis().set_major_formatter(
@@ -295,11 +299,12 @@ ax.legend(
     handles=[no_urban_patch],
     loc="upper right",
     frameon=False,
-    fontsize=pdict["fontsize"] + 2,
+    fontsize=fontsize,
 )
 plt.tight_layout()
 plt.savefig(
-    fp_cluster_plots_base + "urban_non_urban_area_by_socio_label.png", dpi=pdict["dpi"]
+    fp_cluster_plots_base + "urban_non_urban_area_by_socio_label.png",
+    dpi=pdict["dpi"],
 )
 
 # %%
