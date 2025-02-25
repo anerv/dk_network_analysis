@@ -1561,7 +1561,7 @@ def plot_unclassified_poly(
             dx=1,
             units="m",
             dimension="si-length",
-            length_fraction=0.15,
+            length_fraction=0.15,  # modify the length of the scale bar
             width_fraction=0.002,
             location="lower left",
             box_alpha=0,
