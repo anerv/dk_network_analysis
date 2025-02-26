@@ -204,12 +204,14 @@ for socio_label in socio_cluster_values:
         fp_below=fp_equity_outliers_below + f"{socio_label_fp}.gpkg",
     )
 
+# %%
 plot_func.make_combined_outlier_plot(
     socio_socio,
     "socio_label",
     "average_bikeability_rank",
     socio_cluster_colors_dict,
     fp_equity_outliers_map,
+    fontsize=14,
 )
 
 
@@ -339,7 +341,7 @@ plot_func.plot_outliers_zoom(
     ymax,
     filepath=fp_equity_outliers_above_zoom,
     bbox_to_anchor=(0.65, 0.99),
-    fontsize=14,
+    fontsize=16,
 )
 
 # %%
@@ -358,7 +360,7 @@ plot_func.plot_outliers_zoom(
     ymax,
     filepath=fp_equity_outliers_below_zoom,
     bbox_to_anchor=(0.1, 0.07),
-    fontsize=14,
+    fontsize=16,
 )
 
 # %%

@@ -311,5 +311,7 @@ for v in variable_combos:
         class_bounds,
         colorlist,
         fp=f"socio_bivariate_{v[0]}_{v[1]}.png",
+        fs_labels=14,
+        fs_tick=12,
     )
 # %%

@@ -2004,6 +2004,8 @@ def make_bivariate_choropleth_map(
     figsize=pdict["fsmap"],
     alpha=0.8,
     fp=None,
+    fs_labels=12,
+    fs_tick=10,
 ):
 
     ### plot map based on bivariate choropleth
@@ -2040,10 +2042,14 @@ def make_bivariate_choropleth_map(
 
     _ = legend_ax.set_xlim([0, len(class_bounds)])
     _ = legend_ax.set_ylim([0, len(class_bounds)])
-    _ = legend_ax.set_xticks(list(range(len(class_bounds) + 1)), xticks)
-    _ = legend_ax.set_yticks(list(range(len(class_bounds) + 1)), yticks)
-    _ = legend_ax.set_xlabel(col1_label)
-    _ = legend_ax.set_ylabel(col2_label)
+    _ = legend_ax.set_xticks(
+        list(range(len(class_bounds) + 1)), xticks, fontsize=fs_tick
+    )
+    _ = legend_ax.set_yticks(
+        list(range(len(class_bounds) + 1)), yticks, fontsize=fs_tick
+    )
+    _ = legend_ax.set_xlabel(col1_label, fontsize=fs_labels)
+    _ = legend_ax.set_ylabel(col2_label, fontsize=fs_labels)
 
     plt.tight_layout()
 
