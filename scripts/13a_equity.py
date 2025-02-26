@@ -565,7 +565,7 @@ for e, socioeconomic_column in enumerate(rank_columns):
         + f"concentration_curve_subplots_combined_{socioeconomic_column}.png"
     )
 
-    fig, axes = plt.subplots(1, len(density_columns), figsize=(20, 6))
+    fig, axes = plt.subplots(1, len(density_columns), figsize=(25, 15))
 
     axes = axes.flatten()
 
@@ -583,7 +583,7 @@ for e, socioeconomic_column in enumerate(rank_columns):
             oppportunity_labels=[labels_dens[i], labels_length[i], labels_capita[i]],
             general_opportunity_label=f"{general_labels[i]} infrastructure",
             opportunity_colors=["#882255", "#009988", "#EE7733"],
-            fontsize=14,
+            fontsize=20,
         )
 
     sns.despine()
@@ -610,7 +610,7 @@ rank_columns_subset = [
     "Households w car (%)",
 ]
 
-fig, axes = plt.subplots(1, len(rank_columns_subset), figsize=(20, 5))
+fig, axes = plt.subplots(1, len(rank_columns_subset), figsize=(25, 15))
 
 axes = axes.flatten()
 
@@ -631,7 +631,7 @@ for e, socioeconomic_column in enumerate(rank_columns_subset):
         oppportunity_labels=[labels_dens[0], labels_length[0], labels_capita[0]],
         general_opportunity_label=f"{general_labels[0]} infrastructure",
         opportunity_colors=["#882255", "#009988", "#EE7733"],
-        fontsize=14,
+        fontsize=20,
     )
 
 
