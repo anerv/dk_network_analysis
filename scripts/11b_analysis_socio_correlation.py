@@ -36,6 +36,7 @@ display(socio[socio_corr_variables].describe())
 
 # %%
 # Just income
+
 socio_vars = socio_corr_variables[7:17]
 plot_func.plot_correlation(
     socio,
@@ -49,6 +50,8 @@ display(socio[socio_vars].corr().style.background_gradient(cmap="coolwarm"))
 display(socio[socio_vars].describe())
 # %%
 # Just income and cars
+
+sns.set(font_scale=1.3, style="white")
 
 socio_vars = (
     socio_corr_variables[8:15] + socio_corr_variables[17:-2]
