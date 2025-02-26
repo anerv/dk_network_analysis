@@ -471,6 +471,8 @@ def plot_lorenz_combined(
 
     ax.set_ylabel(f"Cumulative share of {y_label}", fontsize=fontsize)
 
+    ax.tick_params(axis="both", which="major", labelsize=fontsize - 2)
+
     sns.despine(bottom=True, left=True)
 
     ax.legend(frameon=False, fontsize=fontsize)
