@@ -167,11 +167,11 @@ for i, c in enumerate(inequality_columns_socio):
 # %%
 # Combine all lorenz curves into one plot
 
-fig, axes = plt.subplots(2, 4, figsize=(18, 10))
+fig, axes = plt.subplots(3, 4, figsize=(20, 15))
 
 axes = axes.flatten()
 
-for i, c in enumerate(inequality_columns_socio[0:8]):
+for i, c in enumerate(inequality_columns_socio):  # [0:8]
 
     axes[i].set_aspect(1)
 
@@ -185,11 +185,10 @@ for i, c in enumerate(inequality_columns_socio[0:8]):
         share_of_population=pop_shares,
         x_label="population",
         y_label=labels_socio[i],
-        fontsize=14,
+        fontsize=18,
     )
 
 plt.tight_layout()
-
 
 plt.savefig(fp_equity_lorenz_combined, dpi=pdict["dpi"])
 
