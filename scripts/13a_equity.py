@@ -21,6 +21,7 @@ engine = dbf.connect_alc(db_name, db_user, db_password, db_port=db_port)
 
 connection = dbf.connect_pg(db_name, db_user, db_password, db_port=db_port)
 
+
 # %%
 # Prepare data
 
@@ -109,19 +110,27 @@ socio_gdf["household_high_income_pct"] = (
     socio_gdf["Income 500-750k (%)"] + socio_gdf["Income 750k+ (%)"]
 )
 
-socio_gdf["lts_1_per_capita"] = socio_gdf["lts_1_dens"] / socio_gdf["population"]
-socio_gdf["lts_1_2_per_capita"] = socio_gdf["lts_1_2_dens"] / socio_gdf["population"]
-socio_gdf["lts_1_3_per_capita"] = socio_gdf["lts_1_3_dens"] / socio_gdf["population"]
-socio_gdf["lts_1_4_per_capita"] = socio_gdf["lts_1_4_dens"] / socio_gdf["population"]
+socio_gdf["lts_1_per_capita"] = socio_gdf["lts_1_length"] / socio_gdf["population"]
+socio_gdf["lts_2_per_capita"] = socio_gdf["lts_2_length"] / socio_gdf["population"]
+socio_gdf["lts_3_per_capita"] = socio_gdf["lts_3_length"] / socio_gdf["population"]
+socio_gdf["lts_4_per_capita"] = socio_gdf["lts_4_length"] / socio_gdf["population"]
+socio_gdf["lts_1_2_per_capita"] = socio_gdf["lts_1_2_length"] / socio_gdf["population"]
+socio_gdf["lts_1_3_per_capita"] = socio_gdf["lts_1_3_length"] / socio_gdf["population"]
+socio_gdf["lts_1_4_per_capita"] = socio_gdf["lts_1_4_length"] / socio_gdf["population"]
 
 
 labels_socio = [
     "LTS 1 density",
+    "LTS 2 density",
+    "LTS 3 density",
+    "LTS 4 density",
     "LTS ≤2 density",
     "LTS ≤3 density",
     "LTS ≤4 density",
-    # "total network density",
     "LTS 1 length",
+    "LTS 2 length",
+    "LTS 3 length",
+    "LTS 4 length",
     "LTS ≤2 length",
     "LTS ≤3 length",
     "LTS ≤4 length",
@@ -129,15 +138,19 @@ labels_socio = [
     "LTS ≤2 per capita",
     "LTS ≤3 per capita",
     "LTS ≤4 per capita",
-    # "total network length",
 ]
 inequality_columns_socio = [
     "lts_1_dens",
+    "lts_2_dens",
+    "lts_3_dens",
+    "lts_4_dens",
     "lts_1_2_dens",
     "lts_1_3_dens",
     "lts_1_4_dens",
-    # "total_network_dens",
     "lts_1_length",
+    "lts_2_length",
+    "lts_3_length",
+    "lts_4_length",
     "lts_1_2_length",
     "lts_1_3_length",
     "lts_1_4_length",
@@ -145,7 +158,6 @@ inequality_columns_socio = [
     "lts_1_2_per_capita",
     "lts_1_3_per_capita",
     "lts_1_4_per_capita",
-    # "total_network_length",
 ]
 # %%
 ############## LORENZ CURVES ##############
@@ -167,7 +179,9 @@ for i, c in enumerate(inequality_columns_socio):
 # %%
 # Combine all lorenz curves into one plot
 
-fig, axes = plt.subplots(3, 4, figsize=(20, 15))
+fig, axes = plt.subplots(
+    3, 4, figsize=(20, 15)
+)  # TODO: include sep length and density!
 
 axes = axes.flatten()
 
@@ -526,6 +540,7 @@ for e, socioeconomic_column in enumerate(rank_columns):
 
 
 # %%
+# TODO: include separeate length and density!
 density_columns = ["lts_1_dens", "lts_1_2_dens", "lts_1_3_dens", "lts_1_4_dens"]
 length_columns = ["lts_1_length", "lts_1_2_length", "lts_1_3_length", "lts_1_4_length"]
 per_capita_columns = [
@@ -600,6 +615,8 @@ for e, socioeconomic_column in enumerate(rank_columns):
     plt.close()
 
 # %%
+
+# TODO: include separeate length and density???
 
 fp = fp_equity_plots_base + f"concentration_curves_combined_lts1.png"
 
