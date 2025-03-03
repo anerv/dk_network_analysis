@@ -118,12 +118,13 @@ socio_gdf["lts_1_2_per_capita"] = socio_gdf["lts_1_2_length"] / socio_gdf["popul
 socio_gdf["lts_1_3_per_capita"] = socio_gdf["lts_1_3_length"] / socio_gdf["population"]
 socio_gdf["lts_1_4_per_capita"] = socio_gdf["lts_1_4_length"] / socio_gdf["population"]
 
-
+# %%
 labels_socio = [
     "LTS 1 density",
     "LTS 2 density",
     "LTS 3 density",
     "LTS 4 density",
+    "LTS 1 density",
     "LTS ≤2 density",
     "LTS ≤3 density",
     "LTS ≤4 density",
@@ -131,19 +132,26 @@ labels_socio = [
     "LTS 2 length",
     "LTS 3 length",
     "LTS 4 length",
+    "LTS 1 length",
     "LTS ≤2 length",
     "LTS ≤3 length",
     "LTS ≤4 length",
+    "LTS 1 per capita",
+    "LTS 2 per capita",
+    "LTS 3 per capita",
+    "LTS 4 per capita",
     "LTS 1 per capita",
     "LTS ≤2 per capita",
     "LTS ≤3 per capita",
     "LTS ≤4 per capita",
 ]
+
 inequality_columns_socio = [
     "lts_1_dens",
     "lts_2_dens",
     "lts_3_dens",
     "lts_4_dens",
+    "lts_1_dens",
     "lts_1_2_dens",
     "lts_1_3_dens",
     "lts_1_4_dens",
@@ -151,9 +159,14 @@ inequality_columns_socio = [
     "lts_2_length",
     "lts_3_length",
     "lts_4_length",
+    "lts_1_length",
     "lts_1_2_length",
     "lts_1_3_length",
     "lts_1_4_length",
+    "lts_1_per_capita",
+    "lts_2_per_capita",
+    "lts_3_per_capita",
+    "lts_4_per_capita",
     "lts_1_per_capita",
     "lts_1_2_per_capita",
     "lts_1_3_per_capita",
@@ -180,7 +193,7 @@ for i, c in enumerate(inequality_columns_socio):
 # Combine all lorenz curves into one plot
 
 fig, axes = plt.subplots(
-    3, 4, figsize=(20, 15)
+    6, 4, figsize=(20, 35)  # (20,15)
 )  # TODO: include sep length and density!
 
 axes = axes.flatten()
@@ -458,7 +471,14 @@ cci_subset = cci_df.loc[
             # "Households 2 cars (%)",
         ]
     )
-]
+].copy()
+
+# %%
+
+cci_subset.drop_duplicates(
+    subset=["analysis_column", "ranking_column"],
+    inplace=True,
+)
 
 # %%
 # Restructure cci_subset
@@ -508,7 +528,7 @@ for e, socioeconomic_column in enumerate(rank_columns):
         + f"concentration_curve_subplots_{socioeconomic_column}.png"
     )
 
-    fig, axes = plt.subplots(3, 4, figsize=(15, 12))
+    fig, axes = plt.subplots(6, 4, figsize=(20, 35))  # (3, 4, figsize=(15, 12))
 
     axes = axes.flatten()
 
@@ -541,18 +561,45 @@ for e, socioeconomic_column in enumerate(rank_columns):
 
 # %%
 # TODO: include separeate length and density!
-density_columns = ["lts_1_dens", "lts_1_2_dens", "lts_1_3_dens", "lts_1_4_dens"]
-length_columns = ["lts_1_length", "lts_1_2_length", "lts_1_3_length", "lts_1_4_length"]
+
+density_columns = [
+    "lts_1_dens",
+    "lts_2_dens",
+    "lts_3_dens",
+    "lts_4_dens",
+    "lts_1_dens",
+    "lts_1_2_dens",
+    "lts_1_3_dens",
+    "lts_1_4_dens",
+]
+length_columns = [
+    "lts_1_length",
+    "lts_2_length",
+    "lts_3_length",
+    "lts_4_length",
+    "lts_1_length",
+    "lts_1_2_length",
+    "lts_1_3_length",
+    "lts_1_4_length",
+]
 per_capita_columns = [
+    "lts_1_per_capita",
+    "lts_2_per_capita",
+    "lts_3_per_capita",
+    "lts_4_per_capita",
     "lts_1_per_capita",
     "lts_1_2_per_capita",
     "lts_1_3_per_capita",
     "lts_1_4_per_capita",
 ]
-general_labels = ["LTS 1", "LTS 2", "LTS 3", "LTS 4"]
+general_labels = ["LTS 1", "LTS 2", "LTS 3", "LTS 4"] * 2
 
 
 labels_dens = [
+    "LTS 1 density",
+    "LTS 2 density",
+    "LTS 3 density",
+    "LTS 4 density",
     "LTS 1 density",
     "LTS ≤2 density",
     "LTS ≤3 density",
@@ -561,6 +608,10 @@ labels_dens = [
 
 labels_length = [
     "LTS 1 length",
+    "LTS 2 length",
+    "LTS 3 length",
+    "LTS 4 length",
+    "LTS 1 length",
     "LTS ≤2 length",
     "LTS ≤3 length",
     "LTS ≤4 length",
@@ -568,11 +619,16 @@ labels_length = [
 
 labels_capita = [
     "LTS 1 per capita",
+    "LTS 2 per capita",
+    "LTS 3 per capita",
+    "LTS 4 per capita",
+    "LTS 1 per capita",
     "LTS ≤2 per capita",
     "LTS ≤3 per capita",
     "LTS ≤4 per capita",
 ]
 
+# %%
 for e, socioeconomic_column in enumerate(rank_columns):
 
     fp = (
@@ -580,7 +636,7 @@ for e, socioeconomic_column in enumerate(rank_columns):
         + f"concentration_curve_subplots_combined_{socioeconomic_column}.png"
     )
 
-    fig, axes = plt.subplots(1, len(density_columns), figsize=(25, 15))
+    fig, axes = plt.subplots(2, int(len(density_columns) / 2), figsize=(25, 15))
 
     axes = axes.flatten()
 
