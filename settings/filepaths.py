@@ -247,7 +247,8 @@ fp_equity_plots_base = "../results/equity/plots/"
 
 fp_equity_outlier_stripplot = "../results/equity/plots/stripplot_outlier_analysis_"
 
-fp_equity_lorenz_combined = "../results/equity/plots/lorenz_combined.png"
+fp_equity_lorenz_combined_ind = "../results/equity/plots/lorenz_combined_ind.png"
+fp_equity_lorenz_combined_step = "../results/equity/plots/lorenz_combined_step.png"
 
 fp_equity_outliers_above_zoom = "../results/equity/maps/outliers_above_mean_zoom.png"
 
