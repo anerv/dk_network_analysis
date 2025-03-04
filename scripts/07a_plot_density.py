@@ -56,6 +56,7 @@ for e, gdf in enumerate(gdfs):
             norm_min=vmin,
             norm_max=vmax,
             background_color=pdict["background_color"],
+            # legend_fs=25,
         )
 
     ###### Plot stepwise LTS densities #####
@@ -89,7 +90,7 @@ for e, gdf in enumerate(gdfs):
             norm_min=vmin,
             norm_max=vmax,
             background_color=pdict["background_color"],
-            # legend_fs=20,
+            # legend_fs=25,
         )
 
     ###### Plot relative network length #####
