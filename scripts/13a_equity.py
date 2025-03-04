@@ -549,7 +549,7 @@ cci_values = cci_pivot.reindex(
         # "Households 2 cars (%)",
     ]
 )
-display(cci_values)
+display(cci_values.T)
 
 cci_values.to_csv(fp_inequalities_cci_subset)
 
