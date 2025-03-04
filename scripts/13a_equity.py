@@ -119,54 +119,60 @@ socio_gdf["lts_1_3_per_capita"] = socio_gdf["lts_1_3_length"] / socio_gdf["popul
 socio_gdf["lts_1_4_per_capita"] = socio_gdf["lts_1_4_length"] / socio_gdf["population"]
 
 # %%
-labels_socio = [
+labels_socio_ind = [
     "LTS 1 density",
     "LTS 2 density",
     "LTS 3 density",
     "LTS 4 density",
+    "LTS 1 length",
+    "LTS 2 length",
+    "LTS 3 length",
+    "LTS 4 length",
+    "LTS 1 per capita",
+    "LTS 2 per capita",
+    "LTS 3 per capita",
+    "LTS 4 per capita",
+]
+
+labels_socio_step = [
     "LTS 1 density",
     "LTS ≤2 density",
     "LTS ≤3 density",
     "LTS ≤4 density",
     "LTS 1 length",
-    "LTS 2 length",
-    "LTS 3 length",
-    "LTS 4 length",
-    "LTS 1 length",
     "LTS ≤2 length",
     "LTS ≤3 length",
     "LTS ≤4 length",
-    "LTS 1 per capita",
-    "LTS 2 per capita",
-    "LTS 3 per capita",
-    "LTS 4 per capita",
     "LTS 1 per capita",
     "LTS ≤2 per capita",
     "LTS ≤3 per capita",
     "LTS ≤4 per capita",
 ]
 
-inequality_columns_socio = [
+inequality_columns_socio_ind = [
     "lts_1_dens",
     "lts_2_dens",
     "lts_3_dens",
     "lts_4_dens",
+    "lts_1_length",
+    "lts_2_length",
+    "lts_3_length",
+    "lts_4_length",
+    "lts_1_per_capita",
+    "lts_2_per_capita",
+    "lts_3_per_capita",
+    "lts_4_per_capita",
+]
+
+inequality_columns_socio_step = [
     "lts_1_dens",
     "lts_1_2_dens",
     "lts_1_3_dens",
     "lts_1_4_dens",
     "lts_1_length",
-    "lts_2_length",
-    "lts_3_length",
-    "lts_4_length",
-    "lts_1_length",
     "lts_1_2_length",
     "lts_1_3_length",
     "lts_1_4_length",
-    "lts_1_per_capita",
-    "lts_2_per_capita",
-    "lts_3_per_capita",
-    "lts_4_per_capita",
     "lts_1_per_capita",
     "lts_1_2_per_capita",
     "lts_1_3_per_capita",
@@ -175,30 +181,44 @@ inequality_columns_socio = [
 # %%
 ############## LORENZ CURVES ##############
 
-for i, c in enumerate(inequality_columns_socio):
+# for i, c in enumerate(inequality_columns_socio_ind):
 
-    cumulative_share = analysis_func.compute_cumulative_shares(socio_gdf[c])
+#     cumulative_share = analysis_func.compute_cumulative_shares(socio_gdf[c])
 
-    pop_shares, y_shares = analysis_func.lorenz(cumulative_share)
+#     pop_shares, y_shares = analysis_func.lorenz(cumulative_share)
 
-    plot_func.plot_lorenz(
-        cumulative_share=cumulative_share,
-        share_of_population=pop_shares,
-        x_label="population",
-        y_label=labels_socio[i],
-        fp=fp_equity_plots_base + f"lorenz_{c}.png",
-    )
+#     plot_func.plot_lorenz(
+#         cumulative_share=cumulative_share,
+#         share_of_population=pop_shares,
+#         x_label="population",
+#         y_label=labels_socio_ind[i],
+#         fp=fp_equity_plots_base + f"lorenz_{c}.png",
+#     )
+
+# for i, c in enumerate(inequality_columns_socio_step):
+
+#     cumulative_share = analysis_func.compute_cumulative_shares(socio_gdf[c])
+
+#     pop_shares, y_shares = analysis_func.lorenz(cumulative_share)
+
+#     plot_func.plot_lorenz(
+#         cumulative_share=cumulative_share,
+#         share_of_population=pop_shares,
+#         x_label="population",
+#         y_label=labels_socio_step[i],
+#         fp=fp_equity_plots_base + f"lorenz_{c}.png",
+#     )
 
 # %%
 # Combine all lorenz curves into one plot
 
-fig, axes = plt.subplots(
-    6, 4, figsize=(20, 35)  # (20,15)
-)  # TODO: include sep length and density!
+# Ind. LTS
+
+fig, axes = plt.subplots(3, 4, figsize=(20, 15))
 
 axes = axes.flatten()
 
-for i, c in enumerate(inequality_columns_socio):  # [0:8]
+for i, c in enumerate(inequality_columns_socio_ind):
 
     axes[i].set_aspect(1)
 
@@ -211,13 +231,46 @@ for i, c in enumerate(inequality_columns_socio):  # [0:8]
         cumulative_share=cumulative_share,
         share_of_population=pop_shares,
         x_label="population",
-        y_label=labels_socio[i],
+        y_label=labels_socio_ind[i],
         fontsize=18,
     )
 
 plt.tight_layout()
 
-plt.savefig(fp_equity_lorenz_combined, dpi=pdict["dpi"])
+plt.savefig(fp_equity_lorenz_combined_ind, dpi=pdict["dpi"])
+
+plt.show()
+
+plt.close()
+
+# %%
+
+# Stepwise LTS
+
+fig, axes = plt.subplots(3, 4, figsize=(20, 15))
+
+axes = axes.flatten()
+
+for i, c in enumerate(inequality_columns_socio_step):  # [0:8]
+
+    axes[i].set_aspect(1)
+
+    cumulative_share = analysis_func.compute_cumulative_shares(socio_gdf[c])
+
+    pop_shares, y_shares = analysis_func.lorenz(cumulative_share)
+
+    plot_func.plot_lorenz_combined(
+        ax=axes[i],
+        cumulative_share=cumulative_share,
+        share_of_population=pop_shares,
+        x_label="population",
+        y_label=labels_socio_step[i],
+        fontsize=18,
+    )
+
+plt.tight_layout()
+
+plt.savefig(fp_equity_lorenz_combined_step, dpi=pdict["dpi"])
 
 plt.show()
 
@@ -225,6 +278,8 @@ plt.close()
 
 # %%
 ############## GINI ##############
+
+inequality_columns_socio = inequality_columns_socio_ind + inequality_columns_socio_step
 
 inequalities_socio = (
     socio_gdf[inequality_columns_socio]
@@ -250,7 +305,7 @@ socio_gdf["urban_rural"] = socio_gdf["Urban area (%)"].apply(
     analysis_func.classify_urban_rural
 )
 
-# %%
+
 for c, l in zip(
     ["socio_label", "municipal_id", "urban_rural"],
     ["socio_clusters", "municipality", "urban_rural"],
@@ -332,7 +387,6 @@ display(spatial_gini_results_hex)
 
 spatial_gini_results_hex.to_csv(fp_inequalities_hex_spatial_gini)
 
-# %%
 # Theil at hex level
 
 # join socio id to hexes
@@ -360,7 +414,6 @@ assert len(hexjoin) <= len(hexgrid)
 
 hexjoin.rename(columns={"id": "socio_id"}, inplace=True)
 
-# %%
 
 inequalities_hex = (
     hexjoin[inequality_columns_hex]
@@ -473,14 +526,12 @@ cci_subset = cci_df.loc[
     )
 ].copy()
 
-# %%
 
 cci_subset.drop_duplicates(
     subset=["analysis_column", "ranking_column"],
     inplace=True,
 )
 
-# %%
 # Restructure cci_subset
 cci_pivot = cci_subset.pivot(
     index="ranking_column", columns="analysis_column", values="cci"
@@ -504,18 +555,31 @@ cci_values.to_csv(fp_inequalities_cci_subset)
 
 # %%
 
-for e, socioeconomic_column in enumerate(rank_columns):
+# for e, socioeconomic_column in enumerate(rank_columns):
 
-    for i, analysis_column in enumerate(inequality_columns_socio):
+#     for i, analysis_column in enumerate(inequality_columns_socio_ind):
 
-        plot_func.plot_concentration_curves(
-            data=socio_gdf,
-            opportunity=analysis_column,
-            population="population",
-            income=socioeconomic_column,
-            income_label=rank_labels[e],
-            oppportunity_label=labels_socio[i],
-        )
+#         plot_func.plot_concentration_curves(
+#             data=socio_gdf,
+#             opportunity=analysis_column,
+#             population="population",
+#             income=socioeconomic_column,
+#             income_label=rank_labels[e],
+#             oppportunity_label=labels_socio_ind[i],
+#         )
+# #%%
+# for e, socioeconomic_column in enumerate(rank_columns):
+
+#     for i, analysis_column in enumerate(inequality_columns_socio_step):
+
+#         plot_func.plot_concentration_curves(
+#             data=socio_gdf,
+#             opportunity=analysis_column,
+#             population="population",
+#             income=socioeconomic_column,
+#             income_label=rank_labels[e],
+#             oppportunity_label=labels_socio_step[i],
+#         )
 
 # %%
 
@@ -525,14 +589,14 @@ for e, socioeconomic_column in enumerate(rank_columns):
 
     fp = (
         fp_equity_plots_base
-        + f"concentration_curve_subplots_{socioeconomic_column}.png"
+        + f"concentration_curve_subplots_{socioeconomic_column}_ind.png"
     )
 
-    fig, axes = plt.subplots(6, 4, figsize=(20, 35))  # (3, 4, figsize=(15, 12))
+    fig, axes = plt.subplots(3, 4, figsize=(20, 15))  # (3, 4, figsize=(15, 12))
 
     axes = axes.flatten()
 
-    for i, analysis_column in enumerate(inequality_columns_socio):
+    for i, analysis_column in enumerate(inequality_columns_socio_ind):
 
         axes[i].set_aspect(1)
 
@@ -543,7 +607,7 @@ for e, socioeconomic_column in enumerate(rank_columns):
             population="population",
             income=socioeconomic_column,
             # income_label=rank_labels[e],
-            oppportunity_label=labels_socio[i],
+            oppportunity_label=labels_socio_ind[i],
         )
 
     plt.suptitle(f"Concentration curves for {rank_labels[e]}")
@@ -558,70 +622,126 @@ for e, socioeconomic_column in enumerate(rank_columns):
 
     plt.close()
 
-
 # %%
-# TODO: include separeate length and density!
+for e, socioeconomic_column in enumerate(rank_columns):
 
-density_columns = [
+    fp = (
+        fp_equity_plots_base
+        + f"concentration_curve_subplots_{socioeconomic_column}_step.png"
+    )
+
+    fig, axes = plt.subplots(3, 4, figsize=(20, 15))  # (3, 4, figsize=(15, 12))
+
+    axes = axes.flatten()
+
+    for i, analysis_column in enumerate(inequality_columns_socio_step):
+
+        axes[i].set_aspect(1)
+
+        plot_func.plot_concentration_curves_subplots(
+            ax=axes[i],
+            data=socio_gdf,
+            opportunity=analysis_column,
+            population="population",
+            income=socioeconomic_column,
+            # income_label=rank_labels[e],
+            oppportunity_label=labels_socio_step[i],
+        )
+
+    plt.suptitle(f"Concentration curves for {rank_labels[e]}")
+    sns.despine()
+
+    plt.tight_layout()
+
+    if fp:
+        plt.savefig(fp, dpi=pdict["dpi"])
+
+    plt.show()
+
+    plt.close()
+# %%
+
+density_columns_ind = [
     "lts_1_dens",
     "lts_2_dens",
     "lts_3_dens",
     "lts_4_dens",
+]
+
+density_columns_step = [
     "lts_1_dens",
     "lts_1_2_dens",
     "lts_1_3_dens",
     "lts_1_4_dens",
 ]
-length_columns = [
+
+length_columns_ind = [
     "lts_1_length",
     "lts_2_length",
     "lts_3_length",
     "lts_4_length",
+]
+
+length_columns_step = [
     "lts_1_length",
     "lts_1_2_length",
     "lts_1_3_length",
     "lts_1_4_length",
 ]
-per_capita_columns = [
+
+per_capita_columns_ind = [
     "lts_1_per_capita",
     "lts_2_per_capita",
     "lts_3_per_capita",
     "lts_4_per_capita",
+]
+
+per_capita_columns_step = [
     "lts_1_per_capita",
     "lts_1_2_per_capita",
     "lts_1_3_per_capita",
     "lts_1_4_per_capita",
 ]
+
 general_labels = ["LTS 1", "LTS 2", "LTS 3", "LTS 4"] * 2
 
 
-labels_dens = [
+labels_dens_ind = [
     "LTS 1 density",
     "LTS 2 density",
     "LTS 3 density",
     "LTS 4 density",
+]
+
+labels_dens_step = [
     "LTS 1 density",
     "LTS ≤2 density",
     "LTS ≤3 density",
     "LTS ≤4 density",
 ]
 
-labels_length = [
+labels_length_ind = [
     "LTS 1 length",
     "LTS 2 length",
     "LTS 3 length",
     "LTS 4 length",
+]
+
+labels_length_step = [
     "LTS 1 length",
     "LTS ≤2 length",
     "LTS ≤3 length",
     "LTS ≤4 length",
 ]
 
-labels_capita = [
+labels_capita_ind = [
     "LTS 1 per capita",
     "LTS 2 per capita",
     "LTS 3 per capita",
     "LTS 4 per capita",
+]
+
+labels_capita_step = [
     "LTS 1 per capita",
     "LTS ≤2 per capita",
     "LTS ≤3 per capita",
@@ -633,15 +753,15 @@ for e, socioeconomic_column in enumerate(rank_columns):
 
     fp = (
         fp_equity_plots_base
-        + f"concentration_curve_subplots_combined_{socioeconomic_column}.png"
+        + f"concentration_curve_subplots_combined_{socioeconomic_column}_ind.png"
     )
 
-    fig, axes = plt.subplots(2, int(len(density_columns) / 2), figsize=(25, 15))
+    fig, axes = plt.subplots(1, 4, figsize=(25, 15))
 
     axes = axes.flatten()
 
     for i, (dens_col, len_col, cap_col) in enumerate(
-        zip(density_columns, length_columns, per_capita_columns)
+        zip(density_columns_ind, length_columns_ind, per_capita_columns_ind)
     ):
         axes[i].set_aspect(1)
 
@@ -651,7 +771,57 @@ for e, socioeconomic_column in enumerate(rank_columns):
             opportunities=[dens_col, len_col, cap_col],
             population="population",
             income=socioeconomic_column,
-            oppportunity_labels=[labels_dens[i], labels_length[i], labels_capita[i]],
+            oppportunity_labels=[
+                labels_dens_ind[i],
+                labels_length_ind[i],
+                labels_capita_ind[i],
+            ],
+            general_opportunity_label=f"{general_labels[i]} infrastructure",
+            opportunity_colors=["#882255", "#009988", "#EE7733"],
+            fontsize=20,
+        )
+
+    sns.despine()
+
+    # plt.suptitle(f"Concentration curves for {rank_labels[e]}", fontsize=14)
+
+    plt.tight_layout()
+
+    if fp:
+        plt.savefig(fp, dpi=pdict["dpi"])
+
+    plt.show()
+
+    plt.close()
+
+# %%
+for e, socioeconomic_column in enumerate(rank_columns):
+
+    fp = (
+        fp_equity_plots_base
+        + f"concentration_curve_subplots_combined_{socioeconomic_column}_step.png"
+    )
+
+    fig, axes = plt.subplots(1, 4, figsize=(25, 15))
+
+    axes = axes.flatten()
+
+    for i, (dens_col, len_col, cap_col) in enumerate(
+        zip(density_columns_step, length_columns_step, per_capita_columns_step)
+    ):
+        axes[i].set_aspect(1)
+
+        plot_func.plot_concentration_curves_combined(
+            ax=axes[i],
+            data=socio_gdf,
+            opportunities=[dens_col, len_col, cap_col],
+            population="population",
+            income=socioeconomic_column,
+            oppportunity_labels=[
+                labels_dens_step[i],
+                labels_length_step[i],
+                labels_capita_step[i],
+            ],
             general_opportunity_label=f"{general_labels[i]} infrastructure",
             opportunity_colors=["#882255", "#009988", "#EE7733"],
             fontsize=20,
@@ -672,53 +842,51 @@ for e, socioeconomic_column in enumerate(rank_columns):
 
 # %%
 
-# TODO: include separeate length and density???
+# fp = fp_equity_plots_base + f"concentration_curves_combined_lts1.png"
 
-fp = fp_equity_plots_base + f"concentration_curves_combined_lts1.png"
+# rank_columns_subset = [
+#     "household_low_income_pct",
+#     "household_medium_income_pct",
+#     "household_high_income_pct",
+#     "Households w car (%)",
+# ]
 
-rank_columns_subset = [
-    "household_low_income_pct",
-    "household_medium_income_pct",
-    "household_high_income_pct",
-    "Households w car (%)",
-]
+# fig, axes = plt.subplots(1, len(rank_columns_subset), figsize=(25, 15))
 
-fig, axes = plt.subplots(1, len(rank_columns_subset), figsize=(25, 15))
+# axes = axes.flatten()
 
-axes = axes.flatten()
+# for e, socioeconomic_column in enumerate(rank_columns_subset):
 
-for e, socioeconomic_column in enumerate(rank_columns_subset):
+#     axes[e].set_aspect(1)
 
-    axes[e].set_aspect(1)
-
-    plot_func.plot_concentration_curves_combined(
-        ax=axes[e],
-        data=socio_gdf,
-        opportunities=[
-            density_columns[0],
-            length_columns[0],
-            per_capita_columns[0],
-        ],
-        population="population",
-        income=socioeconomic_column,
-        oppportunity_labels=[labels_dens[0], labels_length[0], labels_capita[0]],
-        general_opportunity_label=f"{general_labels[0]} infrastructure",
-        opportunity_colors=["#882255", "#009988", "#EE7733"],
-        fontsize=20,
-    )
+#     plot_func.plot_concentration_curves_combined(
+#         ax=axes[e],
+#         data=socio_gdf,
+#         opportunities=[
+#             density_columns[0],
+#             length_columns[0],
+#             per_capita_columns[0],
+#         ],
+#         population="population",
+#         income=socioeconomic_column,
+#         oppportunity_labels=[labels_dens[0], labels_length[0], labels_capita[0]],
+#         general_opportunity_label=f"{general_labels[0]} infrastructure",
+#         opportunity_colors=["#882255", "#009988", "#EE7733"],
+#         fontsize=20,
+#     )
 
 
-sns.despine()
+# sns.despine()
 
-# plt.suptitle(f"Concentration curves for LTS 1", fontsize=14)
+# # plt.suptitle(f"Concentration curves for LTS 1", fontsize=14)
 
-plt.tight_layout()
+# plt.tight_layout()
 
-if fp:
-    plt.savefig(fp, dpi=pdict["dpi"])
+# if fp:
+#     plt.savefig(fp, dpi=pdict["dpi"])
 
-plt.show()
+# plt.show()
 
-plt.close()
+# plt.close()
 
 # %%
