@@ -1129,9 +1129,15 @@ fig, ax = plt.subplots(figsize=pdict["fsmap"])
 
 bg_dis.plot(ax=ax, color="white", edgecolor="black", linewidth=0.2, legend=False)
 
-low_stress_subset.plot(ax=ax, color="#117733", linewidth=0.2)
-scs_existing.plot(ax=ax, color="#EE7733", linewidth=2, alpha=0.8)
-scs_planned.plot(ax=ax, color="#6699CC", linewidth=2, alpha=0.8)
+low_stress_subset.plot(
+    ax=ax, color="#117733", linewidth=0.2, label="Low-stress network"
+)
+scs_existing.plot(
+    ax=ax, color="#EE7733", linewidth=2, alpha=0.8, label="Existing cycle highway"
+)
+scs_planned.plot(
+    ax=ax, color="#6699CC", linewidth=2, alpha=0.8, label="Planned cycle highway"
+)
 
 ax.axis([xmin, xmax, ymin, ymax])
 ax.set_axis_off()
@@ -1158,6 +1164,30 @@ txt = ax.texts[-1]
 txt.set_position([0.99, 0.01])
 txt.set_ha("right")
 txt.set_va("bottom")
+
+from matplotlib.lines import Line2D
+
+lines = [
+    Line2D([0], [0], color="#117733", lw=1),
+    Line2D([0], [0], color="#EE7733", lw=1),
+    Line2D([0], [0], color="#6699CC", lw=1),
+]
+
+ax.legend(
+    loc="upper left",
+    handles=lines,
+    labels=["Low-stress network", "Existing cycle highway", "Planned cycle highway"],
+    fontsize=pdict["map_legend_fs"],
+    frameon=False,
+)
+
+# get legend
+legend = ax.get_legend()
+
+# Add white halo to legend labels
+for text in legend.get_texts():
+    text.set_path_effects([mpl.patheffects.withStroke(linewidth=3, foreground="white")])
+
 
 if plot_res == "high":
     fig.savefig(filepath + ".svg", dpi=pdict["dpi"])
