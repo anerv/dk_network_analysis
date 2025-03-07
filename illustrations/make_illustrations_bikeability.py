@@ -1092,3 +1092,76 @@ plt.savefig(filepath + ".png", dpi=pdict["dpi"])
 plt.show()
 
 # %%
+# MAKE SCS illustration
+
+xmin, ymin, xmax, ymax = 680737 + 1500, 6176481, 729782 - 1000, 6220763 - 500
+
+# TODO: Get background
+background = gpd.read_postgis(
+    "SELECT * FROM municipalities;", engine, geom_col="geometry"
+)
+
+bg_dis = background.dissolve()
+
+scs = gpd.read_file("scs.gpkg")
+
+scs.to_crs(crs="EPSG:25832", inplace=True)
+scs_planned = scs.loc[scs["status"].isin(["Planlagt", "Projekteret"])]
+scs_existing = scs.loc[scs["status"].isin(["Eksisterende"])]
+
+# %%
+# Get full network
+low_stress_network = gpd.read_postgis(
+    "SELECT id, geometry FROM edges WHERE lts_access IN (1,2)",
+    engine,
+    geom_col="geometry",
+)
+
+low_stress_subset = low_stress_network.cx[
+    xmin - 100 : xmax + 100, ymin - 100 : ymax + 100
+].copy()
+# %%
+plot_res = "low"
+
+filepath = "../illustrations/scs_map"
+
+fig, ax = plt.subplots(figsize=pdict["fsmap"])
+
+bg_dis.plot(ax=ax, color="white", edgecolor="black", linewidth=0.2, legend=False)
+
+low_stress_subset.plot(ax=ax, color="#117733", linewidth=0.2)
+scs_existing.plot(ax=ax, color="#EE7733", linewidth=2, alpha=0.8)
+scs_planned.plot(ax=ax, color="#6699CC", linewidth=2, alpha=0.8)
+
+ax.axis([xmin, xmax, ymin, ymax])
+ax.set_axis_off()
+# ax.set_title("total network", fontsize=pdict["map_title_fs"])
+
+ax.add_artist(
+    ScaleBar(
+        dx=1,
+        units="m",
+        dimension="si-length",
+        length_fraction=0.15,
+        width_fraction=0.002,
+        location="lower left",
+        box_alpha=0,
+        font_properties={"size": pdict["map_legend_fs"]},
+    )
+)
+cx.add_attribution(
+    ax=ax,
+    text="(C) " + pdict["map_attr"] + ", Supercykelstier",
+    font_size=pdict["map_legend_fs"],
+)
+txt = ax.texts[-1]
+txt.set_position([0.99, 0.01])
+txt.set_ha("right")
+txt.set_va("bottom")
+
+if plot_res == "high":
+    fig.savefig(filepath + ".svg", dpi=pdict["dpi"])
+else:
+    fig.savefig(filepath + ".png", dpi=pdict["dpi"])
+
+# %%
