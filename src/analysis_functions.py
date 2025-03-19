@@ -803,13 +803,13 @@ def label_above_below_mean(gdf, socio_column, bikeability_column):
 
         gdf.loc[
             (gdf[socio_column] == socio_label)
-            & (gdf[bikeability_column] > mean + std_dev),
+            & (gdf[bikeability_column] > mean + (std_dev * 2)),
             "above_mean",
         ] = True
 
         gdf.loc[
             (gdf[socio_column] == socio_label)
-            & (gdf[bikeability_column] < mean - std_dev),
+            & (gdf[bikeability_column] < mean - (std_dev * 2)),
             "below_mean",
         ] = True
 
@@ -829,11 +829,11 @@ def export_outliers(
     std_dev = gdf.loc[gdf[socio_column] == socio_label][bikeability_column].std()
 
     below_mean = gdf[gdf[socio_column] == socio_label].loc[
-        gdf[bikeability_column] < mean - std_dev
+        gdf[bikeability_column] < mean - (std_dev * 2)
     ]
 
     above_mean = gdf[gdf[socio_column] == socio_label].loc[
-        gdf[bikeability_column] > mean + std_dev
+        gdf[bikeability_column] > mean + (std_dev * 2)
     ]
     if len(below_mean) > 0:
         below_mean.to_file(fp_below)

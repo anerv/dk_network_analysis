@@ -117,11 +117,11 @@ def plot_above_below_mean(
     axes = axes.flatten()
 
     below_mean = gdf[gdf[socio_column] == socio_label].loc[
-        gdf[bikeability_column] < mean - std_dev
+        gdf[bikeability_column] < mean - (std_dev * 2)
     ]
 
     above_mean = gdf[gdf[socio_column] == socio_label].loc[
-        gdf[bikeability_column] > mean + std_dev
+        gdf[bikeability_column] > mean + (std_dev * 2)
     ]
 
     if len(below_mean) > 0:
@@ -132,7 +132,7 @@ def plot_above_below_mean(
 
         axes[0].axis("off")
 
-        axes[0].title.set_text(f"Areas 1 std dev below mean")
+        axes[0].title.set_text(f"Areas 2 std dev below mean")
 
     elif len(below_mean) == 0:
         axes[0].axis("off")
@@ -143,7 +143,7 @@ def plot_above_below_mean(
 
         above_mean.plot(ax=axes[1], color="red", linewidth=0.1)
 
-        axes[1].title.set_text(f"Areas 1 std dev above mean")
+        axes[1].title.set_text(f"Areas 2 std dev above mean")
 
         axes[1].axis("off")
 
