@@ -852,6 +852,25 @@ def label_outliers_iqr(df, cluster_col, value_col):
     return df
 
 
+def label_outliers_custom_std(df, cluster_col, value_col, std_multiplier=1.5):
+    """
+    Label outliers more than 1.5 standard deviations from the mean for their cluster group
+    """
+    # Calculate mean and standard deviation for each cluster
+    cluster_stats = (
+        df.groupby(cluster_col)[value_col].agg(["mean", "std"]).reset_index()
+    )
+
+    # Merge the stats back to the original dataframe
+    df = df.merge(cluster_stats, on=cluster_col, suffixes=("", "_stats"))
+
+    # Label outliers
+    df["outlier_above"] = df[value_col] > (df["mean"] + std_multiplier * df["std"])
+    df["outlier_below"] = df[value_col] < (df["mean"] - std_multiplier * df["std"])
+
+    return df
+
+
 def export_outliers(
     gdf,
     fp_above,
