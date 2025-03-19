@@ -463,19 +463,55 @@ def plot_lorenz_combined(
     color="#882255",
     fontsize=12,
 ):
+    y_label_elements = y_label.split()
+
+    y_label_part_1 = y_label_elements[0] + " " + y_label_elements[1]
+    y_label_part_2 = " ".join(y_label_elements[2:])
+
     ax.plot(share_of_population, cumulative_share, color=color, label="Lorenz Curve")
 
     ax.plot((0, 1), (0, 1), color="black", linestyle="--", label="Perfect Equality")
 
     ax.set_xlabel(f"Cumulative share of {x_label}", fontsize=fontsize)
 
-    ax.set_ylabel(f"Cumulative share of {y_label}", fontsize=fontsize)
+    # ax.set_ylabel(
+    #     f"Cumulative share of {y_label_part_1} " + r"$\bf{" + y_label_part_2 + "}$",
+    #     fontsize=fontsize,
+    # )
+    ax.set_ylabel(
+        f"Cumulative share of {y_label_part_1} " + r"\textbf{" + y_label_part_2 + "}",
+        fontsize=fontsize,
+    )
 
     ax.tick_params(axis="both", which="major", labelsize=fontsize - 2)
 
     sns.despine(bottom=True, left=True)
 
     ax.legend(frameon=False, fontsize=fontsize)
+
+
+# def plot_lorenz_combined(
+#     ax,
+#     cumulative_share,
+#     share_of_population,
+#     x_label,
+#     y_label,
+#     color="#882255",
+#     fontsize=12,
+# ):
+#     ax.plot(share_of_population, cumulative_share, color=color, label="Lorenz Curve")
+
+#     ax.plot((0, 1), (0, 1), color="black", linestyle="--", label="Perfect Equality")
+
+#     ax.set_xlabel(f"Cumulative share of {x_label}", fontsize=fontsize)
+
+#     ax.set_ylabel(f"Cumulative share of {y_label}", fontsize=fontsize)
+
+#     ax.tick_params(axis="both", which="major", labelsize=fontsize - 2)
+
+#     sns.despine(bottom=True, left=True)
+
+#     ax.legend(frameon=False, fontsize=fontsize)
 
 
 def plot_components_zoom(
