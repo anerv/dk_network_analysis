@@ -76,37 +76,6 @@ ax.get_legend().remove()
 plt.tight_layout()
 plt.savefig(fp_cluster_plots_base + "socio_clusters_proportions.png", dpi=pdict["dpi"])
 plt.show()
-# %%
-
-# Average bikeability rank per socio clsuters
-ave_socio_bike = pd.read_sql("SELECT * FROM clustering.socio_socio_clusters", engine)
-# Order rows by socio_label and average_bikeability_rank
-ave_socio_bike.sort_values(by=["socio_label", "average_bikeability_rank"], inplace=True)
-ave_socio_bike.reset_index(drop=True, inplace=True)
-
-# %%
-# For each socio area
-
-plot_func.make_stripplot(
-    ave_socio_bike,
-    "average_bikeability_rank",
-    "socio_label",
-    "socio_label",
-    list(socio_cluster_colors_dict.values()),
-    xlabel="Average bikeability rank",
-    xticks=[i for i in range(1, 6)],
-    fp=fp_cluster_plots_base + "average_bikeability_rank_by_socio_label.png",
-)
-
-plot_func.make_barplot(
-    ave_socio_bike,
-    "socio_label",
-    "average_bikeability_rank",
-    "socio_label",
-    list(socio_cluster_colors_dict.values()),
-    xlabel="",
-    fp=fp_cluster_plots_base + "average_bikeability_rank_by_socio_label_grouped.png",
-)
 
 # %%
 # Correlation between socio variables and bikeability rank
