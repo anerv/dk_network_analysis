@@ -11,6 +11,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 plt.rcParams["text.usetex"] = True
+plt.rcParams["text.latex.preamble"] = r"\usepackage{sansmath}\sansmath"
+
 
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
@@ -890,5 +892,3 @@ for e, socioeconomic_column in enumerate(rank_columns):
 # plt.show()
 
 # plt.close()
-
-# %%
