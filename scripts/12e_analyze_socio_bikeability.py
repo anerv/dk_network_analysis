@@ -147,14 +147,19 @@ display(bikeability_stats)
 # %%
 
 # Label outliers
-socio_socio = analysis_func.label_outliers_iqr(
-    socio_socio, "socio_label", "average_bikeability_rank"
+# socio_socio = analysis_func.label_outliers_iqr(
+#     socio_socio, "socio_label", "average_bikeability_rank"
+# )
+
+socio_socio = analysis_func.label_outliers_custom_std(
+    socio_socio, "socio_label", "average_bikeability_rank", std_multiplier=1
 )
 
 for i in socio_socio["socio_label"].unique():
     print(
         f"{i}: Total: {len(socio_socio[socio_socio['socio_label'] == i])} - Above: {len(socio_socio[(socio_socio['socio_label'] == i) & (socio_socio['outlier_above'] == True)])} - Below: {len(socio_socio[(socio_socio['socio_label'] == i) & (socio_socio['outlier_below'] == True)])}"
     )
+
 # %%
 
 socio_cluster_values = socio_socio.socio_label.unique()
@@ -266,7 +271,7 @@ for socio_label in socio_cluster_values:
 
 # %%
 
-# TODO: UPDATE
+# TODO: UPDATE??
 socio_outliers_below = socio_socio[
     (socio_socio.outlier_below == True) & (socio_socio.kmeans_socio.isin([5]))  # 6, 7
 ]
@@ -344,5 +349,63 @@ plt.tight_layout()
 plt.savefig(fp_equity_outliers_context, dpi=pdict["dpi"])
 plt.show()
 plt.close()
+
+# %%
+# Average bikeability rank per socio clsuters
+ave_socio_bike = pd.read_sql("SELECT * FROM clustering.socio_socio_clusters", engine)
+# Order rows by socio_label and average_bikeability_rank
+ave_socio_bike.sort_values(by=["socio_label", "average_bikeability_rank"], inplace=True)
+ave_socio_bike.reset_index(drop=True, inplace=True)
+
+# %%
+
+## Label outliers
+ave_socio_bike = analysis_func.label_outliers_iqr(
+    ave_socio_bike, "socio_label", "average_bikeability_rank"
+)
+
+# ave_socio_bike = label_outliers_1std(
+#     ave_socio_bike, "socio_label", "average_bikeability_rank"
+# )
+
+for i in ave_socio_bike["socio_label"].unique():
+    print(
+        f"{i}: Total: {len(ave_socio_bike[ave_socio_bike['socio_label'] == i])} - Above: {len(ave_socio_bike[(ave_socio_bike['socio_label'] == i) & (ave_socio_bike['outlier_above'] == True)])} - Below: {len(ave_socio_bike[(ave_socio_bike['socio_label'] == i) & (ave_socio_bike['outlier_below'] == True)])}"
+    )
+
+# %%
+
+plot_func.make_stripplot(
+    ave_socio_bike,
+    "average_bikeability_rank",
+    "socio_label",
+    "socio_label",
+    list(socio_cluster_colors_dict.values()),
+    xlabel="Average bikeability rank",
+    xticks=[i for i in range(1, 6)],
+    fp=fp_cluster_plots_base + "average_bikeability_rank_by_socio_label.png",
+)
+
+plot_func.make_stripplot_w_outliers(
+    data=ave_socio_bike,
+    x="average_bikeability_rank",
+    y="socio_label",
+    hue_col="socio_label",
+    palette=list(socio_cluster_colors_dict.values()),
+    xlabel="Average bikeability rank",
+    xticks=[i for i in range(1, 6)],
+    fp=fp_cluster_plots_base + "average_bikeability_rank_by_socio_label_outliers.png",
+)
+
+plot_func.make_barplot(
+    ave_socio_bike,
+    "socio_label",
+    "average_bikeability_rank",
+    "socio_label",
+    list(socio_cluster_colors_dict.values()),
+    xlabel="",
+    fp=fp_cluster_plots_base + "average_bikeability_rank_by_socio_label_grouped.png",
+)
+
 
 # %%
