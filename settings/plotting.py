@@ -129,14 +129,25 @@ bikeability_cluster_color_dict = {
 }
 
 socio_cluster_colors_dict = {
-    "1: High income - 2 cars": "#77AADD",  # light blue
-    "2: Very high income - 2 cars": "#99DDFF",  # light cyan
-    "3: Medium income - high car": "#44BB99",  # mint
+    "1: High income - 2 cars": "#EE8866",  # orange
+    "2: Very high income - 2 cars": "#FFAABB",  # pink
+    "3: Medium income - high car": "#BBCC33",  # pear
     "4: Medium/high income - medium car": "#AAAA00",  # olive
-    "5: Medium/low income - 1 car": "#BBCC33",  # pear
-    "6: Very low income - low car": "#FFAABB",  # pink
-    "7: Medium income - very low car": "#EE8866",  # orange
+    "5: Medium/low income - 1 car": "#44BB99",  # mint
+    "6: Very low income - low car": "#99DDFF",  # light cyan
+    "7: Medium income - very low car": "#77AADD",  # light blue
 }
+
+
+# socio_cluster_colors_dict = {
+#     "1: High income - 2 cars": "#77AADD",  # light blue
+#     "2: Very high income - 2 cars": "#99DDFF",  # light cyan
+#     "3: Medium income - high car": "#44BB99",  # mint
+#     "4: Medium/high income - medium car": "#AAAA00",  # olive
+#     "5: Medium/low income - 1 car": "#BBCC33",  # pear
+#     "6: Very low income - low car": "#FFAABB",  # pink
+#     "7: Medium income - very low car": "#EE8866",  # orange
+# }
 
 distance_color_dict = {
     "1": "#DDCC77",  # "#94CBEC",
