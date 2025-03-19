@@ -2093,3 +2093,53 @@ def make_bivariate_choropleth_map(
 
     plt.show()
     plt.close()
+
+
+def make_stripplot_w_outliers(
+    data,
+    x,
+    y,
+    hue_col,
+    palette,
+    outlier_above_col="outlier_above",
+    outlier_below_col="outlier_below",
+    legend=False,
+    xlabel=None,
+    xticks=None,
+    fp=None,
+    fontsize=12,
+):
+    plt.figure(figsize=pdict["fsbar"])
+    sns.stripplot(
+        data=data, x=x, y=y, hue=hue_col, palette=palette, legend=legend, jitter=True
+    )
+
+    # Overlay outliers in black
+    outliers = data[
+        (data[outlier_above_col] == True) | (data[outlier_below_col] == True)
+    ]
+    plt.scatter(
+        outliers[x],
+        outliers[y],
+        color="black",
+        s=50,
+        label="Outliers",
+        zorder=10,  # Ensure outliers are plotted on top
+        alpha=0.6,
+    )
+
+    plt.xlabel(xlabel, fontsize=fontsize)
+    plt.ylabel("")
+
+    if xticks:
+        plt.xticks(xticks, fontsize=fontsize)
+
+    plt.yticks(fontsize=fontsize)
+
+    sns.despine(left=True, bottom=True)
+    plt.tight_layout()
+
+    if fp:
+        plt.savefig(fp, dpi=pdict["dpi"])
+
+    plt.show()
