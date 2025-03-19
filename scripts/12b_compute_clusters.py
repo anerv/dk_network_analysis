@@ -62,23 +62,13 @@ socio_socio_gdf.replace({kmeans_col_socio_soc: cluster_dict}, inplace=True)
 
 # %%
 
-socio_cluster_colors_dict = {
-    "1: High income - 2 cars": "#77AADD",  # light blue
-    "2: Very high income - 2 cars": "#99DDFF",  # light cyan
-    "3: Medium income - high car": "#44BB99",  # mint
-    "4: Medium/high income - medium car": "#AAAA00",  # olive
-    "5: Medium/low income - 1 car": "#BBCC33",  # pear
-    "6: Very low income - low car": "#FFAABB",  # pink
-    "7: Medium income - very low car": "#EE8866",  # orange
-}
-
 fp_map = fp_cluster_maps_base + f"socio_socio_map_{kmeans_col_socio_soc}.png"
 fp_size = fp_cluster_plots_base + f"socio_socio_size_{kmeans_col_socio_soc}.png"
 fp_kde = fp_cluster_plots_base + f"socio_socio_kde_{kmeans_col_socio_soc}.png"
 
 colors = list(socio_cluster_colors_dict.values())
 cmap = plot_func.color_list_to_cmap(colors)
-# colors = sns.color_palette("Set2", k)
+
 
 cluster_means_socio_soc = analysis_func.examine_cluster_results(
     socio_socio_gdf,
