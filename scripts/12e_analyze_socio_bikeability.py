@@ -360,13 +360,13 @@ ave_socio_bike.reset_index(drop=True, inplace=True)
 # %%
 
 ## Label outliers
-ave_socio_bike = analysis_func.label_outliers_iqr(
-    ave_socio_bike, "socio_label", "average_bikeability_rank"
-)
-
-# ave_socio_bike = label_outliers_1std(
+# ave_socio_bike = analysis_func.label_outliers_iqr(
 #     ave_socio_bike, "socio_label", "average_bikeability_rank"
 # )
+
+ave_socio_bike = analysis_func.label_outliers_custom_std(
+    ave_socio_bike, "socio_label", "average_bikeability_rank", 1
+)
 
 for i in ave_socio_bike["socio_label"].unique():
     print(
