@@ -788,34 +788,6 @@ def clean_labels(s):
     return s
 
 
-# def label_above_below_mean(gdf, socio_column, bikeability_column):
-
-#     socio_cluster_values = gdf[socio_column].unique()
-#     socio_cluster_values.sort()
-
-#     gdf["above_mean"] = False
-#     gdf["below_mean"] = False
-
-#     for socio_label in socio_cluster_values:
-
-#         mean = gdf.loc[gdf[socio_column] == socio_label][bikeability_column].mean()
-#         std_dev = gdf.loc[gdf[socio_column] == socio_label][bikeability_column].std()
-
-#         gdf.loc[
-#             (gdf[socio_column] == socio_label)
-#             & (gdf[bikeability_column] > mean + (std_dev * 2)),
-#             "above_mean",
-#         ] = True
-
-#         gdf.loc[
-#             (gdf[socio_column] == socio_label)
-#             & (gdf[bikeability_column] < mean - (std_dev * 2)),
-#             "below_mean",
-#         ] = True
-
-#     return gdf
-
-
 def label_outliers_iqr(df, cluster_col, value_col):
     """
     Label areas as outliers based on their average bikeability rank using the IQR method.
