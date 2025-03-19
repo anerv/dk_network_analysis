@@ -10,6 +10,8 @@ from pysal.lib import weights
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+plt.rcParams["text.usetex"] = True
+
 exec(open("../settings/yaml_variables.py").read())
 exec(open("../settings/plotting.py").read())
 exec(open("../settings/df_styler.py").read())
