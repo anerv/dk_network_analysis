@@ -52,17 +52,21 @@ socio_bikeability_cols = [c for c in socio_socio.columns if "Share bikeability" 
 
 corr_columns = socio_corr_variables[7:-2] + socio_bikeability_cols
 # %%
-plot_func.plot_correlation(
-    socio_socio,
-    corr_columns,
-    heatmap_fp=fp_socio_bikeability_heatmap,
-    pairplot_fp=fp_socio_bikeability_pairplot,
-    pair_plot_x_log=True,
-    pair_plot_y_log=True,
-)
 
-display(socio_socio[corr_columns].corr().style.background_gradient(cmap="coolwarm"))
-display(socio_socio[corr_columns])
+plot_corr = False  # Slow!
+
+if plot_corr:
+    plot_func.plot_correlation(
+        socio_socio,
+        corr_columns,
+        heatmap_fp=fp_socio_bikeability_heatmap,
+        pairplot_fp=fp_socio_bikeability_pairplot,
+        pair_plot_x_log=True,
+        pair_plot_y_log=True,
+    )
+
+    display(socio_socio[corr_columns].corr().style.background_gradient(cmap="coolwarm"))
+    display(socio_socio[corr_columns])
 
 # %%
 
@@ -140,49 +144,17 @@ bikeability_stats = socio_socio.groupby("socio_label")["average_bikeability_rank
 
 display(bikeability_stats)
 
-for socio_cluster in socio_socio.socio_label.unique():
+# %%
 
-    areas_below_median = socio_socio[socio_socio["socio_label"] == socio_cluster].loc[
-        socio_socio["average_bikeability_rank"]
-        < bikeability_stats.loc[socio_cluster, "median"]
-    ]
+# Label outliers
+socio_socio = analysis_func.label_outliers_iqr(
+    socio_socio, "socio_label", "average_bikeability_rank"
+)
 
-    total_socio_label = socio_socio[socio_socio["socio_label"] == socio_cluster]
-
+for i in socio_socio["socio_label"].unique():
     print(
-        f"{len(areas_below_median)} out of {len(total_socio_label)} areas are below the median for socio cluster {socio_cluster}"
+        f"{i}: Total: {len(socio_socio[socio_socio['socio_label'] == i])} - Above: {len(socio_socio[(socio_socio['socio_label'] == i) & (socio_socio['outlier_above'] == True)])} - Below: {len(socio_socio[(socio_socio['socio_label'] == i) & (socio_socio['outlier_below'] == True)])}"
     )
-
-    areas_below_mean = socio_socio[socio_socio["socio_label"] == socio_cluster].loc[
-        socio_socio["average_bikeability_rank"]
-        < bikeability_stats.loc[socio_cluster, "mean"]
-    ]
-    print(
-        f"{len(areas_below_mean)} out of {len(total_socio_label)} areas are below the mean for socio cluster {socio_cluster}"
-    )
-
-    areas_1std_below = socio_socio[socio_socio["socio_label"] == socio_cluster].loc[
-        socio_socio["average_bikeability_rank"]
-        < bikeability_stats.loc[socio_cluster, "mean"]
-        - bikeability_stats.loc[socio_cluster, "std"]
-    ]
-    print(
-        f"{len(areas_1std_below)} out of {len(total_socio_label)} areas are 1 std dev below the mean for socio cluster {socio_cluster}"
-    )
-
-    areas_1std_above = socio_socio[socio_socio["socio_label"] == socio_cluster].loc[
-        socio_socio["average_bikeability_rank"]
-        > bikeability_stats.loc[socio_cluster, "mean"]
-        + bikeability_stats.loc[socio_cluster, "std"]
-    ]
-
-    print(
-        f"{len(areas_1std_above)} out of {len(total_socio_label)} areas are 1 std dev above the mean for socio cluster {socio_cluster}"
-    )
-
-    print("\n")
-
-
 # %%
 
 socio_cluster_values = socio_socio.socio_label.unique()
@@ -194,7 +166,7 @@ for socio_label in socio_cluster_values:
 
     plot_func.plot_above_below_mean(
         socio_socio,
-        socio_label=socio_label,
+        socio_label,
     )
 
     analysis_func.export_outliers(
@@ -205,21 +177,16 @@ for socio_label in socio_cluster_values:
     )
 
 # %%
+
 plot_func.make_combined_outlier_plot(
     socio_socio,
     "socio_label",
-    "average_bikeability_rank",
     socio_cluster_colors_dict,
-    fp_equity_outliers_map,
+    fp=fp_equity_outliers_map,
     fontsize=14,
 )
 
-
 # %%
-
-socio_socio = analysis_func.label_above_below_mean(
-    socio_socio, "socio_label", "average_bikeability_rank"
-)
 
 socio_cluster_values = socio_socio.socio_label.unique()
 socio_cluster_values.sort()
@@ -230,16 +197,18 @@ for socio_label in socio_cluster_values:
 
     this_cluster = socio_socio[
         (socio_socio["socio_label"] == socio_label)
-        & (socio_socio.above_mean == False)
-        & (socio_socio.below_mean == False)
+        & (socio_socio.outlier_above == False)
+        & (socio_socio.outlier_below == False)
     ]
 
     this_cluster_above = socio_socio[
-        (socio_socio["socio_label"] == socio_label) & (socio_socio.above_mean == True)
+        (socio_socio["socio_label"] == socio_label)
+        & (socio_socio.outlier_above == True)
     ]
 
     this_cluster_below = socio_socio[
-        (socio_socio["socio_label"] == socio_label) & (socio_socio.below_mean == True)
+        (socio_socio["socio_label"] == socio_label)
+        & (socio_socio.outlier_below == True)
     ]
 
     # Define cluster variables
@@ -297,16 +266,14 @@ for socio_label in socio_cluster_values:
 
 # %%
 
-socio_socio = analysis_func.label_above_below_mean(
-    socio_socio, "socio_label", "average_bikeability_rank"
-)
-
+# TODO: UPDATE
 socio_outliers_below = socio_socio[
-    (socio_socio.below_mean == True) & (socio_socio.kmeans_socio.isin([5]))  # 6, 7
+    (socio_socio.outlier_below == True) & (socio_socio.kmeans_socio.isin([5]))  # 6, 7
 ]
 
 socio_outliers_above = socio_socio[
-    (socio_socio.above_mean == True) & (socio_socio.kmeans_socio.isin([1, 2, 3, 4, 5]))
+    (socio_socio.outlier_above == True)
+    & (socio_socio.kmeans_socio.isin([1, 2, 3, 4, 5]))
 ]
 
 active_labels_below = list(socio_outliers_below["socio_label"].unique())
