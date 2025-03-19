@@ -788,53 +788,87 @@ def clean_labels(s):
     return s
 
 
-def label_above_below_mean(gdf, socio_column, bikeability_column):
+# def label_above_below_mean(gdf, socio_column, bikeability_column):
 
-    socio_cluster_values = gdf[socio_column].unique()
-    socio_cluster_values.sort()
+#     socio_cluster_values = gdf[socio_column].unique()
+#     socio_cluster_values.sort()
 
-    gdf["above_mean"] = False
-    gdf["below_mean"] = False
+#     gdf["above_mean"] = False
+#     gdf["below_mean"] = False
 
-    for socio_label in socio_cluster_values:
+#     for socio_label in socio_cluster_values:
 
-        mean = gdf.loc[gdf[socio_column] == socio_label][bikeability_column].mean()
-        std_dev = gdf.loc[gdf[socio_column] == socio_label][bikeability_column].std()
+#         mean = gdf.loc[gdf[socio_column] == socio_label][bikeability_column].mean()
+#         std_dev = gdf.loc[gdf[socio_column] == socio_label][bikeability_column].std()
 
-        gdf.loc[
-            (gdf[socio_column] == socio_label)
-            & (gdf[bikeability_column] > mean + (std_dev * 2)),
-            "above_mean",
+#         gdf.loc[
+#             (gdf[socio_column] == socio_label)
+#             & (gdf[bikeability_column] > mean + (std_dev * 2)),
+#             "above_mean",
+#         ] = True
+
+#         gdf.loc[
+#             (gdf[socio_column] == socio_label)
+#             & (gdf[bikeability_column] < mean - (std_dev * 2)),
+#             "below_mean",
+#         ] = True
+
+#     return gdf
+
+
+def label_outliers_iqr(df, cluster_col, value_col):
+    """
+    Label areas as outliers based on their average bikeability rank using the IQR method.
+
+    Parameters:
+    df (pd.DataFrame): DataFrame containing the data.
+    cluster_col (str): Column name for the socio cluster.
+    value_col (str): Column name for the average bikeability rank.
+
+    Returns:
+    pd.DataFrame: DataFrame with additional columns 'outlier_below' and 'outlier_above'.
+    """
+    df["outlier_below"] = False
+    df["outlier_above"] = False
+
+    for cluster in df[cluster_col].unique():
+        cluster_data = df[df[cluster_col] == cluster]
+        Q1 = cluster_data[value_col].quantile(0.25)
+        Q3 = cluster_data[value_col].quantile(0.75)
+        IQR = Q3 - Q1
+
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 + 1.5 * IQR
+
+        df.loc[
+            (df[cluster_col] == cluster) & (df[value_col] < lower_bound),
+            "outlier_below",
+        ] = True
+        df.loc[
+            (df[cluster_col] == cluster) & (df[value_col] > upper_bound),
+            "outlier_above",
         ] = True
 
-        gdf.loc[
-            (gdf[socio_column] == socio_label)
-            & (gdf[bikeability_column] < mean - (std_dev * 2)),
-            "below_mean",
-        ] = True
-
-    return gdf
+    return df
 
 
 def export_outliers(
     gdf,
-    socio_label,
     fp_above,
     fp_below,
+    socio_label,
     socio_column="socio_label",
-    bikeability_column="average_bikeability_rank",
+    outlier_above_column="outlier_above",
+    outlier_below_column="outlier_below",
 ):
 
-    mean = gdf.loc[gdf[socio_column] == socio_label][bikeability_column].mean()
-    std_dev = gdf.loc[gdf[socio_column] == socio_label][bikeability_column].std()
-
-    below_mean = gdf[gdf[socio_column] == socio_label].loc[
-        gdf[bikeability_column] < mean - (std_dev * 2)
+    below_mean = gdf[
+        (gdf[socio_column] == socio_label) & (gdf[outlier_below_column] == True)
+    ]
+    above_mean = gdf[
+        (gdf[socio_column] == socio_label) & (gdf[outlier_above_column] == True)
     ]
 
-    above_mean = gdf[gdf[socio_column] == socio_label].loc[
-        gdf[bikeability_column] > mean + (std_dev * 2)
-    ]
     if len(below_mean) > 0:
         below_mean.to_file(fp_below)
 

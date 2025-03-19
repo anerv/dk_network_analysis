@@ -105,24 +105,21 @@ def plot_above_below_mean(
     gdf,
     socio_label,
     socio_column="socio_label",
-    bikeability_column="average_bikeability_rank",
+    outlier_above_column="outlier_above",
+    outlier_below_column="outlier_below",
     fp=None,
 ):
 
-    mean = gdf.loc[gdf[socio_column] == socio_label][bikeability_column].mean()
-    std_dev = gdf.loc[gdf[socio_column] == socio_label][bikeability_column].std()
+    below_mean = gdf[
+        (gdf[socio_column] == socio_label) & (gdf[outlier_below_column] == True)
+    ]
+    above_mean = gdf[
+        (gdf[socio_column] == socio_label) & (gdf[outlier_above_column] == True)
+    ]
 
     _, axes = plt.subplots(1, 2, figsize=(10, 5))
 
     axes = axes.flatten()
-
-    below_mean = gdf[gdf[socio_column] == socio_label].loc[
-        gdf[bikeability_column] < mean - (std_dev * 2)
-    ]
-
-    above_mean = gdf[gdf[socio_column] == socio_label].loc[
-        gdf[bikeability_column] > mean + (std_dev * 2)
-    ]
 
     if len(below_mean) > 0:
 
@@ -132,7 +129,7 @@ def plot_above_below_mean(
 
         axes[0].axis("off")
 
-        axes[0].title.set_text(f"Areas 2 std dev below mean")
+        axes[0].title.set_text(f"Outliers below mean")
 
     elif len(below_mean) == 0:
         axes[0].axis("off")
@@ -143,7 +140,7 @@ def plot_above_below_mean(
 
         above_mean.plot(ax=axes[1], color="red", linewidth=0.1)
 
-        axes[1].title.set_text(f"Areas 2 std dev above mean")
+        axes[1].title.set_text(f"Outliers above mean")
 
         axes[1].axis("off")
 
@@ -161,18 +158,18 @@ def plot_above_below_mean(
 
 
 def make_combined_outlier_plot(
-    input_gdf, socio_column, bikeability_column, color_dict, fp=None, fontsize=12
+    gdf,
+    socio_column,
+    color_dict,
+    outlier_above_column="outlier_above",
+    outlier_below_column="outlier_below",
+    fp=None,
+    fontsize=12,
 ):
 
-    gdf = input_gdf.copy()
-
-    gdf = analysis_func.label_above_below_mean(
-        gdf,
-        socio_column,
-        bikeability_column,
+    active_labels = list(
+        gdf.loc[gdf[outlier_above_column] == True][socio_column].unique()
     )
-
-    active_labels = list(gdf.loc[gdf["above_mean"] == True][socio_column].unique())
     active_labels.sort()
     colors = [color_dict[l] for l in active_labels]
     cmap = color_list_to_cmap(colors)
@@ -185,7 +182,7 @@ def make_combined_outlier_plot(
 
     gdf.plot(ax=ax_above, color="lightgrey", alpha=0.5, linewidth=0.0)
 
-    gdf[gdf["above_mean"] == True].plot(
+    gdf[gdf[outlier_above_column] == True].plot(
         categorical=True,
         ax=ax_above,
         column=socio_column,
@@ -197,14 +194,16 @@ def make_combined_outlier_plot(
 
     ax_above.set_axis_off()
 
-    active_labels = list(gdf.loc[gdf["below_mean"] == True][socio_column].unique())
+    active_labels = list(
+        gdf.loc[gdf[outlier_below_column] == True][socio_column].unique()
+    )
     active_labels.sort()
     colors = [color_dict[l] for l in active_labels]
     cmap = color_list_to_cmap(colors)
 
     gdf.plot(ax=ax_below, color="lightgrey", alpha=0.5, linewidth=0.0)
 
-    gdf[gdf["below_mean"] == True].plot(
+    gdf[gdf[outlier_below_column] == True].plot(
         categorical=True,
         ax=ax_below,
         column=socio_column,
