@@ -2057,6 +2057,19 @@ def make_bivariate_choropleth_map(
 
     ax.set_axis_off()
 
+    ax.add_artist(
+        ScaleBar(
+            dx=1,
+            units="m",
+            dimension="si-length",
+            length_fraction=0.15,
+            width_fraction=0.002,
+            location="lower left",
+            box_alpha=0.5,
+            font_properties={"size": fs_labels},
+        )
+    )
+
     ### now create inset legend
     legend_ax = ax.inset_axes([0.6, 0.6, 0.35, 0.35])
     legend_ax.set_aspect("equal", adjustable="box")
@@ -2151,3 +2164,92 @@ def make_stripplot_w_outliers(
         plt.savefig(fp, dpi=pdict["dpi"])
 
     plt.show()
+
+
+def make_bivariate_choropleth_map_zoom(
+    gdf,
+    col1,
+    col2,
+    # attr,
+    col1_label,
+    col2_label,
+    class_bounds,
+    colorlist,
+    xmin,
+    xmax,
+    ymin,
+    ymax,
+    figsize=pdict["fsmap"],
+    alpha=0.8,
+    fp=None,
+    fs_labels=12,
+    fs_tick=10,
+    legend=True,
+):
+
+    ### plot map based on bivariate choropleth
+    _, ax = plt.subplots(1, 1, figsize=figsize)
+
+    gdf["color_bivariate"] = [
+        get_bivariate_choropleth_color(p1, p2, class_bounds, colorlist)
+        for p1, p2 in zip(gdf[col1].values, gdf[col2].values)
+    ]
+
+    gdf.plot(
+        ax=ax, color=gdf["color_bivariate"], alpha=alpha, legend=False, linewidth=0.0
+    )
+
+    ax.axis([xmin, xmax, ymin, ymax])
+
+    ax.add_artist(
+        ScaleBar(
+            dx=1,
+            units="m",
+            dimension="si-length",
+            length_fraction=0.15,
+            width_fraction=0.002,
+            location="lower left",
+            box_alpha=0.5,
+            font_properties={"size": fs_labels},
+        )
+    )
+
+    ax.set_axis_off()
+
+    if legend:
+        ### now create inset legend
+        legend_ax = ax.inset_axes([0.6, 0.6, 0.35, 0.35])
+        legend_ax.set_aspect("equal", adjustable="box")
+        count = 0
+        xticks = [0]
+        yticks = [0]
+        for i, percentile_bound_p1 in enumerate(class_bounds):
+            for j, percentile_bound_p2 in enumerate(class_bounds):
+                percentileboxes = [Rectangle((i, j), 1, 1)]
+                pc = PatchCollection(
+                    percentileboxes, facecolor=colorlist[count], alpha=alpha
+                )
+                count += 1
+                legend_ax.add_collection(pc)
+                if i == 0:
+                    yticks.append(percentile_bound_p2)
+            xticks.append(percentile_bound_p1)
+
+        _ = legend_ax.set_xlim([0, len(class_bounds)])
+        _ = legend_ax.set_ylim([0, len(class_bounds)])
+        _ = legend_ax.set_xticks(
+            list(range(len(class_bounds) + 1)), xticks, fontsize=fs_tick
+        )
+        _ = legend_ax.set_yticks(
+            list(range(len(class_bounds) + 1)), yticks, fontsize=fs_tick
+        )
+        _ = legend_ax.set_xlabel(col1_label, fontsize=fs_labels)
+        _ = legend_ax.set_ylabel(col2_label, fontsize=fs_labels)
+
+    plt.tight_layout()
+
+    if fp:
+        plt.savefig(fp, dpi=pdict["dpi"])
+
+    plt.show()
+    plt.close()

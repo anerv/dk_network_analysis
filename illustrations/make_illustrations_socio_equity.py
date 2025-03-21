@@ -315,3 +315,48 @@ for v in variable_combos:
         fs_tick=12,
     )
 # %%
+# Make zoomed bivariate map
+
+xmin, ymin = 685721.753031, 6152758.429163
+xmax, ymax = 735187.777430, 6218675.836537
+
+v1 = "Average bikeability rank_norm"
+v0 = "Households w car (%)_norm"
+
+c1 = "Average bikeability rank"
+c0 = "Households w car (%)"
+
+plot_func.make_bivariate_choropleth_map_zoom(
+    socio_socio_bike,
+    v0,
+    v1,
+    c0,
+    c1,
+    class_bounds,
+    colorlist,
+    xmin=xmin,
+    xmax=xmax,
+    ymin=ymin,
+    ymax=ymax,
+    fp=f"socio_bivariate_{c0}_{c1}_zoom.png",
+    fs_labels=14,
+    fs_tick=12,
+    legend=False,
+)
+
+
+# %%
+plot_func.make_bivariate_choropleth_map(
+    socio_socio_bike,
+    v0,
+    v1,
+    c0,
+    c1,
+    class_bounds,
+    colorlist,
+    fp=f"socio_bivariate_{c0}_{c1}_scale.png",
+    fs_labels=14,
+    fs_tick=12,
+)
+
+# %%
