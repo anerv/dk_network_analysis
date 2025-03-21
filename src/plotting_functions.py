@@ -2111,7 +2111,15 @@ def make_stripplot_w_outliers(
 ):
     plt.figure(figsize=pdict["fsbar"])
     sns.stripplot(
-        data=data, x=x, y=y, hue=hue_col, palette=palette, legend=legend, jitter=True
+        data=data,
+        x=x,
+        y=y,
+        hue=hue_col,
+        palette=palette,
+        size=8,
+        legend=legend,
+        jitter=False,
+        alpha=0.5,
     )
 
     # Overlay outliers in black
