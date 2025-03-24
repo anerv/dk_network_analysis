@@ -271,14 +271,13 @@ for socio_label in socio_cluster_values:
 
 # %%
 
-# TODO: UPDATE??
+# Based on outliers present in zoomed in areas
 socio_outliers_below = socio_socio[
     (socio_socio.outlier_below == True) & (socio_socio.kmeans_socio.isin([5]))  # 6, 7
 ]
 
 socio_outliers_above = socio_socio[
-    (socio_socio.outlier_above == True)
-    & (socio_socio.kmeans_socio.isin([1, 2, 3, 4, 5]))
+    (socio_socio.outlier_above == True) & (socio_socio.kmeans_socio.isin([1, 2, 4, 5]))
 ]
 
 active_labels_below = list(socio_outliers_below["socio_label"].unique())
