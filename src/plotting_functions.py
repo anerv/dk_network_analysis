@@ -2142,7 +2142,10 @@ def make_stripplot_w_outliers(
     plt.scatter(
         outliers[x],
         outliers[y],
-        color="#4A4A4A",
+        edgecolor="black",
+        facecolor="none",
+        linewidth=1,
+        # color="#4A4A4A",
         s=50,
         label="Outliers",
         zorder=10,  # Ensure outliers are plotted on top
